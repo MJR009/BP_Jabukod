@@ -26,8 +26,6 @@ antlr_target(JabukodParser Jabukod.g4
 
 include_directories(${ANTLR_JabukodParser_OUTPUT_DIR})
 
-message(${ANTLR_JabukodParser_OUTPUT_DIR})
-
 add_definitions(-DANTLR4CPP_STATIC) # linking to a static library
 add_executable(main main.cpp 
     ${ANTLR_JabukodParser_CXX_OUTPUTS}
