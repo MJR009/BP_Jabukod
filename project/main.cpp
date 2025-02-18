@@ -6,6 +6,8 @@
 
 #include "JabukodBaseListener.h"
 
+#include "TestListener.h"
+
 using namespace std;
 
 int main() {
@@ -33,7 +35,7 @@ int main() {
     //cout << tree->toStringTree(&parser) << endl;
 
     antlr4::tree::ParseTreeWalker walker;
-    JabukodBaseListener listener;
+    TestListener listener;
     walker.walk(&listener, tree);
 
     cout << endl;
