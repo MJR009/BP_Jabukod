@@ -1,9 +1,13 @@
 # CMakeLists.txt made using guide in README.md at https://github.com/antlr/antlr4/tree/master/runtime/Cpp/cmake and modified.
 
-cmake_minimum_required (VERSION 3.7 FATAL_ERROR)
+cmake_minimum_required (VERSION 2.8...3.29 FATAL_ERROR)
 set(CMAKE_CXX_STANDARD 17)
 
 project(jabukod)
+
+if(NOT CMAKE_BUILD_TYPE)
+    set(CMAKE_BUILD_TYPE Debug) # implicitly with debug info
+endif()
 
 file(GLOB_RECURSE HDR *.h)
 
