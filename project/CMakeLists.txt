@@ -6,7 +6,7 @@ set(CMAKE_CXX_STANDARD 17)
 project(jabukod)
 
 if(NOT CMAKE_BUILD_TYPE)
-    set(CMAKE_BUILD_TYPE Debug) # implicitly with debug info
+    set(CMAKE_BUILD_TYPE Debug) # implicitly build with debug info
 endif()
 
 file(GLOB_RECURSE HDR *.h)
