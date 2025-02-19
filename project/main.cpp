@@ -6,7 +6,7 @@
 
 #include "JabukodBaseListener.h"
 
-#include "TestListener.h"
+#include "TestVisitor.h"
 
 using namespace std;
 
@@ -19,26 +19,12 @@ int main() {
 
     antlr4::CommonTokenStream tokens(&lexer);
 
-    /* // tokens
-    tokens.fill();
-    for (auto token : tokens.getTokens()) {
-      cout << token->toString() << endl;
-    }
-    cout << endl;
-    */
-
     JabukodParser parser(&tokens);
 
-    antlr4::tree::ParseTree *tree = parser.init(); // from starting nonterminal
+    antlr4::tree::ParseTree *tree = parser.prog(); // from starting nonterminal
 
-    // string tree
-    //cout << tree->toStringTree(&parser) << endl;
-
-    antlr4::tree::ParseTreeWalker walker;
-    TestListener listener;
-    walker.walk(&listener, tree);
-
-    cout << endl;
+    TestVisitor visitor;
+    visitor.visit(tree);
 
     return 0;
 }
