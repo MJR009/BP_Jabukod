@@ -20,11 +20,9 @@ int main(int argc, char **argv) {
 
     antlr4::CommonTokenStream tokens(&lexer);
 
-    int col = stoi(argv[1]);
-    JabukodParser parser(&tokens, col);
+    JabukodParser parser(&tokens);
 
-    parser.setBuildParseTree(false); // building a parse tree is not needed, everything is taken care of by grammar actions
-    parser.file(); // from starting nonterminal
+    antlr4::tree::ParseTree *tree = parser.file(); // from starting nonterminal
 
 // LISTENER:
     // antlr4::tree::ParseTreeWalker walker;

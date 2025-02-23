@@ -1,39 +1,25 @@
 grammar Jabukod;
 
-@parser::members {
-private:
-    int col;
-public:
-    JabukodParser(antlr4::TokenStream *input, int col) : JabukodParser(input, antlr4::atn::ParserATNSimulatorOptions()) {
-        this->col = col;
-    }
-}
-
 file
-    : (row NL)+
+    : group+
     ;
 
-row
-locals [int i=0]
+group
+    : INT sequence[$INT.int]
+    ;
+
+sequence[int count]
+locals [int i = 1]
     :
     (
-        ENTRY {
-$i++;
-if ($i == col) {
-    std::cout << $ENTRY.text << std::endl;
-}
-        }
-    )+
+        {$i <= $count}? INT {$i++;} // if the predicate {}? is false, the rule cannot be assigned!
+    )*
+    ; 
+
+INT
+    : [0-9]+
     ;
 
-ENTRY
-    : (~[ \t\r\n])+
-    ;
-
-NL
-    : '\r'? '\n'
-    ;
-
-TAB
-    : [ \t] -> skip
+WS
+    : [ \t\n\r]+ -> skip
     ;
