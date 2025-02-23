@@ -19,4 +19,12 @@
 //  //void visitErrorNode(antlr4::tree::ErrorNode * /*node*/) override { }
 //};
 
+// TESTING OUTPUTS:
 
+class TestListener : public JabukodBaseListener {
+public:
+    void enterEveryRule(antlr4::ParserRuleContext *ctx) override;
+
+private:
+    int order = 0;
+};

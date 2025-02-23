@@ -17,3 +17,13 @@ using namespace std;
 //        cout << ctx->INT()->getText() << " ";
 //    }
 //}
+
+// TESTING OUTPUTS:
+
+void TestListener::enterEveryRule(antlr4::ParserRuleContext *ctx) {
+    cout <<
+        ++this->order <<
+        ")\n" <<
+        ctx->getText() <<
+    endl;
+}

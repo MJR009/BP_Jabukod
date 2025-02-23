@@ -48,3 +48,9 @@ add_executable(${PROJECT_NAME} ${SRC}
     ${ANTLR_JabukodParser_CXX_OUTPUTS} # ANTLR generated headers
 )
 target_link_libraries(${PROJECT_NAME} antlr4_static)
+
+add_custom_target(run
+    COMMAND ${CMAKE_BINARY_DIR}/${PROJECT_NAME}    
+    DEPENDS ${PROJECT_NAME}
+    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+)

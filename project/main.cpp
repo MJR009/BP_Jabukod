@@ -6,7 +6,7 @@
 
 #include "JabukodBaseListener.h"
 
-//#include "TestListener.h"
+#include "TestListener.h"
 //#include "TestVisitor.h"
 
 using namespace std;
@@ -24,6 +24,12 @@ int main() {
 
     antlr4::tree::ParseTree *tree = parser.prog(); // from starting nonterminal
 
+// LISTENER:
+    antlr4::tree::ParseTreeWalker walker;
+    TestListener listener;
+    walker.walk(&listener, tree);
+
+// VISITOR:
     // TestVisitor visitor;
     // visitor.visit(tree);
 
