@@ -2,6 +2,8 @@
 
 using namespace std;
 
+// CALCULATOR:
+/*
 any TestVisitor::visitPrintExpr(JabukodParser::PrintExprContext *ctx) {
     int value = any_cast<int>( this->visit(ctx->expr()) );
 
@@ -59,3 +61,4 @@ any TestVisitor::visitId(JabukodParser::IdContext *ctx) {
 any TestVisitor::visitInt(JabukodParser::IntContext *ctx) {
     return any_cast<int>( stoi(ctx->INT()->getText()) );
 }
+*/

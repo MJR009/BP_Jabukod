@@ -2,6 +2,8 @@
 
 using namespace std;
 
+// JAVA ARRAY PROCESSOR:
+
 //void TestListener::enterInit(JabukodParser::InitContext *ctx) {
 //    cout << "[";
 //}
