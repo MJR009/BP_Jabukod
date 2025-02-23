@@ -11,7 +11,7 @@
 
 using namespace std;
 
-int main() {
+int main(int argc, char **argv) {
     ifstream stream;
     stream.open("../samples/first.jk");
     antlr4::ANTLRInputStream input(stream);
@@ -20,14 +20,16 @@ int main() {
 
     antlr4::CommonTokenStream tokens(&lexer);
 
-    JabukodParser parser(&tokens);
+    int col = stoi(argv[1]);
+    JabukodParser parser(&tokens, col);
 
-    antlr4::tree::ParseTree *tree = parser.prog(); // from starting nonterminal
+    parser.setBuildParseTree(false); // building a parse tree is not needed, everything is taken care of by grammar actions
+    parser.file(); // from starting nonterminal
 
 // LISTENER:
-    antlr4::tree::ParseTreeWalker walker;
-    TestListener listener;
-    walker.walk(&listener, tree);
+    // antlr4::tree::ParseTreeWalker walker;
+    // TestListener listener;
+    // walker.walk(&listener, tree);
 
 // VISITOR:
     // TestVisitor visitor;

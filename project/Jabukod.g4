@@ -1,45 +1,39 @@
 grammar Jabukod;
 
-prog
-    : stat+
+@parser::members {
+private:
+    int col;
+public:
+    JabukodParser(antlr4::TokenStream *input, int col) : JabukodParser(input, antlr4::atn::ParserATNSimulatorOptions()) {
+        this->col = col;
+    }
+}
+
+file
+    : (row NL)+
     ;
 
-stat
-    : expr NEWLINE          # printExpr
-    | ID '=' expr NEWLINE   # assign
-    | NEWLINE               # blank
+row
+locals [int i=0]
+    :
+    (
+        ENTRY {
+$i++;
+if ($i == col) {
+    std::cout << $ENTRY.text << std::endl;
+}
+        }
+    )+
     ;
 
-expr
-    : expr op=('*'|'/') expr    # MulDiv
-    | expr op=('+'|'-') expr    # AddSub
-    | INT                       # int
-    | ID                        # id
-    | '(' expr ')'              # parens
+ENTRY
+    : (~[ \t\r\n])+
     ;
 
-ID
-    : [a-zA-Z]+
-    ;
-INT
-    : [0-9]+
-    ;
-NEWLINE
+NL
     : '\r'? '\n'
     ;
-WS
-    : [ \t]+ -> skip
-    ;
 
-MUL
-    : '*'
-    ;
-DIV
-    : '/'
-    ;
-ADD
-    : '+'
-    ;
-SUB
-    : '-'
+TAB
+    : [ \t] -> skip
     ;

@@ -19,7 +19,7 @@ using namespace std;
 //}
 
 // TESTING OUTPUTS:
-
+/*
 void TestListener::enterEveryRule(antlr4::ParserRuleContext *ctx) {
     cout <<
         ++this->order <<
@@ -27,3 +27,4 @@ void TestListener::enterEveryRule(antlr4::ParserRuleContext *ctx) {
         ctx->getText() <<
     endl;
 }
+*/

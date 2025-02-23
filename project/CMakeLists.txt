@@ -50,7 +50,7 @@ add_executable(${PROJECT_NAME} ${SRC}
 target_link_libraries(${PROJECT_NAME} antlr4_static)
 
 add_custom_target(run
-    COMMAND ${CMAKE_BINARY_DIR}/${PROJECT_NAME}    
+    COMMAND ${CMAKE_BINARY_DIR}/${PROJECT_NAME}
     DEPENDS ${PROJECT_NAME}
     WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
 )
