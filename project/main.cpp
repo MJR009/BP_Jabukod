@@ -4,7 +4,7 @@
 #include "JabukodLexer.h"
 #include "JabukodParser.h"
 
-#include "JabukodBaseListener.h"
+//#include "JabukodBaseListener.h"
 
 //#include "TestListener.h"
 //#include "TestVisitor.h"
@@ -33,5 +33,14 @@ int main(int argc, char **argv) {
     // TestVisitor visitor;
     // visitor.visit(tree);
 
+    tokens.fill();
+    for (auto &token : tokens.getTokens()) {
+        cout << token->toString() << endl;
+    }
+
+    cout << endl;
+
+    cout << tree->toStringTree(&parser, true) << endl;
+    
     return 0;
 }

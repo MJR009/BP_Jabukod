@@ -1,2 +1,9 @@
 - Resolve CMake warnings
 - Add a LICENCE file (if needed)
+- GRAMMAR:
+    - UNICODE (\Uxxxx)
+    - Hex numbers
+    - Floats
+    - Should any number of leading zeros be allowed?
+    - better escape sequences
+    
