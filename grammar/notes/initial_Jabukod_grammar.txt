@@ -1,0 +1,181 @@
+Zápis podobný formátu YACC
+N:	(N+T)* // !!! prázdný řádek je zde prázdný řetězec
+	| (N+T)*
+	| (N+T)*
+	...
+
+Počáteční neterminál:
+	<PROG>
+	
+Komentáře "//" obsahují popis sémantické analýzy
+	
+TODO: if-then a if-then-else nelze rozlišit
+	počet dvojic [ a ] nelze rozlišit
+	
+==================================================
+	
+<PROG>:		EOF
+		| <FDEF> <PROG>					// nutna právě jedna funkce "main", identifikátor bude vložen do tabulky symbolů (dtto každý výskyt ID)
+		| <VARDEF> <PROG>				// bude provedena kontrola typů, popř. implicitní konverze
+		| <VARDECL> <PROG>
+		| <CONSTDEF> <PROG>
+		| <ENUMDEF> <PROG>
+
+<FDEF>:		<TYPE> <GENERID> ( <PARAMLIST> { <STMTS>	// je nutné rozeznat že je potřeba vrátit seznam
+
+<VARDEF>:	<NONVOIDTYPE> <GENERID> = <EXPR> ;
+
+<VARDECL>:	<NONVOIDTYPE> <GENERID> ;
+
+<CONSTDEF>:	const <NONVOIDTYPE> ID = <NONLISTLIT> ;
+		| const <NONVOIDTYPE> ID [ <LISTDECL> = [ <LISTLIT> ;
+
+<ENUMDEF>:	enum ID { <ENUMITEMS>
+
+<ENUMITEMS>:	}
+		| ID <ENUMITEMSCON>	
+
+<ENUMITEMSCON>:	}						// identifikátor bude vložen do tabulky symbolů (dtto každý výskyt ID)
+		| , ID <ENUMITEMSCON>
+
+<TYPE>:		void
+		| int
+		| float
+		| bool
+		| string
+		
+<NONVOIDTYPE>:	int
+		| float
+		| bool
+		| string
+	
+<GENERID>:	ID
+		| ID [ <LISTDECL>
+		
+<LISTDECL>:	]
+		| ] [ <LISTDECL>
+
+<PARAMLIST>:	)
+		| <NONVOIDTYPE> <GENERID> <PARAMLISTCON>
+
+<PARAMLISTCON>:	)
+		| , <NONVOIDTYPE> <GENERID> <PARAMLISTCON>
+
+<STMTS>:	}
+		| <STMT> <STMTS>
+
+<STMT>:		<VARDEF>					// vynucení jediného výrazu, a to s '='
+		| <VARDECL>
+		| <CONSTDEF>
+		| <STVARDEF>
+		| <FCALL> ;	
+		| ID <ASG> ;					// ID musí být definováno v daném rozsahu jako proměnná
+		| if ( <COND> <IFBODY>				// výraz vyhodnocený na pravdivostní hodnotu
+		| while ( <COND> <LOOPBODY>	
+		| for ( <FORHEAD> <LOOPBODY>
+		| foreach ( <FEHEAD> <LOOPBODY>			// výraz, nad kterým je iterováno
+		| return <RETEXEND>
+		| exit <RETEXEND>				// je nutné vracený výraz interpretovat jako číslo !
+		| suspend ;
+		| resume ;
+		| continue ;					// níže uvedené se mohou vyskytnout pouze v těle cyklu
+		| break ;
+		| redo ;
+		| restart ;
+
+<STVARDEF>:	static <NONVOIDTYPE> <GENERID> = <EXPR> ;	// konstanty mohou být implicitně statické
+
+<FCALL>:	ID ( <ARGLIST>					// ID musí být v tabulce symbolů pro daný scope
+
+<ARGLIST>:	)
+		| <EXPR> <ARGLISTCON>
+
+<ARGLISTCON>:	)
+		| , <EXPR> <ARGLISTCON>
+
+<ASG>:		= <EXPR>				
+		| <LISTASG>					// nutná kontrola mezí indexu
+
+<LISTASG>:	[ <EXPR> ] <LISTASG>
+		| = <EXPR>
+
+<COND>:		<EXPR> )
+
+<IFBODY>:	{ <STMTS>
+		| { <STMTS> else { <STMTS>			// !!!
+		| <STMT> ;
+
+<LOOPBODY>:	{ <STMTS>
+		| <STMT> ;
+		
+<FORHEAD>:	<EXPR> ; <FORHEAD1>
+		| ; <FORHEAD1>
+		
+<FORHEAD1>:	<EXPR> ; <FORHEAD2> 
+		| ; <FORHEAD2>
+
+<FORHEAD2>:	<EXPR> )
+		| )
+
+<FEHEAD>:	<VARDEF> : <EXPR> )				// vynucení přiřazení
+
+<RETEXEND>:	;
+		| <EXPR> ;
+
+<EXPR>:		<LIT>
+		| <GENERID>
+		| [ <LIST>
+		| <FCALL>
+		| <EXPR> <OP> <EXPR>
+		| ( <EXPR> )
+
+<LIT>:		nil
+		| INTLIT
+		| FLOATLIT
+		| <BOOLLIT>
+		| STRINGLIT
+		| [ <LISTLIT>
+
+<LIST>:		]
+		| <EXPR> <LISTCON>				// položky by měly být stejného typu
+
+<LISTCON>:	]
+		| , <EXPR> <LISTCON>
+
+<BOOLLIT>:	true
+		| false
+
+<LISTLIT>:	]
+		| <LIT> <LISTLITCON>				// položky by měly být stejného typu
+
+<LISTLITCON>:	]
+		| , <LIT> <LISTLITCON>
+
+<NONLISTLIT>:	nil
+		| INTLIT
+		| FLOATLIT
+		| <BOOLLIT>
+		| STRINGLIT
+		
+<OP>:		+
+		| -
+		| *
+		| /
+		| %
+		| **
+		| &&
+		| ||
+		| !
+		| &
+		| |
+		| ~
+		| ^
+		| <<
+		| >>
+		| ==
+		| !=
+		| <
+		| >
+		| <=
+		| >=
+		| =

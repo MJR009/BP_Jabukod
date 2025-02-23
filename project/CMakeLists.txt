@@ -29,7 +29,7 @@ find_package(ANTLR REQUIRED)
 
 include_directories(${ANTLR4_INCLUDE_DIRS})
 
-antlr_target(JabukodParser Jabukod.g4
+antlr_target(JabukodParser ${CMAKE_CURRENT_SOURCE_DIR}/../grammar/Jabukod.g4
     VISITOR
     LISTENER
     #PACKAGE jabukod_antlr # Specifies namespace for generated parser and lexer, if needed.
