@@ -51,15 +51,17 @@ add_executable(${PROJECT_NAME} ${SRC}
 )
 target_link_libraries(${PROJECT_NAME} antlr4_static)
 
+# Fundamental run target without arguments
 add_custom_target(run
     COMMAND ${CMAKE_BINARY_DIR}/${PROJECT_NAME}
     DEPENDS ${PROJECT_NAME}
     WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
 )
 
+# Java parse tree visualiser (grun)
 set(VISUALISE_BUILD_DIR ${CMAKE_BINARY_DIR}/visualise_build)
 get_filename_component(GRAMMAR_NAME ${GRAMMAR_PATH} NAME_WE)
-set(STARTING_NONTERMINAL "sourceFile")
+set(STARTING_NONTERMINAL sourceFile)
 add_custom_target(visualise
     COMMAND ${CMAKE_COMMAND} -E make_directory ${VISUALISE_BUILD_DIR}
     COMMAND java -jar ${ANTLR_EXECUTABLE} -o ${VISUALISE_BUILD_DIR} ${GRAMMAR_PATH}
@@ -75,4 +77,19 @@ add_custom_target(visualise
             ${CMAKE_COMMAND} -E echo "Usage: make visualise INPUT_FILE=[file in __samples__ subdirectory]" ; &&
             ${CMAKE_COMMAND} -E echo ""
         )
+)
+
+# Creates a standalone zip archive of the project
+set(ARCHIVE_BASE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/..)
+file(GLOB PACK_FILES
+    RELATIVE ${ARCHIVE_BASE_DIR}
+    ${ARCHIVE_BASE_DIR}/grammar/Jabukod.g4
+    ${ARCHIVE_BASE_DIR}/project/*
+    ${ARCHIVE_BASE_DIR}/samples/*
+    ${ARCHIVE_BASE_DIR}/tool/*
+    ${ARCHIVE_BASE_DIR}/README.md
+)
+add_custom_target(pack
+    COMMAND ${CMAKE_COMMAND} -E tar cfv ${PROJECT_NAME}.zip --format=zip ${PACK_FILES}
+    WORKING_DIRECTORY ${ARCHIVE_BASE_DIR}
 )
