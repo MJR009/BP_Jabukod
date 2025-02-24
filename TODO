@@ -6,4 +6,8 @@
     - Floats
     - Should any number of leading zeros be allowed?
     - better escape sequences
-    
+    - constants, static
+    - CHECK IF RULES AREN'T UNNESERALI NESTING
+    - enums
+    - lists
+

@@ -7,7 +7,57 @@ sourceFile // starting nonterminal
     ;
 
 program
-    : ( IDENTIFIER | NUMBER )+
+    : ( definition )+
+    ;
+
+definition
+    : variableDefinition
+    | functionDefinition
+    ;
+
+variableDefinition
+    : nonVoidType IDENTIFIER '=' expression ';'
+    ;
+
+functionDefinition
+    : type IDENTIFIER '(' functionParameters? ')' functionBody
+    ;
+
+nonVoidType
+    : 'int'
+    | 'float'
+    | 'bool'
+    | 'string'
+    ;
+
+type
+    : 'void'
+    | 'int'
+    | 'float'
+    | 'bool'
+    | 'string'
+    ;
+
+expression
+    : '...'
+    ;
+
+functionParameters
+    : functionParameter ( ',' functionParameter )*
+    ;
+
+functionParameter
+    : type IDENTIFIER
+    ;
+
+functionBody
+    : '{' statement+ '}'
+    | statement
+    ;
+
+statement
+    : variableDefinition
+    //| // if, while, for, foreach, return, exit, suspend, resume, continue, break, redo, restart
     ;
 
 
@@ -53,10 +103,10 @@ LINE_COMMENT
 BLOCK_COMMENT
     : '/*' .*? '*/' -> skip
     ;
-WS
-    : [ \t\r\n]+ -> skip
-    ;
-
 fragment NEWLINE
     : '\r'? '\n'
+    ;
+
+WS
+    : [ \t\r\n]+ -> skip
     ;
