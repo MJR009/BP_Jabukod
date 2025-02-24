@@ -16,6 +16,8 @@ add_subdirectory(src)
 
 ### ANTLR related: ###
 
+set(GRAMMAR_PATH ${CMAKE_CURRENT_SOURCE_DIR}/../grammar/Jabukod.g4)
+
 # add needed antlr4 module
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 include(ExternalAntlr4Cpp)
@@ -29,7 +31,7 @@ find_package(ANTLR REQUIRED)
 
 include_directories(${ANTLR4_INCLUDE_DIRS})
 
-antlr_target(JabukodParser ${CMAKE_CURRENT_SOURCE_DIR}/../grammar/Jabukod.g4
+antlr_target(JabukodParser ${GRAMMAR_PATH}
     #VISITOR
     #LISTENER
     #PACKAGE jabukod_antlr # Specifies namespace for generated parser and lexer, if needed.
@@ -53,4 +55,24 @@ add_custom_target(run
     COMMAND ${CMAKE_BINARY_DIR}/${PROJECT_NAME}
     DEPENDS ${PROJECT_NAME}
     WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+)
+
+set(VISUALISE_BUILD_DIR ${CMAKE_BINARY_DIR}/visualise_build)
+get_filename_component(GRAMMAR_NAME ${GRAMMAR_PATH} NAME_WE)
+set(STARTING_NONTERMINAL "sourceFile")
+add_custom_target(visualise
+    COMMAND ${CMAKE_COMMAND} -E make_directory ${VISUALISE_BUILD_DIR}
+    COMMAND java -jar ${ANTLR_EXECUTABLE} -o ${VISUALISE_BUILD_DIR} ${GRAMMAR_PATH}
+    COMMAND javac -cp ${ANTLR_EXECUTABLE} ${VISUALISE_BUILD_DIR}/*.java
+    COMMAND
+        test -f ${CMAKE_CURRENT_SOURCE_DIR}/../samples/$(INPUT_FILE)
+        &&
+            java -cp ${ANTLR_EXECUTABLE}:${VISUALISE_BUILD_DIR} org.antlr.v4.gui.TestRig
+                ${GRAMMAR_NAME} ${STARTING_NONTERMINAL} -gui ${CMAKE_CURRENT_SOURCE_DIR}/../samples/$(INPUT_FILE)
+        || (
+            ${CMAKE_COMMAND} -E echo "" ; &&
+            ${CMAKE_COMMAND} -E echo "Input file not provided or invalid" ; &&
+            ${CMAKE_COMMAND} -E echo "Usage: make visualise INPUT_FILE=[file in __samples__ subdirectory]" ; &&
+            ${CMAKE_COMMAND} -E echo ""
+        )
 )
