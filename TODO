@@ -9,5 +9,12 @@
     - constants, static
     - CHECK IF RULES AREN'T UNNESERALI NESTING
     - enums
-    - lists
-
+    - nil
+    - correctness of int, float literals
+    - exponential format of float
+    - variable declaration
+    - UNARY MINUS FOR CONSTANTS OR NEGATIVE LITERALS ???
+    - LISTS
+    - unary + and i associativity
+    - STATEMENTS !!!
+    - check precedences

@@ -1,0 +1,17 @@
+int x = y;
+
+int _1 = 2**3**4;
+int __1 = (2**3)**4;
+
+
+/*
+void main() {
+    int X = a;
+    bool Y = true;
+    string Z= "\"\\" ;
+
+    int a001 = -42;
+}
+*/
+
+// globální + lokální proměnné -> přiřezení

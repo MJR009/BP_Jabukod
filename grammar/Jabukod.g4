@@ -7,7 +7,7 @@ sourceFile // starting nonterminal
     ;
 
 program
-    : ( definition )+
+    : definition+
     ;
 
 definition
@@ -21,6 +21,14 @@ variableDefinition
 
 functionDefinition
     : type IDENTIFIER '(' functionParameters? ')' functionBody
+    ;
+
+functionParameters
+    : functionParameter ( ',' functionParameter )*
+    ;
+
+functionParameter
+    : type IDENTIFIER
     ;
 
 nonVoidType
@@ -39,15 +47,43 @@ type
     ;
 
 expression
-    : '...'
+    : functionCall
+    | <assoc=right> expression '**' expression
+    | ( '-' | '~' | '!' ) expression
+    | expression ( '*' | '/' | '%' ) expression
+    | expression ( '+' | '-' ) expression
+    | expression ( '<<' | '>>' ) expression
+    | expression ( '<' | '<=' | '>' | '>=' ) expression
+    | expression ( '==' | '!=' ) expression
+    | expression '&' expression
+    | expression '^' expression
+    | expression '|' expression
+    | expression '&&' expression
+    | expression '||' expression
+    | <assoc=right> expression '=' expression
+    | IDENTIFIER
+    | LITERAL
+    | '(' expression ')'
     ;
 
-functionParameters
-    : functionParameter ( ',' functionParameter )*
+// potential extensions:
+//      pre/postfix unary ++, --
+//      prefix unary +
+//      bit rotations ?
+//      ternary ?:
+//      opeartion assignments (+=, -=, ...)
+
+
+functionCall
+    : IDENTIFIER '(' functionArguments? ')'
     ;
 
-functionParameter
-    : type IDENTIFIER
+functionArguments
+    : functionArgument ( ',' functionArgument )*
+    ;
+
+functionArgument
+    : expression
     ;
 
 functionBody
@@ -68,13 +104,33 @@ IDENTIFIER
     : ( ALPHA | UNDERSCORE ) ( ALPHA | UNDERSCORE | DIGIT )*
     ;
 
-NUMBER
-    : NON_ZERO_DIGIT ( DIGIT )*
-    | ZERO
+LITERAL
+    : INT_LITERAL
+    | FLOAT_LITERAL
+    | BOOL_LITERAL
+    | STRING_LITERAL
+    ;
+
+INT_LITERAL
+    : '-'? NUMBER
+    ;
+
+FLOAT_LITERAL
+    : '-'? NUMBER? '.' NUMBER
+    ;
+
+BOOL_LITERAL
+    : 'true'
+    | 'false'
     ;
 
 STRING_LITERAL
-    : '"' ( . | ESCAPE_SEQUENCE )*? '"'
+    : '"' ( ~["\\] | ESCAPE_SEQUENCE )*? '"'
+    ;
+
+NUMBER
+    : NON_ZERO_DIGIT ( DIGIT )*
+    | ZERO
     ;
 
 fragment ALPHA

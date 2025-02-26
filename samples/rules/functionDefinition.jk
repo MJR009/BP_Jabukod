@@ -1,13 +1,13 @@
-int foo() int x = ...;
+int foo() int x = A;
 bool bar ( bool X, float Y )
 {
-    bool y = ...;
+    bool y = B;
 }
-string baz46546_ (
+void baz46546_ (
     string _1, string _2, bool _3
 ) {
-    string ______________________ = ...;
+    string ______________________ = 42;
 
-    int hi = ...;
+    int hi = 69;
     
 }
