@@ -1,4 +1,5 @@
 - Resolve CMake warnings
+- Add a "cleanall" target to remove build dir
 - Add a LICENCE file (if needed)
 - GRAMMAR:
     - UNICODE (\Uxxxx)
@@ -26,3 +27,5 @@
 
 - text: in case of inconsistencies, inspiration was taken from actual C.g4 grammar
 -- bring up interesting snippets, like the way ';' are delt with in "statement" nonterminal (this specifically was inspired by C.g4)
+
+- 

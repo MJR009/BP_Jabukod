@@ -5,5 +5,5 @@ int main() {
 
     foreach(bool val : POLE) {Valdemar(is_alive) ;}
 
-    
+    return 0;
 }

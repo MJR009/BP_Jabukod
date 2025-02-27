@@ -96,10 +96,10 @@ statement
     | 'while' '(' expression ')' statementBlock
     | 'for' '(' forHeader ')' statementBlock
     | 'foreach' '(' foreachHeader ')' statementBlock
-    | 'return' expression?
-    | 'exit' expression?
     | (   variableDefinition
         | expression // TODO or define "assignment" ? this covers functionCall also
+        | 'return' expression?
+        | 'exit' expression?
         | 'suspend'
         | 'resume'
         | 'continue'
