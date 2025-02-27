@@ -11,16 +11,16 @@ program
     ;
 
 definition
-    : variableDefinition
+    : variableDefinition ';'
     | functionDefinition
     ;
 
 variableDefinition
-    : nonVoidType IDENTIFIER '=' expression ';'
+    : nonVoidType IDENTIFIER '=' expression
     ;
 
 functionDefinition
-    : type IDENTIFIER '(' functionParameters? ')' functionBody
+    : type IDENTIFIER '(' functionParameters? ')' blockStatement
     ;
 
 functionParameters
@@ -86,15 +86,30 @@ functionArgument
     : expression
     ;
 
-functionBody
+blockStatement
     : '{' statement+ '}'
     | statement
     ;
 
 statement
-    : variableDefinition
-    //| // if, while, for, foreach, return, exit, suspend, resume, continue, break, redo, restart
+    : variableDefinition ';'
+    | functionCall ';'
+    | 'if' //
+    | 'while' //
+    | 'for' //
+    | 'foreach' //
+    | 'return' //
+    | 'exit' //
+    | 'suspend' //
+    | 'resume' //
+    | 'continue' //
+    | 'break' //
+    | 'redo' //
+    | 'restart' //
     ;
+
+// potential extensions:
+//      yield
 
 
 
