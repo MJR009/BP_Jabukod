@@ -18,3 +18,11 @@
     - unary + and i associativity
     - STATEMENTS !!!
     - check precedences
+    - block without possibility of jump statements (if without continue...)
+    - statement block -> statement doesn't eat ';'
+    - for and foreach header correctness
+    - expression vs. assignment
+    - foreach must support declarations
+
+- text: in case of inconsistencies, inspiration was taken from actual C.g4 grammar
+-- bring up interesting snippets, like the way ';' are delt with in "statement" nonterminal (this specifically was inspired by C.g4)

@@ -20,7 +20,7 @@ variableDefinition
     ;
 
 functionDefinition
-    : type IDENTIFIER '(' functionParameters? ')' blockStatement
+    : type IDENTIFIER '(' functionParameters? ')' statementBlock
     ;
 
 functionParameters
@@ -49,7 +49,7 @@ type
 expression
     : functionCall
     | <assoc=right> expression '**' expression
-    | ( '-' | '~' | '!' ) expression
+    | <assoc=right> ( '-' | '~' | '!' ) expression
     | expression ( '*' | '/' | '%' ) expression
     | expression ( '+' | '-' ) expression
     | expression ( '<<' | '>>' ) expression
@@ -86,30 +86,40 @@ functionArgument
     : expression
     ;
 
-blockStatement
+statementBlock
     : '{' statement+ '}'
     | statement
     ;
 
 statement
-    : variableDefinition ';'
-    | functionCall ';'
-    | 'if' //
-    | 'while' //
-    | 'for' //
-    | 'foreach' //
-    | 'return' //
-    | 'exit' //
-    | 'suspend' //
-    | 'resume' //
-    | 'continue' //
-    | 'break' //
-    | 'redo' //
-    | 'restart' //
+    : 'if' '(' expression ')' statementBlock ( 'else' statementBlock )?
+    | 'while' '(' expression ')' statementBlock
+    | 'for' '(' forHeader ')' statementBlock
+    | 'foreach' '(' foreachHeader ')' statementBlock
+    | 'return' expression?
+    | 'exit' expression?
+    | (   variableDefinition
+        | expression // TODO or define "assignment" ? this covers functionCall also
+        | 'suspend'
+        | 'resume'
+        | 'continue'
+        | 'break'
+        | 'redo'
+        | 'restart'
+    ) ';'
     ;
 
 // potential extensions:
 //      yield
+
+
+forHeader
+    : ( expression | variableDefinition )? ';' expression? ';' expression?
+    ;
+
+foreachHeader
+    : expression ':' expression
+    ;
 
 
 
