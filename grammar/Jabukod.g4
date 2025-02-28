@@ -18,11 +18,11 @@ definition
     ;
 
 variableDeclaration
-    : storageSpecifier? nonVoidType IDENTIFIER
+    : storageSpecifier? nonVoidType IDENTIFIER LIST_SPECIFIER?
     ;
 
 variableDefinition
-    : storageSpecifier? nonVoidType IDENTIFIER '=' expression
+    : storageSpecifier? nonVoidType IDENTIFIER LIST_SPECIFIER? '=' expression
     ;
 
 storageSpecifier
@@ -31,7 +31,7 @@ storageSpecifier
     ;
 
 functionDefinition
-    : type IDENTIFIER '(' functionParameters? ')' statementBlock
+    : type IDENTIFIER LIST_SPECIFIER? '(' functionParameters? ')' statementBlock
     ;
 
 functionParameters
@@ -39,7 +39,7 @@ functionParameters
     ;
 
 functionParameter
-    : nonVoidType IDENTIFIER
+    : nonVoidType IDENTIFIER LIST_SPECIFIER?
     ;
 
 enumDefinition
@@ -68,7 +68,7 @@ nonVoidType
     ;
 
 expression
-    : functionCall
+    : ( functionCall | listAccess | list)
     | <assoc=right> expression '**' expression
     | <assoc=right> ( '-' | '~' | '!' ) expression
     | expression ( '*' | '/' | '%' ) expression
@@ -99,6 +99,10 @@ functionCall
     : IDENTIFIER '(' functionArguments? ')'
     ;
 
+listAccess
+    : IDENTIFIER ( '[' expression ']' )+
+    ;
+
 functionArguments
     : functionArgument ( ',' functionArgument )*
     ;
@@ -119,7 +123,7 @@ statement
     | 'foreach' '(' foreachHeader ')' statementBlock
     | (   variableDeclaration
         | variableDefinition
-        | expression // TODO or define "assignment" ? this covers functionCall also
+        | expression // covers functionCall
         | 'return' expression?
         | 'exit' expression?
         | 'suspend'
@@ -133,6 +137,7 @@ statement
 
 // potential extensions:
 //      yield
+//      potentially define "assignment" 
 
 
 forHeader
@@ -143,12 +148,20 @@ foreachHeader
     : variableDeclaration ':' expression
     ;
 
+list
+    : '{' expression ( ',' expression )* '}'
+    ;
+
 
 
 // Lexer rules:
 
 IDENTIFIER
     : ( ALPHA | UNDERSCORE ) ( ALPHA | UNDERSCORE | DIGIT )*
+    ;
+
+LIST_SPECIFIER
+    : '[]'+
     ;
 
 LITERAL

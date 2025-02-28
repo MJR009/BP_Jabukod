@@ -3,7 +3,6 @@
 - Add a LICENCE file (if needed)
 - GRAMMAR:
     - CHECK IF RULES AREN'T UNNESERALI NESTING
-    - LISTS
 
 - text: in case of inconsistencies, inspiration was taken from actual C.g4 grammar
 -- bring up interesting snippets, like the way ';' are delt with in "statement" nonterminal (this specifically was inspired by C.g4)
@@ -18,3 +17,11 @@
 -- with enums, it is supported to terminate last item with trailing ",", it is inconsistent, not in funcitons, so it is not included
     for consistency
 -- constant expressions? - optimisation or a thing of obfuscation?
+-- NOP ";" ?
+-- list definition is equal to the C initialiser list, since it is a constant, it should be iferable without explicit type given
+
+- slovní popis "seznamů"
+
+Seznamy jsou definovány implicitně za překladu. Jejich chování odovídá poli. Pro deklarování proměnné jako
+seznam je třeba ji zakončit znaky []. Seznamy jsou homogenní. Podle počtu zakončujicích [] je určen počet rozměrů.
+Jejich velikost je určena za překladu a nelze zadat při zápisu programu. Jsou indexovány od 0.
