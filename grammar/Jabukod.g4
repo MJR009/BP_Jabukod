@@ -170,6 +170,11 @@ STRING_LITERAL
     : '"' ( ~["\\] | ESCAPE_SEQUENCE )*? '"'
     ;
 
+// potential extensions:
+//      unicode
+//      more escape sequences (ascii < 32, ones defined for std. C)
+
+
 fragment NUMBER
     : NON_ZERO_DIGIT DIGIT*
     | ZERO
@@ -211,6 +216,8 @@ fragment ZERO
 fragment ESCAPE_SEQUENCE
     : '\\"'
     | '\\\\'
+    | '\\n'
+    | '\\t'
     ;
 
 LINE_COMMENT

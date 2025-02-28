@@ -2,18 +2,9 @@
 - Add a "cleanall" target to remove build dir
 - Add a LICENCE file (if needed)
 - GRAMMAR:
-    - UNICODE (\Uxxxx)
-    - better escape sequences
     - CHECK IF RULES AREN'T UNNESERALI NESTING
     - enums
-    - nil
-    - correctness of int, float literals
-    - exponential format of float
-    - UNARY MINUS FOR CONSTANTS OR NEGATIVE LITERALS ???
     - LISTS
-    - check precedences
-    - expression vs. assignment
-    - minus sign for literals - simplify
 
 - text: in case of inconsistencies, inspiration was taken from actual C.g4 grammar
 -- bring up interesting snippets, like the way ';' are delt with in "statement" nonterminal (this specifically was inspired by C.g4)
@@ -21,3 +12,7 @@
 -- unary minus with constant taken straight as a negative number to avoid parsing as an expression
 -- unary plus feels like it is not important
 -- decision was made to not allow leaading zeros with numbers
+-- expression does not force an assignment -> results in dead code => should there be mandatory "assignment" nonterminal?
+-- typically uninitialised global variables set to 0, local undefined -> nil does not make sense as there is no way
+    to convey membership or identity, it's just value, it would need to be zero => implicit inicialization to 0 (has potential of
+    obfuscation if, just, not done)
