@@ -14,6 +14,7 @@ definition
     : variableDeclaration ';'
     | variableDefinition ';'
     | functionDefinition
+    | enumDefinition
     ;
 
 variableDeclaration
@@ -38,7 +39,24 @@ functionParameters
     ;
 
 functionParameter
-    : type IDENTIFIER
+    : nonVoidType IDENTIFIER
+    ;
+
+enumDefinition
+    : 'enum' IDENTIFIER enumBlock ';'
+    ;
+
+enumBlock
+    : '{' enumItem ( ',' enumItem )* '}'
+    ;
+
+enumItem
+    : IDENTIFIER ( '=' INT_LITERAL )?
+    ;
+
+type
+    : 'void'
+    | nonVoidType
     ;
 
 nonVoidType
@@ -46,14 +64,7 @@ nonVoidType
     | 'float'
     | 'bool'
     | 'string'
-    ;
-
-type
-    : 'void'
-    | 'int'
-    | 'float'
-    | 'bool'
-    | 'string'
+    | 'enum' IDENTIFIER
     ;
 
 expression

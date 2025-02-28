@@ -1,0 +1,10 @@
+enum X {AHOJKY, NAZDAREK, oujeee};
+
+int start() {
+    int A = NAZDAREK;
+    enum X hmmmm = oujeee;  
+}
+
+enum X foo (bool Y, enum X x, int y) {
+    return NAZDAREK;
+}

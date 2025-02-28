@@ -3,7 +3,6 @@
 - Add a LICENCE file (if needed)
 - GRAMMAR:
     - CHECK IF RULES AREN'T UNNESERALI NESTING
-    - enums
     - LISTS
 
 - text: in case of inconsistencies, inspiration was taken from actual C.g4 grammar
@@ -16,3 +15,6 @@
 -- typically uninitialised global variables set to 0, local undefined -> nil does not make sense as there is no way
     to convey membership or identity, it's just value, it would need to be zero => implicit inicialization to 0 (has potential of
     obfuscation if, just, not done)
+-- with enums, it is supported to terminate last item with trailing ",", it is inconsistent, not in funcitons, so it is not included
+    for consistency
+-- constant expressions? - optimisation or a thing of obfuscation?
