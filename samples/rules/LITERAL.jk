@@ -12,3 +12,9 @@ float D = 1.1;
 float E = -.1;
 //float F = -1.;
 float F = -1.1;
+
+
+int _1 = 0xA;
+int _2 = -0XFFFF;
+int _3 = 0x0;
+int _4 = 0X123;

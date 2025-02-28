@@ -148,12 +148,18 @@ LITERAL
     ;
 
 INT_LITERAL
-    : '-'? NUMBER
+    : '-'? ( NUMBER | HEX_NUMBER )
     ;
 
 FLOAT_LITERAL
-    : '-'? NUMBER? '.' NUMBER
+    : '-'? NUMBER ( EXPONENT | '.' NUMBER EXPONENT? )
     ;
+
+// potential extensions:
+//      hex. floats
+//      whole or decimal part ommission (.1, 2., ...)
+//      binary literals 0b../0B...
+
 
 BOOL_LITERAL
     : 'true'
@@ -164,9 +170,13 @@ STRING_LITERAL
     : '"' ( ~["\\] | ESCAPE_SEQUENCE )*? '"'
     ;
 
-NUMBER
-    : NON_ZERO_DIGIT ( DIGIT )*
+fragment NUMBER
+    : NON_ZERO_DIGIT DIGIT*
     | ZERO
+    ;
+
+fragment HEX_NUMBER
+    : HEX_PREFIX HEX_DIGIT+
     ;
 
 fragment ALPHA
@@ -180,6 +190,20 @@ fragment DIGIT
     ;
 fragment NON_ZERO_DIGIT
     : [1-9]
+    ;
+fragment EXPONENT
+    : EXPONENT_SIGN '-'? NUMBER
+    ;
+fragment EXPONENT_SIGN
+    : 'e'
+    | 'E'
+    ;
+fragment HEX_PREFIX
+    : '0x'
+    | '0X'
+    ;
+fragment HEX_DIGIT
+    : [0-9a-fA-F]
     ;
 fragment ZERO
     : '0'

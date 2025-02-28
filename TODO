@@ -3,9 +3,6 @@
 - Add a LICENCE file (if needed)
 - GRAMMAR:
     - UNICODE (\Uxxxx)
-    - Hex numbers
-    - Floats
-    - Should any number of leading zeros be allowed?
     - better escape sequences
     - CHECK IF RULES AREN'T UNNESERALI NESTING
     - enums
@@ -16,7 +13,11 @@
     - LISTS
     - check precedences
     - expression vs. assignment
+    - minus sign for literals - simplify
 
 - text: in case of inconsistencies, inspiration was taken from actual C.g4 grammar
 -- bring up interesting snippets, like the way ';' are delt with in "statement" nonterminal (this specifically was inspired by C.g4)
 -- declaration needen at least for good use of foreach
+-- unary minus with constant taken straight as a negative number to avoid parsing as an expression
+-- unary plus feels like it is not important
+-- decision was made to not allow leaading zeros with numbers
