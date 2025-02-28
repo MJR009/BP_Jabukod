@@ -5,5 +5,15 @@ int main() {
 
     foreach(bool val : POLE) {Valdemar(is_alive) ;}
 
+    for (;;) {
+        while(x > 2 && y <= 3) {
+            if (a + b ==c) return;
+            else {
+                cnt = cnt + 1;
+                continue;
+            }
+        }
+    }
+
     return 0;
 }

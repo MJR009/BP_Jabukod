@@ -11,12 +11,22 @@ program
     ;
 
 definition
-    : variableDefinition ';'
+    : variableDeclaration ';'
+    | variableDefinition ';'
     | functionDefinition
     ;
 
+variableDeclaration
+    : storageSpecifier? nonVoidType IDENTIFIER
+    ;
+
 variableDefinition
-    : nonVoidType IDENTIFIER '=' expression
+    : storageSpecifier? nonVoidType IDENTIFIER '=' expression
+    ;
+
+storageSpecifier
+    : 'const'
+    | 'static'
     ;
 
 functionDefinition
@@ -96,7 +106,8 @@ statement
     | 'while' '(' expression ')' statementBlock
     | 'for' '(' forHeader ')' statementBlock
     | 'foreach' '(' foreachHeader ')' statementBlock
-    | (   variableDefinition
+    | (   variableDeclaration
+        | variableDefinition
         | expression // TODO or define "assignment" ? this covers functionCall also
         | 'return' expression?
         | 'exit' expression?
@@ -118,7 +129,7 @@ forHeader
     ;
 
 foreachHeader
-    : expression ':' expression
+    : variableDeclaration ':' expression
     ;
 
 

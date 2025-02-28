@@ -5,3 +5,12 @@ void foo () {
 
     return x;
 }
+
+int main() {
+    while(true) {
+        resume;
+        if (a + b == c ** d) {
+            break;break;break;break;breakbreak=0;break;break;break;break;
+        }
+    }
+}
