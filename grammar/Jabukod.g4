@@ -2,6 +2,10 @@ grammar Jabukod;
 
 // Parser rules:
 
+//@parser::members{
+//    int foo();
+//}
+
 sourceFile // starting nonterminal
     : program? EOF
     ;
@@ -149,7 +153,7 @@ foreachHeader
     ;
 
 list
-    : '{' expression ( ',' expression )* '}'
+    : '{' expression ( ',' expression )* '}' // ARISES NEED FOR DYNAMIC MEMORY ALLOCATION
     ;
 
 
