@@ -1,0 +1,7 @@
+int x;
+bool x = 0;
+float rose() { int x; }
+enum x {
+    ONE,
+    TWO, THREE
+};

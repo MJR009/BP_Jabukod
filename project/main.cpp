@@ -4,16 +4,16 @@
 #include "JabukodLexer.h"
 #include "JabukodParser.h"
 
-//#include "JabukodBaseListener.h"
-
-//#include "TestListener.h"
-//#include "TestVisitor.h"
-
 using namespace std;
 
 int main(int argc, char **argv) {
+    if (argc != 2) {
+        cout << "Usage: ./jabukod <path_to_program>" << endl;
+        return 1;
+    }
+
     ifstream stream;
-    stream.open("../samples/first.jk");
+    stream.open(argv[1]);
     antlr4::ANTLRInputStream input(stream);
 
     JabukodLexer lexer(&input);
@@ -32,6 +32,6 @@ int main(int argc, char **argv) {
     cout << endl;
 
     cout << tree->toStringTree(&parser, true) << endl;
-    
+
     return 0;
 }

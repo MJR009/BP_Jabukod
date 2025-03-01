@@ -25,3 +25,5 @@
 Seznamy jsou definovány implicitně za překladu. Jejich chování odovídá poli. Pro deklarování proměnné jako
 seznam je třeba ji zakončit znaky []. Seznamy jsou homogenní. Podle počtu zakončujicích [] je určen počet rozměrů.
 Jejich velikost je určena za překladu a nelze zadat při zápisu programu. Jsou indexovány od 0.
+
+-- !!! How do I express IO functionality? -> Raku "spurt" and "slurp"
