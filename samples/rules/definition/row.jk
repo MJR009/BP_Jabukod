@@ -1,1 +1,1 @@
-int x; bool x = true; string rose () { int x; } enum x {ONE, TWO, THREEj};
+int x; bool y = true; string rose () { int x; } enum X {ONE, TWO, THREE};

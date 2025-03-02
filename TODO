@@ -49,4 +49,5 @@ Jejich velikost je určena za překladu a nelze zadat při zápisu programu. Jso
 
     Pepe: "Gigabyte sem, gigabyte tam, to už dneska nikoho nezajímá."
 
-    
+-- StrayKw2 a 3 testují situaci, jak se to chová, když jsou za sebou tokeny, co za sebou v žádném
+    kontextu nemohou být, a když to lze

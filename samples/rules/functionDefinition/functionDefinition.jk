@@ -1,15 +1,15 @@
-int foo() int x = A;
+int rose() int x = y;
 
-bool bar ( bool X, float Y )
+bool mary ( bool x, float y )
 {
-    bool y = B;
+    bool y = false;
 }
 
-void baz46546_ (
+void rock (
     string _1, string _2, bool _3
 ) {
-    string ______________________ = 42;
+    string x = 42;
 
-    int hi = 69;
+    int y = 69;
     
 }

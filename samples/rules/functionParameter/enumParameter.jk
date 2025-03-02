@@ -1,7 +1,4 @@
 void rose (enum X x) {
-
-    string y = "wow"
-    ;
-    return
-    ;
+    string y = "Jabukod";
+    return;
 }

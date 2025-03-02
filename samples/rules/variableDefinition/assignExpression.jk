@@ -1,1 +1,1 @@
-bool x = ~a[5];
+bool x = ~y[5];

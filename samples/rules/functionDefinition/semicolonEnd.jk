@@ -1,5 +1,5 @@
 int rose(){
     string x = "Hello";
 
-    return;
+    return 0;
 };

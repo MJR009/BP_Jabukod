@@ -1,7 +1,5 @@
 void rose(
     int x
     bool y
-
 )
-
 { return ; }
