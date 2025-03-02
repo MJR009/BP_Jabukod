@@ -1,0 +1,7 @@
+void rose (enum X x) {
+
+    string y = "wow"
+    ;
+    return
+    ;
+}
