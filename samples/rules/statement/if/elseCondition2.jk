@@ -1,0 +1,5 @@
+void rose() {
+    if (x > 0) {
+        return x * (-1);
+    } else ((x = -5) < 0);
+}

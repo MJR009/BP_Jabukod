@@ -1,0 +1,3 @@
+void rose() {
+    int suspend = 0;
+}

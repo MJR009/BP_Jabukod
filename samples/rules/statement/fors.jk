@@ -1,15 +1,15 @@
-int main() {
+int rose() {
     for (int i = 0; i < 10; i = i + 1) {
         return i;
     }
 
-    foreach(bool val : POLE) {Valdemar(is_alive) ;}
+    foreach(bool x : y) {mary(y, x) ;}
 
     for (;;) {
         while(x > 2 && y <= 3) {
-            if (a + b ==c) return;
+            if (a + b == c) return;
             else {
-                cnt = cnt + 1;
+                z = z + 1;
                 continue;
             }
         }

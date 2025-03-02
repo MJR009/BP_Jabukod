@@ -1,0 +1,12 @@
+bool rose() {
+    If (x > 0) return true;
+    Else return false;
+}
+
+void mary() {
+    While (true) {
+        For (;;) {
+            rose();
+        }
+    }
+}

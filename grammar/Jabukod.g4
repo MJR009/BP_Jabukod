@@ -117,6 +117,9 @@ statement
     | (   variableDeclaration
         | variableDefinition
         | expression // covers functionCall
+        // possible alternative
+        // assignment -> IDENTIFIER listAccess '=' expression
+        // functionCall
         | 'return' expression?
         | 'exit' expression?
         | 'suspend'
@@ -131,6 +134,7 @@ statement
 // potential extensions:
 //      yield
 //      potentially define "assignment" 
+// May be better to segment into more rules
 
 
 forHeader

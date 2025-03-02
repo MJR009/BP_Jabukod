@@ -1,0 +1,4 @@
+int rose() {
+    if (x > y) return x;
+    else (y > x) return y;
+}

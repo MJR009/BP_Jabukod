@@ -61,3 +61,9 @@ Jejich velikost je určena za překladu a nelze zadat při zápisu programu. Jso
     
 -- List access po list literálu? Dává to smysl?
 -- Obecně list ve výrazu? Dává vcelku smysl jenom pro přiřazení
+
+-- !!! Bylo by lepší rozdělit statetment na vlastní pravidla (teoreticky stačí labely)
+
+-- elseCondtion2.jk je trošku cursed
+
+-- deadExpression projde -> je to OK? -> vytvořit pravidlo assignment

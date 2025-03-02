@@ -1,0 +1,7 @@
+void rose() {
+    for (int x : y[0]) {
+        mary(x);
+    }
+
+    return;
+}

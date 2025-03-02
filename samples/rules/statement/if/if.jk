@@ -1,0 +1,15 @@
+int rose() {
+    if (x < 0) {
+        return -x;
+    }
+
+    if (y > 0) return y*2; else return y**2;
+
+    if (z == 0) {
+        mary(0);
+    } else if (z == 1) {
+        mary(1);
+    } else {
+        mary(2);
+    }
+}

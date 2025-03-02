@@ -1,0 +1,7 @@
+void rose() {
+    while (x) {
+        x = !x;
+    } else {
+        return;
+    }
+}

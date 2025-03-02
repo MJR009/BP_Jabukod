@@ -1,0 +1,4 @@
+void rose() {
+    suspend 1;
+    redo (x + 2);
+}

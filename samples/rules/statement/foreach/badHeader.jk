@@ -1,0 +1,5 @@
+void rose() {
+    foreach(int i = 10; i != 0; i = i - 1) {
+        mary(i);
+    }
+}

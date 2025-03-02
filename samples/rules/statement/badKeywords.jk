@@ -1,0 +1,13 @@
+int rose() {
+    if (int i = 0; i < 10; i = i +1) {
+        mary(i);
+    } else {
+        mary(0);
+    }
+
+    while(int x : {1, 2, 3}) {
+        rock(x);
+
+        x = x - 1;
+    }
+}

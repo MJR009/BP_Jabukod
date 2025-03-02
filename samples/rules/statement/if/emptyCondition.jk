@@ -1,0 +1,7 @@
+void mary() {
+    if() {
+        return true;
+    } else {
+        return false;
+    }
+}

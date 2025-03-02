@@ -1,0 +1,16 @@
+void rose () {
+    if (x > 5) {x = y = -z+1; y=x;} else x = 4545;
+
+    suspend;
+
+    return x;
+}
+
+int mary() {
+    while(true) {
+        resume;
+        if (a + b == c ** d) {
+            break;break;break;break;break;break;break;break;break;break;
+        }
+    }
+}
