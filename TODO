@@ -27,3 +27,26 @@ seznam je třeba ji zakončit znaky []. Seznamy jsou homogenní. Podle počtu za
 Jejich velikost je určena za překladu a nelze zadat při zápisu programu. Jsou indexovány od 0.
 
 -- !!! How do I express IO functionality? -> Raku "spurt" and "slurp"
+
+- List access cant't be preceeded with an expression, in C only pointer arithmetic allows this, but the principles of this projects
+    obfuscation do not
+
+-- !!! Should it be possible to define functions without body delimiters {} like in C? Some functions may be just one command and this can be parsed.
+
+-- In the current version, functions can't return lists, there is no way to encode site p=> HOW TO ENCODE SIZE???
+    With 8B number pascal style encoding wouldn't be a problem.
+    Just do not and embrace the segfault. -> How do I define "do this for all items" -> What is "all items" -> How do I say "This is all."
+    Null value -> int 0 -> won't work
+    Pointing to dynamic memoty -> very complex
+
+    Returning list from a function?
+    How is a list stored?
+    What SINGLE data point referers to an entire list?
+    A start address.
+    Is this an address on stack or on heap? Does it matter?
+    
+    Strings are lists to. Why would I mix up Pascal and C style? I can obfuscate. Characters must not be 1B.
+
+    Pepe: "Gigabyte sem, gigabyte tam, to už dneska nikoho nezajímá."
+
+    

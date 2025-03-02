@@ -1,0 +1,7 @@
+void rose() {
+    float x = 1e10;
+
+    enum mary {one, two, three};
+
+    int x = 1 + 2;
+}

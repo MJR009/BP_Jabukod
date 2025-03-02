@@ -1,0 +1,1 @@
+static x = "this should not compile";

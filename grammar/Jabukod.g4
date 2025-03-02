@@ -35,7 +35,8 @@ storageSpecifier
     ;
 
 functionDefinition
-    : type IDENTIFIER LIST_SPECIFIER? '(' functionParameters? ')' statementBlock
+    : type IDENTIFIER '(' functionParameters? ')' statementBlock
+    //: type IDENTIFIER LIST_SPECIFIER? '(' functionParameters? ')' statementBlock
     ;
 
 functionParameters

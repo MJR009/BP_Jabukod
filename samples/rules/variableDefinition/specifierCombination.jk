@@ -1,0 +1,1 @@
+const static bool x[] = {true, false, true};
