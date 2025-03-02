@@ -1,0 +1,9 @@
+int a = 2;
+int b = -3;
+int c = 0;
+int d = -0;
+
+int e = 0xA;
+int f = -0Xffff;
+int g = 0x0;
+int h = 0X0001;

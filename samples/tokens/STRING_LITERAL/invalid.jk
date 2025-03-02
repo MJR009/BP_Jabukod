@@ -1,0 +1,11 @@
+string a = ";
+string b = "Jabukod;
+string c = Jabukod";
+
+";
+
+string d = "Jabukod\"; ";
+
+string e = "\abc";
+string f = "\\\";
+string g = "\U0001f595";

@@ -1,0 +1,6 @@
+int a = 01;
+int b = 0001;
+int c = -001;
+
+int d = 1f;
+int e = 0x-00ff;

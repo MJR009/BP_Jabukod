@@ -1,0 +1,16 @@
+float a = .;
+float b = 1.;
+float c = .1;
+float d = -.;
+float e = -.1;
+float f = -1.;
+
+float g = 10e;
+float h = 1.5E;
+float i = 5.1e;
+
+float j = 2e3.2;
+float k = 2E-1.6;
+float l = 1.2e3.4;
+
+float m = 5.e5;

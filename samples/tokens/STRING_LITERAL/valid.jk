@@ -1,0 +1,6 @@
+string a = "";
+string b = "Jabukod";
+
+string c = "\"\\\n\t";
+
+string d = " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~";
