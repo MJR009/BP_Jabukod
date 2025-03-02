@@ -1,0 +1,7 @@
+void rose() {
+    int x[] = {};
+    x[0] = 1;
+    bool y[][] = {{true}};
+
+    string z[][][] = {{{"Ja"}, {"bu"}}, {{"ko"}, {"d"}}}; 
+}

@@ -1,6 +1,0 @@
-int x[] = {1, 2, 3};
-bool z[][];
-
-int nelze() {
-    string horrible[][][] = {{{"batsh*t insane"}}, {{"jupii"}}};
-}

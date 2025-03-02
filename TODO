@@ -25,7 +25,8 @@
 
 Seznamy jsou definovány implicitně za překladu. Jejich chování odovídá poli. Pro deklarování proměnné jako
 seznam je třeba ji zakončit znaky []. Seznamy jsou homogenní. Podle počtu zakončujicích [] je určen počet rozměrů.
-Jejich velikost je určena za překladu a nelze zadat při zápisu programu. Jsou indexovány od 0.
+Jejich velikost je určena za překladu a nelze zadat při zápisu programu. Jsou indexovány od 0. Rozměrovost se nedá
+po definici měnit, lze pouze předat do jiné proměnné.
 
 -- !!! How do I express IO functionality? -> Raku "spurt" and "slurp"
 
@@ -60,10 +61,23 @@ Jejich velikost je určena za překladu a nelze zadat při zápisu programu. Jso
     -- Teoreticky by se mohla provést implicitní konverze.
     
 -- List access po list literálu? Dává to smysl?
--- Obecně list ve výrazu? Dává vcelku smysl jenom pro přiřazení
+-- !!! Obecně list ve výrazu? Dává vcelku smysl jenom pro přiřazení !!! -> Jenom pro definici proměnné
 
 -- !!! Bylo by lepší rozdělit statetment na vlastní pravidla (teoreticky stačí labely)
 
 -- elseCondtion2.jk je trošku cursed
 
 -- deadExpression projde -> je to OK? -> vytvořit pravidlo assignment
+
+-- Stejně jako je možný prázdný řetězec by měl být možný prázdný seznam
+
+-- !!! Vícerozměrné seznamy se jeví velmi obtížné: nápad
+
+1. rozměr velikost, vzálenost od dat ?, pointer, ...
+2. rozměr velikost, vzálenost od dat ?, pointer, ...
+...
+n. rozměr velikost, data, data, ...
+
+popř. vynechat (není to málo? jako jak to říkal Kláře Křívka - žádný pole)
+
+-- Pokud je IDENTIFIER před BOOL_LITERAL, tak se true a false onačí za identifikátory

@@ -1,0 +1,4 @@
+int x = 0;
+float y = 0.1E-5;
+bool z = true;
+string a = "Jabukod";

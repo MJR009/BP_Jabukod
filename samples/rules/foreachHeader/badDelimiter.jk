@@ -1,0 +1,5 @@
+void rose() {
+    foreach(int x; y) {
+        return x;
+    }
+}

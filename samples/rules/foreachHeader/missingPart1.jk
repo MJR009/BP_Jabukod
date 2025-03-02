@@ -1,0 +1,5 @@
+void rose() {
+    foreach(:x) {
+        return y;
+    }
+}

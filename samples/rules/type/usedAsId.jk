@@ -1,0 +1,6 @@
+bool rose() {
+    int string = 1;
+
+    if (string == 1)    
+    return true;
+}

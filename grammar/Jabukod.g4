@@ -146,7 +146,7 @@ foreachHeader
     ;
 
 list
-    : '{' expression ( ',' expression )* '}' // ARISES NEED FOR DYNAMIC MEMORY ALLOCATION
+    : '{' ( expression ( ',' expression )* )? '}' // ARISES NEED FOR DYNAMIC MEMORY ALLOCATION
     ;
 
 literal
@@ -173,10 +173,6 @@ nonVoidType
 
 // Lexer rules:
 
-IDENTIFIER
-    : ( ALPHA | UNDERSCORE ) ( ALPHA | UNDERSCORE | DIGIT )*
-    ;
-
 LIST_SPECIFIER
     : '[]'+
     ;
@@ -202,6 +198,10 @@ BOOL_LITERAL
 
 STRING_LITERAL
     : '"' ( ~["\\] | ESCAPE_SEQUENCE )*? '"'
+    ;
+
+IDENTIFIER
+    : ( ALPHA | UNDERSCORE ) ( ALPHA | UNDERSCORE | DIGIT )*
     ;
 
 // potential extensions:
