@@ -1,0 +1,5 @@
+enum X {
+    void rose() {
+        return;
+    }
+};

@@ -1,12 +1,6 @@
 int x[] = {1, 2, 3};
-int y = x[2];
 bool z[][];
-
-int main() {
-    z[1][2] = true;
-}
 
 int nelze() {
     string horrible[][][] = {{{"batsh*t insane"}}, {{"jupii"}}};
-    horrid[0][0][0] = "abhorent";
 }

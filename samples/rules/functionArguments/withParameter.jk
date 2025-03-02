@@ -1,0 +1,5 @@
+int mary(int x) {
+    rose(x, int x);
+
+    return 1;
+}

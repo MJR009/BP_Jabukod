@@ -1,6 +1,7 @@
 - Resolve CMake warnings
 - Add a "cleanall" target to remove build dir
 - Add a LICENCE file (if needed)
+- REMOVE mandatory ";" after an enum
 - GRAMMAR:
     - CHECK IF RULES AREN'T UNNESERALI NESTING
 
@@ -51,3 +52,12 @@ Jejich velikost je určena za překladu a nelze zadat při zápisu programu. Jso
 
 -- StrayKw2 a 3 testují situaci, jak se to chová, když jsou za sebou tokeny, co za sebou v žádném
     kontextu nemohou být, a když to lze
+
+-- ANTLR měl problém zparsovat INT_LITERAL a LITERAL. Pokud byly definovány oba, tak nedokázal v enumu přiřadit int
+    tokenu INT_LITERAL, ale jen LITERAL. TOHLE BYLO NAVÍC NEKONZISTENTNÍ MEZI JAVOU A C++.
+    Přepis na neterminál se zdál že problém vyřešil.
+    -- Asi problém? Jak pak poznat, který token byl rozgenerován?
+    -- Teoreticky by se mohla provést implicitní konverze.
+    
+-- List access po list literálu? Dává to smysl?
+-- Obecně list ve výrazu? Dává vcelku smysl jenom pro přiřazení

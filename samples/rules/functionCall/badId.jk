@@ -1,0 +1,6 @@
+float rose() {
+    int x = 1();
+    int y = string();
+
+    return 0.0;
+}

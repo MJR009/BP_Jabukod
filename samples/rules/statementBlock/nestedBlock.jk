@@ -1,0 +1,4 @@
+int rose(bool x){{
+    return 0;
+}
+}

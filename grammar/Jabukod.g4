@@ -59,21 +59,9 @@ enumItem
     : IDENTIFIER ( '=' INT_LITERAL )?
     ;
 
-type
-    : 'void'
-    | nonVoidType
-    ;
-
-nonVoidType
-    : 'int'
-    | 'float'
-    | 'bool'
-    | 'string'
-    | 'enum' IDENTIFIER
-    ;
-
 expression
     : ( functionCall | listAccess | list)
+    //: ( functionCall | listAccess | list listAccess? )
     | <assoc=right> expression '**' expression
     | <assoc=right> ( '-' | '~' | '!' ) expression
     | expression ( '*' | '/' | '%' ) expression
@@ -88,7 +76,7 @@ expression
     | expression '||' expression
     | <assoc=right> expression '=' expression
     | IDENTIFIER
-    | LITERAL
+    | literal
     | '(' expression ')'
     ;
 
@@ -104,16 +92,16 @@ functionCall
     : IDENTIFIER '(' functionArguments? ')'
     ;
 
-listAccess
-    : IDENTIFIER ( '[' expression ']' )+
-    ;
-
 functionArguments
     : functionArgument ( ',' functionArgument )*
     ;
 
 functionArgument
     : expression
+    ;
+
+listAccess
+    : IDENTIFIER ( '[' expression ']' )+
     ;
 
 statementBlock
@@ -157,6 +145,26 @@ list
     : '{' expression ( ',' expression )* '}' // ARISES NEED FOR DYNAMIC MEMORY ALLOCATION
     ;
 
+literal
+    : INT_LITERAL
+    | FLOAT_LITERAL
+    | BOOL_LITERAL
+    | STRING_LITERAL
+    ;
+
+type
+    : 'void'
+    | nonVoidType
+    ;
+
+nonVoidType
+    : 'int'
+    | 'float'
+    | 'bool'
+    | 'string'
+    | 'enum' IDENTIFIER
+    ;
+
 
 
 // Lexer rules:
@@ -167,13 +175,6 @@ IDENTIFIER
 
 LIST_SPECIFIER
     : '[]'+
-    ;
-
-LITERAL
-    : INT_LITERAL
-    | FLOAT_LITERAL
-    | BOOL_LITERAL
-    | STRING_LITERAL
     ;
 
 INT_LITERAL
