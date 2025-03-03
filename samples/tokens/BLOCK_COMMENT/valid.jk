@@ -1,0 +1,18 @@
+/**/
+/*Jabukod*/
+
+/*
+    Another way of obfuscation:
+*/
+
+/* /* */
+
+int/*a*/rose(int x)/*b*/{/*c
+    */if/*d*/(x/*e*/</*f*/2)/*g*/{/*
+h    ij    */return/*k*/1;/*l
+    m*/}/*n*/else/*o*/{/*
+   pqr     */return/*s*/x/*t*/*/*u*/rose/*u*/(x/*v*/-/*w*/1);/*x
+    */}/*y
+*/}/*
+z
+*/

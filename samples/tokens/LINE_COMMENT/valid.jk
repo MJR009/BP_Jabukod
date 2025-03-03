@@ -1,0 +1,12 @@
+//
+// Jabukod
+// //
+
+int x; // Declare x
+
+void rose() { //function
+//body
+    if (y != 0) {//condition
+        return; // return statement
+    }
+}
