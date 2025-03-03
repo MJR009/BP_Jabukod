@@ -1,16 +1,19 @@
 - Resolve CMake warnings
-- Add a "cleanall" target to remove build dir
 - Add a LICENCE file (if needed)
 - REMOVE mandatory ";" after an enum
 - GRAMMAR:
     - CHECK IF RULES AREN'T UNNESERALI NESTING
+- Add directory structure to README.md
+- DOPLNIT ZÁKLADNÍ POJMY DO TEXTU PRÁCE
+
+STUFF TO ADD TO TEXT, TO GO THROUHG:
 
 - text: in case of inconsistencies, inspiration was taken from actual C.g4 grammar
 -- bring up interesting snippets, like the way ';' are delt with in "statement" nonterminal (this specifically was inspired by C.g4)
 -- declaration needen at least for good use of foreach
 -- unary minus with constant taken straight as a negative number to avoid parsing as an expression
 -- unary plus feels like it is not important
--- decision was made to not allow leaading zeros with numbers
+-- decision was made to not allow leading zeros with numbers
 -- expression does not force an assignment -> results in dead code => should there be mandatory "assignment" nonterminal?
 -- typically uninitialised global variables set to 0, local undefined -> nil does not make sense as there is no way
     to convey membership or identity, it's just value, it would need to be zero => implicit inicialization to 0 (has potential of
@@ -27,6 +30,8 @@ Seznamy jsou definovány implicitně za překladu. Jejich chování odovídá po
 seznam je třeba ji zakončit znaky []. Seznamy jsou homogenní. Podle počtu zakončujicích [] je určen počet rozměrů.
 Jejich velikost je určena za překladu a nelze zadat při zápisu programu. Jsou indexovány od 0. Rozměrovost se nedá
 po definici měnit, lze pouze předat do jiné proměnné.
+
+FROM TESTING:
 
 -- !!! How do I express IO functionality? -> Raku "spurt" and "slurp"
 
@@ -78,6 +83,9 @@ po definici měnit, lze pouze předat do jiné proměnné.
 ...
 n. rozměr velikost, data, data, ...
 
-popř. vynechat (není to málo? jako jak to říkal Kláře Křívka - žádný pole)
+popř. vynechat (není to málo? - žádný pole)
 
 -- Pokud je IDENTIFIER před BOOL_LITERAL, tak se true a false onačí za identifikátory
+
+- List může být klidně linked list, může to být mixup pro obfuskaci
+- Lze popřípadě přidat jednoduché comprehensions
