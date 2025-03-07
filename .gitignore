@@ -2,3 +2,9 @@
 build
 .antlr
 *.zip
+
+assembly/experiments/**
+!assembly/experiments/atat
+!assembly/experiments/intel
+!assembly/experiments/**/*.asm
+!assembly/experiments/**/*.s
