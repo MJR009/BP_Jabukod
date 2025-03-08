@@ -117,7 +117,6 @@ statement
     | (   variableDeclaration
         | variableDefinition
         | expression // covers functionCall
-        // possible alternative
         // assignment -> IDENTIFIER listAccess '=' expression
         // functionCall
         | 'return' expression?
@@ -128,6 +127,8 @@ statement
         | 'break'
         | 'redo'
         | 'restart'
+        | 'read' IDENTIFIER
+        | 'write' expression
     ) ';'
     ;
 

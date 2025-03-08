@@ -33,8 +33,6 @@ po definici měnit, lze pouze předat do jiné proměnné.
 
 FROM TESTING:
 
--- !!! How do I express IO functionality? -> Raku "spurt" and "slurp"
-
 - List access cant't be preceeded with an expression, in C only pointer arithmetic allows this, but the principles of this projects
     obfuscation do not
 
