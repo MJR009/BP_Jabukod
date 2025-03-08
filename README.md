@@ -19,17 +19,16 @@ Project requirements are analogous to ANTLR4 version 4.13.2:
 
 The following are recommended steps for first time running the program:
 
-`mkdir build`<br>
-`cd build`<br>
-`cmake ../project/`<br>
-`make`<br>
+`cmake -B build -S project`<br>
+`make -C build`<br>
 
-The resulting executable `jabukod` will be located in the `build` directory.
+The resulting executable `jabukod` will be located in the `build` subdirectory.
 To run, do:
 
 // TODO
 
-There are also other build options. All of the available options are:
+There are also other build options. All of the available options are as follows, they all consider make being run from
+the `build` subdirectory or with `-C build` argument:
 - `make` <br> Build the compiler binary.
 - `make visualise INPUT_FILE=<file from subdir. 'samples'>` <br> Opens a window with a syntax tree visualisation (please note this target requires `java`, `javac` and `dot` installed).
 - `make pack` <br> Creates a `Jabukod.zip` file with all project files needed to build the project.
