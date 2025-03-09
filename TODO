@@ -1,9 +1,8 @@
 - Resolve CMake warnings
 - Add a LICENCE file (if needed)
-- REMOVE mandatory ";" after an enum
-- GRAMMAR:
-    - CHECK IF RULES AREN'T UNNESERALI NESTING
-- Add directory structure to README.md
+
+
+
 - DOPLNIT ZÁKLADNÍ POJMY DO TEXTU PRÁCE
 
 STUFF TO ADD TO TEXT, TO GO THROUHG:

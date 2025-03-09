@@ -4,6 +4,31 @@
 
 // TODO description
 
+### Project structure
+
+Top level project directories are arranged as follows:
+
+```
+BP_Jabukod
+├── assembly
+│   └── experiments
+├── grammar
+│   ├── Jabukod.g4
+│   └── notes
+├── project
+│   ├── cmake
+│   ├── CMakeLists.txt
+│   ├── main.cpp
+│   └── src
+├── README.md
+├── samples
+│   ├── rules
+│   └── tokens
+├── TODO
+└── tool
+    └── antlr-4.13.2-complete.jar
+```
+
 ### Requirements
 
 Project requirements are analogous to ANTLR4 version 4.13.2:
