@@ -2,14 +2,14 @@ enum X {
     ONE,
     TWO,
     THREE
-};
+}
 
 int start() {
     int x = ONE;
     enum X y = THREE;  
 }
 
-enum Y {_1, _2, _3, _4, _5};
+enum Y {_1, _2, _3, _4, _5}
 
 enum Z foo (bool Y, enum X x, int y) {
     return TWO;

@@ -2,4 +2,4 @@ enum X {
     ONE,
     TWO = 1e2,
     THREE
-};
+}

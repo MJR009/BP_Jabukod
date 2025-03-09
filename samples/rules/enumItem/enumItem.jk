@@ -4,4 +4,4 @@ enum X {
     MINUS_THREE = -3,
     NEXT = 0,
     afterThat = 0xff
-};
+}

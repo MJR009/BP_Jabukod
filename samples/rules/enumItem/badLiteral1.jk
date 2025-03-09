@@ -1,4 +1,4 @@
 enum X {
     ONE = "one",
     TWO
-};
+}

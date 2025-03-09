@@ -27,6 +27,7 @@ variableDeclaration
 
 variableDefinition
     : storageSpecifier? nonVoidType IDENTIFIER LIST_SPECIFIER? '=' expression
+    //: variableDeclaration '=' expression
     ;
 
 storageSpecifier
@@ -48,7 +49,7 @@ functionParameter
     ;
 
 enumDefinition
-    : 'enum' IDENTIFIER enumBlock ';'
+    : 'enum' IDENTIFIER enumBlock
     ;
 
 enumBlock
