@@ -118,7 +118,7 @@ statement
     | (   variableDeclaration
         | variableDefinition
         | expression // covers functionCall
-        // assignment -> IDENTIFIER listAccess '=' expression
+        // assignment -> IDENTIFIER listAccess? '=' expression
         // functionCall
         | 'return' expression?
         | 'exit' expression?
