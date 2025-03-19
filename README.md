@@ -42,10 +42,9 @@ Project requirements are analogous to ANTLR4 version 4.13.2:
 
 ### Usage
 
-The following are recommended steps for first time running the program:
+The following is the recommended command for first time building the program:
 
-`cmake -B build -S project`<br>
-`make -C build`<br>
+`cmake -B build -S project && make -C build`<br>
 
 The resulting executable `jabukod` will be located in the `build` subdirectory.
 To run, do:

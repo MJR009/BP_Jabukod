@@ -1,0 +1,22 @@
+int main() {
+    int num = fact(5);
+    write num;
+
+    a();
+
+    return 0;
+}
+
+int fact(int n) {
+    if (n < 2) {
+        return 1;
+    } else {
+        return n * fact(n - 1);
+    }
+}
+
+void a() { int x = b(); c(); d(); }
+void b() { c(); }
+void c() { b(); }
+void d() { write "d"; }
+void e() { write "e"; }

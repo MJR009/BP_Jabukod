@@ -33,7 +33,7 @@ include_directories(${ANTLR4_INCLUDE_DIRS})
 
 antlr_target(JabukodParser ${GRAMMAR_PATH}
     #VISITOR
-    #LISTENER
+    LISTENER
     #PACKAGE jabukod_antlr # Specifies namespace for generated parser and lexer, if needed.
 )
 
