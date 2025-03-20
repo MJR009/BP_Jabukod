@@ -1,4 +1,5 @@
 #include <iostream>
+#include <filesystem>
 
 #include "antlr4-runtime.h"
 #include "JabukodLexer.h"
@@ -34,6 +35,13 @@ int main(int argc, char **argv) {
         return 1;
     }
 
+    const filesystem::path fileName(argv[1]);
+    error_code ec;
+    if ( ! filesystem::is_regular_file(fileName, ec)) {
+        cerr << argv[1] << " is not a file" << endl;
+        return 1;
+    }
+
     ifstream stream;
     stream.open(argv[1], ifstream::in);
     if ( ! stream.is_open()) {
@@ -49,6 +57,9 @@ int main(int argc, char **argv) {
     JabukodParser parser(&tokens);
 
     antlr4::tree::ParseTree *tree = parser.sourceFile(); // from starting nonterminal
+    if (parser.getNumberOfSyntaxErrors() != 0) {
+        return 1;
+    }
 
     //output(tokens, tree, parser);
 

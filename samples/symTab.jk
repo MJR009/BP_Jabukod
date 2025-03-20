@@ -1,0 +1,29 @@
+int x;
+int y;
+void a() {
+    int x;
+    x = 1;
+    y = 2;
+    int y = x;
+}
+
+int f(int x, int y) {
+    g();
+    i = 3;
+    g = 4;
+    return x + y;
+}
+
+void g() {
+    int x = 0;
+    float y;
+    y = 9;
+    f();
+    z();
+    y();
+    x = f;
+}
+
+int main() {
+    f(1, 1);
+}

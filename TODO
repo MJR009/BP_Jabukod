@@ -8,3 +8,11 @@
 -- Quine
 -- Syntax postcard
 -- Nové konstrukce, operátory
+
+- Návratový kód překladače by měl být jiný při syntaktické (nebo sémantické) chybě programu a chybě překladače (zatím všude 1)
+
+TEXT
+
+Pomocí ke generování je přednáška 9 z IFJ
+Doplnit - Jabukód umožňuje dopředné (forward) deklarace
+Další výhoda ANTLR4 - výborný error reporting (podle poznámek na papíře a knihy, str. 150)
