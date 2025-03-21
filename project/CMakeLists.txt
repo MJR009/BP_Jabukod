@@ -69,8 +69,10 @@ add_custom_target(visualise
     COMMAND
         test -f ${CMAKE_CURRENT_SOURCE_DIR}/../samples/$(INPUT_FILE)
         &&
-            java -cp ${ANTLR_EXECUTABLE}:${VISUALISE_BUILD_DIR} org.antlr.v4.gui.TestRig
-                ${GRAMMAR_NAME} ${STARTING_NONTERMINAL} -gui ${CMAKE_CURRENT_SOURCE_DIR}/../samples/$(INPUT_FILE)
+            java
+                -Dorg.antlr.v4.runtime.atn.LL_EXACT_AMBIG_DETECTION=true # report all ambiguities
+                -cp ${ANTLR_EXECUTABLE}:${VISUALISE_BUILD_DIR} org.antlr.v4.gui.TestRig
+                ${GRAMMAR_NAME} ${STARTING_NONTERMINAL} -gui -diagnostics ${CMAKE_CURRENT_SOURCE_DIR}/../samples/$(INPUT_FILE)
         || (
             ${CMAKE_COMMAND} -E echo "" ; &&
             ${CMAKE_COMMAND} -E echo "Input file not provided or invalid" ; &&

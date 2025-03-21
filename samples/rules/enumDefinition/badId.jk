@@ -1,0 +1,1 @@
+enum enum { ONE, TWO, THREE = 4 }

@@ -6,6 +6,9 @@
 #include "JabukodParser.h"
 
 #include "CallGraphListener.h"
+#include "CustomErrorListener.h"
+
+#include "DiagnosticErrorListener.h"
 
 using namespace std;
 
@@ -55,6 +58,15 @@ int main(int argc, char **argv) {
     antlr4::CommonTokenStream tokens(&lexer);
 
     JabukodParser parser(&tokens);
+    //CustomErrorListener customErrorListener;
+    //parser.removeErrorListeners();
+    //parser.addErrorListener(&customErrorListener);
+
+    // DIAGNOSTICS:
+    antlr4::DiagnosticErrorListener diagnosticErrorListener;
+    parser.addErrorListener(&diagnosticErrorListener); // Do NOT remove original listener!
+    parser.getInterpreter<antlr4::atn::ParserATNSimulator>()->
+        setPredictionMode(antlr4::atn::PredictionMode::LL_EXACT_AMBIG_DETECTION);
 
     antlr4::tree::ParseTree *tree = parser.sourceFile(); // from starting nonterminal
     if (parser.getNumberOfSyntaxErrors() != 0) {

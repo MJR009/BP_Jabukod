@@ -8,11 +8,17 @@
 -- Quine
 -- Syntax postcard
 -- Nové konstrukce, operátory
+-- easter egg -> prázdný soubor něco udělá
 
 - Návratový kód překladače by měl být jiný při syntaktické (nebo sémantické) chybě programu a chybě překladače (zatím všude 1)
 
 TEXT
 
+- OPRAVIT v příloze ne/terminální symboly na ne/terminály !!!
+
 Pomocí ke generování je přednáška 9 z IFJ
 Doplnit - Jabukód umožňuje dopředné (forward) deklarace
 Další výhoda ANTLR4 - výborný error reporting (podle poznámek na papíře a knihy, str. 150)
+kniha antlr str. 167 - není vhodné používat sémantické predikáty (vnořené akce) na sémantiku (bruh)
+kniha antlr str. 178 - obecně není vhodné dávat kód aplikace do gramatiky, já to taky dělat nebudu
+protože se při chybách parseru překlad zastaví, je obrovskou výhodou, že pokud projde, můžeme očekávat validní vstup pro generátor

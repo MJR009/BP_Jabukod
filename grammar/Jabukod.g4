@@ -22,11 +22,11 @@ definition
     ;
 
 variableDeclaration
-    : storageSpecifier? nonVoidType IDENTIFIER LIST_SPECIFIER?
+    : storageSpecifier? nonVoidType IDENTIFIER listSpecifier?
     ;
 
 variableDefinition
-    : storageSpecifier? nonVoidType IDENTIFIER LIST_SPECIFIER? '=' expression
+    : storageSpecifier? nonVoidType IDENTIFIER listSpecifier? '=' expression
     //: variableDeclaration '=' expression
     ;
 
@@ -37,7 +37,7 @@ storageSpecifier
 
 functionDefinition
     : type IDENTIFIER '(' functionParameters? ')' statementBlock
-    //: type IDENTIFIER LIST_SPECIFIER? '(' functionParameters? ')' statementBlock
+    //: type IDENTIFIER listSpecifier? '(' functionParameters? ')' statementBlock
     ;
 
 functionParameters
@@ -45,7 +45,7 @@ functionParameters
     ;
 
 functionParameter
-    : nonVoidType IDENTIFIER LIST_SPECIFIER?
+    : nonVoidType IDENTIFIER listSpecifier?
     ;
 
 enumDefinition
@@ -171,13 +171,13 @@ nonVoidType
     | 'enum' IDENTIFIER
     ;
 
+listSpecifier
+    : ( '[' ']' )+
+    ;
+
 
 
 // Lexer rules:
-
-LIST_SPECIFIER
-    : '[]'+
-    ;
 
 INT_LITERAL
     : '-'? ( NUMBER | HEX_NUMBER )

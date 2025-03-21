@@ -8,7 +8,7 @@ bool mary ( bool x, float y )
 void rock (
     string _1, string _2, bool _3
 ) {
-    string x = 42;
+    string x = mary(true, 0);
 
     int y = 69;
     
