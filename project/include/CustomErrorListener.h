@@ -1,9 +1,7 @@
 #pragma once
+#include "common.h"
 
-#include "antlr4-runtime.h"
 #include "BaseErrorListener.h"
-
-using namespace std;
 
 class CustomErrorListener : public antlr4::BaseErrorListener {
 public:

@@ -14,6 +14,9 @@ file(GLOB_RECURSE HDR *.h)
 set(SRC main.cpp)
 add_subdirectory(src)
 
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}) # common.h
+
 ### ANTLR related: ###
 
 set(GRAMMAR_PATH ${CMAKE_CURRENT_SOURCE_DIR}/../grammar/Jabukod.g4)
@@ -42,8 +45,6 @@ include_directories(${ANTLR_JabukodParser_OUTPUT_DIR})
 add_definitions(-DANTLR4CPP_STATIC) # linking to a static library
 
 ###
-
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 
 add_executable(${PROJECT_NAME} ${SRC}
     ${HDR} # own headers

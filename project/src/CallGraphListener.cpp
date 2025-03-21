@@ -1,7 +1,5 @@
 #include "CallGraphListener.h"
 
-using namespace std;
-
 void CallGraphListener::enterFunctionDefinition(JabukodParser::FunctionDefinitionContext *ctx) {
     string name = ctx->IDENTIFIER()->toString();
 

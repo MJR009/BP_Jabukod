@@ -42,6 +42,9 @@ Project requirements are analogous to ANTLR4 version 4.13.2:
 
 ### Usage
 
+Opening the project for the first time in an IDE will likely result in many erors appearing.
+These are dependency error coming from files that are generating during the build process.
+
 The following is the recommended command for first time building the program:
 
 `cmake -B build -S project && make -C build`<br>

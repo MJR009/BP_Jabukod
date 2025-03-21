@@ -1,9 +1,7 @@
 #pragma once
+#include "common.h"
 
-#include "antlr4-runtime.h"
 #include "JabukodBaseListener.h"
-
-using namespace std;
 
 class CallGraphListener : public JabukodBaseListener {
 public:
