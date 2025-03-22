@@ -11,11 +11,12 @@ endif()
 
 file(GLOB_RECURSE HDR *.h)
 
-set(SRC main.cpp)
-add_subdirectory(src)
+file(GLOB_RECURSE SRC *.cpp)
+list(PREPEND SRC main.cpp)
 
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}) # common.h
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include/SymbolTable)
 
 ### ANTLR related: ###
 
@@ -35,7 +36,7 @@ find_package(ANTLR REQUIRED)
 include_directories(${ANTLR4_INCLUDE_DIRS})
 
 antlr_target(JabukodParser ${GRAMMAR_PATH}
-    #VISITOR
+    VISITOR
     LISTENER
     #PACKAGE jabukod_antlr # Specifies namespace for generated parser and lexer, if needed.
 )

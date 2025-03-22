@@ -5,23 +5,25 @@
 
 #include "CallGraphListener.h"
 #include "CustomErrorListener.h"
-
 #include "DiagnosticErrorListener.h"
+
+#include "SymTabGlobalsVisitor.h"
 
 int OpenSourceFile(char *name, ifstream & stream);
 void ChangeErrorListener(JabukodParser & parser);
 
 void DumpTokensAndTree(antlr4::CommonTokenStream & tokens, antlr4::tree::ParseTree *tree, JabukodParser & parser);
+void DumpCallGraph(antlr4::tree::ParseTree *tree);
 
 int main(int argc, char **argv) {
     if (argc != 2) {
         cout << "Usage: ./jabukod <path_to_program>" << endl;
-        return 1;
+        return NOK;
     }
 
     ifstream stream;
     if (OpenSourceFile(argv[1], stream) == 1) {
-        return 1;
+        return NOK;
     }
 
     antlr4::ANTLRInputStream input(stream);
@@ -29,22 +31,25 @@ int main(int argc, char **argv) {
     antlr4::CommonTokenStream tokens(&lexer);
     JabukodParser parser(&tokens);
 
-    ChangeErrorListener(parser);
+    //ChangeErrorListener(parser);
 
     antlr4::tree::ParseTree *tree = parser.sourceFile(); // sourceFile: starting nonterminal
     if (parser.getNumberOfSyntaxErrors() != 0) {
-        return 1;
+        return NOK;
     }
 
     //DumpTokensAndTree(tokens, tree, parser);
+    //DumpCallGraph(tree);
 
+    // Phase 0: instantiate a symbol table
+    SymbolTable symbolTable;
+    // Phase 1: get all global symbols: variables, functions, enums
+    SymTabGlobalsVisitor symTabGlobalsVisitor(symbolTable);
+    symTabGlobalsVisitor.visit(tree);
 
-    antlr4::tree::ParseTreeWalker walker;
-    CallGraphListener listener;
-    walker.walk(&listener, tree);
+    symTabGlobalsVisitor.DumpSymbolTable();
 
-
-    return 0;
+    return OK;
 }
 
 
@@ -54,16 +59,16 @@ int OpenSourceFile(char *name, ifstream & stream) {
     error_code ec;
     if ( ! filesystem::is_regular_file(fileName, ec)) {
         cerr << name << " is not a file" << endl;
-        return 1;
+        return NOK;
     }
 
     stream.open(name, ifstream::in);
     if ( ! stream.is_open()) {
         cerr << "Failed to open file " << name << endl;
-        return 1;
+        return NOK;
     }
 
-    return 0;
+    return OK;
 }
 
 void ChangeErrorListener(JabukodParser & parser) {
@@ -92,4 +97,11 @@ void DumpTokensAndTree(
     cout << endl;
 
     cout << tree->toStringTree(&parser, true) << endl;
+}
+
+void DumpCallGraph(antlr4::tree::ParseTree *tree) {
+    antlr4::tree::ParseTreeWalker walker;
+    CallGraphListener listener;
+
+    walker.walk(&listener, tree);
 }
