@@ -12,6 +12,8 @@ public:
     any visitVariableDefinition(JabukodParser::VariableDefinitionContext *ctx) override;
     any visitFunctionDefinition(JabukodParser::FunctionDefinitionContext *ctx) override;
     any visitEnumDefinition(JabukodParser::EnumDefinitionContext *ctx) override;
+    any visitEnumBlock(JabukodParser::EnumBlockContext *ctx) override;
+    any visitEnumItem(JabukodParser::EnumItemContext *ctx) override;
 
     void DumpSymbolTable();
 

@@ -13,8 +13,9 @@ public:
 
     void AddGlobalVariable(antlr4::Token *variable);
     void AddFunction(antlr4::Token *function);
-    void AddEnum(antlr4::Token *theEnum);
-    
+    EnumTableEntry *AddEnum(antlr4::Token *theEnum);
+    void AddEnumItem(antlr4::Token *itemName, antlr4::Token *itemValue);
+
     bool IsIDAvailable(const string & name, Scope & scope);
 
     void Print();
@@ -25,4 +26,6 @@ private:
     Scope globalScope;
     FunctionTable functionTable;
     EnumTable enumTable;
+public:
+    EnumTableEntry *currentEnum = nullptr; // used for adding entries
 };

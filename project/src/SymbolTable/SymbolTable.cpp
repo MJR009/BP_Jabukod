@@ -20,14 +20,29 @@ void SymbolTable::AddFunction(antlr4::Token *function) {
     }
 }
 
-void SymbolTable::AddEnum(antlr4::Token *theEnum) {
+EnumTableEntry *SymbolTable::AddEnum(antlr4::Token *theEnum) {
     string name = theEnum->getText();
 
     if (this->IsIDAvailable(name, this->globalScope)) {
-        this->enumTable.AddEntry(name);
+        return this->enumTable.AddEntry(name);
     } else {
         this->parser->notifyErrorListeners(theEnum, ENUM_REDEFINITION, nullptr);
+        return nullptr;
     }
+}
+
+void SymbolTable::AddEnumItem(antlr4::Token *itemName, antlr4::Token *itemValue) {
+    string name = itemName->getText();
+    int value;
+    if (itemValue) {
+        value = stoi( itemValue->getText() );
+    } else {
+        value = 0;
+    }
+
+    // TODO kontrola že to tam lze vložit
+
+    this->currentEnum->AddItem(name, value);
 }
 
 

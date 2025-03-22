@@ -36,10 +36,42 @@ any SymTabGlobalsVisitor::visitFunctionDefinition(JabukodParser::FunctionDefinit
 
 any SymTabGlobalsVisitor::visitEnumDefinition(JabukodParser::EnumDefinitionContext *ctx) {
     antlr4::Token *theEnum = ctx->IDENTIFIER()->getSymbol();
-    this->symbolTable.AddEnum(theEnum);
+    this->symbolTable.currentEnum = this->symbolTable.AddEnum(theEnum); // set current enum as active
+
+    this->visit(ctx->enumBlock());
+
+    this->symbolTable.currentEnum = nullptr; // remove active enum
 
     // kontrola kolizí i u itemů, pro každý
     // uložit všechny itemy a jejich hodnoty
+    // TODO metoda pro nastavení a reset aktivního enumu
+
+    return OK;
+}
+
+any SymTabGlobalsVisitor::visitEnumBlock(JabukodParser::EnumBlockContext *ctx) {
+    for (auto & enumItem : ctx->enumItem()) {
+        this->visit(enumItem);
+    }
+
+    return OK;
+}
+
+any SymTabGlobalsVisitor::visitEnumItem(JabukodParser::EnumItemContext *ctx) {
+    antlr4::Token *itemName = ctx->IDENTIFIER()->getSymbol();
+    antlr4::Token *itemValue;
+
+    if (ctx->INT_LITERAL()) {
+        itemValue = ctx->INT_LITERAL()->getSymbol();
+    } else {
+        itemValue = nullptr;
+    }
+
+    // kontrola že item je jednozančné id
+    // Kontrola že už položka se stejným číslem není přítomna
+    // TODO automatické doplnění hodnoty
+
+    this->symbolTable.AddEnumItem(itemName, itemValue);
 
     return OK;
 }

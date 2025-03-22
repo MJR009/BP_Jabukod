@@ -5,7 +5,7 @@
 
 class EnumTable {
 public:
-    void AddEntry(const string & name);
+    EnumTableEntry *AddEntry(const string & name);
 
     bool IsIdTaken(const string & name);
 

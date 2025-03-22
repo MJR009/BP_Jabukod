@@ -41,7 +41,8 @@ int main(int argc, char **argv) {
 
     // Phase 0: instantiate a symbol table
     SymbolTable symbolTable(&parser);
-    // Phase 1: get and check all function and enum identifiers (also gets global variables, generally stuff not to be in AST)
+    // Phase 1: get and check all globaly available symbols;
+    //        ->  function and enum identifiers, also get global variables (generaly stuff that should not be in AST)
     SymTabGlobalsVisitor symTabGlobalsVisitor(symbolTable);
     symTabGlobalsVisitor.visit(tree);
 

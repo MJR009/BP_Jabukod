@@ -1,8 +1,10 @@
 #include "EnumTable.h"
 
-void EnumTable::AddEntry(const string & name) {
+EnumTableEntry *EnumTable::AddEntry(const string & name) {
     EnumTableEntry entry(name);
     this->enums.push_back(entry);
+
+    return &this->enums.back();
 }
 
 
