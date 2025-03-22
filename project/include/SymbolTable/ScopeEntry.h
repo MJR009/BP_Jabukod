@@ -1,9 +1,9 @@
 #pragma once
 #include "common.h"
 
-class FunctionTableEntry {
+class ScopeEntry {
 public:
-    FunctionTableEntry(const string & name) : name(name) {}
+    ScopeEntry(const string & name) : name(name) {}
 
     void Print();
 

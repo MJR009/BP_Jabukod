@@ -6,7 +6,7 @@ void FunctionTable::AddEntry(const string & name) {
 }
 
 void FunctionTable::Print() {
-    for (auto function : this->functions) {
+    for (auto & function : this->functions) {
         function.Print();
     }
 }
