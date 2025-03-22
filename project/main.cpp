@@ -10,7 +10,6 @@
 #include "SymTabGlobalsVisitor.h"
 
 int OpenSourceFile(char *name, ifstream & stream);
-void ChangeErrorListener(JabukodParser & parser);
 
 void DumpTokensAndTree(antlr4::CommonTokenStream & tokens, antlr4::tree::ParseTree *tree, JabukodParser & parser);
 void DumpCallGraph(antlr4::tree::ParseTree *tree);
@@ -31,7 +30,9 @@ int main(int argc, char **argv) {
     antlr4::CommonTokenStream tokens(&lexer);
     JabukodParser parser(&tokens);
 
-    //ChangeErrorListener(parser);
+    parser.removeErrorListeners();
+    CustomErrorListener customErrorListener;
+    parser.addErrorListener(&customErrorListener);
 
     antlr4::tree::ParseTree *tree = parser.sourceFile(); // sourceFile: starting nonterminal
 
@@ -39,8 +40,8 @@ int main(int argc, char **argv) {
     //DumpCallGraph(tree);
 
     // Phase 0: instantiate a symbol table
-    SymbolTable symbolTable( & parser);
-    // Phase 1: get and check all global symbols: variables, functions, enums
+    SymbolTable symbolTable(&parser);
+    // Phase 1: get and check all function and enum identifiers (also gets global variables, generally stuff not to be in AST)
     SymTabGlobalsVisitor symTabGlobalsVisitor(symbolTable);
     symTabGlobalsVisitor.visit(tree);
 
@@ -72,19 +73,6 @@ int OpenSourceFile(char *name, ifstream & stream) {
     return OK;
 }
 
-void ChangeErrorListener(JabukodParser & parser) {
-    // CUSTOM:
-    //CustomErrorListener customErrorListener;
-    //parser.removeErrorListeners();
-    //parser.addErrorListener(&customErrorListener);
-
-    // DIAGNOSTICS: // reports all ambiguities
-    antlr4::DiagnosticErrorListener diagnosticErrorListener;
-    parser.addErrorListener(&diagnosticErrorListener); // Do NOT remove original listener!
-    parser.getInterpreter<antlr4::atn::ParserATNSimulator>()->
-        setPredictionMode(antlr4::atn::PredictionMode::LL_EXACT_AMBIG_DETECTION);
-}
-
 void DumpTokensAndTree(
     antlr4::CommonTokenStream & tokens,
     antlr4::tree::ParseTree *tree,
@@ -106,3 +94,9 @@ void DumpCallGraph(antlr4::tree::ParseTree *tree) {
 
     walker.walk(&listener, tree);
 }
+
+// Diagnostics error listener to report all ambiguities
+//antlr4::DiagnosticErrorListener diagnosticErrorListener;
+//parser.addErrorListener(&diagnosticErrorListener); // Do NOT remove original listener!
+//parser.getInterpreter<antlr4::atn::ParserATNSimulator>()->
+//    setPredictionMode(antlr4::atn::PredictionMode::LL_EXACT_AMBIG_DETECTION);

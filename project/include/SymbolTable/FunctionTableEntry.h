@@ -5,6 +5,8 @@ class FunctionTableEntry {
 public:
     FunctionTableEntry(const string & name) : name(name) {}
 
+    string GetFunctionName();
+
     void Print();
 
 private:

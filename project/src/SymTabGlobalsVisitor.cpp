@@ -1,15 +1,12 @@
 #include "SymTabGlobalsVisitor.h"
 
-// nesmí se míchat deklarace napříč všema tabulkama
-    // stejné id u enumu nebo funkce nebo proměnné
-// přidat pointer na parser pro vypisování chyb s notifyErrorListeners -> stejně se musí projít všechny, aby se vypsalo c nejvíce chyb
+// UKLÁDÁNÍ ENUM ITEMŮ a jejich vícenásobné definice
 
 any SymTabGlobalsVisitor::visitVariableDeclaration(JabukodParser::VariableDeclarationContext *ctx) {
     antlr4::Token *variable = ctx->IDENTIFIER()->getSymbol();
     this->symbolTable.AddGlobalVariable(variable);
 
-    // check na vícenásobnou definici
-    // uožit typ
+    // uložit typ
     // zkontrolovat a uložit specifikátor uložení
     // zadat výchozí hodnotu (VYMYSLET!)
 
@@ -20,7 +17,6 @@ any SymTabGlobalsVisitor::visitVariableDefinition(JabukodParser::VariableDefinit
     antlr4::Token *variable = ctx->IDENTIFIER()->getSymbol();
     this->symbolTable.AddGlobalVariable(variable);
 
-    // check na vícenásobnou definici
     // uožit typ a hodnotu
     // zkontrolovat a uložit specifikátor uložení
     // na pravé straně musí být literál / konstatní hodnota
@@ -29,10 +25,9 @@ any SymTabGlobalsVisitor::visitVariableDefinition(JabukodParser::VariableDefinit
 }
 
 any SymTabGlobalsVisitor::visitFunctionDefinition(JabukodParser::FunctionDefinitionContext *ctx) {
-    string functionName = ctx->IDENTIFIER()->getText();
-    this->symbolTable.AddFunction(functionName);
+    antlr4::Token *function = ctx->IDENTIFIER()->getSymbol();
+    this->symbolTable.AddFunction(function);
 
-    // check jestli není už definovaná
     // uložit signaturu (přetěžování nelze)
     // musí být přítomna funkce main
 
@@ -40,8 +35,8 @@ any SymTabGlobalsVisitor::visitFunctionDefinition(JabukodParser::FunctionDefinit
 }
 
 any SymTabGlobalsVisitor::visitEnumDefinition(JabukodParser::EnumDefinitionContext *ctx) {
-    string enumName = ctx->IDENTIFIER()->getText();
-    this->symbolTable.AddEnum(enumName);
+    antlr4::Token *theEnum = ctx->IDENTIFIER()->getSymbol();
+    this->symbolTable.AddEnum(theEnum);
 
     // kontrola kolizí i u itemů, pro každý
     // uložit všechny itemy a jejich hodnoty

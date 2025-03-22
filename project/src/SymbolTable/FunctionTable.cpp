@@ -7,6 +7,18 @@ void FunctionTable::AddEntry(const string & name) {
 
 
 
+bool FunctionTable::IsIdTaken(const string & name) {
+    for (auto & function : this->functions) {
+        if (function.GetFunctionName() == name) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+
+
 void FunctionTable::Print() {
     for (auto & function : this->functions) {
         function.Print();

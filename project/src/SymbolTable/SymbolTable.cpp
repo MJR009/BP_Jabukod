@@ -1,35 +1,54 @@
 #include "SymbolTable.h"
 
-void SymbolTable::AddFunction(const string & name) {
-    this->functionTable.AddEntry(name);
-}
-
 void SymbolTable::AddGlobalVariable(antlr4::Token *variable) {
     string name = variable->getText();
 
-    if (this->IsVariableInGlobalScope(name)) {
-        this->parser->notifyErrorListeners(variable, VARIABLE_REDEFINITION, nullptr);
-    } else {
+    if (this->IsIDAvailable(name, this->globalScope)) {
         this->globalScope.AddEntry(name);
+    } else {
+        this->parser->notifyErrorListeners(variable, VARIABLE_REDEFINITION, nullptr);
     }
 }
 
-void SymbolTable::AddEnum(const string & name) {
-    this->enumTable.AddEntry(name);
+void SymbolTable::AddFunction(antlr4::Token *function) {
+    string name = function->getText();
+
+    if (this->IsIDAvailable(name, this->globalScope)) {
+        this->functionTable.AddEntry(name);
+    } else {
+        this->parser->notifyErrorListeners(function, FUNCTION_REDEFINITION, nullptr);
+    }
+}
+
+void SymbolTable::AddEnum(antlr4::Token *theEnum) {
+    string name = theEnum->getText();
+
+    if (this->IsIDAvailable(name, this->globalScope)) {
+        this->enumTable.AddEntry(name);
+    } else {
+        this->parser->notifyErrorListeners(theEnum, ENUM_REDEFINITION, nullptr);
+    }
 }
 
 
 
-bool SymbolTable::IsVariableVisible(const string & name, Scope *from) {
-    // go thorough the tree of local scopes from the current one
+bool SymbolTable::IsIDAvailable(const string & name, Scope & scope) {
+    if (this->enumTable.IsIdTaken(name)) {
+        return false;
+    }
 
-    // as last, check global scope
-    //IsVariableInGlobalScope
-    return true;//PLACEHOLDER
-}
+    // enum item
+    //TODO
 
-bool SymbolTable::IsVariableInGlobalScope(const string & name) {
-    return globalScope.IsVariableInScope(name);
+    if (this->functionTable.IsIdTaken(name)) {
+        return false;
+    }
+
+    if (scope.IsVariableInScope(name)) {
+        return false;
+    }
+
+    return true;
 }
 
 

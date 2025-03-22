@@ -9,12 +9,16 @@ void a() {
     int y = x;
 }
 
+//int a;
+
 int f(int x, int y) {
     g();
     i = 3;
     g = 4;
     return x + y;
 }
+
+//int a;
 
 void g() {
     int x = 0;

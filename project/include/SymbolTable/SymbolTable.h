@@ -12,11 +12,10 @@ public:
     SymbolTable(JabukodParser *parser) : parser(parser) {}
 
     void AddGlobalVariable(antlr4::Token *variable);
-    void AddFunction(const string & name);
-    void AddEnum(const string & name);
+    void AddFunction(antlr4::Token *function);
+    void AddEnum(antlr4::Token *theEnum);
     
-    bool IsVariableVisible(const string & name, Scope *from);
-    bool IsVariableInGlobalScope(const string & name);
+    bool IsIDAvailable(const string & name, Scope & scope);
 
     void Print();
 

@@ -3,6 +3,9 @@
 
 #include "BaseErrorListener.h"
 
+#define RED "\033[1;31m"
+#define DEFAULT_COLOR "\033[0m"
+
 class CustomErrorListener : public antlr4::BaseErrorListener {
 public:
     void syntaxError(

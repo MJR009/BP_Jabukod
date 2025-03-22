@@ -7,6 +7,8 @@ class EnumTable {
 public:
     void AddEntry(const string & name);
 
+    bool IsIdTaken(const string & name);
+
     void Print();
 
 private:

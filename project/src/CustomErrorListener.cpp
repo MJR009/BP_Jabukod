@@ -8,6 +8,14 @@ void CustomErrorListener::syntaxError(
     const string &msg, // original text of the error
     exception_ptr e
 ) {
-    //cerr << line << ", " << charPositionInLine << endl;
-    //cerr << msg;
+    cerr <<
+        RED <<
+        "line " <<
+        line <<
+        ":" <<
+        charPositionInLine <<
+        DEFAULT_COLOR <<
+        " " <<
+        msg <<
+        endl;
 }
