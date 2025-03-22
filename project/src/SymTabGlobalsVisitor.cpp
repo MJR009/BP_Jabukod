@@ -1,5 +1,8 @@
 #include "SymTabGlobalsVisitor.h"
 
+// nesmí se míchat deklarace napříč všema tabulkama
+    // stejné id u enumu nebo funkce nebo proměnné
+
 any SymTabGlobalsVisitor::visitVariableDeclaration(JabukodParser::VariableDeclarationContext *ctx) {
     string variableName = ctx->IDENTIFIER()->getText();
     this->symbolTable.AddGlobalVariable(variableName);
@@ -29,13 +32,19 @@ any SymTabGlobalsVisitor::visitFunctionDefinition(JabukodParser::FunctionDefinit
 
     // check jestli není už definovaná
     // uložit signaturu (přetěžování nelze)
+    // musí být přítomna funkce main
 
     return OK;
 }
 
 any SymTabGlobalsVisitor::visitEnumDefinition(JabukodParser::EnumDefinitionContext *ctx) {
-    cout << "ENUM DEF" << endl;
-    return 0;
+    string enumName = ctx->IDENTIFIER()->getText();
+    this->symbolTable.AddEnum(enumName);
+
+    // kontrola kolizí i u itemů, pro každý
+    // uložit všechny itemy a jejich hodnoty
+
+    return OK;
 }
 
 

@@ -8,6 +8,12 @@ void SymbolTable::AddGlobalVariable(const string & name) {
     this->globalScope.AddEntry(name);
 }
 
+void SymbolTable::AddEnum(const string & name) {
+    this->enumTable.AddEntry(name);
+}
+
+
+
 void SymbolTable::Print() {
     cout << "Functions:" << endl;
     cout << "=====" << endl;
@@ -18,4 +24,10 @@ void SymbolTable::Print() {
     cout << "Global variables:" << endl;
     cout << "=====" << endl;
     this->globalScope.Print();
+
+    cout << endl;
+
+    cout << "Enums:" << endl;
+    cout << "=====" << endl;
+    this->enumTable.Print();
 }

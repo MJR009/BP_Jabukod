@@ -5,6 +5,8 @@ void Scope::AddEntry(const string & name) {
     this->variables.push_back(variable);
 }
 
+
+
 void Scope::Print() {
     for (auto & variable : this->variables) {
         variable.Print();
