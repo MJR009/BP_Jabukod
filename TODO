@@ -12,6 +12,8 @@
 
 - Návratový kód překladače by měl být jiný při syntaktické (nebo sémantické) chybě programu a chybě překladače (zatím všude 1)
 
+- Redefinice proměnné by mohla ukázat kde byla poprvé definována
+
 TEXT
 
 - OPRAVIT v příloze ne/terminální symboly na ne/terminály !!!

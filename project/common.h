@@ -2,6 +2,9 @@
 
 #include <iostream>
 #include <filesystem>
+#include <algorithm>
+
+#include "SemanticErrors.h"
 
 #include "antlr4-runtime.h"
 

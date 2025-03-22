@@ -34,18 +34,19 @@ int main(int argc, char **argv) {
     //ChangeErrorListener(parser);
 
     antlr4::tree::ParseTree *tree = parser.sourceFile(); // sourceFile: starting nonterminal
-    if (parser.getNumberOfSyntaxErrors() != 0) {
-        return NOK;
-    }
 
     //DumpTokensAndTree(tokens, tree, parser);
     //DumpCallGraph(tree);
 
     // Phase 0: instantiate a symbol table
-    SymbolTable symbolTable;
-    // Phase 1: get all global symbols: variables, functions, enums
+    SymbolTable symbolTable( & parser);
+    // Phase 1: get and check all global symbols: variables, functions, enums
     SymTabGlobalsVisitor symTabGlobalsVisitor(symbolTable);
     symTabGlobalsVisitor.visit(tree);
+
+    if (parser.getNumberOfSyntaxErrors() != 0) {
+        return NOK;
+    }
 
     symTabGlobalsVisitor.DumpSymbolTable();
 

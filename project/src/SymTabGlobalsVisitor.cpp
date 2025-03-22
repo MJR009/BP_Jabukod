@@ -2,10 +2,11 @@
 
 // nesmí se míchat deklarace napříč všema tabulkama
     // stejné id u enumu nebo funkce nebo proměnné
+// přidat pointer na parser pro vypisování chyb s notifyErrorListeners -> stejně se musí projít všechny, aby se vypsalo c nejvíce chyb
 
 any SymTabGlobalsVisitor::visitVariableDeclaration(JabukodParser::VariableDeclarationContext *ctx) {
-    string variableName = ctx->IDENTIFIER()->getText();
-    this->symbolTable.AddGlobalVariable(variableName);
+    antlr4::Token *variable = ctx->IDENTIFIER()->getSymbol();
+    this->symbolTable.AddGlobalVariable(variable);
 
     // check na vícenásobnou definici
     // uožit typ
@@ -16,13 +17,14 @@ any SymTabGlobalsVisitor::visitVariableDeclaration(JabukodParser::VariableDeclar
 }
 
 any SymTabGlobalsVisitor::visitVariableDefinition(JabukodParser::VariableDefinitionContext *ctx) {
-    string variableName = ctx->IDENTIFIER()->getText();
-    this->symbolTable.AddGlobalVariable(variableName);
+    antlr4::Token *variable = ctx->IDENTIFIER()->getSymbol();
+    this->symbolTable.AddGlobalVariable(variable);
 
     // check na vícenásobnou definici
     // uožit typ a hodnotu
     // zkontrolovat a uložit specifikátor uložení
-
+    // na pravé straně musí být literál / konstatní hodnota
+ 
     return OK;
 }
 
