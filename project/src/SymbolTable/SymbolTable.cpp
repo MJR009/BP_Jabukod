@@ -8,34 +8,10 @@ void SymbolTable::AddGlobalVariable(
 ) {
     string name = variable->getText();
 
-    StorageSpecifier storage;
-    if (storageSpecifier) {
-        string specifierName = storageSpecifier->getText();
-        
-        if (specifierName == "const") {
-            storage = StorageSpecifier::CONST;
-        } else if (specifierName == "static") {
-            storage = StorageSpecifier::STATIC;
-            this->parser->notifyErrorListeners(storageSpecifier->getStart(), STATIC_GLOBAL_VARIABLE, nullptr);
-        }
-    } else {
-        storage = StorageSpecifier::NONE;
-    }
-
-    Type type = ResolveType(variableType);
-
-    any value;
-    if (defaultValue) {
-        if (this->IsOnlyLiteral(defaultValue)) {
-            value = this->GetExplicitDefaultValue(defaultValue->literal());
-            // ZKONTROLOVAT ŽE TYP JE SPRÁVNĚ
-        } else {
-            value = any(0);
-            this->parser->notifyErrorListeners(defaultValue->getStart(), GLOBAL_VARIABLE_EXPRESSION, nullptr);
-        }
-    } else {
-        value = this->GetImplicitDefaultValue(type);
-    }
+    StorageSpecifier storage = this->ResolveStorageSpecifier(storageSpecifier);
+    Type type = this->ResolveType(variableType);
+    any value = this->ResolveDefaultValue(defaultValue, type);
+    // there will always be a value returned to process sematics as long as possible
 
     if (this->IsIDAvailable(name, this->globalScope)) {
         this->globalScope.AddEntry(name, storage, type, value);
@@ -170,6 +146,39 @@ Type SymbolTable::ResolveType(JabukodParser::NonVoidTypeContext *type) {
     return Type::VOID;
 }
 
+StorageSpecifier SymbolTable::ResolveStorageSpecifier(JabukodParser::StorageSpecifierContext *specifier) {
+    if (specifier) {
+        string specifierName = specifier->getText();
+        
+        if (specifierName == "const") { // declaring a constant doesn't make sense
+            if (dynamic_cast<JabukodParser::VariableDeclarationContext *>(specifier->parent)) {
+                this->parser->notifyErrorListeners(specifier->getStart(), CONSTANT_DECLARATION, nullptr);
+            }
+            return StorageSpecifier::CONST;
+        } else if (specifierName == "static") {
+            this->parser->notifyErrorListeners(specifier->getStart(), STATIC_GLOBAL_VARIABLE, nullptr);
+            return StorageSpecifier::STATIC;
+        } else {
+            return StorageSpecifier::NONE;
+        }
+    }
+
+    return StorageSpecifier::NONE;
+}
+
+any SymbolTable::ResolveDefaultValue(JabukodParser::ExpressionContext *expression, Type type) {
+    if (expression) {
+        if (this->IsOnlyLiteral(expression)) {
+            return this->ResolveExplicitDefaultValue(expression->literal(), type);
+        } else {
+            this->parser->notifyErrorListeners(expression->getStart(), GLOBAL_VARIABLE_DEFINITION_EXPRESSION, nullptr);
+            return any(0);
+        }
+    } else {
+        return this->ImplicitDefaultValue(type);
+    }
+}
+
 bool SymbolTable::IsOnlyLiteral(JabukodParser::ExpressionContext *expression) {
     if (expression->literal()) {
         return true;
@@ -178,7 +187,7 @@ bool SymbolTable::IsOnlyLiteral(JabukodParser::ExpressionContext *expression) {
     return false;
 }
 
-any SymbolTable::GetImplicitDefaultValue(Type type){
+any SymbolTable::ImplicitDefaultValue(Type type){
     switch (type) {
         case Type::INT:
             return any( 0 );
@@ -193,16 +202,25 @@ any SymbolTable::GetImplicitDefaultValue(Type type){
     return any(0); // suppress warning
 }
 
-any SymbolTable::GetExplicitDefaultValue(JabukodParser::LiteralContext *defaultValue) {
+any SymbolTable::ResolveExplicitDefaultValue(JabukodParser::LiteralContext *defaultValue, Type type) {
     if (defaultValue->INT_LITERAL()) {
+        if (type != Type::INT) {
+            this->parser->notifyErrorListeners(defaultValue->INT_LITERAL()->getSymbol(), MISPLACED_INT_LITERAL, nullptr);
+        }
         return any( stoi( defaultValue->INT_LITERAL()->getText() ) );   
     }
 
     if (defaultValue->FLOAT_LITERAL()) {
+        if (type != Type::FLOAT) {
+            this->parser->notifyErrorListeners(defaultValue->FLOAT_LITERAL()->getSymbol(), MISPLACED_FLOAT_LITERAL, nullptr);
+        }
         return any( stof( defaultValue->FLOAT_LITERAL()->getText() ) );
     }
 
     if (defaultValue->BOOL_LITERAL()) {
+        if (type != Type::BOOL) {
+            this->parser->notifyErrorListeners(defaultValue->BOOL_LITERAL()->getSymbol(), MISPLACED_BOOL_LITERAL, nullptr);
+        }
         if (defaultValue->BOOL_LITERAL()->getText() == "true") {
             return any(true);
         } else {
@@ -211,6 +229,9 @@ any SymbolTable::GetExplicitDefaultValue(JabukodParser::LiteralContext *defaultV
     }
 
     if (defaultValue->STRING_LITERAL()) {
+        if (type != Type::STRING) {
+            this->parser->notifyErrorListeners(defaultValue->STRING_LITERAL()->getSymbol(), MISPLACED_STRING_LITERAL, nullptr);
+        }
         return any( this->ReplaceEscapeSequences( defaultValue->STRING_LITERAL()->getText() ) );
     }
 
@@ -245,10 +266,4 @@ string SymbolTable::ReplaceEscapeSequences(const string & str) {
     }
 
     return resolved;
-}
-
-
-
-bool SymbolTable::IsOfType(JabukodParser::LiteralContext *literal, Type type) {
-
 }

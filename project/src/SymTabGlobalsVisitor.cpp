@@ -1,5 +1,7 @@
 #include "SymTabGlobalsVisitor.h"
 
+// TODO ZPRACOVÁNÍ POLÍ A ENUMŮ 
+
 any SymTabGlobalsVisitor::visitSourceFile(JabukodParser::SourceFileContext *ctx) {
     visitChildren(ctx);
     this->symbolTable.CheckIfMainPresent();
@@ -22,7 +24,6 @@ any SymTabGlobalsVisitor::visitVariableDeclaration(JabukodParser::VariableDeclar
     this->symbolTable.AddGlobalVariable(variable, storageSpecifier, type, nullptr);
 
     // zajistit zpracování polí a enumů !!!!
-    // deklarace na konstantu nedává smysl
 
     return OK;
 }

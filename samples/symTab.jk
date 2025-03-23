@@ -1,7 +1,7 @@
-string x = "Hello";
-const int y = 0;
+string x = "hello\n";
+const int y = 1;
 bool z = true;
-float n = 3.14;
+float n = 3.14e-3;
 //string x = 0;
 void a() {
     int x;

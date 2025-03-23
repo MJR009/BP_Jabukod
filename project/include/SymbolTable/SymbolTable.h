@@ -43,11 +43,14 @@ private:
     bool IsEnumValueAvailable(const int & value);
 
     Type ResolveType(JabukodParser::NonVoidTypeContext *type);
+    StorageSpecifier ResolveStorageSpecifier(JabukodParser::StorageSpecifierContext *specifier);
+    any ResolveDefaultValue(JabukodParser::ExpressionContext *expression, Type type);
     bool IsOnlyLiteral(JabukodParser::ExpressionContext *expression);
-    any GetImplicitDefaultValue(Type type); // for declarations
-    any GetExplicitDefaultValue(JabukodParser::LiteralContext *defaultValue); // for global definitions
+    any ImplicitDefaultValue(Type type); // for declarations
+    any ResolveExplicitDefaultValue(
+        JabukodParser::LiteralContext *defaultValue,
+        Type type    
+    ); // for global definitions, also does type checking
 
     string ReplaceEscapeSequences(const string & str);
-
-    bool IsOfType(JabukodParser::LiteralContext *literal, Type type);
 };
