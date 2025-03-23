@@ -8,6 +8,7 @@ public:
     void AddItem(string itemName, int itemValue);
 
     string GetEntryName();
+    vector<pair<string, int>> GetEntryItems();
 
     void Print();
 

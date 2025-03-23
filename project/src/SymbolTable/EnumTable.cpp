@@ -14,6 +14,12 @@ bool EnumTable::IsIdTaken(const string & name) {
         if (entry.GetEntryName() == name) {
             return true;
         }
+
+        for (auto & item : entry.GetEntryItems()) {
+            if (item.first == name) {
+                return true;
+            }
+        }
     }
 
     return false;

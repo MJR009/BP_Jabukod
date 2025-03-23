@@ -18,10 +18,13 @@ public:
 
     bool IsIDAvailable(const string & name, Scope & scope);
 
+    void SetCurrentEnum(EnumTableEntry *theEnum);
+    void RemoveCurrentEnum();
+
     void Print();
 
 private:
-    JabukodParser *parser; // for semantic error reporting via notifyErrorListeners
+    JabukodParser *parser; // for semantic error reporting via notifyErrorListeners()
 
     Scope globalScope;
     FunctionTable functionTable;

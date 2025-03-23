@@ -1,13 +1,17 @@
 #include "EnumTableEntry.h"
 
-string EnumTableEntry::GetEntryName() {
-    return this->name;
+void EnumTableEntry::AddItem(string itemName, int itemValue) {
+    this->items.push_back( { itemName, itemValue } );
 }
 
 
 
-void EnumTableEntry::AddItem(string itemName, int itemValue) {
-    this->items.push_back( { itemName, itemValue } );
+string EnumTableEntry::GetEntryName() {
+    return this->name;
+}
+
+vector<pair<string, int>> EnumTableEntry::GetEntryItems() {
+    return this->items;
 }
 
 

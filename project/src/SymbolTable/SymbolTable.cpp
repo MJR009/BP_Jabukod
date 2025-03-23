@@ -33,6 +33,15 @@ EnumTableEntry *SymbolTable::AddEnum(antlr4::Token *theEnum) {
 
 void SymbolTable::AddEnumItem(antlr4::Token *itemName, antlr4::Token *itemValue) {
     string name = itemName->getText();
+
+    if ( ! this->IsIDAvailable(name, this->globalScope)) {
+        this->parser->notifyErrorListeners(itemName, ENUM_ITEM_REDEFINITION, nullptr);
+    }
+
+    // KONTROLA HODNOTY
+    // nesmí být přítomno stejnmé číslo ve stejném enumu
+    // pokud hodnota není explicitně musí se doplnit
+
     int value;
     if (itemValue) {
         value = stoi( itemValue->getText() );
@@ -40,20 +49,15 @@ void SymbolTable::AddEnumItem(antlr4::Token *itemName, antlr4::Token *itemValue)
         value = 0;
     }
 
-    // TODO kontrola že to tam lze vložit
-
     this->currentEnum->AddItem(name, value);
 }
 
 
 
 bool SymbolTable::IsIDAvailable(const string & name, Scope & scope) {
-    if (this->enumTable.IsIdTaken(name)) {
+    if (this->enumTable.IsIdTaken(name)) { // checks enums and their items
         return false;
     }
-
-    // enum item
-    //TODO
 
     if (this->functionTable.IsIdTaken(name)) {
         return false;
@@ -64,6 +68,16 @@ bool SymbolTable::IsIDAvailable(const string & name, Scope & scope) {
     }
 
     return true;
+}
+
+
+
+void SymbolTable::SetCurrentEnum(EnumTableEntry *theEnum) {
+    this->currentEnum = theEnum;
+}
+
+void SymbolTable::RemoveCurrentEnum() {
+    this->currentEnum = nullptr;
 }
 
 
