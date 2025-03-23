@@ -36,9 +36,8 @@ int main(int argc, char **argv) {
 
     antlr4::tree::ParseTree *tree = parser.sourceFile(); // sourceFile: starting nonterminal
 
-    //DumpTokensAndTree(tokens, tree, parser);
-    //DumpCallGraph(tree);
-
+    // SEMANTIC CHECKS
+    customErrorListener.SetSemanticPhase();
     // Phase 0: instantiate a symbol table
     SymbolTable symbolTable(&parser);
     // Phase 1: get and check all globaly available symbols;
@@ -49,7 +48,6 @@ int main(int argc, char **argv) {
     if (parser.getNumberOfSyntaxErrors() != 0) {
         return NOK;
     }
-
     symTabGlobalsVisitor.DumpSymbolTable();
 
     return OK;
@@ -73,6 +71,8 @@ int OpenSourceFile(char *name, ifstream & stream) {
 
     return OK;
 }
+
+
 
 void DumpTokensAndTree(
     antlr4::CommonTokenStream & tokens,

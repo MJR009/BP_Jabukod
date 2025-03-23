@@ -3,8 +3,18 @@
 
 #include "BaseErrorListener.h"
 
-#define RED "\033[1;31m"
-#define DEFAULT_COLOR "\033[0m"
+#define BOLD "\033[1m"
+#define DIM "\033[2m"
+
+#define RED "\033[31m"
+#define ORANGE "\033[38;2;255;165;0m"
+
+#define DEFAULT "\033[0m"
+
+enum PHASE {
+    SYNTAX, SEMANTIC
+};
+typedef enum PHASE Phase;
 
 class CustomErrorListener : public antlr4::BaseErrorListener {
 public:
@@ -17,4 +27,8 @@ public:
         exception_ptr e
     ) override;
 
+    void SetSemanticPhase();
+
+private:
+    Phase phase = Phase::SYNTAX;
 };
