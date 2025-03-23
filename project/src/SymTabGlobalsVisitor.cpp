@@ -1,6 +1,10 @@
 #include "SymTabGlobalsVisitor.h"
 
 // TODO ZPRACOVÁNÍ POLÍ A ENUMŮ 
+// TODO IMPLICITNÍ KONVERZE
+// !!!!! potřeba zkontrovlovat co má vlatní namespace a co ne...
+// TODO NÁZEV FUNKCE JE VLASTNÍ NAMESPACE
+// TODO NÁZEV ENUMU JE VLASTNÍ NAMESPACE -> nemůže kolidovat s proměnnými a položkami enumu
 
 any SymTabGlobalsVisitor::visitSourceFile(JabukodParser::SourceFileContext *ctx) {
     visitChildren(ctx);
@@ -23,7 +27,7 @@ any SymTabGlobalsVisitor::visitVariableDeclaration(JabukodParser::VariableDeclar
 
     this->symbolTable.AddGlobalVariable(variable, storageSpecifier, type, nullptr);
 
-    // zajistit zpracování polí a enumů !!!!
+    // viz. TODOs
 
     return OK;
 }
@@ -43,18 +47,16 @@ any SymTabGlobalsVisitor::visitVariableDefinition(JabukodParser::VariableDefinit
 
     this->symbolTable.AddGlobalVariable(variable, storageSpecifier, type, toAssign);
 
-    // zajitstit zpracování polí a enumů !!!!
+    // viz. TODOs
  
     return OK;
 }
 
 any SymTabGlobalsVisitor::visitFunctionDefinition(JabukodParser::FunctionDefinitionContext *ctx) {
     antlr4::Token *function = ctx->IDENTIFIER()->getSymbol();
-    this->symbolTable.AddFunction(function);
-
-    // uložit signaturu (přetěžování nelze)
-    // definovat hlavní scope
-
+    JabukodParser::TypeContext *returnType = ctx->type();
+    this->symbolTable.AddFunction(function, returnType);
+    
     return OK;
 }
 

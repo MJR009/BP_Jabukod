@@ -8,4 +8,8 @@ string FunctionTableEntry::GetFunctionName() {
 
 void FunctionTableEntry::Print() {
     cout << this->name << endl;
+
+    cout << "  < returns: " << TypeFunctions::TypeToString(this->returnType) << " >";
+
+    cout << endl;
 }

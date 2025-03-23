@@ -9,7 +9,9 @@ string ScopeEntry::GetEntryName() {
 void ScopeEntry::Print() {
     cout << this->name << " ";
 
-    cout << "< ";
+    cout << endl;
+
+    cout << "  < ";
     switch (this->storageSpecifier) {
         case StorageSpecifier::NONE:
             cout << "-";
@@ -23,28 +25,17 @@ void ScopeEntry::Print() {
             cout << "static";
             break;
     }
-    cout << " ";
-    switch (this->type) {
-        case Type::INT:
-            cout << "INT";
-            break;
-        case Type::FLOAT:
-            cout << "FLOAT";
-            break;
-        case Type::BOOL:
-            cout << "BOOL";
-            break;
-        case Type::STRING:
-            cout << "STRING";
-            break;
-    }    
-    cout << " >";
 
-    cout << " < default : ";
+    cout << " " << TypeFunctions::TypeToString(this->type) << " >";
+
+    cout << endl;
+
+    cout << "  < default : ";
     switch (this->type) {
         case Type::INT:
             cout << any_cast<int>(this->defaultValue);
             break;
+
         case Type::FLOAT:
             if (any_cast<float>(this->defaultValue) == 0.0) {
                 cout << fixed << setprecision(1) << any_cast<float>(this->defaultValue);
@@ -52,6 +43,7 @@ void ScopeEntry::Print() {
                 cout << any_cast<float>(this->defaultValue);
             }
             break;
+
         case Type::BOOL:
             if (any_cast<bool>(this->defaultValue)) {
                 cout << "true";
@@ -59,6 +51,7 @@ void ScopeEntry::Print() {
                 cout << "false";
             }
             break;
+            
         case Type::STRING:
             cout << "\"" << any_cast<string>(this->defaultValue) << "\"";
             break;        

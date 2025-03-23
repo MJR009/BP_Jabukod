@@ -1,7 +1,7 @@
 #include "FunctionTable.h"
 
-void FunctionTable::AddEntry(const string & name) {
-    FunctionTableEntry function(name);
+void FunctionTable::AddEntry(const string & name, const Type returnType) {
+    FunctionTableEntry function(name, returnType);
     this->functions.push_back(function);
 }
 

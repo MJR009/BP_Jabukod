@@ -5,7 +5,7 @@
 
 class FunctionTable {
 public:
-    void AddEntry(const string & name);
+    void AddEntry(const string & name, const Type returnType);
 
     bool IsIdTaken(const string & name);
 

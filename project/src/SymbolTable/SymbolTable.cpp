@@ -9,7 +9,7 @@ void SymbolTable::AddGlobalVariable(
     string name = variable->getText();
 
     StorageSpecifier storage = this->ResolveStorageSpecifier(storageSpecifier);
-    Type type = this->ResolveType(variableType);
+    Type type = this->ResolveNonVoidType(variableType);
     any value = this->ResolveDefaultValue(defaultValue, type);
     // there will always be a value returned to process sematics as long as possible
 
@@ -20,11 +20,14 @@ void SymbolTable::AddGlobalVariable(
     }
 }
 
-void SymbolTable::AddFunction(antlr4::Token *function) {
+void SymbolTable::AddFunction(antlr4::Token *function, JabukodParser::TypeContext *returnType) {
     string name = function->getText();
+    Type type = this->ResolveType(returnType);
+
+    // uložit parametry - definovat hlavní scope
 
     if (this->IsIDAvailable(name, this->globalScope)) {
-        this->functionTable.AddEntry(name);
+        this->functionTable.AddEntry(name, type);
     } else {
         this->parser->notifyErrorListeners(function, FUNCTION_REDEFINITION, nullptr);
     }
@@ -130,7 +133,7 @@ bool SymbolTable::IsEnumValueAvailable(const int & value) {
 
 
 
-Type SymbolTable::ResolveType(JabukodParser::NonVoidTypeContext *type) {
+Type SymbolTable::ResolveNonVoidType(JabukodParser::NonVoidTypeContext *type) {
     string typeName = type->getText();
 
     if (typeName == "int") {
@@ -145,6 +148,26 @@ Type SymbolTable::ResolveType(JabukodParser::NonVoidTypeContext *type) {
 
     return Type::VOID;
 }
+
+Type SymbolTable::ResolveType(JabukodParser::TypeContext *type) {
+    string typeName = type->getText();
+
+    if (typeName == "int") {
+        return Type::INT;
+    } else if (typeName == "float") {
+        return Type::FLOAT;
+    } else if (typeName == "bool") {
+        return Type::BOOL;
+    } else if (typeName == "string") {
+        return Type::STRING;
+    } else if (typeName == "void") {
+        return Type::VOID;
+    }
+
+    return Type::VOID;
+}
+
+
 
 StorageSpecifier SymbolTable::ResolveStorageSpecifier(JabukodParser::StorageSpecifierContext *specifier) {
     if (specifier) {
@@ -175,7 +198,7 @@ any SymbolTable::ResolveDefaultValue(JabukodParser::ExpressionContext *expressio
             return any(0);
         }
     } else {
-        return this->ImplicitDefaultValue(type);
+        return this->GetImplicitDefaultValue(type);
     }
 }
 
@@ -187,7 +210,7 @@ bool SymbolTable::IsOnlyLiteral(JabukodParser::ExpressionContext *expression) {
     return false;
 }
 
-any SymbolTable::ImplicitDefaultValue(Type type){
+any SymbolTable::GetImplicitDefaultValue(Type type){
     switch (type) {
         case Type::INT:
             return any( 0 );

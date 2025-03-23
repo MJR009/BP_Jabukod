@@ -17,7 +17,7 @@ public:
         JabukodParser::NonVoidTypeContext *variableType,
         JabukodParser::ExpressionContext *defaultValue
     );
-    void AddFunction(antlr4::Token *function);
+    void AddFunction(antlr4::Token *function, JabukodParser::TypeContext *returnType);
     EnumTableEntry *AddEnum(antlr4::Token *theEnum);
     void AddEnumItem(antlr4::Token *itemName, antlr4::Token *itemValue);
 
@@ -42,11 +42,13 @@ private:
     bool IsIDAvailable(const string & name, Scope & scope);
     bool IsEnumValueAvailable(const int & value);
 
-    Type ResolveType(JabukodParser::NonVoidTypeContext *type);
+    Type ResolveNonVoidType(JabukodParser::NonVoidTypeContext *type);
+    Type ResolveType(JabukodParser::TypeContext *type);
+
     StorageSpecifier ResolveStorageSpecifier(JabukodParser::StorageSpecifierContext *specifier);
     any ResolveDefaultValue(JabukodParser::ExpressionContext *expression, Type type);
     bool IsOnlyLiteral(JabukodParser::ExpressionContext *expression);
-    any ImplicitDefaultValue(Type type); // for declarations
+    any GetImplicitDefaultValue(Type type); // for declarations
     any ResolveExplicitDefaultValue(
         JabukodParser::LiteralContext *defaultValue,
         Type type    
