@@ -25,6 +25,16 @@ bool EnumTable::IsIdTaken(const string & name) {
     return false;
 }
 
+bool EnumTable::IsItemValueAvailable(const int & value, EnumTableEntry *theEnum) {
+    for (auto & item : theEnum->GetEntryItems()) {
+        if (item.second == value) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
 
 
 void EnumTable::Print() {

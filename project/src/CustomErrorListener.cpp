@@ -5,7 +5,7 @@ void CustomErrorListener::syntaxError(
     antlr4::Token *offendingSymbol,
     size_t line,
     size_t charPositionInLine,
-    const string &msg, // original text of the error
+    const string & msg, // original text of the error
     exception_ptr e
 ) {
     cerr << BOLD;
@@ -23,6 +23,8 @@ void CustomErrorListener::syntaxError(
         "\t" << DIM << msg << DEFAULT <<
     endl;
 }
+
+
 
 void CustomErrorListener::SetSemanticPhase() {
     this->phase = Phase::SEMANTIC;

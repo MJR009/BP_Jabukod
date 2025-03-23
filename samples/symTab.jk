@@ -11,7 +11,7 @@ void a() {
 
 //int a;
 
-enum _1 {one, two, three = -3}
+enum _1 {one, two, three = -3, four, five}//, six}
 
 int f(int x, int y) {
     g();
@@ -37,5 +37,5 @@ int main() {
 }
 
 enum X {
-    ONE, TWO = 5, THREE
+    ONE, TWO = 7, THREE
 }

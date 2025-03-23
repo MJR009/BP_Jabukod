@@ -38,18 +38,21 @@ void SymbolTable::AddEnumItem(antlr4::Token *itemName, antlr4::Token *itemValue)
         this->parser->notifyErrorListeners(itemName, ENUM_ITEM_REDEFINITION, nullptr);
     }
 
-    // KONTROLA HODNOTY
-    // nesmí být přítomno stejnmé číslo ve stejném enumu
-    // pokud hodnota není explicitně musí se doplnit
-
-    int value;
     if (itemValue) {
-        value = stoi( itemValue->getText() );
-    } else {
-        value = 0;
+        this->currentEnumItemvalue = stoi( itemValue->getText() );
     }
 
-    this->currentEnum->AddItem(name, value);
+    if ( ! this->IsEnumValueAvailable(this->currentEnumItemvalue)) {
+        if (itemValue) {
+            this->parser->notifyErrorListeners(itemValue, REPEATED_ENUM_VALUE, nullptr);
+        } else {
+            this->parser->notifyErrorListeners(itemName, REPEATED_CONJURED_ENUM_VALUE, nullptr);
+        }
+    }
+
+    this->currentEnum->AddItem(name, this->currentEnumItemvalue);
+
+    this->currentEnumItemvalue++;
 }
 
 
@@ -70,10 +73,15 @@ bool SymbolTable::IsIDAvailable(const string & name, Scope & scope) {
     return true;
 }
 
+bool SymbolTable::IsEnumValueAvailable(const int & value) {
+    return this->enumTable.IsItemValueAvailable(value, this->currentEnum);
+}
+
 
 
 void SymbolTable::SetCurrentEnum(EnumTableEntry *theEnum) {
     this->currentEnum = theEnum;
+    this->currentEnumItemvalue = 0;
 }
 
 void SymbolTable::RemoveCurrentEnum() {

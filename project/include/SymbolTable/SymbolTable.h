@@ -17,6 +17,7 @@ public:
     void AddEnumItem(antlr4::Token *itemName, antlr4::Token *itemValue);
 
     bool IsIDAvailable(const string & name, Scope & scope);
+    bool IsEnumValueAvailable(const int & value);
 
     void SetCurrentEnum(EnumTableEntry *theEnum);
     void RemoveCurrentEnum();
@@ -31,4 +32,5 @@ private:
     EnumTable enumTable;
 public:
     EnumTableEntry *currentEnum = nullptr; // used for adding entries
+    int currentEnumItemvalue = 0;
 };

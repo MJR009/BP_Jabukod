@@ -23,7 +23,7 @@ public:
         antlr4::Token *offendingSymbol,
         size_t line,
         size_t charPositionInLine,
-        const string &msg,
+        const string & msg,
         exception_ptr e
     ) override;
 

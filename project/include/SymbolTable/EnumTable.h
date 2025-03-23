@@ -8,6 +8,7 @@ public:
     EnumTableEntry *AddEntry(const string & name);
 
     bool IsIdTaken(const string & name);
+    bool IsItemValueAvailable(const int & value, EnumTableEntry *theEnum);
 
     void Print();
 
