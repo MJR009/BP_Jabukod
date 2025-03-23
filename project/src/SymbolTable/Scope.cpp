@@ -1,7 +1,7 @@
 #include "Scope.h"
 
-void Scope::AddEntry(const string & name, const StorageSpecifier specifier) {
-    ScopeEntry variable(name, specifier);
+void Scope::AddEntry(const string & name, const StorageSpecifier specifier, const Type type) {
+    ScopeEntry variable(name, specifier, type);
     this->variables.push_back(variable);
 }
 

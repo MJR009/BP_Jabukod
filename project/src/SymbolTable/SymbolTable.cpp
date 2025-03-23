@@ -1,6 +1,10 @@
 #include "SymbolTable.h"
 
-void SymbolTable::AddGlobalVariable(antlr4::Token *variable, JabukodParser::StorageSpecifierContext *storageSpecifier) {
+void SymbolTable::AddGlobalVariable(
+    antlr4::Token *variable,
+    JabukodParser::StorageSpecifierContext *storageSpecifier,
+    JabukodParser::NonVoidTypeContext *variableType
+) {
     string name = variable->getText();
 
     StorageSpecifier storage;
@@ -9,7 +13,7 @@ void SymbolTable::AddGlobalVariable(antlr4::Token *variable, JabukodParser::Stor
         
         if (specifierName == "const") {
             storage = StorageSpecifier::CONST;
-        } else {
+        } else if (specifierName == "static") {
             storage = StorageSpecifier::STATIC;
             this->parser->notifyErrorListeners(storageSpecifier->getStart(), STATIC_GLOBAL_VARIABLE, nullptr);
         }
@@ -17,8 +21,10 @@ void SymbolTable::AddGlobalVariable(antlr4::Token *variable, JabukodParser::Stor
         storage = StorageSpecifier::NONE;
     }
 
+    Type type = ResolveType(variableType);
+
     if (this->IsIDAvailable(name, this->globalScope)) {
-        this->globalScope.AddEntry(name, storage);
+        this->globalScope.AddEntry(name, storage, type);
     } else {
         this->parser->notifyErrorListeners(variable, VARIABLE_REDEFINITION, nullptr);
     }
@@ -71,26 +77,6 @@ void SymbolTable::AddEnumItem(antlr4::Token *itemName, antlr4::Token *itemValue)
 
 
 
-bool SymbolTable::IsIDAvailable(const string & name, Scope & scope) {
-    if (this->enumTable.IsIdTaken(name)) { // checks enums and their items
-        return false;
-    }
-
-    if (this->functionTable.IsIdTaken(name)) {
-        return false;
-    }
-
-    if (scope.IsVariableInScope(name)) {
-        return false;
-    }
-
-    return true;
-}
-
-bool SymbolTable::IsEnumValueAvailable(const int & value) {
-    return this->enumTable.IsItemValueAvailable(value, this->currentEnum);
-}
-
 void SymbolTable::CheckIfMainPresent() {
     if ( ! this->functionTable.IsIdTaken("main")) {
         this->parser->notifyErrorListeners(MISSING_MAIN);
@@ -126,4 +112,46 @@ void SymbolTable::Print() {
     cout << "Enums:" << endl;
     cout << "=====" << endl;
     this->enumTable.Print();
+}
+
+
+
+// PRIVATE:
+
+bool SymbolTable::IsIDAvailable(const string & name, Scope & scope) {
+    if (this->enumTable.IsIdTaken(name)) { // checks enums and their items
+        return false;
+    }
+
+    if (this->functionTable.IsIdTaken(name)) {
+        return false;
+    }
+
+    if (scope.IsVariableInScope(name)) {
+        return false;
+    }
+
+    return true;
+}
+
+bool SymbolTable::IsEnumValueAvailable(const int & value) {
+    return this->enumTable.IsItemValueAvailable(value, this->currentEnum);
+}
+
+
+
+Type SymbolTable::ResolveType(JabukodParser::NonVoidTypeContext *type) {
+    string typeName = type->getText();
+
+    if (typeName == "int") {
+        return Type::INT;
+    } else if (typeName == "float") {
+        return Type::FLOAT;
+    } else if (typeName == "bool") {
+        return Type::BOOL;
+    } else if (typeName == "string") {
+        return Type::STRING;
+    }
+
+    return Type::VOID;
 }

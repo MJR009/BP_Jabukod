@@ -42,8 +42,8 @@ Project requirements are analogous to ANTLR4 version 4.13.2:
 
 ### Usage
 
-Opening the project for the first time in an IDE will likely result in many erors appearing.
-These are dependency error coming from files that are generating during the build process.
+Opening the project for the first time in an IDE will likely result in many errors appearing.
+These are dependency errors from files to be generated during build.
 
 The following is the recommended command for first time building the program:
 
@@ -57,7 +57,8 @@ To run, do:
 There are also other build options. All of the available options are as follows, they all consider make being run from
 the `build` subdirectory or with `-C build` argument:
 - `make` <br> Build the compiler binary.
-- `make visualise INPUT_FILE=<file from subdir. 'samples'>` <br> Opens a window with a syntax tree visualisation (please note this target requires `java`, `javac` and `dot` installed).
+- `make visualise INPUT_FILE=<file from subdir. 'samples'>` <br> Opens a window
+with a syntax tree visualisation (note this target requires `java`, `javac` and `dot` installed).
 - `make pack` <br> Creates a `Jabukod.zip` file with all project files needed to build the project.
 
 As the build process needs to download and build the ANTLR4 runtime, initial

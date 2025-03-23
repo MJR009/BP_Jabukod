@@ -5,7 +5,11 @@
 
 class Scope {
 public:
-    void AddEntry(const string & name, const StorageSpecifier specifier);
+    void AddEntry(
+        const string & name,
+        const StorageSpecifier specifier,
+        const Type type
+    );
 
     bool IsVariableInScope(const string & name);
 

@@ -6,9 +6,16 @@ enum STORAGE_SPECIFIER {
 };
 typedef enum STORAGE_SPECIFIER StorageSpecifier;
 
+enum TYPE {
+    INT, FLOAT, BOOL, STRING,
+    VOID
+};
+typedef enum TYPE Type;
+
 class ScopeEntry {
 public:
-    ScopeEntry(const string & name, const StorageSpecifier specifier) : name(name), storageSpecifier(specifier) {}
+    ScopeEntry(const string & name, const StorageSpecifier specifier, const Type type) :
+        name(name), storageSpecifier(specifier), type(type) {}
 
     string GetEntryName();
 
@@ -17,4 +24,5 @@ public:
 private:
     string name;
     StorageSpecifier storageSpecifier;
+    Type type;
 };

@@ -17,9 +17,10 @@ any SymTabGlobalsVisitor::visitVariableDeclaration(JabukodParser::VariableDeclar
         storageSpecifier = nullptr;
     }
 
-    this->symbolTable.AddGlobalVariable(variable, storageSpecifier);
+    JabukodParser::NonVoidTypeContext *type = ctx->nonVoidType();
 
-    // uložit typ
+    this->symbolTable.AddGlobalVariable(variable, storageSpecifier, type);
+
     // zadat výchozí hodnotu (VYMYSLET!)
 
     return OK;
@@ -35,10 +36,11 @@ any SymTabGlobalsVisitor::visitVariableDefinition(JabukodParser::VariableDefinit
         storageSpecifier = nullptr;
     }
 
-    this->symbolTable.AddGlobalVariable(variable, storageSpecifier);
+    JabukodParser::NonVoidTypeContext *type = ctx->nonVoidType();
 
-    // uožit typ a hodnotu
-    // na pravé straně musí být literál / konstatní hodnota
+    this->symbolTable.AddGlobalVariable(variable, storageSpecifier, type);
+
+    // na pravé straně musí být literál / konstatní hodnota SPRÁVNÉHO TYPU
  
     return OK;
 }
@@ -48,6 +50,7 @@ any SymTabGlobalsVisitor::visitFunctionDefinition(JabukodParser::FunctionDefinit
     this->symbolTable.AddFunction(function);
 
     // uložit signaturu (přetěžování nelze)
+    // definovat hlavní scope
 
     return OK;
 }

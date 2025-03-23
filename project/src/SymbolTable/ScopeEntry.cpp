@@ -9,21 +9,36 @@ string ScopeEntry::GetEntryName() {
 void ScopeEntry::Print() {
     cout << this->name << " ";
 
-    cout << "<";
+    cout << "< ";
     switch (this->storageSpecifier) {
-        case (StorageSpecifier::NONE):
-            cout << "";
+        case StorageSpecifier::NONE:
+            cout << "-";
             break;
 
-        case (StorageSpecifier::CONST):
+        case StorageSpecifier::CONST:
             cout << "const";
             break;
 
-        case (StorageSpecifier::STATIC):
+        case StorageSpecifier::STATIC:
             cout << "static";
             break;
     }
-    cout << ">";
+    cout << " ";
+    switch (this->type) {
+        case Type::INT:
+            cout << "INT";
+            break;
+        case Type::FLOAT:
+            cout << "FLOAT";
+            break;
+        case Type::BOOL:
+            cout << "BOOL";
+            break;
+        case Type::STRING:
+            cout << "STRING";
+            break;
+    }    
+    cout << " >";
 
     cout << endl;
 }
