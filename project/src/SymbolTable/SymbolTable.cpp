@@ -1,10 +1,24 @@
 #include "SymbolTable.h"
 
-void SymbolTable::AddGlobalVariable(antlr4::Token *variable) {
+void SymbolTable::AddGlobalVariable(antlr4::Token *variable, JabukodParser::StorageSpecifierContext *storageSpecifier) {
     string name = variable->getText();
 
+    StorageSpecifier storage;
+    if (storageSpecifier) {
+        string specifierName = storageSpecifier->getText();
+        
+        if (specifierName == "const") {
+            storage = StorageSpecifier::CONST;
+        } else {
+            storage = StorageSpecifier::STATIC;
+            this->parser->notifyErrorListeners(storageSpecifier->getStart(), STATIC_GLOBAL_VARIABLE, nullptr);
+        }
+    } else {
+        storage = StorageSpecifier::NONE;
+    }
+
     if (this->IsIDAvailable(name, this->globalScope)) {
-        this->globalScope.AddEntry(name);
+        this->globalScope.AddEntry(name, storage);
     } else {
         this->parser->notifyErrorListeners(variable, VARIABLE_REDEFINITION, nullptr);
     }
@@ -75,6 +89,12 @@ bool SymbolTable::IsIDAvailable(const string & name, Scope & scope) {
 
 bool SymbolTable::IsEnumValueAvailable(const int & value) {
     return this->enumTable.IsItemValueAvailable(value, this->currentEnum);
+}
+
+void SymbolTable::CheckIfMainPresent() {
+    if ( ! this->functionTable.IsIdTaken("main")) {
+        this->parser->notifyErrorListeners(MISSING_MAIN);
+    }
 }
 
 

@@ -1,13 +1,25 @@
 #include "SymTabGlobalsVisitor.h"
 
-// UKLÁDÁNÍ ENUM ITEMŮ a jejich vícenásobné definice
+any SymTabGlobalsVisitor::visitSourceFile(JabukodParser::SourceFileContext *ctx) {
+    visitChildren(ctx);
+    this->symbolTable.CheckIfMainPresent();
+
+    return OK;
+}
 
 any SymTabGlobalsVisitor::visitVariableDeclaration(JabukodParser::VariableDeclarationContext *ctx) {
     antlr4::Token *variable = ctx->IDENTIFIER()->getSymbol();
-    this->symbolTable.AddGlobalVariable(variable);
+    JabukodParser::StorageSpecifierContext *storageSpecifier;
+
+    if (ctx->storageSpecifier()) {
+        storageSpecifier = ctx->storageSpecifier();
+    } else {
+        storageSpecifier = nullptr;
+    }
+
+    this->symbolTable.AddGlobalVariable(variable, storageSpecifier);
 
     // uložit typ
-    // zkontrolovat a uložit specifikátor uložení
     // zadat výchozí hodnotu (VYMYSLET!)
 
     return OK;
@@ -15,10 +27,17 @@ any SymTabGlobalsVisitor::visitVariableDeclaration(JabukodParser::VariableDeclar
 
 any SymTabGlobalsVisitor::visitVariableDefinition(JabukodParser::VariableDefinitionContext *ctx) {
     antlr4::Token *variable = ctx->IDENTIFIER()->getSymbol();
-    this->symbolTable.AddGlobalVariable(variable);
+    JabukodParser::StorageSpecifierContext *storageSpecifier;
+
+    if (ctx->storageSpecifier()) {
+        storageSpecifier = ctx->storageSpecifier();
+    } else {
+        storageSpecifier = nullptr;
+    }
+
+    this->symbolTable.AddGlobalVariable(variable, storageSpecifier);
 
     // uožit typ a hodnotu
-    // zkontrolovat a uložit specifikátor uložení
     // na pravé straně musí být literál / konstatní hodnota
  
     return OK;
@@ -29,7 +48,6 @@ any SymTabGlobalsVisitor::visitFunctionDefinition(JabukodParser::FunctionDefinit
     this->symbolTable.AddFunction(function);
 
     // uložit signaturu (přetěžování nelze)
-    // musí být přítomna funkce main
 
     return OK;
 }

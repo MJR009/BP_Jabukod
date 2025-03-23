@@ -1,6 +1,6 @@
 int x;
 const int y = 4;
-bool z;
+bool z = false;
 //string x = 0;
 void a() {
     int x;

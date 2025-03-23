@@ -11,13 +11,14 @@ class SymbolTable {
 public:
     SymbolTable(JabukodParser *parser) : parser(parser) {}
 
-    void AddGlobalVariable(antlr4::Token *variable);
+    void AddGlobalVariable(antlr4::Token *variable, JabukodParser::StorageSpecifierContext *storageSpecifier);
     void AddFunction(antlr4::Token *function);
     EnumTableEntry *AddEnum(antlr4::Token *theEnum);
     void AddEnumItem(antlr4::Token *itemName, antlr4::Token *itemValue);
 
     bool IsIDAvailable(const string & name, Scope & scope);
     bool IsEnumValueAvailable(const int & value);
+    void CheckIfMainPresent();
 
     void SetCurrentEnum(EnumTableEntry *theEnum);
     void RemoveCurrentEnum();
