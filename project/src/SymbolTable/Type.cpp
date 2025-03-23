@@ -1,4 +1,4 @@
-#include "type.h"
+#include "Type.h"
 
 string TypeFunctions::TypeToString(Type type) {
     switch(type) {

@@ -1,8 +1,10 @@
 #include "FunctionTable.h"
 
-void FunctionTable::AddEntry(const string & name, const Type returnType) {
+FunctionTableEntry *FunctionTable::AddEntry(const string & name, const Type returnType) {
     FunctionTableEntry function(name, returnType);
     this->functions.push_back(function);
+
+    return &this->functions.back();
 }
 
 
@@ -15,6 +17,16 @@ bool FunctionTable::IsIdTaken(const string & name) {
     }
 
     return false;
+}
+
+bool FunctionTable::IsParameterNameAvailable(const string & name, FunctionTableEntry *function) {
+    for (auto & parameter : function->GetParameters()) {
+        if (parameter.second == name) {
+            return false;
+        }
+    }
+
+    return true;
 }
 
 

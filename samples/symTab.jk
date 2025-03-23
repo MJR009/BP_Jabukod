@@ -14,7 +14,7 @@ void a() {
 
 enum _1 {one, two, three = -3, four, five}//, six}
 
-int f(int x, int y) {
+int f(int xx, int yy, bool zz) {
     g();
     i = 3;
     g = 4;
@@ -33,7 +33,7 @@ void g() {
     x = f;
 }
 
-int main() {
+int main(int argc, string argv) {
     f(1, 1);
 }
 

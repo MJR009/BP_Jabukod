@@ -20,17 +20,33 @@ void SymbolTable::AddGlobalVariable(
     }
 }
 
-void SymbolTable::AddFunction(antlr4::Token *function, JabukodParser::TypeContext *returnType) {
+FunctionTableEntry *SymbolTable::AddFunction(antlr4::Token *function, JabukodParser::TypeContext *returnType) {
     string name = function->getText();
     Type type = this->ResolveType(returnType);
 
     // uložit parametry - definovat hlavní scope
 
     if (this->IsIDAvailable(name, this->globalScope)) {
-        this->functionTable.AddEntry(name, type);
+        return this->functionTable.AddEntry(name, type);
     } else {
         this->parser->notifyErrorListeners(function, FUNCTION_REDEFINITION, nullptr);
+        return nullptr;
     }
+}
+
+void SymbolTable::AddFunctionParameter(JabukodParser::NonVoidTypeContext *parameterType, antlr4::Token *parameterName) {
+    Type type = this->ResolveNonVoidType(parameterType);
+
+    // TODO ZDE SE POTVRZUJE DIVNOST KONTROLY DEFINOVANOSTI, POTŘEBA MÍT VLASTNÍ FUNKCE
+    string name = parameterName->getText();
+    if ( ! this->IsIDAvailable(name, this->globalScope)) {
+        this->parser->notifyErrorListeners(parameterName, REDEFINITION_OF_PARAMETER, nullptr);
+    }
+    if ( ! this->IsFunctionParameterNameAvailable(name)) {
+        this->parser->notifyErrorListeners(parameterName, REDEFINITION_OF_PARAMETER, nullptr);
+    }
+
+    this->currentFunction->AddParameter(type, name);
 }
 
 EnumTableEntry *SymbolTable::AddEnum(antlr4::Token *theEnum) {
@@ -89,6 +105,16 @@ void SymbolTable::RemoveCurrentEnum() {
 
 
 
+void SymbolTable::SetCurrentFunction(FunctionTableEntry *function) {
+    this->currentFunction = function;
+}
+
+void SymbolTable::RemoveCurrentFunction() {
+    this->currentFunction = nullptr;
+}
+
+
+
 void SymbolTable::Print() {
     cout << "Functions:" << endl;
     cout << "=====" << endl;
@@ -129,6 +155,10 @@ bool SymbolTable::IsIDAvailable(const string & name, Scope & scope) {
 
 bool SymbolTable::IsEnumValueAvailable(const int & value) {
     return this->enumTable.IsItemValueAvailable(value, this->currentEnum);
+}
+
+bool SymbolTable::IsFunctionParameterNameAvailable(const string & name) {
+    return this->functionTable.IsParameterNameAvailable(name, this->currentFunction);
 }
 
 

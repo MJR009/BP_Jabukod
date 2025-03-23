@@ -2,7 +2,7 @@
 
 // TODO ZPRACOVÁNÍ POLÍ A ENUMŮ 
 // TODO IMPLICITNÍ KONVERZE
-// !!!!! potřeba zkontrovlovat co má vlatní namespace a co ne...
+// !!!!! potřeba zkontrovlovat co má vlatní namespace a co ne... - ÚPRAVA IsIdAvailable funkce !
 // TODO NÁZEV FUNKCE JE VLASTNÍ NAMESPACE
 // TODO NÁZEV ENUMU JE VLASTNÍ NAMESPACE -> nemůže kolidovat s proměnnými a položkami enumu
 
@@ -55,8 +55,31 @@ any SymTabGlobalsVisitor::visitVariableDefinition(JabukodParser::VariableDefinit
 any SymTabGlobalsVisitor::visitFunctionDefinition(JabukodParser::FunctionDefinitionContext *ctx) {
     antlr4::Token *function = ctx->IDENTIFIER()->getSymbol();
     JabukodParser::TypeContext *returnType = ctx->type();
-    this->symbolTable.AddFunction(function, returnType);
+
+    FunctionTableEntry *newFunctionPointer = this->symbolTable.AddFunction(function, returnType);
+    this->symbolTable.SetCurrentFunction(newFunctionPointer);
+
+    if (ctx->functionParameters()) {
+        this->visit(ctx->functionParameters());
+    }
     
+    return OK;
+}
+
+any SymTabGlobalsVisitor::visitFunctionParameters(JabukodParser::FunctionParametersContext *ctx) {
+    for (auto & parameter : ctx->functionParameter()) {
+        this->visit(parameter);
+    }
+
+    return OK;
+}
+
+any SymTabGlobalsVisitor::visitFunctionParameter(JabukodParser::FunctionParameterContext *ctx) {
+    JabukodParser::NonVoidTypeContext *type = ctx->nonVoidType();
+    antlr4::Token *name = ctx->IDENTIFIER()->getSymbol();
+
+    this->symbolTable.AddFunctionParameter(type, name);
+
     return OK;
 }
 

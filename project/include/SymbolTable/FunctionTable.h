@@ -5,9 +5,10 @@
 
 class FunctionTable {
 public:
-    void AddEntry(const string & name, const Type returnType);
+    FunctionTableEntry *AddEntry(const string & name, const Type returnType);
 
     bool IsIdTaken(const string & name);
+    bool IsParameterNameAvailable(const string & name, FunctionTableEntry *function);
 
     void Print();
 

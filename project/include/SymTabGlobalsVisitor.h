@@ -12,10 +12,12 @@ public:
     any visitVariableDeclaration(JabukodParser::VariableDeclarationContext *ctx) override;
     any visitVariableDefinition(JabukodParser::VariableDefinitionContext *ctx) override;
     any visitFunctionDefinition(JabukodParser::FunctionDefinitionContext *ctx) override;
+    any visitFunctionParameters(JabukodParser::FunctionParametersContext *ctx) override;
+    any visitFunctionParameter(JabukodParser::FunctionParameterContext *ctx) override;
     any visitEnumDefinition(JabukodParser::EnumDefinitionContext *ctx) override;
     any visitEnumBlock(JabukodParser::EnumBlockContext *ctx) override;
     any visitEnumItem(JabukodParser::EnumItemContext *ctx) override;
-
+    
     void DumpSymbolTable();
 
 private:

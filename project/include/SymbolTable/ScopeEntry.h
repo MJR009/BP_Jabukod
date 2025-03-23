@@ -1,7 +1,7 @@
 #pragma once
 #include "common.h"
 
-#include "type.h"
+#include "Type.h"
 
 enum STORAGE_SPECIFIER {
     NONE, CONST, STATIC
