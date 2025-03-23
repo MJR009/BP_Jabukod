@@ -14,8 +14,17 @@ typedef enum TYPE Type;
 
 class ScopeEntry {
 public:
-    ScopeEntry(const string & name, const StorageSpecifier specifier, const Type type) :
-        name(name), storageSpecifier(specifier), type(type) {}
+    ScopeEntry(
+        const string & name,
+        const StorageSpecifier specifier,
+        const Type type,
+        const any & defaultValue
+    ) :
+        name(name),
+        storageSpecifier(specifier),
+        type(type),
+        defaultValue(defaultValue)
+    {}
 
     string GetEntryName();
 
@@ -25,4 +34,5 @@ private:
     string name;
     StorageSpecifier storageSpecifier;
     Type type;
+    any defaultValue;
 };

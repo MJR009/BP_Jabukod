@@ -3,7 +3,8 @@
 void SymbolTable::AddGlobalVariable(
     antlr4::Token *variable,
     JabukodParser::StorageSpecifierContext *storageSpecifier,
-    JabukodParser::NonVoidTypeContext *variableType
+    JabukodParser::NonVoidTypeContext *variableType,
+    JabukodParser::ExpressionContext *defaultValue
 ) {
     string name = variable->getText();
 
@@ -23,8 +24,21 @@ void SymbolTable::AddGlobalVariable(
 
     Type type = ResolveType(variableType);
 
+    any value;
+    if (defaultValue) {
+        if (this->IsOnlyLiteral(defaultValue)) {
+            value = this->GetExplicitDefaultValue(defaultValue->literal());
+            // ZKONTROLOVAT ŽE TYP JE SPRÁVNĚ
+        } else {
+            value = any(0);
+            this->parser->notifyErrorListeners(defaultValue->getStart(), GLOBAL_VARIABLE_EXPRESSION, nullptr);
+        }
+    } else {
+        value = this->GetImplicitDefaultValue(type);
+    }
+
     if (this->IsIDAvailable(name, this->globalScope)) {
-        this->globalScope.AddEntry(name, storage, type);
+        this->globalScope.AddEntry(name, storage, type, value);
     } else {
         this->parser->notifyErrorListeners(variable, VARIABLE_REDEFINITION, nullptr);
     }
@@ -154,4 +168,87 @@ Type SymbolTable::ResolveType(JabukodParser::NonVoidTypeContext *type) {
     }
 
     return Type::VOID;
+}
+
+bool SymbolTable::IsOnlyLiteral(JabukodParser::ExpressionContext *expression) {
+    if (expression->literal()) {
+        return true;
+    }
+    
+    return false;
+}
+
+any SymbolTable::GetImplicitDefaultValue(Type type){
+    switch (type) {
+        case Type::INT:
+            return any( 0 );
+        case Type::FLOAT:
+            return any( 0.0f );
+        case Type::BOOL:
+            return any( false );
+        case Type::STRING:
+            return any( string("") );
+    }
+
+    return any(0); // suppress warning
+}
+
+any SymbolTable::GetExplicitDefaultValue(JabukodParser::LiteralContext *defaultValue) {
+    if (defaultValue->INT_LITERAL()) {
+        return any( stoi( defaultValue->INT_LITERAL()->getText() ) );   
+    }
+
+    if (defaultValue->FLOAT_LITERAL()) {
+        return any( stof( defaultValue->FLOAT_LITERAL()->getText() ) );
+    }
+
+    if (defaultValue->BOOL_LITERAL()) {
+        if (defaultValue->BOOL_LITERAL()->getText() == "true") {
+            return any(true);
+        } else {
+            return any(false);
+        }
+    }
+
+    if (defaultValue->STRING_LITERAL()) {
+        return any( this->ReplaceEscapeSequences( defaultValue->STRING_LITERAL()->getText() ) );
+    }
+
+    return any(0); // suppress warning
+}
+
+
+
+string SymbolTable::ReplaceEscapeSequences(const string & str) {
+    string resolved = "";
+    
+    for (size_t i = 1; i < str.size() - 1; i++) { // literal itself is delimited by "", this is skipped
+        if (str[i] == '\\') {
+            i++;
+            switch (str[i]) {
+                case '\"':
+                    resolved.push_back('\"');
+                    break;
+                case '\\':
+                    resolved.push_back('\\');
+                    break;
+                case 'n':
+                    resolved.push_back('\n');
+                    break;
+                case 't':
+                    resolved.push_back('\t');
+                    break;
+            }
+        } else {
+            resolved.push_back(str[i]);
+        }
+    }
+
+    return resolved;
+}
+
+
+
+bool SymbolTable::IsOfType(JabukodParser::LiteralContext *literal, Type type) {
+
 }

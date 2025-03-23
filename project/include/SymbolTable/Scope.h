@@ -8,7 +8,8 @@ public:
     void AddEntry(
         const string & name,
         const StorageSpecifier specifier,
-        const Type type
+        const Type type,
+        const any & defaultValue
     );
 
     bool IsVariableInScope(const string & name);

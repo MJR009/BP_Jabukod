@@ -14,7 +14,8 @@ public:
     void AddGlobalVariable(
         antlr4::Token *variable,
         JabukodParser::StorageSpecifierContext *storageSpecifier,
-        JabukodParser::NonVoidTypeContext *variableType
+        JabukodParser::NonVoidTypeContext *variableType,
+        JabukodParser::ExpressionContext *defaultValue
     );
     void AddFunction(antlr4::Token *function);
     EnumTableEntry *AddEnum(antlr4::Token *theEnum);
@@ -36,10 +37,17 @@ private:
 
     EnumTableEntry *currentEnum = nullptr; // used for adding entries
     int currentEnumItemvalue = 0;
-    
+
 private:
     bool IsIDAvailable(const string & name, Scope & scope);
     bool IsEnumValueAvailable(const int & value);
 
     Type ResolveType(JabukodParser::NonVoidTypeContext *type);
+    bool IsOnlyLiteral(JabukodParser::ExpressionContext *expression);
+    any GetImplicitDefaultValue(Type type); // for declarations
+    any GetExplicitDefaultValue(JabukodParser::LiteralContext *defaultValue); // for global definitions
+
+    string ReplaceEscapeSequences(const string & str);
+
+    bool IsOfType(JabukodParser::LiteralContext *literal, Type type);
 };

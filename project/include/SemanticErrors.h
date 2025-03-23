@@ -8,3 +8,4 @@
 #define REPEATED_CONJURED_ENUM_VALUE "reoccurence of a value for multiple enum items is not allowed"
 #define MISSING_MAIN "no entry point function 'main' is defined"
 #define STATIC_GLOBAL_VARIABLE "static global variables are not allowed"
+#define GLOBAL_VARIABLE_EXPRESSION "global varible must be initialised by literal"

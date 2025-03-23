@@ -19,9 +19,10 @@ any SymTabGlobalsVisitor::visitVariableDeclaration(JabukodParser::VariableDeclar
 
     JabukodParser::NonVoidTypeContext *type = ctx->nonVoidType();
 
-    this->symbolTable.AddGlobalVariable(variable, storageSpecifier, type);
+    this->symbolTable.AddGlobalVariable(variable, storageSpecifier, type, nullptr);
 
-    // zadat výchozí hodnotu (VYMYSLET!)
+    // zajistit zpracování polí a enumů !!!!
+    // deklarace na konstantu nedává smysl
 
     return OK;
 }
@@ -37,10 +38,11 @@ any SymTabGlobalsVisitor::visitVariableDefinition(JabukodParser::VariableDefinit
     }
 
     JabukodParser::NonVoidTypeContext *type = ctx->nonVoidType();
+    JabukodParser::ExpressionContext *toAssign = ctx->expression();
 
-    this->symbolTable.AddGlobalVariable(variable, storageSpecifier, type);
+    this->symbolTable.AddGlobalVariable(variable, storageSpecifier, type, toAssign);
 
-    // na pravé straně musí být literál / konstatní hodnota SPRÁVNÉHO TYPU
+    // zajitstit zpracování polí a enumů !!!!
  
     return OK;
 }
