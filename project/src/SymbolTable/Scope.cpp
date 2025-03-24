@@ -6,15 +6,15 @@ void Scope::AddEntry(
     const Type type,
     const any & defaultValue
 ) {
-    ScopeEntry variable(name, specifier, type, defaultValue);
-    this->variables.push_back(variable);
+    Variable newVariable(name, specifier, type, defaultValue);
+    this->variables.push_back(newVariable);
 }
 
 
 
 bool Scope::IsVariableInScope(const string & name) {
-    for (auto & entry : this->variables) {
-        if (entry.GetEntryName() == name) {
+    for (auto & variable : this->variables) {
+        if (variable.GetName() == name) {
             return true;
         }
     }
@@ -26,6 +26,8 @@ bool Scope::IsVariableInScope(const string & name) {
 
 void Scope::Print() {
     for (auto & variable : this->variables) {
+        cout << "< ";
         variable.Print();
+        cout << " >" << endl;
     }
 }

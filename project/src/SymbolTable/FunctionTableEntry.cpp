@@ -1,7 +1,8 @@
 #include "FunctionTableEntry.h"
 
 void FunctionTableEntry::AddParameter(const Type parameterType, const string & parameterName) {
-    this->parameters.push_back( { parameterType, parameterName } );
+    Parameter newParameter(parameterName, parameterType);
+    this->parameters.push_back(newParameter);
 }
 
 
@@ -14,7 +15,7 @@ Type FunctionTableEntry::GetReturnType() {
     return this->returnType;
 }
 
-vector< pair<Type, string> > FunctionTableEntry::GetParameters() {
+vector<Parameter> FunctionTableEntry::GetParameters() {
     return this->parameters;
 }
 
@@ -26,11 +27,11 @@ void FunctionTableEntry::Print() {
     cout << "  < returns: " << TypeFunctions::TypeToString(this->returnType) << " >" << endl;
 
     cout << "  < ";
+    bool first = true;
     for (auto & parameter : this->parameters) {
-        cout << TypeFunctions::TypeToString(parameter.first) << " " << parameter.second;
-        if (parameter != this->parameters.back()) {
-            cout << " , ";
-        }
+        first ? cout << "" : cout << " , ";
+        first = false;
+        parameter.Print();
     }
     cout << " >";
 

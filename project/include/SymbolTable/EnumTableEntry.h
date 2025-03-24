@@ -1,6 +1,8 @@
 #pragma once
 #include "common.h"
 
+#include "EnumItem.h"
+
 class EnumTableEntry {
 public:
     EnumTableEntry(const string & name) : name(name) {}
@@ -8,11 +10,11 @@ public:
     void AddItem(string itemName, int itemValue);
 
     string GetEntryName();
-    vector<pair<string, int>> GetEntryItems();
+    vector<EnumItem> GetEntryItems();
 
     void Print();
 
 private:
     string name;
-    vector<pair<string, int>> items;
+    vector<EnumItem> items;
 };

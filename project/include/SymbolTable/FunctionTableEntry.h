@@ -1,7 +1,7 @@
 #pragma once
 #include "common.h"
 
-#include "Type.h"
+#include "Parameter.h"
 
 class FunctionTableEntry {
 public:
@@ -11,12 +11,12 @@ public:
 
     string GetFunctionName();
     Type GetReturnType();
-    vector< pair<Type, string> > GetParameters();
+    vector<Parameter> GetParameters();
 
     void Print();
 
 private:
     string name;
     Type returnType;
-    vector< pair<Type, string> > parameters;
+    vector<Parameter> parameters;
 };

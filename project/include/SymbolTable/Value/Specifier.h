@@ -6,8 +6,8 @@ enum STORAGE_SPECIFIER {
 };
 typedef enum STORAGE_SPECIFIER StorageSpecifier;
 
-namespace SpecifierMethods {
+namespace SpecifierFunctions {
 
 string SpeficierToString(StorageSpecifier specifier);
 
-} // namespace SpecifierMethods
+} // namespace SpecifierFunctions

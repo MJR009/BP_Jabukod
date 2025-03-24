@@ -1,7 +1,8 @@
 #include "EnumTableEntry.h"
 
 void EnumTableEntry::AddItem(string itemName, int itemValue) {
-    this->items.push_back( { itemName, itemValue } );
+    EnumItem newItem(itemName, itemValue);
+    this->items.push_back(newItem);
 }
 
 
@@ -10,7 +11,7 @@ string EnumTableEntry::GetEntryName() {
     return this->name;
 }
 
-vector<pair<string, int>> EnumTableEntry::GetEntryItems() {
+vector<EnumItem> EnumTableEntry::GetEntryItems() {
     return this->items;
 }
 
@@ -19,7 +20,9 @@ vector<pair<string, int>> EnumTableEntry::GetEntryItems() {
 void EnumTableEntry::Print() {
     cout << this->name << " [" << endl;
     for (auto & item : this->items) {
-        cout << "  " << item.first << " = " << item.second << endl;
+        cout << "  ";
+        item.Print();
+        cout << endl;
     }
     cout << "]" << endl;
 }

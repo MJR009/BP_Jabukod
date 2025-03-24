@@ -1,6 +1,6 @@
 #include "Specifier.h"
 
-string SpecifierMethods::SpeficierToString(StorageSpecifier specifier) {
+string SpecifierFunctions::SpeficierToString(StorageSpecifier specifier) {
     switch (specifier) {
         case StorageSpecifier::NONE:
             return "-";

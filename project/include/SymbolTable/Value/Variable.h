@@ -1,30 +1,30 @@
 #pragma once
 #include "common.h"
 
+#include "BaseValue.h"
 #include "Type.h"
 #include "Specifier.h"
 
-class ScopeEntry {
+class Variable : public BaseValue {
 public:
-    ScopeEntry(
+    Variable(
         const string & name,
-        const StorageSpecifier specifier,
+        const StorageSpecifier storage,
         const Type type,
         const any & defaultValue
     ) :
-        name(name),
-        storageSpecifier(specifier),
+        BaseValue(name),
+        storage(storage),
         type(type),
         defaultValue(defaultValue)
     {}
 
-    string GetEntryName();
-
-    void Print();
+    void Print() const override;
 
 private:
-    string name;
-    StorageSpecifier storageSpecifier;
+    StorageSpecifier storage;
     Type type;
     any defaultValue;
+
+    void PrintDefaultByType() const;
 };

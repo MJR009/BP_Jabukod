@@ -38,5 +38,5 @@ int main (int argc, string argv) {
 }
 
 enum X {
-    ONE, TWO = 7, THREE
+    ONE, TWO = 7, THREE = 1, FOUR
 }

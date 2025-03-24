@@ -33,7 +33,7 @@ bool FunctionTable::IsIdTaken(const string & name) {
 
 bool FunctionTable::IsParameterNameAvailable(const string & name, FunctionTableEntry *function) {
     for (auto & parameter : function->GetParameters()) {
-        if (parameter.second == name) {
+        if (parameter.GetName() == name) {
             return false;
         }
     }

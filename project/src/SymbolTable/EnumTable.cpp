@@ -16,7 +16,7 @@ bool EnumTable::IsIdTaken(const string & name) {
         }
 
         for (auto & item : entry.GetEntryItems()) {
-            if (item.first == name) {
+            if (item.GetName() == name) {
                 return true;
             }
         }
@@ -27,7 +27,7 @@ bool EnumTable::IsIdTaken(const string & name) {
 
 bool EnumTable::IsItemValueAvailable(const int & value, EnumTableEntry *theEnum) {
     for (auto & item : theEnum->GetEntryItems()) {
-        if (item.second == value) {
+        if (item.GetValue() == value) {
             return false;
         }
     }

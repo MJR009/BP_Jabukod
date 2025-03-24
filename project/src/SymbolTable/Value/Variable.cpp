@@ -1,21 +1,19 @@
-#include "ScopeEntry.h"
+#include "Variable.h"
 
-string ScopeEntry::GetEntryName() {
-    return this->name;
+
+void Variable::Print() const {
+    cout <<
+        SpecifierFunctions::SpeficierToString(this->storage) << " " <<
+        TypeFunctions::TypeToString(this->type) << " , " <<
+        "default: ";
+    this->PrintDefaultByType();
 }
 
 
 
-void ScopeEntry::Print() {
-    cout << this->name << endl;
+// PRIVATE:
 
-    cout << "  < " << SpecifierMethods::SpeficierToString(this->storageSpecifier);
-    cout << " " << TypeFunctions::TypeToString(this->type);
-    cout << " >";
-
-    cout << endl;
-
-    cout << "  < default : ";
+void Variable::PrintDefaultByType() const {
     switch (this->type) {
         case Type::INT:
             cout << any_cast<int>( this->defaultValue );
@@ -41,7 +39,4 @@ void ScopeEntry::Print() {
             cout << "\"" << any_cast<string>( this->defaultValue ) << "\"";
             break;        
     }
-    cout << " >";
-
-    cout << endl;
 }

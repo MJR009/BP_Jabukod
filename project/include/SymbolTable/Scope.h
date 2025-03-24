@@ -1,7 +1,7 @@
 #pragma once
 #include "common.h"
 
-#include "ScopeEntry.h"
+#include "Variable.h"
 
 class Scope {
 public:
@@ -17,5 +17,5 @@ public:
     void Print();
 
 private:
-    vector<ScopeEntry> variables;
+    vector<Variable> variables;
 };
