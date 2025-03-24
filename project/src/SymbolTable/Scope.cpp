@@ -26,7 +26,9 @@ bool Scope::IsVariableNameAvailable(const string & name) {
 
 void Scope::Print() {
     for (auto & variable : this->variables) {
-        cout << "< ";
+        cout << variable.GetName() << endl;
+
+        cout << "  < ";
         variable.Print();
         cout << " >" << endl;
     }

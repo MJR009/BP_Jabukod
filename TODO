@@ -34,3 +34,6 @@ FLOAT - 0.0
 BOOL - false
 STRING - ""
 JAKÉKOLI POLE - prázdné
+
+ROZSAHY
+POPSÁNO PODROBNĚ V KÓDU SymbolTable.cpp

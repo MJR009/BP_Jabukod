@@ -38,7 +38,7 @@ public:
     void SetCurrentFunction(FunctionTableEntry *function);
     void ResetCurrentFunction();
 
-    void IsIntMainPresent();
+    void CheckIfIntMainPresent();
 
     void Print();
 

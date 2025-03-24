@@ -8,7 +8,7 @@
 
 any SymTabGlobalsVisitor::visitSourceFile(JabukodParser::SourceFileContext *ctx) {
     visitChildren(ctx);
-    this->symbolTable.CheckIfMainPresent();
+    this->symbolTable.CheckIfIntMainPresent();
 
     return OK;
 }

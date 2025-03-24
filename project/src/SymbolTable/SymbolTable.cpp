@@ -105,7 +105,7 @@ void SymbolTable::ResetCurrentFunction() {
 
 
 
-void SymbolTable::IsIntMainPresent() {
+void SymbolTable::CheckIfIntMainPresent() {
     FunctionTableEntry *mainFunction = this->functionTable.GetFunctionByName("main");
 
     if (mainFunction) {
@@ -142,61 +142,74 @@ void SymbolTable::Print() {
 // PRIVATE:
 
 bool SymbolTable::IsVariableNameAvailable(const string & name, Scope & scope) {
-    // NESMÍ být stejná jako jiná proměnná v dané rozsahu
-        // lokální - v sobě samotném a NESMÍ být stejná jako parametr funkce
-        // globální - jen v něm samotném a MŮŽE být stejná jako parametr funkce
-    // NESMÍ být stejná jako funkce
-    // MŮŽE být stejná jako parametr funkce VE KTERÉ NELEŽÍ
-    // MŮŽE být stejná jako název enumu
-    // NESMÍ být stejná jako položka enumu
-}
+    // GLOBÁLNÍ
 
-bool SymbolTable::IsFunctionNameAvailable(const string & name) {
-    // NESMÍ být stejné jako globální proměnná
-    // MŮŽE být stejné jako jakákoli lokální proměnná
-    // NESMÍ být stejné jako jiná funkce
-    // MŮŽE být stejné jako parametr funkce
+    // NEMOHOU být dvě stejně se jmenující globální proměnné
+    // lokální proměnná PŘEKRYJE globální
+    // NEMŮŽE být stejně jako funkce, před ani za
+    // parametr funkce JI PŘEKRYJE
+    // MŮŽE být stejná jako název enumu, před i za
+    // NEMŮŽE být stejná jako položka enumu, před ani za
+
+    // LOKÁLNÍ
+
+    // lokální proměnná PŘEKRYJE globální proměnnou
+    // nelze mít v jednom rozsahu dvě stejné lokální proměnné, PŘEKRÝVÁ vyšší rozsahy
+    // !!!!! PŘEKRYJE název funkce, ALE funkce nepřekryje ji pokud je volaná před její definicí
+    // NEMŮŽE být stejné jako parametr své funkce -> !!!!! parametry a nejvyšší scope funkce jsou jeden scope !!!!!
     // MŮŽE být stejné jako název enumu
-    // NEMŮŽE být stejné jako položka enumu
-}
-
-bool SymbolTable::IsFunctionParameterNameAvailable(const string & name) { // checks in currentFunction
-    // MŮŽE být stejné jako globální proměnná
-    // zamezuje stejně pojmenované lokální proměnné ve stejné funkci
-    // MŮŽE být stejné jako nějaká funkce
-    // NESMÍ být stejné jako parametr stejné funkce, v různých OK
-    // MŮŽE být stejné jako název enumu
-    // !!!!! MŮŽE být stejné jako položka enumu (wtf...)
-}
-
-bool SymbolTable::IsEnumNameAvailable(const string & name);
-bool SymbolTable::IsEnumItemNameAvailable(const string & name); // checks in currentEnum
-bool SymbolTable::IsEnumItemValueAvailable(const int & value); // -//-
-/*
-bool SymbolTable::IsIDAvailable(const string & name, Scope & scope) {
-    if (this->enumTable.IsIdTaken(name)) { // checks enums and their items
-        return false;
-    }
-
-    if (this->functionTable.IsIdTaken(name)) {
-        return false;
-    }
-
-    if (scope.IsVariableInScope(name)) {
-        return false;
-    }
+    // PŘEKRYJE položku enumu
 
     return true;
 }
 
-bool SymbolTable::IsEnumValueAvailable(const int & value) {
-    return this->enumTable.IsItemValueAvailable(value, this->currentEnum);
+bool SymbolTable::IsFunctionNameAvailable(const string & name) {
+    // NESMÍ být stejné jako globální proměnná
+    // je PŘEKRYTA lokální proměnnou, ALE až po její definici
+    // NESMÍ být stejné jako jiná funkce
+    // MŮŽE být stejné jako parametr funkce, ALE pak ji nelze volat, lokálnní proměnné ji překrývá
+    // MŮŽE být stejné jako název enumu
+    // NEMŮŽE být stejné jako položka enumu
+
+    return true;
 }
 
-bool SymbolTable::IsFunctionParameterNameAvailable(const string & name) {
-    return this->functionTable.IsParameterNameAvailable(name, this->currentFunction);
+bool SymbolTable::IsFunctionParameterNameAvailable(const string & name) { // checks in currentFunction
+    // PŘEKRYJE globální proměnnou
+    // STEJNÝ SCOPE - nelze mít stejnou lokální proměnnou
+    // PŘEKRYJE název funkce
+    // NESMÍ být dva stejné parametry funkce
+    // MŮŽE být stejné jako název enumu
+    // PŘEKRYJE položku enumu
+
+    return true;
 }
-*/
+
+bool SymbolTable::IsEnumNameAvailable(const string & name) {
+    // MŮŽE být stejné jako globální proměnná, před i za
+    // MŮŽE být stejné jako lokální proměnná, před i za ní
+    // MŮŽE být stejné jako název funkce, před i za
+    // MŮŽE být stejné jako parametr funkce, před i za
+    // NEMŮŽE být stejné jako už existující enum
+    // MŮŽE být stejné jako položka už existujícího enumu, před i za
+
+    return true;
+}
+
+bool SymbolTable::IsEnumItemNameAvailable(const string & name) { // checks in currentEnum
+    // NEMŮŽE být stejné jako globální proměnná, před ani za
+    // !!!!! lokální proměnná PŘEKRÝVÁ enum item
+    // NEMŮŽE být stejné jako název funkce, před ani za
+    // MŮŽE být stejné jako parametr funkce, před i za
+    // MŮŽE být stejné jako název svého enumu a i jiného enumu
+    // NEMŮŽE být stejné jako jiná položka stejného enumu ani jiného enumu
+
+    return true;
+}
+
+bool SymbolTable::IsEnumItemValueAvailable(const int & value) { // -//-
+    return this->enumTable.IsItemValueAvailable(value, this->currentEnum);
+}
 
 
 
