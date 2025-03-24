@@ -12,14 +12,14 @@ void Scope::AddEntry(
 
 
 
-bool Scope::IsVariableInScope(const string & name) {
+bool Scope::IsVariableNameAvailable(const string & name) {
     for (auto & variable : this->variables) {
         if (variable.GetName() == name) {
-            return true;
+            return false;
         }
     }
 
-    return false;
+    return true;
 }
 
 

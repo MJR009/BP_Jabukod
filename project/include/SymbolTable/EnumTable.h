@@ -7,7 +7,10 @@ class EnumTable {
 public:
     EnumTableEntry *AddEntry(const string & name);
 
-    bool IsIdTaken(const string & name);
+    EnumTableEntry *GetEntryByName(const string & name);
+
+    bool IsNameAvailable(const string & name);
+    bool IsItemNameAvailable(const string & name, EnumTableEntry *theEnum);
     bool IsItemValueAvailable(const int & value, EnumTableEntry *theEnum);
 
     void Print();

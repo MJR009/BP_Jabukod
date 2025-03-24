@@ -4,16 +4,17 @@
 void Variable::Print() const {
     cout <<
         SpecifierFunctions::SpeficierToString(this->storage) << " " <<
-        TypeFunctions::TypeToString(this->type) << " , " <<
-        "default: ";
-    this->PrintDefaultByType();
+        TypeFunctions::TypeToString(this->type) << " , ";
+
+    cout << "default: ";
+    this->PrintDefaultValue();
 }
 
 
 
 // PRIVATE:
 
-void Variable::PrintDefaultByType() const {
+void Variable::PrintDefaultValue() const {
     switch (this->type) {
         case Type::INT:
             cout << any_cast<int>( this->defaultValue );

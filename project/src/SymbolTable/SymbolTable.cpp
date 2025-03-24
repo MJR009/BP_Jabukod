@@ -8,12 +8,16 @@ void SymbolTable::AddGlobalVariable(
 ) {
     string name = variable->getText();
 
-    StorageSpecifier storage = this->ResolveStorageSpecifier(storageSpecifier);
-    Type type = this->ResolveNonVoidType(variableType);
-    any value = this->ResolveDefaultValue(defaultValue, type);
-    // there will always be a value returned to process sematics as long as possible
+    StorageSpecifier storage;
+    if (storageSpecifier) {
+        storage = this->ResolveStorageSpecifier(storageSpecifier);
+    } else {
+        storage = StorageSpecifier::NONE;
+    }
+    Type type = TypeFunctions::StringToType(variableType->getText());
+    any value = this->ResolveDefaultValue(defaultValue, type); // returns default to process as many errors as possible
 
-    if (this->IsIDAvailable(name, this->globalScope)) {
+    if (this->IsVariableNameAvailable(name, this->globalScope)) {
         this->globalScope.AddEntry(name, storage, type, value);
     } else {
         this->parser->notifyErrorListeners(variable, VARIABLE_REDEFINITION, nullptr);
@@ -22,11 +26,11 @@ void SymbolTable::AddGlobalVariable(
 
 FunctionTableEntry *SymbolTable::AddFunction(antlr4::Token *function, JabukodParser::TypeContext *returnType) {
     string name = function->getText();
-    Type type = this->ResolveType(returnType);
+    Type type = TypeFunctions::StringToType(returnType->getText());
 
     // uložit parametry - definovat hlavní scope
 
-    if (this->IsIDAvailable(name, this->globalScope)) {
+    if (this->IsFunctionNameAvailable(name)) {
         return this->functionTable.AddEntry(name, type);
     } else {
         this->parser->notifyErrorListeners(function, FUNCTION_REDEFINITION, nullptr);
@@ -35,13 +39,9 @@ FunctionTableEntry *SymbolTable::AddFunction(antlr4::Token *function, JabukodPar
 }
 
 void SymbolTable::AddFunctionParameter(JabukodParser::NonVoidTypeContext *parameterType, antlr4::Token *parameterName) {
-    Type type = this->ResolveNonVoidType(parameterType);
+    Type type = TypeFunctions::StringToType(parameterType->getText());
 
-    // TODO ZDE SE POTVRZUJE DIVNOST KONTROLY DEFINOVANOSTI, POTŘEBA MÍT VLASTNÍ FUNKCE
     string name = parameterName->getText();
-    if ( ! this->IsIDAvailable(name, this->globalScope)) {
-        this->parser->notifyErrorListeners(parameterName, REDEFINITION_OF_PARAMETER, nullptr);
-    }
     if ( ! this->IsFunctionParameterNameAvailable(name)) {
         this->parser->notifyErrorListeners(parameterName, REDEFINITION_OF_PARAMETER, nullptr);
     }
@@ -52,7 +52,7 @@ void SymbolTable::AddFunctionParameter(JabukodParser::NonVoidTypeContext *parame
 EnumTableEntry *SymbolTable::AddEnum(antlr4::Token *theEnum) {
     string name = theEnum->getText();
 
-    if (this->IsIDAvailable(name, this->globalScope)) {
+    if (this->IsEnumNameAvailable(name)) {
         return this->enumTable.AddEntry(name);
     } else {
         this->parser->notifyErrorListeners(theEnum, ENUM_REDEFINITION, nullptr);
@@ -63,15 +63,15 @@ EnumTableEntry *SymbolTable::AddEnum(antlr4::Token *theEnum) {
 void SymbolTable::AddEnumItem(antlr4::Token *itemName, antlr4::Token *itemValue) {
     string name = itemName->getText();
 
-    if ( ! this->IsIDAvailable(name, this->globalScope)) {
+    if ( ! this->IsEnumItemNameAvailable(name)) {
         this->parser->notifyErrorListeners(itemName, ENUM_ITEM_REDEFINITION, nullptr);
     }
 
     if (itemValue) {
-        this->currentEnumItemvalue = stoi( itemValue->getText() );
+        this->currentEnumItemValue = stoi( itemValue->getText() );
     }
 
-    if ( ! this->IsEnumValueAvailable(this->currentEnumItemvalue)) {
+    if ( ! this->IsEnumItemValueAvailable(this->currentEnumItemValue)) {
         if (itemValue) {
             this->parser->notifyErrorListeners(itemValue, REPEATED_ENUM_VALUE, nullptr);
         } else {
@@ -79,14 +79,33 @@ void SymbolTable::AddEnumItem(antlr4::Token *itemName, antlr4::Token *itemValue)
         }
     }
 
-    this->currentEnum->AddItem(name, this->currentEnumItemvalue);
+    this->currentEnum->AddItem(name, this->currentEnumItemValue);
 
-    this->currentEnumItemvalue++;
+    this->currentEnumItemValue++;
 }
 
 
 
-void SymbolTable::CheckIfMainPresent() {
+void SymbolTable::SetCurrentEnum(EnumTableEntry *theEnum) {
+    this->currentEnum = theEnum;
+}
+
+void SymbolTable::ResetCurrentEnum() {
+    this->currentEnum = nullptr;
+    this->currentEnumItemValue = 0;
+}
+
+void SymbolTable::SetCurrentFunction(FunctionTableEntry *function) {
+    this->currentFunction = function;
+}
+
+void SymbolTable::ResetCurrentFunction() {
+    this->currentFunction = nullptr;
+}
+
+
+
+void SymbolTable::IsIntMainPresent() {
     FunctionTableEntry *mainFunction = this->functionTable.GetFunctionByName("main");
 
     if (mainFunction) {
@@ -96,27 +115,6 @@ void SymbolTable::CheckIfMainPresent() {
     } else {
         this->parser->notifyErrorListeners(MISSING_MAIN);
     }
-}
-
-
-
-void SymbolTable::SetCurrentEnum(EnumTableEntry *theEnum) {
-    this->currentEnum = theEnum;
-    this->currentEnumItemvalue = 0;
-}
-
-void SymbolTable::RemoveCurrentEnum() {
-    this->currentEnum = nullptr;
-}
-
-
-
-void SymbolTable::SetCurrentFunction(FunctionTableEntry *function) {
-    this->currentFunction = function;
-}
-
-void SymbolTable::RemoveCurrentFunction() {
-    this->currentFunction = nullptr;
 }
 
 
@@ -143,6 +141,38 @@ void SymbolTable::Print() {
 
 // PRIVATE:
 
+bool SymbolTable::IsVariableNameAvailable(const string & name, Scope & scope) {
+    // NESMÍ být stejná jako jiná proměnná v dané rozsahu
+        // lokální - v sobě samotném a NESMÍ být stejná jako parametr funkce
+        // globální - jen v něm samotném a MŮŽE být stejná jako parametr funkce
+    // NESMÍ být stejná jako funkce
+    // MŮŽE být stejná jako parametr funkce VE KTERÉ NELEŽÍ
+    // MŮŽE být stejná jako název enumu
+    // NESMÍ být stejná jako položka enumu
+}
+
+bool SymbolTable::IsFunctionNameAvailable(const string & name) {
+    // NESMÍ být stejné jako globální proměnná
+    // MŮŽE být stejné jako jakákoli lokální proměnná
+    // NESMÍ být stejné jako jiná funkce
+    // MŮŽE být stejné jako parametr funkce
+    // MŮŽE být stejné jako název enumu
+    // NEMŮŽE být stejné jako položka enumu
+}
+
+bool SymbolTable::IsFunctionParameterNameAvailable(const string & name) { // checks in currentFunction
+    // MŮŽE být stejné jako globální proměnná
+    // zamezuje stejně pojmenované lokální proměnné ve stejné funkci
+    // MŮŽE být stejné jako nějaká funkce
+    // NESMÍ být stejné jako parametr stejné funkce, v různých OK
+    // MŮŽE být stejné jako název enumu
+    // !!!!! MŮŽE být stejné jako položka enumu (wtf...)
+}
+
+bool SymbolTable::IsEnumNameAvailable(const string & name);
+bool SymbolTable::IsEnumItemNameAvailable(const string & name); // checks in currentEnum
+bool SymbolTable::IsEnumItemValueAvailable(const int & value); // -//-
+/*
 bool SymbolTable::IsIDAvailable(const string & name, Scope & scope) {
     if (this->enumTable.IsIdTaken(name)) { // checks enums and their items
         return false;
@@ -166,99 +196,50 @@ bool SymbolTable::IsEnumValueAvailable(const int & value) {
 bool SymbolTable::IsFunctionParameterNameAvailable(const string & name) {
     return this->functionTable.IsParameterNameAvailable(name, this->currentFunction);
 }
-
-
-
-Type SymbolTable::ResolveNonVoidType(JabukodParser::NonVoidTypeContext *type) {
-    string typeName = type->getText();
-
-    if (typeName == "int") {
-        return Type::INT;
-    } else if (typeName == "float") {
-        return Type::FLOAT;
-    } else if (typeName == "bool") {
-        return Type::BOOL;
-    } else if (typeName == "string") {
-        return Type::STRING;
-    }
-
-    return Type::VOID;
-}
-
-Type SymbolTable::ResolveType(JabukodParser::TypeContext *type) {
-    string typeName = type->getText();
-
-    if (typeName == "int") {
-        return Type::INT;
-    } else if (typeName == "float") {
-        return Type::FLOAT;
-    } else if (typeName == "bool") {
-        return Type::BOOL;
-    } else if (typeName == "string") {
-        return Type::STRING;
-    } else if (typeName == "void") {
-        return Type::VOID;
-    }
-
-    return Type::VOID;
-}
+*/
 
 
 
 StorageSpecifier SymbolTable::ResolveStorageSpecifier(JabukodParser::StorageSpecifierContext *specifier) {
-    if (specifier) {
-        string specifierName = specifier->getText();
-        
-        if (specifierName == "const") { // declaring a constant doesn't make sense
-            if (dynamic_cast<JabukodParser::VariableDeclarationContext *>(specifier->parent)) {
+    StorageSpecifier specifierKind = SpecifierFunctions::StringToSpecifier(specifier->getText());
+
+    switch (specifierKind) {
+        case StorageSpecifier::NONE:
+            break;
+        case StorageSpecifier::CONST:
+            if (this->IsFromDeclaration(specifier)) {
                 this->parser->notifyErrorListeners(specifier->getStart(), CONSTANT_DECLARATION, nullptr);
             }
-            return StorageSpecifier::CONST;
-        } else if (specifierName == "static") {
+            break;
+        case StorageSpecifier::STATIC:
             this->parser->notifyErrorListeners(specifier->getStart(), STATIC_GLOBAL_VARIABLE, nullptr);
-            return StorageSpecifier::STATIC;
-        } else {
-            return StorageSpecifier::NONE;
-        }
+            break;
     }
 
-    return StorageSpecifier::NONE;
+    return specifierKind;
 }
+
+bool SymbolTable::IsFromDeclaration(JabukodParser::StorageSpecifierContext *specifier) {
+    return dynamic_cast<JabukodParser::VariableDeclarationContext *>( specifier->parent );
+}
+
+
 
 any SymbolTable::ResolveDefaultValue(JabukodParser::ExpressionContext *expression, Type type) {
     if (expression) {
-        if (this->IsOnlyLiteral(expression)) {
+        if (this->IsExpressionOnlyLiteral(expression)) {
             return this->ResolveExplicitDefaultValue(expression->literal(), type);
         } else {
             this->parser->notifyErrorListeners(expression->getStart(), GLOBAL_VARIABLE_DEFINITION_EXPRESSION, nullptr);
-            return any(0);
+            return any( 0 );
         }
     } else {
         return this->GetImplicitDefaultValue(type);
     }
 }
 
-bool SymbolTable::IsOnlyLiteral(JabukodParser::ExpressionContext *expression) {
-    if (expression->literal()) {
-        return true;
-    }
-    
-    return false;
-}
-
-any SymbolTable::GetImplicitDefaultValue(Type type){
-    switch (type) {
-        case Type::INT:
-            return any( 0 );
-        case Type::FLOAT:
-            return any( 0.0f );
-        case Type::BOOL:
-            return any( false );
-        case Type::STRING:
-            return any( string("") );
-    }
-
-    return any(0); // suppress warning
+bool SymbolTable::IsExpressionOnlyLiteral(JabukodParser::ExpressionContext *expression) {
+    return expression->literal();
 }
 
 any SymbolTable::ResolveExplicitDefaultValue(JabukodParser::LiteralContext *defaultValue, Type type) {
@@ -281,9 +262,9 @@ any SymbolTable::ResolveExplicitDefaultValue(JabukodParser::LiteralContext *defa
             this->parser->notifyErrorListeners(defaultValue->BOOL_LITERAL()->getSymbol(), MISPLACED_BOOL_LITERAL, nullptr);
         }
         if (defaultValue->BOOL_LITERAL()->getText() == "true") {
-            return any(true);
+            return any( true );
         } else {
-            return any(false);
+            return any( false );
         }
     }
 
@@ -294,7 +275,22 @@ any SymbolTable::ResolveExplicitDefaultValue(JabukodParser::LiteralContext *defa
         return any( this->ReplaceEscapeSequences( defaultValue->STRING_LITERAL()->getText() ) );
     }
 
-    return any(0); // suppress warning
+    return any( 0 ); // suppress warning
+}
+
+any SymbolTable::GetImplicitDefaultValue(Type type){
+    switch (type) {
+        case Type::INT:
+            return any( 0 );
+        case Type::FLOAT:
+            return any( 0.0f );
+        case Type::BOOL:
+            return any( false );
+        case Type::STRING:
+            return any( string("") );
+    }
+
+    return any( 0 ); // suppress warning
 }
 
 
@@ -302,7 +298,7 @@ any SymbolTable::ResolveExplicitDefaultValue(JabukodParser::LiteralContext *defa
 string SymbolTable::ReplaceEscapeSequences(const string & str) {
     string resolved = "";
     
-    for (size_t i = 1; i < str.size() - 1; i++) { // literal itself is delimited by "", this is skipped
+    for (size_t i = 1; i < str.size() - 1; i++) { // literal itself is delimited by "", they are skipped
         if (str[i] == '\\') {
             i++;
             switch (str[i]) {

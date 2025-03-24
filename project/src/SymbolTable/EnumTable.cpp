@@ -9,20 +9,36 @@ EnumTableEntry *EnumTable::AddEntry(const string & name) {
 
 
 
-bool EnumTable::IsIdTaken(const string & name) {
+EnumTableEntry *EnumTable::GetEntryByName(const string & name) {
     for (auto & entry : this->enums) {
         if (entry.GetEntryName() == name) {
-            return true;
-        }
-
-        for (auto & item : entry.GetEntryItems()) {
-            if (item.GetName() == name) {
-                return true;
-            }
+            return &entry;
         }
     }
 
-    return false;
+    return nullptr;
+}
+
+
+
+bool EnumTable::IsNameAvailable(const string & name) {
+    for (auto & entry : this->enums) {
+        if (entry.GetEntryName() == name) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+bool EnumTable::IsItemNameAvailable(const string & name, EnumTableEntry *theEnum) {
+    for (auto & item : theEnum->GetEntryItems()) {
+        if (item.GetName() == name) {
+            return false;
+        }
+    }
+
+    return true;
 }
 
 bool EnumTable::IsItemValueAvailable(const int & value, EnumTableEntry *theEnum) {

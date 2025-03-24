@@ -61,7 +61,7 @@ any SymTabGlobalsVisitor::visitFunctionDefinition(JabukodParser::FunctionDefinit
     if (ctx->functionParameters()) {
         this->visit(ctx->functionParameters());
     }
-    this->symbolTable.RemoveCurrentFunction();
+    this->symbolTable.ResetCurrentFunction();
     
     return OK;
 }
@@ -81,7 +81,7 @@ any SymTabGlobalsVisitor::visitEnumDefinition(JabukodParser::EnumDefinitionConte
 
     this->symbolTable.SetCurrentEnum(newEnumPointer);
     this->visit(ctx->enumBlock());
-    this->symbolTable.RemoveCurrentEnum();
+    this->symbolTable.ResetCurrentEnum();
 
     return OK;
 }

@@ -12,7 +12,7 @@ public:
         const any & defaultValue
     );
 
-    bool IsVariableInScope(const string & name);
+    bool IsVariableNameAvailable(const string & name);
 
     void Print();
 

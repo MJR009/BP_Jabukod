@@ -21,3 +21,23 @@ string TypeFunctions::TypeToString(Type type) {
 
     return "";
 }
+
+Type TypeFunctions::StringToType(const string & type) {
+    if (type == "int") {
+        return Type::INT;
+    }
+    if (type == "float") {
+        return Type::FLOAT;
+    }
+    if (type == "bool") {
+        return Type::BOOL;
+    }
+    if (type == "string") {
+        return Type::STRING;
+    }
+    if (type == "void") {
+        return Type::VOID;
+    }
+
+    return Type::VOID;
+}

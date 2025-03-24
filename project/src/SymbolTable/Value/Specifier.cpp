@@ -12,3 +12,17 @@ string SpecifierFunctions::SpeficierToString(StorageSpecifier specifier) {
 
     return "";
 }
+
+StorageSpecifier SpecifierFunctions::StringToSpecifier(const string & specifier) {
+    if (specifier == "-") {
+        return StorageSpecifier::NONE;
+    }
+    if (specifier == "const") {
+        return StorageSpecifier::CONST;
+    }
+    if (specifier == "static") {
+        return StorageSpecifier::STATIC;
+    }
+
+    return StorageSpecifier::NONE;
+}

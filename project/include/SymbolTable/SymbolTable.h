@@ -17,18 +17,28 @@ public:
         JabukodParser::NonVoidTypeContext *variableType,
         JabukodParser::ExpressionContext *defaultValue
     );
-    FunctionTableEntry *AddFunction(antlr4::Token *function, JabukodParser::TypeContext *returnType);
-    void AddFunctionParameter(JabukodParser::NonVoidTypeContext *parameterType, antlr4::Token *parameterName);
-    EnumTableEntry *AddEnum(antlr4::Token *theEnum);
-    void AddEnumItem(antlr4::Token *itemName, antlr4::Token *itemValue);
-
-    void CheckIfMainPresent();
+    FunctionTableEntry *AddFunction(
+        antlr4::Token *function,
+        JabukodParser::TypeContext *returnType
+    );
+    void AddFunctionParameter(
+        JabukodParser::NonVoidTypeContext *parameterType,
+        antlr4::Token *parameterName
+    );
+    EnumTableEntry *AddEnum(
+        antlr4::Token *theEnum
+    );
+    void AddEnumItem(
+        antlr4::Token *itemName,
+        antlr4::Token *itemValue
+    );
 
     void SetCurrentEnum(EnumTableEntry *theEnum);
-    void RemoveCurrentEnum();
-
+    void ResetCurrentEnum();
     void SetCurrentFunction(FunctionTableEntry *function);
-    void RemoveCurrentFunction();
+    void ResetCurrentFunction();
+
+    void IsIntMainPresent();
 
     void Print();
 
@@ -40,27 +50,25 @@ private:
     EnumTable enumTable;
 
     EnumTableEntry *currentEnum = nullptr; // used for adding entries
-    int currentEnumItemvalue = 0;
+    int currentEnumItemValue = 0;
 
     FunctionTableEntry *currentFunction = nullptr; // used for storing parameters
 
 private:
-    // TODO these functions need to be more specific !!!!!!
-    bool IsIDAvailable(const string & name, Scope & scope);
-    bool IsEnumValueAvailable(const int & value);
-    bool IsFunctionParameterNameAvailable(const string & name);
-
-    Type ResolveNonVoidType(JabukodParser::NonVoidTypeContext *type);
-    Type ResolveType(JabukodParser::TypeContext *type);
+    bool IsVariableNameAvailable(const string & name, Scope & scope);
+    bool IsFunctionNameAvailable(const string & name);
+    bool IsFunctionParameterNameAvailable(const string & name); // checks in currentFunction
+    bool IsEnumNameAvailable(const string & name);
+    bool IsEnumItemNameAvailable(const string & name); // checks in currentEnum
+    bool IsEnumItemValueAvailable(const int & value);
 
     StorageSpecifier ResolveStorageSpecifier(JabukodParser::StorageSpecifierContext *specifier);
+    bool IsFromDeclaration(JabukodParser::StorageSpecifierContext *specifier);
+
     any ResolveDefaultValue(JabukodParser::ExpressionContext *expression, Type type);
-    bool IsOnlyLiteral(JabukodParser::ExpressionContext *expression);
+    bool IsExpressionOnlyLiteral(JabukodParser::ExpressionContext *expression);
+    any ResolveExplicitDefaultValue(JabukodParser::LiteralContext *defaultValue, Type type); // for definitions, also does type checking
     any GetImplicitDefaultValue(Type type); // for declarations
-    any ResolveExplicitDefaultValue(
-        JabukodParser::LiteralContext *defaultValue,
-        Type type    
-    ); // for global definitions, also does type checking
 
     string ReplaceEscapeSequences(const string & str);
 };

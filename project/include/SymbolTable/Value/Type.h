@@ -10,5 +10,6 @@ typedef enum TYPE Type;
 namespace TypeFunctions {
 
 string TypeToString(Type type);
+Type StringToType(const string & type);
 
 } // namespace TypeFuntions

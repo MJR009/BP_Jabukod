@@ -9,7 +9,7 @@ public:
 
     FunctionTableEntry *GetFunctionByName(const string & name);
 
-    bool IsIdTaken(const string & name);
+    bool IsNameAvailable(const string & name);
     bool IsParameterNameAvailable(const string & name, FunctionTableEntry *function);
 
     void Print();

@@ -21,14 +21,14 @@ FunctionTableEntry *FunctionTable::AddEntry(const string & name, const Type retu
 
 
 
-bool FunctionTable::IsIdTaken(const string & name) {
+bool FunctionTable::IsNameAvailable(const string & name) {
     for (auto & function : this->functions) {
         if (function.GetFunctionName() == name) {
-            return true;
+            return false;
         }
     }
 
-    return false;
+    return true;
 }
 
 bool FunctionTable::IsParameterNameAvailable(const string & name, FunctionTableEntry *function) {

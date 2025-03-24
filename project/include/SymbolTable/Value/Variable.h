@@ -26,5 +26,5 @@ private:
     Type type;
     any defaultValue;
 
-    void PrintDefaultByType() const;
+    void PrintDefaultValue() const;
 };

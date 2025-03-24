@@ -14,6 +14,8 @@
 
 - Redefinice proměnné by mohla ukázat kde byla poprvé definována
 
+- REDEKLARACE NEJSOU POVOLENY
+
 TEXT
 
 - OPRAVIT v příloze ne/terminální symboly na ne/terminály !!!
@@ -24,6 +26,7 @@ Další výhoda ANTLR4 - výborný error reporting (podle poznámek na papíře 
 kniha antlr str. 167 - není vhodné používat sémantické predikáty (vnořené akce) na sémantiku (bruh)
 kniha antlr str. 178 - obecně není vhodné dávat kód aplikace do gramatiky, já to taky dělat nebudu
 protože se při chybách parseru překlad zastaví, je obrovskou výhodou, že pokud projde, můžeme očekávat validní vstup pro generátor
+- REDEKLARACE NEJSOU POVOLENY
 
 popsat výchozí hodnoty pro deklarace
 INT - 0
