@@ -9,11 +9,11 @@ public:
 
     void AddParameter(const Type parameterType, const string & parameterName);
 
-    string GetFunctionName();
-    Type GetReturnType();
-    vector<Parameter> GetParameters();
+    string GetFunctionName() const;
+    Type GetReturnType() const;
+    vector<Parameter> GetParameters() const;
 
-    void Print();
+    void Print() const;
 
 private:
     string name;

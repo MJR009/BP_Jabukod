@@ -12,7 +12,7 @@ void Scope::AddEntry(
 
 
 
-bool Scope::IsVariableNameAvailable(const string & name) {
+bool Scope::IsVariableNameAvailable(const string & name) const {
     for (auto & variable : this->variables) {
         if (variable.GetName() == name) {
             return false;
@@ -24,7 +24,7 @@ bool Scope::IsVariableNameAvailable(const string & name) {
 
 
 
-void Scope::Print() {
+void Scope::Print() const {
     for (auto & variable : this->variables) {
         cout << variable.GetName() << endl;
 

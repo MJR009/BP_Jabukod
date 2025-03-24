@@ -7,21 +7,21 @@ void FunctionTableEntry::AddParameter(const Type parameterType, const string & p
 
 
 
-string FunctionTableEntry::GetFunctionName() {
+string FunctionTableEntry::GetFunctionName() const {
     return this->name;
 }
 
-Type FunctionTableEntry::GetReturnType() {
+Type FunctionTableEntry::GetReturnType() const {
     return this->returnType;
 }
 
-vector<Parameter> FunctionTableEntry::GetParameters() {
+vector<Parameter> FunctionTableEntry::GetParameters() const {
     return this->parameters;
 }
 
 
 
-void FunctionTableEntry::Print() {
+void FunctionTableEntry::Print() const {
     cout << this->name << endl;
 
     cout << "  < returns: " << TypeFunctions::TypeToString(this->returnType) << " >" << endl;

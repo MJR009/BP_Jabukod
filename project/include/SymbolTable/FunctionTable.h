@@ -9,10 +9,10 @@ public:
 
     FunctionTableEntry *GetFunctionByName(const string & name);
 
-    bool IsNameAvailable(const string & name);
-    bool IsParameterNameAvailable(const string & name, FunctionTableEntry *function);
+    bool IsNameAvailable(const string & name) const;
+    bool IsParameterNameAvailable(const string & name, FunctionTableEntry *function) const;
 
-    void Print();
+    void Print() const;
 
 private:
     vector<FunctionTableEntry> functions;

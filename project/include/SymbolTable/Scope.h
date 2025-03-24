@@ -12,9 +12,9 @@ public:
         const any & defaultValue
     );
 
-    bool IsVariableNameAvailable(const string & name);
+    bool IsVariableNameAvailable(const string & name) const;
 
-    void Print();
+    void Print() const;
 
 private:
     vector<Variable> variables;

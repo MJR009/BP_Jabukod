@@ -40,7 +40,7 @@ public:
 
     void CheckIfIntMainPresent();
 
-    void Print();
+    void Print() const;
 
 private:
     JabukodParser *parser; // for semantic error reporting via notifyErrorListeners()
@@ -55,20 +55,21 @@ private:
     FunctionTableEntry *currentFunction = nullptr; // used for storing parameters
 
 private:
-    bool IsVariableNameAvailable(const string & name, Scope & scope);
-    bool IsFunctionNameAvailable(const string & name);
-    bool IsFunctionParameterNameAvailable(const string & name); // checks in currentFunction
-    bool IsEnumNameAvailable(const string & name);
-    bool IsEnumItemNameAvailable(const string & name); // checks in currentEnum
-    bool IsEnumItemValueAvailable(const int & value);
+    bool IsGlobalVariableNameAvailable(const string & name) const;
+    bool IsVariableNameAvailable(const string & name, Scope & scope) const;
+    bool IsFunctionNameAvailable(const string & name) const;
+    bool IsFunctionParameterNameAvailable(const string & name) const; // checks in currentFunction
+    bool IsEnumNameAvailable(const string & name) const;
+    bool IsEnumItemNameAvailable(const string & name) const; // checks in currentEnum
+    bool IsEnumItemValueAvailable(const int & value) const;
 
-    StorageSpecifier ResolveStorageSpecifier(JabukodParser::StorageSpecifierContext *specifier);
-    bool IsFromDeclaration(JabukodParser::StorageSpecifierContext *specifier);
+    StorageSpecifier ResolveStorageSpecifier(JabukodParser::StorageSpecifierContext *specifier) const;
+    bool IsFromDeclaration(JabukodParser::StorageSpecifierContext *specifier) const;
 
-    any ResolveDefaultValue(JabukodParser::ExpressionContext *expression, Type type);
-    bool IsExpressionOnlyLiteral(JabukodParser::ExpressionContext *expression);
-    any ResolveExplicitDefaultValue(JabukodParser::LiteralContext *defaultValue, Type type); // for definitions, also does type checking
-    any GetImplicitDefaultValue(Type type); // for declarations
+    any ResolveDefaultValue(JabukodParser::ExpressionContext *expression, Type type) const;
+    bool IsExpressionOnlyLiteral(JabukodParser::ExpressionContext *expression) const;
+    any ResolveExplicitDefaultValue(JabukodParser::LiteralContext *defaultValue, Type type) const; // for definitions, also does type checking
+    any GetImplicitDefaultValue(Type type) const; // for declarations
 
-    string ReplaceEscapeSequences(const string & str);
+    string ReplaceEscapeSequences(const string & str) const;
 };

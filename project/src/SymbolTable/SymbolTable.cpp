@@ -17,7 +17,7 @@ void SymbolTable::AddGlobalVariable(
     Type type = TypeFunctions::StringToType(variableType->getText());
     any value = this->ResolveDefaultValue(defaultValue, type); // returns default to process as many errors as possible
 
-    if (this->IsVariableNameAvailable(name, this->globalScope)) {
+    if (this->IsGlobalVariableNameAvailable(name)) {
         this->globalScope.AddEntry(name, storage, type, value);
     } else {
         this->parser->notifyErrorListeners(variable, VARIABLE_REDEFINITION, nullptr);
@@ -46,7 +46,9 @@ void SymbolTable::AddFunctionParameter(JabukodParser::NonVoidTypeContext *parame
         this->parser->notifyErrorListeners(parameterName, REDEFINITION_OF_PARAMETER, nullptr);
     }
 
-    this->currentFunction->AddParameter(type, name);
+    if (this->currentFunction) {
+        this->currentFunction->AddParameter(type, name);
+    }
 }
 
 EnumTableEntry *SymbolTable::AddEnum(antlr4::Token *theEnum) {
@@ -79,7 +81,9 @@ void SymbolTable::AddEnumItem(antlr4::Token *itemName, antlr4::Token *itemValue)
         }
     }
 
-    this->currentEnum->AddItem(name, this->currentEnumItemValue);
+    if (this->currentEnum) { // if enum does not have original name, it is not stored
+        this->currentEnum->AddItem(name, this->currentEnumItemValue);
+    }
 
     this->currentEnumItemValue++;
 }
@@ -119,7 +123,7 @@ void SymbolTable::CheckIfIntMainPresent() {
 
 
 
-void SymbolTable::Print() {
+void SymbolTable::Print() const {
     cout << "Functions:" << endl;
     cout << "=====" << endl;
     this->functionTable.Print();
@@ -139,11 +143,9 @@ void SymbolTable::Print() {
 
 
 
-// PRIVATE:
+// PRIVATE: 
 
-bool SymbolTable::IsVariableNameAvailable(const string & name, Scope & scope) {
-    // GLOBÁLNÍ
-
+bool SymbolTable::IsGlobalVariableNameAvailable(const string & name) const {
     // NEMOHOU být dvě stejně se jmenující globální proměnné
     // lokální proměnná PŘEKRYJE globální
     // NEMŮŽE být stejně jako funkce, před ani za
@@ -151,8 +153,20 @@ bool SymbolTable::IsVariableNameAvailable(const string & name, Scope & scope) {
     // MŮŽE být stejná jako název enumu, před i za
     // NEMŮŽE být stejná jako položka enumu, před ani za
 
-    // LOKÁLNÍ
+    if ( ! this->globalScope.IsVariableNameAvailable(name)) {
+        return false;
+    }
+    if ( ! this->functionTable.IsNameAvailable(name)) {
+        return false;
+    }
+    if ( ! this->enumTable.IsItemNameAvailableAcrossAll(name)) {
+        return false;
+    }
 
+    return true;
+}
+
+bool SymbolTable::IsVariableNameAvailable(const string & name, Scope & scope) const {
     // lokální proměnná PŘEKRYJE globální proměnnou
     // nelze mít v jednom rozsahu dvě stejné lokální proměnné, PŘEKRÝVÁ vyšší rozsahy
     // !!!!! PŘEKRYJE název funkce, ALE funkce nepřekryje ji pokud je volaná před její definicí
@@ -160,10 +174,12 @@ bool SymbolTable::IsVariableNameAvailable(const string & name, Scope & scope) {
     // MŮŽE být stejné jako název enumu
     // PŘEKRYJE položku enumu
 
+    // TODO celkové zpracování lokálních proměnných
+
     return true;
 }
 
-bool SymbolTable::IsFunctionNameAvailable(const string & name) {
+bool SymbolTable::IsFunctionNameAvailable(const string & name) const {
     // NESMÍ být stejné jako globální proměnná
     // je PŘEKRYTA lokální proměnnou, ALE až po její definici
     // NESMÍ být stejné jako jiná funkce
@@ -171,21 +187,41 @@ bool SymbolTable::IsFunctionNameAvailable(const string & name) {
     // MŮŽE být stejné jako název enumu
     // NEMŮŽE být stejné jako položka enumu
 
+    // TODO kontrola pro lokální proměnné
+
+    if ( ! this->globalScope.IsVariableNameAvailable(name)) {
+        return false;
+    }
+    if ( ! this->functionTable.IsNameAvailable(name)) {
+        return false;
+    }
+    if ( ! this->enumTable.IsItemNameAvailableAcrossAll(name)) {
+        return false;
+    }
+
     return true;
 }
 
-bool SymbolTable::IsFunctionParameterNameAvailable(const string & name) { // checks in currentFunction
+bool SymbolTable::IsFunctionParameterNameAvailable(const string & name) const { // checks in currentFunction
     // PŘEKRYJE globální proměnnou
     // STEJNÝ SCOPE - nelze mít stejnou lokální proměnnou
-    // PŘEKRYJE název funkce
+    // PŘEKRYJE název jakékoli funkce (pokud pak byla funkce zavolána, nastane chyba)
     // NESMÍ být dva stejné parametry funkce
     // MŮŽE být stejné jako název enumu
     // PŘEKRYJE položku enumu
 
+    // TODO kontrola pro lokální scope funkce
+
+    if (this->currentFunction) {
+        if ( ! this->functionTable.IsParameterNameAvailable(name, this->currentFunction)) {
+            return false;
+        }
+    }
+
     return true;
 }
 
-bool SymbolTable::IsEnumNameAvailable(const string & name) {
+bool SymbolTable::IsEnumNameAvailable(const string & name) const {
     // MŮŽE být stejné jako globální proměnná, před i za
     // MŮŽE být stejné jako lokální proměnná, před i za ní
     // MŮŽE být stejné jako název funkce, před i za
@@ -193,27 +229,41 @@ bool SymbolTable::IsEnumNameAvailable(const string & name) {
     // NEMŮŽE být stejné jako už existující enum
     // MŮŽE být stejné jako položka už existujícího enumu, před i za
 
-    return true;
+    return this->enumTable.IsNameAvailable(name);
 }
 
-bool SymbolTable::IsEnumItemNameAvailable(const string & name) { // checks in currentEnum
+bool SymbolTable::IsEnumItemNameAvailable(const string & name) const { // checks in currentEnum
     // NEMŮŽE být stejné jako globální proměnná, před ani za
-    // !!!!! lokální proměnná PŘEKRÝVÁ enum item
+    // MŮŽE být stejhný jako lokální proměnná, JE JÍ PŘEKRYT
     // NEMŮŽE být stejné jako název funkce, před ani za
     // MŮŽE být stejné jako parametr funkce, před i za
     // MŮŽE být stejné jako název svého enumu a i jiného enumu
-    // NEMŮŽE být stejné jako jiná položka stejného enumu ani jiného enumu
+    // NEMŮŽE být stejné jako jiná položka stejného enumu ANI JINÉHO ENUMU
+
+    if ( ! this->globalScope.IsVariableNameAvailable(name)) {
+        return false;
+    }
+    if ( ! this->functionTable.IsNameAvailable(name)) {
+        return false;
+    }
+    if ( ! this->enumTable.IsItemNameAvailableAcrossAll(name)) {
+        return false;
+    }
 
     return true;
 }
 
-bool SymbolTable::IsEnumItemValueAvailable(const int & value) { // -//-
-    return this->enumTable.IsItemValueAvailable(value, this->currentEnum);
+bool SymbolTable::IsEnumItemValueAvailable(const int & value) const { // -//-
+    if (this->currentEnum) {
+        return this->enumTable.IsItemValueAvailable(value, this->currentEnum);
+    } else {
+        return true; // if no enum is active, no value is stored, and no errors should be shown
+    }
 }
 
 
 
-StorageSpecifier SymbolTable::ResolveStorageSpecifier(JabukodParser::StorageSpecifierContext *specifier) {
+StorageSpecifier SymbolTable::ResolveStorageSpecifier(JabukodParser::StorageSpecifierContext *specifier) const {
     StorageSpecifier specifierKind = SpecifierFunctions::StringToSpecifier(specifier->getText());
 
     switch (specifierKind) {
@@ -232,13 +282,13 @@ StorageSpecifier SymbolTable::ResolveStorageSpecifier(JabukodParser::StorageSpec
     return specifierKind;
 }
 
-bool SymbolTable::IsFromDeclaration(JabukodParser::StorageSpecifierContext *specifier) {
+bool SymbolTable::IsFromDeclaration(JabukodParser::StorageSpecifierContext *specifier) const {
     return dynamic_cast<JabukodParser::VariableDeclarationContext *>( specifier->parent );
 }
 
 
 
-any SymbolTable::ResolveDefaultValue(JabukodParser::ExpressionContext *expression, Type type) {
+any SymbolTable::ResolveDefaultValue(JabukodParser::ExpressionContext *expression, Type type) const {
     if (expression) {
         if (this->IsExpressionOnlyLiteral(expression)) {
             return this->ResolveExplicitDefaultValue(expression->literal(), type);
@@ -251,11 +301,11 @@ any SymbolTable::ResolveDefaultValue(JabukodParser::ExpressionContext *expressio
     }
 }
 
-bool SymbolTable::IsExpressionOnlyLiteral(JabukodParser::ExpressionContext *expression) {
+bool SymbolTable::IsExpressionOnlyLiteral(JabukodParser::ExpressionContext *expression) const {
     return expression->literal();
 }
 
-any SymbolTable::ResolveExplicitDefaultValue(JabukodParser::LiteralContext *defaultValue, Type type) {
+any SymbolTable::ResolveExplicitDefaultValue(JabukodParser::LiteralContext *defaultValue, Type type) const {
     if (defaultValue->INT_LITERAL()) {
         if (type != Type::INT) {
             this->parser->notifyErrorListeners(defaultValue->INT_LITERAL()->getSymbol(), MISPLACED_INT_LITERAL, nullptr);
@@ -291,7 +341,7 @@ any SymbolTable::ResolveExplicitDefaultValue(JabukodParser::LiteralContext *defa
     return any( 0 ); // suppress warning
 }
 
-any SymbolTable::GetImplicitDefaultValue(Type type){
+any SymbolTable::GetImplicitDefaultValue(Type type) const {
     switch (type) {
         case Type::INT:
             return any( 0 );
@@ -308,7 +358,7 @@ any SymbolTable::GetImplicitDefaultValue(Type type){
 
 
 
-string SymbolTable::ReplaceEscapeSequences(const string & str) {
+string SymbolTable::ReplaceEscapeSequences(const string & str) const {
     string resolved = "";
     
     for (size_t i = 1; i < str.size() - 1; i++) { // literal itself is delimited by "", they are skipped

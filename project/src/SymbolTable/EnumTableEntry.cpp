@@ -7,17 +7,17 @@ void EnumTableEntry::AddItem(string itemName, int itemValue) {
 
 
 
-string EnumTableEntry::GetEntryName() {
+string EnumTableEntry::GetEntryName() const {
     return this->name;
 }
 
-vector<EnumItem> EnumTableEntry::GetEntryItems() {
+vector<EnumItem> EnumTableEntry::GetEntryItems() const {
     return this->items;
 }
 
 
 
-void EnumTableEntry::Print() {
+void EnumTableEntry::Print() const {
     cout << this->name << " [" << endl;
     for (auto & item : this->items) {
         cout << "  ";

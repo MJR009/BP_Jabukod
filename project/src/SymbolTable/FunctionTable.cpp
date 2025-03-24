@@ -21,7 +21,7 @@ FunctionTableEntry *FunctionTable::AddEntry(const string & name, const Type retu
 
 
 
-bool FunctionTable::IsNameAvailable(const string & name) {
+bool FunctionTable::IsNameAvailable(const string & name) const {
     for (auto & function : this->functions) {
         if (function.GetFunctionName() == name) {
             return false;
@@ -31,7 +31,7 @@ bool FunctionTable::IsNameAvailable(const string & name) {
     return true;
 }
 
-bool FunctionTable::IsParameterNameAvailable(const string & name, FunctionTableEntry *function) {
+bool FunctionTable::IsParameterNameAvailable(const string & name, FunctionTableEntry *function) const {
     for (auto & parameter : function->GetParameters()) {
         if (parameter.GetName() == name) {
             return false;
@@ -43,7 +43,7 @@ bool FunctionTable::IsParameterNameAvailable(const string & name, FunctionTableE
 
 
 
-void FunctionTable::Print() {
+void FunctionTable::Print() const {
     for (auto & function : this->functions) {
         function.Print();
     }

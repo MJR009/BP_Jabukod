@@ -2,7 +2,7 @@ string x = "hello\n";
 const int y = 1;
 bool z = true;
 float n = 3.14e-3;
-//string x = 0;
+//string x = "";
 void a() {
     int x;
     x = 1;
@@ -12,7 +12,7 @@ void a() {
 
 //int a;
 
-enum _1 {one, two, three = -3, four, five}//, six}
+enum X {one, two, three = -3, four, five}//, six}
 
 int f(int xx, int yy, bool zz) {
     g();
@@ -20,8 +20,6 @@ int f(int xx, int yy, bool zz) {
     g = 4;
     return x + y;
 }
-
-//int a;
 
 void g() {
     int x = 0;
@@ -37,6 +35,6 @@ int main (int argc, string argv) {
     f(1, 1);
 }
 
-enum X {
+enum Y {
     ONE, TWO = 7, THREE = 1, FOUR
 }

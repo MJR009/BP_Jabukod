@@ -9,10 +9,10 @@ public:
 
     void AddItem(string itemName, int itemValue);
 
-    string GetEntryName();
-    vector<EnumItem> GetEntryItems();
+    string GetEntryName() const;
+    vector<EnumItem> GetEntryItems() const;
 
-    void Print();
+    void Print() const;
 
 private:
     string name;
