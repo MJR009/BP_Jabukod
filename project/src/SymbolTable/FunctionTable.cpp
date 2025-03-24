@@ -1,5 +1,17 @@
 #include "FunctionTable.h"
 
+FunctionTableEntry *FunctionTable::GetFunctionByName(const string & name) {
+    for (auto &function : this->functions) {
+        if (function.GetFunctionName() == name) {
+            return &function;
+        }
+    }
+
+    return nullptr;
+}
+
+
+
 FunctionTableEntry *FunctionTable::AddEntry(const string & name, const Type returnType) {
     FunctionTableEntry function(name, returnType);
     this->functions.push_back(function);

@@ -10,6 +10,7 @@ public:
     void AddParameter(const Type parameterType, const string & parameterName);
 
     string GetFunctionName();
+    Type GetReturnType();
     vector< pair<Type, string> > GetParameters();
 
     void Print();

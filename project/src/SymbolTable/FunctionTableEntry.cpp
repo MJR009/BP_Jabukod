@@ -10,6 +10,10 @@ string FunctionTableEntry::GetFunctionName() {
     return this->name;
 }
 
+Type FunctionTableEntry::GetReturnType() {
+    return this->returnType;
+}
+
 vector< pair<Type, string> > FunctionTableEntry::GetParameters() {
     return this->parameters;
 }

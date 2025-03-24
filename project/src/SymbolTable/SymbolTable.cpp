@@ -87,7 +87,13 @@ void SymbolTable::AddEnumItem(antlr4::Token *itemName, antlr4::Token *itemValue)
 
 
 void SymbolTable::CheckIfMainPresent() {
-    if ( ! this->functionTable.IsIdTaken("main")) {
+    FunctionTableEntry *mainFunction = this->functionTable.GetFunctionByName("main");
+
+    if (mainFunction) {
+        if (mainFunction->GetReturnType() != Type::INT) {
+            this->parser->notifyErrorListeners(BAD_MAIN_RETURN_TYPE);
+        }
+    } else {
         this->parser->notifyErrorListeners(MISSING_MAIN);
     }
 }

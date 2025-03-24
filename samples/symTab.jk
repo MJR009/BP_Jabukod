@@ -33,7 +33,7 @@ void g() {
     x = f;
 }
 
-int main(int argc, string argv) {
+int main (int argc, string argv) {
     f(1, 1);
 }
 

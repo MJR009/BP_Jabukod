@@ -55,22 +55,14 @@ any SymTabGlobalsVisitor::visitVariableDefinition(JabukodParser::VariableDefinit
 any SymTabGlobalsVisitor::visitFunctionDefinition(JabukodParser::FunctionDefinitionContext *ctx) {
     antlr4::Token *function = ctx->IDENTIFIER()->getSymbol();
     JabukodParser::TypeContext *returnType = ctx->type();
-
     FunctionTableEntry *newFunctionPointer = this->symbolTable.AddFunction(function, returnType);
-    this->symbolTable.SetCurrentFunction(newFunctionPointer);
 
+    this->symbolTable.SetCurrentFunction(newFunctionPointer);
     if (ctx->functionParameters()) {
         this->visit(ctx->functionParameters());
     }
+    this->symbolTable.RemoveCurrentFunction();
     
-    return OK;
-}
-
-any SymTabGlobalsVisitor::visitFunctionParameters(JabukodParser::FunctionParametersContext *ctx) {
-    for (auto & parameter : ctx->functionParameter()) {
-        this->visit(parameter);
-    }
-
     return OK;
 }
 
@@ -85,21 +77,11 @@ any SymTabGlobalsVisitor::visitFunctionParameter(JabukodParser::FunctionParamete
 
 any SymTabGlobalsVisitor::visitEnumDefinition(JabukodParser::EnumDefinitionContext *ctx) {
     antlr4::Token *theEnum = ctx->IDENTIFIER()->getSymbol();
-
     EnumTableEntry *newEnumPointer = this->symbolTable.AddEnum(theEnum);
+
     this->symbolTable.SetCurrentEnum(newEnumPointer);
-
     this->visit(ctx->enumBlock());
-
     this->symbolTable.RemoveCurrentEnum();
-
-    return OK;
-}
-
-any SymTabGlobalsVisitor::visitEnumBlock(JabukodParser::EnumBlockContext *ctx) {
-    for (auto & enumItem : ctx->enumItem()) {
-        this->visit(enumItem);
-    }
 
     return OK;
 }

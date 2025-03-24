@@ -7,6 +7,7 @@
 #define REPEATED_ENUM_VALUE "reuse of the same value for multiple enum items is not allowed"
 #define REPEATED_CONJURED_ENUM_VALUE "reoccurence of a value for multiple enum items is not allowed"
 #define MISSING_MAIN "no entry point function 'main' is defined"
+#define BAD_MAIN_RETURN_TYPE "function main must have 'int' return type"
 #define STATIC_GLOBAL_VARIABLE "static global variables are not allowed"
 #define GLOBAL_VARIABLE_DEFINITION_EXPRESSION "global varible must be initialised by literal"
 #define MISPLACED_INT_LITERAL "cannot assign int literal"

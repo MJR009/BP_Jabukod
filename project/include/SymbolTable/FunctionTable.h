@@ -7,6 +7,8 @@ class FunctionTable {
 public:
     FunctionTableEntry *AddEntry(const string & name, const Type returnType);
 
+    FunctionTableEntry *GetFunctionByName(const string & name);
+
     bool IsIdTaken(const string & name);
     bool IsParameterNameAvailable(const string & name, FunctionTableEntry *function);
 
