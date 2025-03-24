@@ -40,7 +40,7 @@ int main(int argc, char **argv) {
     customErrorListener.SetSemanticPhase();
     // Phase 0: instantiate a symbol table
     SymbolTable symbolTable(&parser);
-    // Phase 1: get and check all globaly available symbols;
+    // Phase 1: get and check all globally available symbols;
     //        ->  function and enum identifiers, also get global variables (generaly stuff that should not be in AST)
     SymTabGlobalsVisitor symTabGlobalsVisitor(symbolTable);
     symTabGlobalsVisitor.visit(tree);

@@ -2,11 +2,7 @@
 #include "common.h"
 
 #include "Type.h"
-
-enum STORAGE_SPECIFIER {
-    NONE, CONST, STATIC
-};
-typedef enum STORAGE_SPECIFIER StorageSpecifier;
+#include "Specifier.h"
 
 class ScopeEntry {
 public:
