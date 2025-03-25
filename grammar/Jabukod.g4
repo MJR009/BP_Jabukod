@@ -2,10 +2,6 @@ grammar Jabukod;
 
 // Parser rules:
 
-//@parser::members{
-//    int foo();
-//}
-
 sourceFile // starting nonterminal
     : program? EOF
     ;

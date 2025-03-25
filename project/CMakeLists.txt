@@ -18,6 +18,7 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}) # common.h
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include/SymbolTable)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include/SymbolTable/Value)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include/AST)
 
 ### ANTLR related: ###
 

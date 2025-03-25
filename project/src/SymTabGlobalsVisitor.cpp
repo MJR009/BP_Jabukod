@@ -100,9 +100,3 @@ any SymTabGlobalsVisitor::visitEnumItem(JabukodParser::EnumItemContext *ctx) {
 
     return OK;
 }
-
-
-
-void SymTabGlobalsVisitor::DumpSymbolTable() {
-    this->symbolTable.Print();
-}

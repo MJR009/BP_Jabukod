@@ -3,16 +3,18 @@
 #include "JabukodLexer.h"
 #include "JabukodParser.h"
 
-#include "CallGraphListener.h"
 #include "CustomErrorListener.h"
-#include "DiagnosticErrorListener.h"
-
 #include "SymTabGlobalsVisitor.h"
+#include "ASTGenerationListener.h"
+
+// Development and debugging:
+#include "CallGraphListener.h"
+#include "DiagnosticErrorListener.h"
 
 int OpenSourceFile(char *name, ifstream & stream);
 
-void DumpTokensAndTree(antlr4::CommonTokenStream & tokens, antlr4::tree::ParseTree *tree, JabukodParser & parser);
-void DumpCallGraph(antlr4::tree::ParseTree *tree);
+void DumpTokensAndTree(antlr4::CommonTokenStream & tokens, antlr4::tree::ParseTree *parseTree, JabukodParser & parser);
+void DumpCallGraph(antlr4::tree::ParseTree *parseTree);
 
 int main(int argc, char **argv) {
     if (argc != 2) {
@@ -34,21 +36,27 @@ int main(int argc, char **argv) {
     CustomErrorListener customErrorListener;
     parser.addErrorListener(&customErrorListener);
 
-    antlr4::tree::ParseTree *tree = parser.sourceFile(); // sourceFile: starting nonterminal
+    antlr4::tree::ParseTree *parseTree = parser.sourceFile(); // sourceFile: starting nonterminal
 
     // SEMANTIC CHECKS
     customErrorListener.SetSemanticPhase();
     // Phase 0: instantiate a symbol table
     SymbolTable symbolTable(&parser);
     // Phase 1: get and check all globally available symbols;
-    //        ->  function and enum identifiers, also get global variables (generaly stuff that should not be in AST)
+    //        ->  function and enum identifiers, also global variables (generaly stuff that should not be in AST)
     SymTabGlobalsVisitor symTabGlobalsVisitor(symbolTable);
-    symTabGlobalsVisitor.visit(tree);
+    symTabGlobalsVisitor.visit(parseTree);
+    // Phase 2: generate abstract syntax tree while doing final semantic checks
+    AST ast(&parser);
+    antlr4::tree::ParseTreeWalker walker;
+    ASTGenerationListener astGenerationListener(ast);
+    walker.walk(&astGenerationListener, parseTree);
 
     if (parser.getNumberOfSyntaxErrors() != 0) {
         return NOK;
     }
-    symTabGlobalsVisitor.DumpSymbolTable();
+    //symbolTable.Print();
+    ast.Print();
 
     return OK;
 }
@@ -76,7 +84,7 @@ int OpenSourceFile(char *name, ifstream & stream) {
 
 void DumpTokensAndTree(
     antlr4::CommonTokenStream & tokens,
-    antlr4::tree::ParseTree *tree,
+    antlr4::tree::ParseTree *parseTree,
     JabukodParser & parser
 ) {
     tokens.fill();
@@ -86,14 +94,14 @@ void DumpTokensAndTree(
 
     cout << endl;
 
-    cout << tree->toStringTree(&parser, true) << endl;
+    cout << parseTree->toStringTree(&parser, true) << endl;
 }
 
-void DumpCallGraph(antlr4::tree::ParseTree *tree) {
+void DumpCallGraph(antlr4::tree::ParseTree *parseTree) {
     antlr4::tree::ParseTreeWalker walker;
     CallGraphListener listener;
 
-    walker.walk(&listener, tree);
+    walker.walk(&listener, parseTree);
 }
 
 // Diagnostics error listener to report all ambiguities

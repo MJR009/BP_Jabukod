@@ -1,5 +1,6 @@
 - Resolve CMake warnings
 - Add a LICENCE file (if needed)
+- Remove comments from grammar
 
 - Příklady programů:
 -- Hello World!
@@ -17,6 +18,14 @@
 - REDEKLARACE NEJSOU POVOLENY
 
 TEXT
+
+- ZREDUKOVAT PRO (četnost slova "pro")
+
+-- operací nad jazykem nebo řetězce vznikne nový jazykem
+-- Věc u vzorce vysvětlujícího pozitivní iteraci je ta věta úplně blbě, pozitivní iterace neobsahuje epsilon ten jazyk neobsahuje epsilon
+-- upravit : existují nástroje a techniky __určené pro__ softwarové pirátství
+-- odkazovat se na kapitolu obfuskace těsně před jejím začátkem je divný...
+-- zásadní nevýhodOu (u detrimentálnosti obfuskace)
 
 - OPRAVIT v příloze ne/terminální symboly na ne/terminály !!!
 
@@ -37,3 +46,5 @@ JAKÉKOLI POLE - prázdné
 
 ROZSAHY
 POPSÁNO PODROBNĚ V KÓDU SymbolTable.cpp
+
+- Položka enumu se chová stejně jako konstantní globální proměnná

@@ -15,9 +15,7 @@ public:
     any visitFunctionParameter(JabukodParser::FunctionParameterContext *ctx) override;
     any visitEnumDefinition(JabukodParser::EnumDefinitionContext *ctx) override;
     any visitEnumItem(JabukodParser::EnumItemContext *ctx) override;
-    
-    void DumpSymbolTable();
 
 private:
-    SymbolTable symbolTable;
+    SymbolTable & symbolTable;
 };
