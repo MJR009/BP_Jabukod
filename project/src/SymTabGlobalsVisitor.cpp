@@ -2,9 +2,6 @@
 
 // TODO ZPRACOVÁNÍ POLÍ A ENUMŮ 
 // TODO IMPLICITNÍ KONVERZE
-// !!!!! potřeba zkontrovlovat co má vlatní namespace a co ne... - ÚPRAVA IsIdAvailable funkce !
-// TODO NÁZEV FUNKCE JE VLASTNÍ NAMESPACE
-// TODO NÁZEV ENUMU JE VLASTNÍ NAMESPACE -> nemůže kolidovat s proměnnými a položkami enumu
 
 any SymTabGlobalsVisitor::visitSourceFile(JabukodParser::SourceFileContext *ctx) {
     visitChildren(ctx);
@@ -27,8 +24,6 @@ any SymTabGlobalsVisitor::visitVariableDeclaration(JabukodParser::VariableDeclar
 
     this->symbolTable.AddGlobalVariable(variable, storageSpecifier, type, nullptr);
 
-    // viz. TODOs
-
     return OK;
 }
 
@@ -47,8 +42,6 @@ any SymTabGlobalsVisitor::visitVariableDefinition(JabukodParser::VariableDefinit
 
     this->symbolTable.AddGlobalVariable(variable, storageSpecifier, type, toAssign);
 
-    // viz. TODOs
- 
     return OK;
 }
 

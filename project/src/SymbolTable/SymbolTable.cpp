@@ -28,8 +28,6 @@ FunctionTableEntry *SymbolTable::AddFunction(antlr4::Token *function, JabukodPar
     string name = function->getText();
     Type type = TypeFunctions::StringToType(returnType->getText());
 
-    // uložit parametry - definovat hlavní scope
-
     if (this->IsFunctionNameAvailable(name)) {
         return this->functionTable.AddEntry(name, type);
     } else {

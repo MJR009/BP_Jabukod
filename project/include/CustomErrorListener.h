@@ -3,14 +3,6 @@
 
 #include "BaseErrorListener.h"
 
-#define BOLD "\033[1m"
-#define DIM "\033[2m"
-
-#define RED "\033[31m"
-#define ORANGE "\033[38;2;255;165;0m"
-
-#define DEFAULT "\033[0m"
-
 enum PHASE {
     SYNTAX, SEMANTIC
 };

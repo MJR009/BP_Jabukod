@@ -8,10 +8,13 @@ public:
     ASTNode(NodeKind kind) : kind(kind) {}
 
     void PreorderWalkthorugh( void (*action)(ASTNode *) );
+    void PostorderWalkthrough( void (*action)(ASTNode *) );
+
+    ASTNode *GetParent();
+    int GetDepth();
+    bool IsLastChild() const;
 
     void AppendNewChild(ASTNode *newChild);
-
-    NodeKind GetKind();
 
     void Print() const;
 
