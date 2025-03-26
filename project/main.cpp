@@ -1,10 +1,8 @@
 #include "common.h"
 
-#include "JabukodLexer.h"
-#include "JabukodParser.h"
-
 #include "CustomErrorListener.h"
-#include "SymTabGlobalsVisitor.h"
+#include "SymbolTable.h"
+#include "GlobalSymbolsVisitor.h"
 #include "ASTGenerationVisitor.h"
 
 // Development and debugging:
@@ -44,8 +42,8 @@ int main(int argc, char **argv) {
     SymbolTable symbolTable(&parser);
     // Phase 1: get and check all globally available symbols;
     //        ->  function and enum identifiers, also global variables (generaly stuff that should not be in AST)
-    SymTabGlobalsVisitor symTabGlobalsVisitor(symbolTable);
-    symTabGlobalsVisitor.visit(parseTree);
+    GlobalSymbolsVisitor GlobalSymbolsVisitor(symbolTable);
+    GlobalSymbolsVisitor.visit(parseTree);
     // Phase 2: generate abstract syntax tree and do final semantic checks
     AST ast(&parser);
     ASTGenerationVisitor astGenerationVisitor(ast);

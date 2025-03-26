@@ -2,11 +2,12 @@
 #include "common.h"
 
 #include "JabukodBaseVisitor.h"
+
 #include "SymbolTable.h"
 
-class SymTabGlobalsVisitor : public JabukodBaseVisitor {
+class GlobalSymbolsVisitor : public JabukodBaseVisitor {
 public:
-    SymTabGlobalsVisitor(SymbolTable & symbolTable) : symbolTable(symbolTable) {}
+    GlobalSymbolsVisitor(SymbolTable & symbolTable) : symbolTable(symbolTable) {}
 
     any visitSourceFile(JabukodParser::SourceFileContext *ctx) override;
     any visitVariableDeclaration(JabukodParser::VariableDeclarationContext *ctx) override;

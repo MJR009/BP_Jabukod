@@ -280,6 +280,8 @@ StorageSpecifier SymbolTable::ResolveStorageSpecifier(JabukodParser::StorageSpec
     return specifierKind;
 }
 
+// dynamic cast only succeeds if the given instance is of the given type
+// for pointers it returns nullptr otherwise
 bool SymbolTable::IsFromDeclaration(JabukodParser::StorageSpecifierContext *specifier) const {
     return dynamic_cast<JabukodParser::VariableDeclarationContext *>( specifier->parent );
 }
@@ -288,19 +290,22 @@ bool SymbolTable::IsFromDeclaration(JabukodParser::StorageSpecifierContext *spec
 
 any SymbolTable::ResolveDefaultValue(JabukodParser::ExpressionContext *expression, Type type) const {
     if (expression) {
-        if (this->IsExpressionOnlyLiteral(expression)) {
-            return this->ResolveExplicitDefaultValue(expression->literal(), type);
+        if (this->IsLiteralExpression(expression)) {
+            JabukodParser::LiteralExpressionContext *literalExpression =
+                dynamic_cast<JabukodParser::LiteralExpressionContext *>( expression ); // downcast to actual expression type
+            return this->ResolveExplicitDefaultValue(literalExpression->literal(), type);
         } else {
             this->parser->notifyErrorListeners(expression->getStart(), GLOBAL_VARIABLE_DEFINITION_EXPRESSION, nullptr);
             return any( 0 );
         }
+
     } else {
         return this->GetImplicitDefaultValue(type);
     }
 }
 
-bool SymbolTable::IsExpressionOnlyLiteral(JabukodParser::ExpressionContext *expression) const {
-    return expression->literal();
+bool SymbolTable::IsLiteralExpression(JabukodParser::ExpressionContext *expression) const {
+    return dynamic_cast<JabukodParser::LiteralExpressionContext *>( expression );
 }
 
 any SymbolTable::ResolveExplicitDefaultValue(JabukodParser::LiteralContext *defaultValue, Type type) const {

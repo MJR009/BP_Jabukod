@@ -8,6 +8,8 @@
 #include "SemanticErrors.h"
 
 #include "antlr4-runtime.h"
+#include "JabukodLexer.h"
+#include "JabukodParser.h"
 
 using namespace std;
 

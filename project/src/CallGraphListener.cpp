@@ -20,6 +20,8 @@ void CallGraphListener::enterFunctionCall(JabukodParser::FunctionCallContext *ct
     this->calls.insert( {this->currentFunction, name} ); // from, to
 }
 
+
+
 void CallGraphListener::exitProgram(JabukodParser::ProgramContext *ctx) {
     this->buffer.append("digraph G {\n");
 

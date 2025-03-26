@@ -67,7 +67,7 @@ private:
     bool IsFromDeclaration(JabukodParser::StorageSpecifierContext *specifier) const;
 
     any ResolveDefaultValue(JabukodParser::ExpressionContext *expression, Type type) const;
-    bool IsExpressionOnlyLiteral(JabukodParser::ExpressionContext *expression) const;
+    bool IsLiteralExpression(JabukodParser::ExpressionContext *expression) const;
     any ResolveExplicitDefaultValue(JabukodParser::LiteralContext *defaultValue, Type type) const; // for definitions, also does type checking
     any GetImplicitDefaultValue(Type type) const; // for declarations
 

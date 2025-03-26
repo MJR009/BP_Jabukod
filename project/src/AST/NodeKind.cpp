@@ -5,6 +5,7 @@
 string NodeKindFunctions::NodeKindToString(NodeKind kind) {
     switch (kind) {
         Conversion_case(PROGRAM);
+        Conversion_case(VARIABLE_DECLARATION);
         Conversion_case(FUNCTION);
         
     }

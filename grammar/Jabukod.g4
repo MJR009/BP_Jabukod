@@ -57,24 +57,27 @@ enumItem
     ;
 
 expression
-    : ( functionCall | listAccess | list)
+    : functionCall                                          # functionCallExpression
+    | listAccess                                            # listAccessExpression
+    | list                                                  # listExpression
+    //: ( functionCall | listAccess | list)
     //: ( functionCall | listAccess | list listAccess? )
-    | <assoc=right> expression '**' expression
-    | <assoc=right> ( '-' | '~' | '!' ) expression
-    | expression ( '*' | '/' | '%' ) expression
-    | expression ( '+' | '-' ) expression
-    | expression ( '<<' | '>>' ) expression
-    | expression ( '<' | '<=' | '>' | '>=' ) expression
-    | expression ( '==' | '!=' ) expression
-    | expression '&' expression
-    | expression '^' expression
-    | expression '|' expression
-    | expression '&&' expression
-    | expression '||' expression
-    | <assoc=right> expression '=' expression
-    | IDENTIFIER
-    | literal
-    | '(' expression ')'
+    | <assoc=right> expression '**' expression              # exponentExpression
+    | <assoc=right> ( '-' | '~' | '!' ) expression          # prefixUnaryExpression
+    | expression ( '*' | '/' | '%' ) expression             # mulDivModExpression
+    | expression ( '+' | '-' ) expression                   # assSubExpression
+    | expression ( '<<' | '>>' ) expression                 # shiftExpression
+    | expression ( '<' | '<=' | '>' | '>=' ) expression     # lessMoreExpression
+    | expression ( '==' | '!=' ) expression                 # equalityExpression
+    | expression '&' expression                             # bitAndExpression
+    | expression '^' expression                             # bitXorExpression
+    | expression '|' expression                             # bitOrExpression
+    | expression '&&' expression                            # andExpression
+    | expression '||' expression                            # orExpression
+    | <assoc=right> expression '=' expression               # assignExpression
+    | IDENTIFIER                                            # idExpression
+    | literal                                               # literalExpression
+    | '(' expression ')'                                    # parenthesisExpression
     ;
 
 // potential extensions:
@@ -107,26 +110,29 @@ statementBlock
     ;
 
 statement
-    : 'if' '(' expression ')' statementBlock ( 'else' statementBlock )?
-    | 'while' '(' expression ')' statementBlock
-    | 'for' '(' forHeader ')' statementBlock
-    | 'foreach' '(' foreachHeader ')' statementBlock
-    | (   variableDeclaration
-        | variableDefinition
-        | expression // covers functionCall
-        // assignment -> IDENTIFIER listAccess? '=' expression
-        // functionCall
-        | 'return' expression?
-        | 'exit' expression?
-        | 'suspend'
-        | 'resume'
-        | 'continue'
-        | 'break'
-        | 'redo'
-        | 'restart'
-        | 'read' IDENTIFIER
-        | 'write' expression
-    ) ';'
+    : 'if' '(' expression ')' statementBlock ( 'else' statementBlock )? # ifStatement
+    | 'while' '(' expression ')' statementBlock                         # whileStatement
+    | 'for' '(' forHeader ')' statementBlock                            # forStatement
+    | 'foreach' '(' foreachHeader ')' statementBlock                    # foreachStatement
+    | simpleStatement ';'                                               # simpleStatementStatement
+    ;
+
+simpleStatement
+    : variableDeclaration                                           # variableDeclarationStatement
+    | variableDefinition                                            # variableDefinitionStatement
+    | assignment                                                    # assignmentStatement
+    | functionCall                                                  # functionCallStatement
+    //| expression // covers functionCall and assignment
+    | 'return' expression?                                          # returnStatement
+    | 'exit' expression?                                            # exitStatement
+    | 'suspend'                                                     # suspendStatement
+    | 'resume'                                                      # resumeStatement
+    | 'continue'                                                    # continueStatement
+    | 'break'                                                       # breakStatement
+    | 'redo'                                                        # redoStatement
+    | 'restart'                                                     # restartStatement
+    | 'read' IDENTIFIER                                             # readStatement
+    | 'write' expression                                            # writeStatement
     ;
 
 // potential extensions:
@@ -134,6 +140,9 @@ statement
 //      potentially define "assignment" 
 // May be better to segment into more rules
 
+assignment
+    : IDENTIFIER listAccess? '=' expression
+    ;
 
 forHeader
     : ( expression | variableDefinition )? ';' expression? ';' expression?

@@ -1,16 +1,16 @@
-#include "SymTabGlobalsVisitor.h"
+#include "GlobalSymbolsVisitor.h"
 
 // TODO ZPRACOVÁNÍ POLÍ A ENUMŮ 
 // TODO IMPLICITNÍ KONVERZE
 
-any SymTabGlobalsVisitor::visitSourceFile(JabukodParser::SourceFileContext *ctx) {
+any GlobalSymbolsVisitor::visitSourceFile(JabukodParser::SourceFileContext *ctx) {
     visitChildren(ctx);
     this->symbolTable.CheckIfIntMainPresent();
 
     return OK;
 }
 
-any SymTabGlobalsVisitor::visitVariableDeclaration(JabukodParser::VariableDeclarationContext *ctx) {
+any GlobalSymbolsVisitor::visitVariableDeclaration(JabukodParser::VariableDeclarationContext *ctx) {
     antlr4::Token *variable = ctx->IDENTIFIER()->getSymbol();
     JabukodParser::StorageSpecifierContext *storageSpecifier;
 
@@ -27,7 +27,7 @@ any SymTabGlobalsVisitor::visitVariableDeclaration(JabukodParser::VariableDeclar
     return OK;
 }
 
-any SymTabGlobalsVisitor::visitVariableDefinition(JabukodParser::VariableDefinitionContext *ctx) {
+any GlobalSymbolsVisitor::visitVariableDefinition(JabukodParser::VariableDefinitionContext *ctx) {
     antlr4::Token *variable = ctx->IDENTIFIER()->getSymbol();
     JabukodParser::StorageSpecifierContext *storageSpecifier;
 
@@ -45,7 +45,7 @@ any SymTabGlobalsVisitor::visitVariableDefinition(JabukodParser::VariableDefinit
     return OK;
 }
 
-any SymTabGlobalsVisitor::visitFunctionDefinition(JabukodParser::FunctionDefinitionContext *ctx) {
+any GlobalSymbolsVisitor::visitFunctionDefinition(JabukodParser::FunctionDefinitionContext *ctx) {
     antlr4::Token *function = ctx->IDENTIFIER()->getSymbol();
     JabukodParser::TypeContext *returnType = ctx->type();
     FunctionTableEntry *newFunctionPointer = this->symbolTable.AddFunction(function, returnType);
@@ -59,7 +59,7 @@ any SymTabGlobalsVisitor::visitFunctionDefinition(JabukodParser::FunctionDefinit
     return OK;
 }
 
-any SymTabGlobalsVisitor::visitFunctionParameter(JabukodParser::FunctionParameterContext *ctx) {
+any GlobalSymbolsVisitor::visitFunctionParameter(JabukodParser::FunctionParameterContext *ctx) {
     JabukodParser::NonVoidTypeContext *type = ctx->nonVoidType();
     antlr4::Token *name = ctx->IDENTIFIER()->getSymbol();
 
@@ -68,7 +68,7 @@ any SymTabGlobalsVisitor::visitFunctionParameter(JabukodParser::FunctionParamete
     return OK;
 }
 
-any SymTabGlobalsVisitor::visitEnumDefinition(JabukodParser::EnumDefinitionContext *ctx) {
+any GlobalSymbolsVisitor::visitEnumDefinition(JabukodParser::EnumDefinitionContext *ctx) {
     antlr4::Token *theEnum = ctx->IDENTIFIER()->getSymbol();
     EnumTableEntry *newEnumPointer = this->symbolTable.AddEnum(theEnum);
 
@@ -79,7 +79,7 @@ any SymTabGlobalsVisitor::visitEnumDefinition(JabukodParser::EnumDefinitionConte
     return OK;
 }
 
-any SymTabGlobalsVisitor::visitEnumItem(JabukodParser::EnumItemContext *ctx) {
+any GlobalSymbolsVisitor::visitEnumItem(JabukodParser::EnumItemContext *ctx) {
     antlr4::Token *itemName = ctx->IDENTIFIER()->getSymbol();
     antlr4::Token *itemValue;
 
