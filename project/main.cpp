@@ -54,8 +54,8 @@ int main(int argc, char **argv) {
     if (parser.getNumberOfSyntaxErrors() != 0) {
         return NOK;
     }
+    
     symbolTable.Print();
-    cout << CYAN << "AST:\n=====" << DEFAULT << endl;
     ast.Print();
 
     return OK;

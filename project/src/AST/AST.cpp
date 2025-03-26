@@ -79,5 +79,6 @@ void AST::Print() {
         }
     };
 
+    cout << CYAN << "AST:\n=====" << DEFAULT << endl;
     this->PreorderForEachNode(printNode);
 }

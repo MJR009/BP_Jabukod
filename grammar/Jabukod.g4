@@ -64,7 +64,7 @@ expression
     //: ( functionCall | listAccess | list listAccess? )
     | <assoc=right> expression '**' expression              # exponentExpression
     | <assoc=right> ( '-' | '~' | '!' ) expression          # prefixUnaryExpression
-    | expression ( '*' | '/' | '%' ) expression             # mulDivModExpression
+    | expression sign=( '*' | '/' | '%' ) expression        # mulDivModExpression
     | expression ( '+' | '-' ) expression                   # assSubExpression
     | expression ( '<<' | '>>' ) expression                 # shiftExpression
     | expression ( '<' | '<=' | '>' | '>=' ) expression     # lessMoreExpression
@@ -75,7 +75,7 @@ expression
     | expression '&&' expression                            # andExpression
     | expression '||' expression                            # orExpression
     | <assoc=right> expression '=' expression               # assignExpression
-    | IDENTIFIER                                            # idExpression
+    | IDENTIFIER                                            # identifierExpression
     | literal                                               # literalExpression
     | '(' expression ')'                                    # parenthesisExpression
     ;
