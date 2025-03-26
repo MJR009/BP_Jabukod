@@ -1,10 +1,12 @@
 #include "NodeKind.h"
 
+#define Conversion_case(item) case NodeKind::item: return #item
+
 string NodeKindFunctions::NodeKindToString(NodeKind kind) {
     switch (kind) {
-        case NodeKind::PROGRAM:
-            return "PROGRAM";
-            
+        Conversion_case(PROGRAM);
+        Conversion_case(FUNCTION);
+        
     }
 
     return "";

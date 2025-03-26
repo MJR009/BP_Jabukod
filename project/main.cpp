@@ -46,7 +46,7 @@ int main(int argc, char **argv) {
     //        ->  function and enum identifiers, also global variables (generaly stuff that should not be in AST)
     SymTabGlobalsVisitor symTabGlobalsVisitor(symbolTable);
     symTabGlobalsVisitor.visit(parseTree);
-    // Phase 2: generate abstract syntax tree while doing final semantic checks
+    // Phase 2: generate abstract syntax tree and do final semantic checks
     AST ast(&parser);
     antlr4::tree::ParseTreeWalker walker;
     ASTGenerationListener astGenerationListener(ast);
@@ -55,7 +55,9 @@ int main(int argc, char **argv) {
     if (parser.getNumberOfSyntaxErrors() != 0) {
         return NOK;
     }
-    //symbolTable.Print();
+    symbolTable.Print();
+    cout << endl;
+    cout << "AST:" << endl << "=====" << endl;
     ast.Print();
 
     return OK;

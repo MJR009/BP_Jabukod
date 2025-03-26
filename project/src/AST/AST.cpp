@@ -13,6 +13,7 @@ void AST::PostorderForEachNode( void (*action)(ASTNode *) ) {
 }
 
 
+
 void AST::AddNode(NodeKind kind) {
     ASTNode *newNode = new ASTNode(kind);
 
@@ -38,28 +39,38 @@ void AST::MoveToParent() {
 }
 
 
+
+NodeKind AST::CurrentlyIn() {
+    return this->activeNode->GetKind();
+}
+
+
+
 void AST::Print() {
     void (*printNode)(ASTNode *) = [](ASTNode *node) {
         if (node) {
-            int depth = node->GetDepth();
+            bool lastChildWasPrinted = false;
+            string treeLadder = "";
 
-            cout << BOLD << DIM;
-
-            for (int i = 0; i < depth; i++) {
-                if (i == depth - 1) {
-                    if (node->IsLastChild()) {
-                        cout << STOP;
+            for (bool isLastChild : node->IsLastChildAllToRoot()) {
+                if (isLastChild) {
+                    if (lastChildWasPrinted) {
+                        treeLadder.insert(0, "    ");
                     } else {
-                        cout << FORK;
+                        treeLadder.insert(0, " " STOP HORIZONTAL " ");
+                        lastChildWasPrinted = true;
                     }
-
-                    cout << HORIZONTAL << HORIZONTAL << " ";
                 } else {
-                    cout << VERTICAL << "   ";
+                    if (lastChildWasPrinted) {
+                        treeLadder.insert(0, " " VERTICAL "  ");
+                    } else {
+                        treeLadder.insert(0, " " FORK HORIZONTAL " ");
+                        lastChildWasPrinted = true;
+                    }
                 }
             }
 
-            cout << DEFAULT;
+            cout << BOLD << DIM << treeLadder << DEFAULT;
             node->Print();
 
             cout << endl;

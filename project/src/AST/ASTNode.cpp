@@ -17,34 +17,15 @@ void ASTNode::PostorderWalkthrough( void (*action)(ASTNode *) ) {
 }
 
 
+
+NodeKind ASTNode::GetKind() {
+    return this->kind;
+}
+
 ASTNode *ASTNode::GetParent() {
     return this->parent;
 }
 
-int ASTNode::GetDepth() {
-    ASTNode *aux = this;
-
-    int depth = 0;
-
-    while (aux->parent != nullptr) {
-        depth++;
-        aux = aux->parent;
-    }
-
-    return depth;
-}
-
-bool ASTNode::IsLastChild() const {
-    if (this->parent) {
-        if (this->parent->children.back() == this) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    return true;
-}
 
 
 void ASTNode::AppendNewChild(ASTNode *newChild) {
@@ -60,4 +41,22 @@ void ASTNode::Print() const {
     cout << " < ";
 
     cout << ">";
+}
+
+vector<bool> ASTNode::IsLastChildAllToRoot() {
+    vector<bool> areLast;
+
+    ASTNode *aux = this;
+
+    while (aux->parent) {
+        if (aux->parent->children.back() == aux) {
+            areLast.push_back(true);
+        } else {
+            areLast.push_back(false);
+        }
+
+        aux = aux->parent;
+    }
+
+    return areLast;
 }

@@ -14,8 +14,10 @@ public:
     void PostorderForEachNode( void (*action)(ASTNode *) );
 
     // Generation:
-    void AddNode(NodeKind kind); // New node is always made active !
+    void AddNode(NodeKind kind); // Newly added node is always made active !
     void MoveToParent();
+
+    NodeKind CurrentlyIn();
 
     void Print();
 

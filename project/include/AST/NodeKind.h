@@ -2,8 +2,7 @@
 #include "common.h"
 
 enum NODE_KIND {
-    PROGRAM
-
+    PROGRAM, FUNCTION
 };
 typedef enum NODE_KIND NodeKind;
 
