@@ -6,7 +6,7 @@ void Variable::Print() const {
         SpecifierFunctions::SpeficierToString(this->storage) << " " <<
         TypeFunctions::TypeToString(this->type) << " , ";
 
-    cout << "default: ";
+    cout << DIM << "default: " << DEFAULT;
     this->PrintDefaultValue();
 }
 

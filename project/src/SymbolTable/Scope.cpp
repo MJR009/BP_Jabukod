@@ -26,10 +26,10 @@ bool Scope::IsVariableNameAvailable(const string & name) const {
 
 void Scope::Print() const {
     for (auto & variable : this->variables) {
-        cout << variable.GetName() << endl;
+        cout << YELLOW << variable.GetName() << DEFAULT;
 
-        cout << "  < ";
+        cout << DIM << " < " << DEFAULT;
         variable.Print();
-        cout << " >" << endl;
+        cout << DIM << " >" << DEFAULT << endl;
     }
 }

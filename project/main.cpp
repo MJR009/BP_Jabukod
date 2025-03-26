@@ -55,8 +55,7 @@ int main(int argc, char **argv) {
         return NOK;
     }
     symbolTable.Print();
-    cout << endl;
-    cout << "AST:" << endl << "=====" << endl;
+    cout << CYAN << "AST:\n=====" << DEFAULT << endl;
     ast.Print();
 
     return OK;

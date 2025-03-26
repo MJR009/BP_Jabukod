@@ -22,18 +22,21 @@ vector<Parameter> FunctionTableEntry::GetParameters() const {
 
 
 void FunctionTableEntry::Print() const {
-    cout << this->name << endl;
+    cout << YELLOW << this->name << DEFAULT << endl;
 
-    cout << "  < returns: " << TypeFunctions::TypeToString(this->returnType) << " >" << endl;
+    cout << DIM << "  < returns: " << DEFAULT <<
+        TypeFunctions::TypeToString(this->returnType) <<
+        DIM << " >" << DEFAULT <<
+    endl;
 
-    cout << "  < ";
+    cout << DIM << "  < parameters: " << DEFAULT;
     bool first = true;
     for (auto & parameter : this->parameters) {
         first ? cout << "" : cout << " , ";
         first = false;
         parameter.Print();
     }
-    cout << " >";
+    cout << DIM << " >" << DEFAULT;
 
     cout << endl;
 }

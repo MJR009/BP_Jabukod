@@ -38,9 +38,9 @@ void ASTNode::AppendNewChild(ASTNode *newChild) {
 void ASTNode::Print() const {
     cout << NodeKindFunctions::NodeKindToString(this->kind);
 
-    cout << " < ";
+    cout << DIM << " < " << DEFAULT;
 
-    cout << ">";
+    cout << DIM << ">" << DEFAULT;
 }
 
 vector<bool> ASTNode::IsLastChildAllToRoot() {

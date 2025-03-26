@@ -7,5 +7,5 @@ int EnumItem::GetValue() const {
 
 
 void EnumItem::Print() const {
-    cout << this->name << " = " << this->value;
+    cout << this->name << DIM << " = " << this->value << DEFAULT;
 }

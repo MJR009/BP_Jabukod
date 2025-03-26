@@ -20,7 +20,9 @@ using namespace std;
 #define DIM "\033[2m"
 
 #define RED "\033[31m"
+#define YELLOW "\033[33m"
 #define ORANGE "\033[38;2;255;165;0m"
+#define CYAN "\033[36m"
 
 #define DEFAULT "\033[0m"
 

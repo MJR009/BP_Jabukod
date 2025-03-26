@@ -18,11 +18,17 @@ vector<EnumItem> EnumTableEntry::GetEntryItems() const {
 
 
 void EnumTableEntry::Print() const {
-    cout << this->name << " [" << endl;
-    for (auto & item : this->items) {
+    cout << YELLOW << this->name << DEFAULT << " {" << endl;
+
+    for (int i = 0; i < this->items.size(); i++) {
         cout << "  ";
-        item.Print();
-        cout << endl;
+        this->items.at(i).Print();
+        cout << DIM;
+        if (i != this->items.size() - 1) {
+            cout << ",";
+        }
+        cout << DEFAULT << endl;
     }
-    cout << "]" << endl;
+
+    cout << "}" << endl;
 }

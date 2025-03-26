@@ -122,21 +122,20 @@ void SymbolTable::CheckIfIntMainPresent() {
 
 
 void SymbolTable::Print() const {
-    cout << "Functions:" << endl;
-    cout << "=====" << endl;
+    cout << CYAN << "Functions:\n=====" << DEFAULT << endl;
     this->functionTable.Print();
     
     cout << endl;
 
-    cout << "Global variables:" << endl;
-    cout << "=====" << endl;
+    cout << CYAN << "Global variables:\n=====" << DEFAULT << endl;
     this->globalScope.Print();
 
     cout << endl;
 
-    cout << "Enums:" << endl;
-    cout << "=====" << endl;
+    cout << CYAN << "Enums:\n=====" << DEFAULT << endl;
     this->enumTable.Print();
+
+    cout << endl;
 }
 
 
