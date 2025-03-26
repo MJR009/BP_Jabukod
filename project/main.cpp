@@ -5,7 +5,7 @@
 
 #include "CustomErrorListener.h"
 #include "SymTabGlobalsVisitor.h"
-#include "ASTGenerationListener.h"
+#include "ASTGenerationVisitor.h"
 
 // Development and debugging:
 #include "CallGraphListener.h"
@@ -48,10 +48,11 @@ int main(int argc, char **argv) {
     symTabGlobalsVisitor.visit(parseTree);
     // Phase 2: generate abstract syntax tree and do final semantic checks
     AST ast(&parser);
-    antlr4::tree::ParseTreeWalker walker;
-    ASTGenerationListener astGenerationListener(ast);
-    walker.walk(&astGenerationListener, parseTree);
+    ASTGenerationVisitor astGenerationVisitor(ast);
+    astGenerationVisitor.visit(parseTree);
 
+
+    
     if (parser.getNumberOfSyntaxErrors() != 0) {
         return NOK;
     }

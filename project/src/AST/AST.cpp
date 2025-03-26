@@ -57,9 +57,10 @@ void AST::Print() {
                     if (lastChildWasPrinted) {
                         treeLadder.insert(0, "    ");
                     } else {
-                        treeLadder.insert(0, " " STOP HORIZONTAL " ");
+                        treeLadder.insert(0, " " STOP HORIZONTAL " "); // use of string literal concatenation
                         lastChildWasPrinted = true;
                     }
+
                 } else {
                     if (lastChildWasPrinted) {
                         treeLadder.insert(0, " " VERTICAL "  ");
@@ -67,6 +68,7 @@ void AST::Print() {
                         treeLadder.insert(0, " " FORK HORIZONTAL " ");
                         lastChildWasPrinted = true;
                     }
+                    
                 }
             }
 
