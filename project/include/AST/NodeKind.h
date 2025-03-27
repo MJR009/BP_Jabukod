@@ -21,6 +21,8 @@ enum NODE_KIND {
 
     minus, // universal option for unary and binary minus, specific to be resolved later
 
+    FUNCTION_CALL,
+
     invalid
 };
 typedef enum NODE_KIND NodeKind;

@@ -17,14 +17,14 @@ public:
     // any visitDefinition(JabukodParser::DefinitionContext *ctx) override; // can be ignored
     any visitVariableDeclaration(JabukodParser::VariableDeclarationContext *ctx) override;
     any visitVariableDefinition(JabukodParser::VariableDefinitionContext *ctx) override;
-    //// půjde k proměnné do tabulky symbolů //any visitStorageSpecifier(JabukodParser::StorageSpecifierContext *ctx) override;
+    //TODO// půjde k proměnné do tabulky symbolů //any visitStorageSpecifier(JabukodParser::StorageSpecifierContext *ctx) override;
     any visitFunctionDefinition(JabukodParser::FunctionDefinitionContext *ctx) override;
     // any visitFunctionParameters(JabukodParser::FunctionParametersContext *ctx) override;
     // any visitFunctionParameter(JabukodParser::FunctionParameterContext *ctx) override;
     // any visitEnumDefinition(JabukodParser::EnumDefinitionContext *ctx) override;         // all processed in GlobalSymbolsVisitor
     // any visitEnumBlock(JabukodParser::EnumBlockContext *ctx) override;
     // any visitEnumItem(JabukodParser::EnumItemContext *ctx) override;
-    //// TODO //any visitListAccessExpression(JabukodParser::ListAccessExpressionContext *ctx) override;
+    //TODO//any visitListAccessExpression(JabukodParser::ListAccessExpressionContext *ctx) override;
     any visitMulDivModExpression(JabukodParser::MulDivModExpressionContext *ctx) override;
     any visitExponentExpression(JabukodParser::ExponentExpressionContext *ctx) override;
     any visitShiftExpression(JabukodParser::ShiftExpressionContext *ctx) override;
@@ -39,11 +39,11 @@ public:
     any visitBitAndExpression(JabukodParser::BitAndExpressionContext *ctx) override;
     any visitLessMoreExpression(JabukodParser::LessMoreExpressionContext *ctx) override;
     any visitEqualityExpression(JabukodParser::EqualityExpressionContext *ctx) override;
-//    any visitFunctionCallExpression(JabukodParser::FunctionCallExpressionContext *ctx) override;
+    // any visitFunctionCallExpression(JabukodParser::FunctionCallExpressionContext *ctx) override; // processed by visitFunctionCall
     any visitPrefixUnaryExpression(JabukodParser::PrefixUnaryExpressionContext *ctx) override;
 //    any visitListExpression(JabukodParser::ListExpressionContext *ctx) override;
 //    any visitLiteralExpression(JabukodParser::LiteralExpressionContext *ctx) override;
-    //any visitFunctionCall(JabukodParser::FunctionCallContext *ctx) override;
+    any visitFunctionCall(JabukodParser::FunctionCallContext *ctx) override;
     //any visitFunctionArguments(JabukodParser::FunctionArgumentsContext *ctx) override;
     //any visitFunctionArgument(JabukodParser::FunctionArgumentContext *ctx) override;
     //any visitListAccess(JabukodParser::ListAccessContext *ctx) override;

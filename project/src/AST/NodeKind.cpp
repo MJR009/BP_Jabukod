@@ -8,6 +8,7 @@ string NodeKindFunctions::NodeKindToString(NodeKind kind) {
         Conversion_case(VARIABLE_DECLARATION);
         Conversion_case(VARIABLE_DEFINITION);
         Conversion_case(FUNCTION);
+
         Conversion_case(MULTIPLICATION);
         Conversion_case(DIVISION);
         Conversion_case(MODULO);
@@ -31,6 +32,7 @@ string NodeKindFunctions::NodeKindToString(NodeKind kind) {
         Conversion_case(BIT_NOT);
         Conversion_case(NOT);
 
+        Conversion_case(FUNCTION_CALL);
 
         Conversion_case(invalid);        
     }

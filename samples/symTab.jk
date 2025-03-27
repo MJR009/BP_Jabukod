@@ -16,7 +16,7 @@ enum X {one, two, three = -3, four, five}//, six}
 
 int f(int xx, int yy, bool zz) {
     g();
-    i = ----------x--------x;
+    i = -1-x();
     g = g;
     return x + y;
 }
