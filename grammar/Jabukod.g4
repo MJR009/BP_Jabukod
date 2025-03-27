@@ -57,27 +57,27 @@ enumItem
     ;
 
 expression
-    : functionCall                                          # functionCallExpression
-    | listAccess                                            # listAccessExpression
-    | list                                                  # listExpression
+    : functionCall                                              # functionCallExpression
+    | listAccess                                                # listAccessExpression
+    | list                                                      # listExpression
     //: ( functionCall | listAccess | list)
     //: ( functionCall | listAccess | list listAccess? )
-    | <assoc=right> expression '**' expression              # exponentExpression
-    | <assoc=right> ( '-' | '~' | '!' ) expression          # prefixUnaryExpression
-    | expression sign=( '*' | '/' | '%' ) expression        # mulDivModExpression
-    | expression ( '+' | '-' ) expression                   # assSubExpression
-    | expression ( '<<' | '>>' ) expression                 # shiftExpression
-    | expression ( '<' | '<=' | '>' | '>=' ) expression     # lessMoreExpression
-    | expression ( '==' | '!=' ) expression                 # equalityExpression
-    | expression '&' expression                             # bitAndExpression
-    | expression '^' expression                             # bitXorExpression
-    | expression '|' expression                             # bitOrExpression
-    | expression '&&' expression                            # andExpression
-    | expression '||' expression                            # orExpression
-    | <assoc=right> expression '=' expression               # assignExpression
-    | IDENTIFIER                                            # identifierExpression
-    | literal                                               # literalExpression
-    | '(' expression ')'                                    # parenthesisExpression
+    | <assoc=right> expression '**' expression                  # exponentExpression
+    | <assoc=right> sign=( '-' | '~' | '!' ) expression         # prefixUnaryExpression
+    | expression sign=( '*' | '/' | '%' ) expression            # mulDivModExpression
+    | expression sign=( '+' | '-' ) expression                  # assSubExpression
+    | expression sign=( '<<' | '>>' ) expression                # shiftExpression
+    | expression sign=( '<' | '<=' | '>' | '>=' ) expression    # lessMoreExpression
+    | expression sign=( '==' | '!=' ) expression                # equalityExpression
+    | expression '&' expression                                 # bitAndExpression
+    | expression '^' expression                                 # bitXorExpression
+    | expression '|' expression                                 # bitOrExpression
+    | expression '&&' expression                                # andExpression
+    | expression '||' expression                                # orExpression
+    | <assoc=right> expression '=' expression                   # assignExpression
+    | IDENTIFIER                                                # identifierExpression
+    | literal                                                   # literalExpression
+    | '(' expression ')'                                        # parenthesisExpression
     ;
 
 // potential extensions:
