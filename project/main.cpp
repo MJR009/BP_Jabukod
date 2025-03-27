@@ -41,10 +41,11 @@ int main(int argc, char **argv) {
     // Phase 0: instantiate a symbol table
     SymbolTable symbolTable(&parser);
     // Phase 1: get and check all globally available symbols;
-    //        ->  function and enum identifiers, also global variables (generaly stuff that should not be in AST)
+    //        -> function and enum identifiers, also global variables (generaly stuff that should not be in AST)
     GlobalSymbolsVisitor GlobalSymbolsVisitor(symbolTable);
     GlobalSymbolsVisitor.visit(parseTree);
     // Phase 2: generate abstract syntax tree and do final semantic checks
+    //        -> makes the tree, gathers local symbols and checks symbol usage, ensures statement use validity
     AST ast(&parser);
     ASTGenerationVisitor astGenerationVisitor(ast);
     astGenerationVisitor.visit(parseTree);

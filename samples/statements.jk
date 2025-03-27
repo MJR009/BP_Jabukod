@@ -1,0 +1,21 @@
+int x = 0;
+
+int main() {
+    if (x <= 10) x = x + 1; else x = x;
+
+    while (x != 10) {
+        x = x + 1;
+        int y = x;
+    }
+
+    for (int x = 0; ; x = x + 1) {
+        string y = "Hello\n";
+        write y;
+    }
+
+    for (;;) write "uh oh\n";
+
+    foreach (int i : x) {
+        return 1;
+    }
+}

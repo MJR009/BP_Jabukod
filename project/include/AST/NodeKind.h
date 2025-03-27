@@ -21,7 +21,13 @@ enum NODE_KIND {
 
     minus, // universal option for unary and binary minus, specific to be resolved later
 
-    FUNCTION_CALL,
+    VARIABLE, LITERAL,
+
+    ASSIGNMENT, FUNCTION_CALL,
+    IF, THEN, ELSE,
+    WHILE, FOR, FOREACH,
+    FOR_HEADER1, FOR_HEADER2, FOR_HEADER3,
+    BODY,
 
     invalid
 };

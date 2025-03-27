@@ -32,7 +32,21 @@ string NodeKindFunctions::NodeKindToString(NodeKind kind) {
         Conversion_case(BIT_NOT);
         Conversion_case(NOT);
 
+        Conversion_case(VARIABLE);
+        Conversion_case(LITERAL);
+
+        Conversion_case(ASSIGNMENT);
         Conversion_case(FUNCTION_CALL);
+        Conversion_case(IF);
+        Conversion_case(THEN);
+        Conversion_case(ELSE);
+        Conversion_case(WHILE);
+        Conversion_case(FOR);
+        Conversion_case(FOREACH);
+        Conversion_case(FOR_HEADER1);
+        Conversion_case(FOR_HEADER2);
+        Conversion_case(FOR_HEADER3);
+        Conversion_case(BODY);
 
         Conversion_case(invalid);        
     }

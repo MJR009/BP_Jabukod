@@ -145,7 +145,12 @@ assignment
     ;
 
 forHeader
-    : ( expression | variableDefinition )? ';' expression? ';' expression?
+    : init=forInitializer? ';' condition=expression? ';' update=expression?
+    ;
+
+forInitializer
+    : expression
+    | variableDefinition
     ;
 
 foreachHeader

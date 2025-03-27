@@ -9,7 +9,7 @@ any ASTGenerationVisitor::visitSourceFile(JabukodParser::SourceFileContext *ctx)
 any ASTGenerationVisitor::visitVariableDeclaration(JabukodParser::VariableDeclarationContext *ctx) {
     any ret = any( OK );
 
-    if (this->ast.CurrentlyIn() != NodeKind::PROGRAM) { // global declarations were processed
+    if (this->ast.CurrentlyIn() != NodeKind::PROGRAM) { // global declarations are already processed
         this->ast.AddNode(NodeKind::VARIABLE_DECLARATION);
 
         any ret = this->visitChildren(ctx);
@@ -81,8 +81,23 @@ any ASTGenerationVisitor::visitBitOrExpression(JabukodParser::BitOrExpressionCon
     return ret;
 }
 
-//any visitAssignExpression(JabukodParser::AssignExpressionContext *ctx) override;
-//any visitIdentifierExpression(JabukodParser::IdentifierExpressionContext *ctx) override;
+any ASTGenerationVisitor::visitAssignExpression(JabukodParser::AssignExpressionContext *ctx) {
+    this->ast.AddNode(NodeKind::ASSIGNMENT);
+
+    any ret = this->visitChildren(ctx);
+
+    this->ast.MoveToParent();
+    return ret;
+}
+
+any ASTGenerationVisitor::visitIdentifierExpression(JabukodParser::IdentifierExpressionContext *ctx) {
+    this->ast.AddNode(NodeKind::VARIABLE);
+
+    any ret = this->visitChildren(ctx);
+
+    this->ast.MoveToParent();
+    return ret;
+}
 
 any ASTGenerationVisitor::visitAssSubExpression(JabukodParser::AssSubExpressionContext *ctx) {
     NodeKind sign = NodeKindFunctions::SignToNodeKind( ctx->sign->getText() );
@@ -166,8 +181,14 @@ any ASTGenerationVisitor::visitPrefixUnaryExpression(JabukodParser::PrefixUnaryE
     return ret;
 }
 
-//any visitListExpression(JabukodParser::ListExpressionContext *ctx) override;
-//any visitLiteralExpression(JabukodParser::LiteralExpressionContext *ctx) override;
+any ASTGenerationVisitor::visitLiteralExpression(JabukodParser::LiteralExpressionContext *ctx) {
+    this->ast.AddNode(NodeKind::LITERAL);
+
+    any ret = this->visitChildren(ctx);
+
+    this->ast.MoveToParent();
+    return ret;
+}
 
 any ASTGenerationVisitor::visitFunctionCall(JabukodParser::FunctionCallContext *ctx) {
     this->ast.AddNode(NodeKind::FUNCTION_CALL);
@@ -175,5 +196,125 @@ any ASTGenerationVisitor::visitFunctionCall(JabukodParser::FunctionCallContext *
     any ret = this->visitChildren(ctx);
 
     this->ast.MoveToParent();
+    return ret;
+}
+
+any ASTGenerationVisitor::visitIfStatement(JabukodParser::IfStatementContext *ctx) {
+    this->ast.AddNode(NodeKind::IF);
+
+    any ret = this->visit( ctx->expression() );
+
+    this->ast.AddNode(NodeKind::THEN);
+
+    ret = this->visit( ctx->statementBlock(0) );
+
+    this->ast.MoveToParent();
+
+    if (ctx->statementBlock().size() != 1) {
+        this->ast.AddNode(NodeKind::ELSE);
+
+        ret = this->visit( ctx->statementBlock(1) );
+
+        this->ast.MoveToParent();
+    }
+
+    this->ast.MoveToParent();
+    return ret;
+}
+
+any ASTGenerationVisitor::visitWhileStatement(JabukodParser::WhileStatementContext *ctx) {
+    this->ast.AddNode(NodeKind::WHILE);
+
+    any ret = this->visit( ctx->expression() );
+
+    this->ast.AddNode(NodeKind::BODY);
+
+    ret = this->visit( ctx->statementBlock() );
+
+    this->ast.MoveToParent();
+
+    this->ast.MoveToParent();
+    return ret;
+}
+
+any ASTGenerationVisitor::visitForStatement(JabukodParser::ForStatementContext *ctx) {
+    this->ast.AddNode(NodeKind::FOR);
+
+    any ret = this->visit( ctx->forHeader() );
+
+    this->ast.AddNode(NodeKind::BODY);
+
+    ret = this->visit( ctx->statementBlock() );
+
+    this->ast.MoveToParent();
+
+    this->ast.MoveToParent();
+    return ret;
+}
+
+any ASTGenerationVisitor::visitForeachStatement(JabukodParser::ForeachStatementContext *ctx) {
+    this->ast.AddNode(NodeKind::FOREACH);
+
+    any ret = this->visit( ctx->foreachHeader() );
+
+    this->ast.AddNode(NodeKind::BODY);
+
+    ret = this->visit( ctx->statementBlock() );
+
+    this->ast.MoveToParent();
+
+    this->ast.MoveToParent();
+    return ret;
+}
+
+any ASTGenerationVisitor::visitAssignmentStatement(JabukodParser::AssignmentStatementContext *ctx) {
+    this->ast.AddNode(NodeKind::ASSIGNMENT);
+
+    any ret = this->visitChildren(ctx);
+
+    this->ast.MoveToParent();
+    return ret;
+}
+
+//any visitFunctionCallStatement(JabukodParser::FunctionCallStatementContext *ctx) override;
+//any visitReturnStatement(JabukodParser::ReturnStatementContext *ctx) override;
+//any visitExitStatement(JabukodParser::ExitStatementContext *ctx) override;
+//any visitSuspendStatement(JabukodParser::SuspendStatementContext *ctx) override;
+//any visitResumeStatement(JabukodParser::ResumeStatementContext *ctx) override;
+//any visitContinueStatement(JabukodParser::ContinueStatementContext *ctx) override;
+//any visitBreakStatement(JabukodParser::BreakStatementContext *ctx) override;
+//any visitRedoStatement(JabukodParser::RedoStatementContext *ctx) override;
+//any visitRestartStatement(JabukodParser::RestartStatementContext *ctx) override;
+//any visitReadStatement(JabukodParser::ReadStatementContext *ctx) override;
+//any visitWriteStatement(JabukodParser::WriteStatementContext *ctx) override;
+//any visitAssignment(JabukodParser::AssignmentContext *ctx) override;
+
+any ASTGenerationVisitor::visitForHeader(JabukodParser::ForHeaderContext *ctx) {
+    any ret = any( OK );
+
+    if (ctx->init) {
+        this->ast.AddNode(NodeKind::FOR_HEADER1);
+
+        ret = this->visit( ctx->init );
+
+        this->ast.MoveToParent();
+    }
+
+    if (ctx->condition) {
+        this->ast.AddNode(NodeKind::FOR_HEADER2);
+
+        ret = this->visit( ctx->condition );
+
+        this->ast.MoveToParent();
+    }
+
+    if (ctx->update) {
+        this->ast.AddNode(NodeKind::FOR_HEADER3);
+
+        ret = this->visit( ctx->update );
+
+        this->ast.MoveToParent();
+    }
+
     return ret;
 }

@@ -25,8 +25,13 @@ void g() {
     int x = 0;
     float y;
     y = 9;
-    f();
-    z();
+    
+    if (x == y) {
+        f();
+    } else {
+        z();
+    }
+
     y();
     x = f;
 }
