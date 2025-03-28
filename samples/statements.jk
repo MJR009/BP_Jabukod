@@ -19,3 +19,29 @@ int main() {
         return 1;
     }
 }
+
+void f() {
+    main();
+    while(true) {
+        return;
+    }
+
+    if (false) {
+        exit 0;
+    } else {
+        suspend;
+    }
+
+    return 1;
+    exit 0;
+    suspend;
+    resume;
+    continue;
+    break;
+    redo;
+    restart;
+    read x;
+    write "Hello!\n";
+
+    x = y = 1;
+}

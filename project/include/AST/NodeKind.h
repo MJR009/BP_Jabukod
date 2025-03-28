@@ -18,8 +18,7 @@ enum NODE_KIND {
     LESS, LESS_EQUAL, GREATER, GREATER_EQUAL,
     EQUAL, NOT_EQUAL,
     UNARY_MINUS, BIT_NOT, NOT,
-
-    minus, // universal option for unary and binary minus, specific to be resolved later
+    minus, // universal option for unary and binary minus, which one resolved in respective context
 
     VARIABLE, LITERAL,
 
@@ -28,6 +27,11 @@ enum NODE_KIND {
     WHILE, FOR, FOREACH,
     FOR_HEADER1, FOR_HEADER2, FOR_HEADER3,
     BODY,
+
+    RETURN, EXIT, SUSPEND, RESUME,
+    CONTINUE, BREAK, REDO, RESTART,
+
+    READ, WRITE,
 
     invalid
 };

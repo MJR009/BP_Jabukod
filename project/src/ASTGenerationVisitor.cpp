@@ -34,6 +34,8 @@ any ASTGenerationVisitor::visitVariableDefinition(JabukodParser::VariableDefinit
     return ret;
 }
 
+//any visitStorageSpecifier(JabukodParser::StorageSpecifierContext *ctx) override;
+
 any ASTGenerationVisitor::visitFunctionDefinition(JabukodParser::FunctionDefinitionContext *ctx) {
     this->ast.AddNode(NodeKind::FUNCTION);
 
@@ -181,15 +183,6 @@ any ASTGenerationVisitor::visitPrefixUnaryExpression(JabukodParser::PrefixUnaryE
     return ret;
 }
 
-any ASTGenerationVisitor::visitLiteralExpression(JabukodParser::LiteralExpressionContext *ctx) {
-    this->ast.AddNode(NodeKind::LITERAL);
-
-    any ret = this->visitChildren(ctx);
-
-    this->ast.MoveToParent();
-    return ret;
-}
-
 any ASTGenerationVisitor::visitFunctionCall(JabukodParser::FunctionCallContext *ctx) {
     this->ast.AddNode(NodeKind::FUNCTION_CALL);
 
@@ -276,18 +269,103 @@ any ASTGenerationVisitor::visitAssignmentStatement(JabukodParser::AssignmentStat
     return ret;
 }
 
-//any visitFunctionCallStatement(JabukodParser::FunctionCallStatementContext *ctx) override;
-//any visitReturnStatement(JabukodParser::ReturnStatementContext *ctx) override;
-//any visitExitStatement(JabukodParser::ExitStatementContext *ctx) override;
-//any visitSuspendStatement(JabukodParser::SuspendStatementContext *ctx) override;
-//any visitResumeStatement(JabukodParser::ResumeStatementContext *ctx) override;
-//any visitContinueStatement(JabukodParser::ContinueStatementContext *ctx) override;
-//any visitBreakStatement(JabukodParser::BreakStatementContext *ctx) override;
-//any visitRedoStatement(JabukodParser::RedoStatementContext *ctx) override;
-//any visitRestartStatement(JabukodParser::RestartStatementContext *ctx) override;
-//any visitReadStatement(JabukodParser::ReadStatementContext *ctx) override;
-//any visitWriteStatement(JabukodParser::WriteStatementContext *ctx) override;
-//any visitAssignment(JabukodParser::AssignmentContext *ctx) override;
+any ASTGenerationVisitor::visitReturnStatement(JabukodParser::ReturnStatementContext *ctx) {
+    this->ast.AddNode(NodeKind::RETURN);
+
+    any ret = this->visitChildren(ctx);
+
+    this->ast.MoveToParent();
+    return ret;
+}
+
+any ASTGenerationVisitor::visitExitStatement(JabukodParser::ExitStatementContext *ctx) {
+    this->ast.AddNode(NodeKind::EXIT);
+
+    any ret = this->visitChildren(ctx);
+
+    this->ast.MoveToParent();
+    return ret;
+}
+
+any ASTGenerationVisitor::visitSuspendStatement(JabukodParser::SuspendStatementContext *ctx) {
+    this->ast.AddNode(NodeKind::SUSPEND);
+
+    any ret = this->visitChildren(ctx);
+
+    this->ast.MoveToParent();
+    return ret;
+}
+
+any ASTGenerationVisitor::visitResumeStatement(JabukodParser::ResumeStatementContext *ctx) {
+    this->ast.AddNode(NodeKind::RESUME);
+
+    any ret = this->visitChildren(ctx);
+
+    this->ast.MoveToParent();
+    return ret;
+}
+
+any ASTGenerationVisitor::visitContinueStatement(JabukodParser::ContinueStatementContext *ctx) {
+    this->ast.AddNode(NodeKind::CONTINUE);
+
+    any ret = this->visitChildren(ctx);
+
+    this->ast.MoveToParent();
+    return ret;
+}
+
+any ASTGenerationVisitor::visitBreakStatement(JabukodParser::BreakStatementContext *ctx) {
+    this->ast.AddNode(NodeKind::BREAK);
+
+    any ret = this->visitChildren(ctx);
+
+    this->ast.MoveToParent();
+    return ret;
+}
+
+any ASTGenerationVisitor::visitRedoStatement(JabukodParser::RedoStatementContext *ctx) {
+    this->ast.AddNode(NodeKind::REDO);
+
+    any ret = this->visitChildren(ctx);
+
+    this->ast.MoveToParent();
+    return ret;
+}
+
+any ASTGenerationVisitor::visitRestartStatement(JabukodParser::RestartStatementContext *ctx) {
+    this->ast.AddNode(NodeKind::RESTART);
+
+    any ret = this->visitChildren(ctx);
+
+    this->ast.MoveToParent();
+    return ret;
+}
+
+any ASTGenerationVisitor::visitReadStatement(JabukodParser::ReadStatementContext *ctx) {
+    this->ast.AddNode(NodeKind::READ);
+
+    // MUSÍ ZPRACOVAT IDENTIFIER
+    any ret = this->visitChildren(ctx);
+
+    this->ast.MoveToParent();
+    return ret;
+}
+
+any ASTGenerationVisitor::visitWriteStatement(JabukodParser::WriteStatementContext *ctx) {
+    this->ast.AddNode(NodeKind::WRITE);
+
+    any ret = this->visitChildren(ctx);
+
+    this->ast.MoveToParent();
+    return ret;
+}
+
+
+any ASTGenerationVisitor::visitAssignment(JabukodParser::AssignmentContext *ctx) {
+    // MUSÍ ZPRACOVAT IDENTIFIER, narozdíl od assignmentExpression
+
+    return this->visitChildren(ctx);
+}
 
 any ASTGenerationVisitor::visitForHeader(JabukodParser::ForHeaderContext *ctx) {
     any ret = any( OK );
@@ -318,3 +396,14 @@ any ASTGenerationVisitor::visitForHeader(JabukodParser::ForHeaderContext *ctx) {
 
     return ret;
 }
+
+any ASTGenerationVisitor::visitLiteral(JabukodParser::LiteralContext *ctx) {
+    this->ast.AddNode(NodeKind::LITERAL);
+
+    any ret = this->visitChildren(ctx);
+
+    this->ast.MoveToParent();
+    return ret;
+}
+
+//any visitNonVoidType(JabukodParser::NonVoidTypeContext *ctx) override;

@@ -48,6 +48,18 @@ string NodeKindFunctions::NodeKindToString(NodeKind kind) {
         Conversion_case(FOR_HEADER3);
         Conversion_case(BODY);
 
+        Conversion_case(RETURN);
+        Conversion_case(EXIT);
+        Conversion_case(SUSPEND);
+        Conversion_case(RESUME);
+        Conversion_case(CONTINUE);
+        Conversion_case(BREAK);
+        Conversion_case(REDO);
+        Conversion_case(RESTART);
+
+        Conversion_case(READ);
+        Conversion_case(WRITE);
+
         Conversion_case(invalid);        
     }
 

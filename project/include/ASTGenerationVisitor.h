@@ -17,7 +17,7 @@ public:
     // any visitDefinition(JabukodParser::DefinitionContext *ctx) override; // needed for parse tree
     any visitVariableDeclaration(JabukodParser::VariableDeclarationContext *ctx) override;
     any visitVariableDefinition(JabukodParser::VariableDefinitionContext *ctx) override;
-    //TODO// půjde k proměnné do tabulky symbolů //any visitStorageSpecifier(JabukodParser::StorageSpecifierContext *ctx) override;
+     //TODO// půjde k proměnné do tabulky symbolů //any visitStorageSpecifier(JabukodParser::StorageSpecifierContext *ctx) override;
     any visitFunctionDefinition(JabukodParser::FunctionDefinitionContext *ctx) override;
     // any visitFunctionParameters(JabukodParser::FunctionParametersContext *ctx) override;
     // any visitFunctionParameter(JabukodParser::FunctionParameterContext *ctx) override;
@@ -42,7 +42,7 @@ public:
     // any visitFunctionCallExpression(JabukodParser::FunctionCallExpressionContext *ctx) override; // processed by visitFunctionCall
     any visitPrefixUnaryExpression(JabukodParser::PrefixUnaryExpressionContext *ctx) override;
     //TODO//any visitListExpression(JabukodParser::ListExpressionContext *ctx) override;
-    any visitLiteralExpression(JabukodParser::LiteralExpressionContext *ctx) override;
+    // any visitLiteralExpression(JabukodParser::LiteralExpressionContext *ctx) override; // processed by literal
     any visitFunctionCall(JabukodParser::FunctionCallContext *ctx) override;
     // any visitFunctionArguments(JabukodParser::FunctionArgumentsContext *ctx) override;
     // any visitFunctionArgument(JabukodParser::FunctionArgumentContext *ctx) override;     // both processed as expression from function call
@@ -56,26 +56,26 @@ public:
     // any visitVariableDeclarationStatement(JabukodParser::VariableDeclarationStatementContext *ctx) override; // processed by visitVariableDeclaration
     // any visitVariableDefinitionStatement(JabukodParser::VariableDefinitionStatementContext *ctx) override; // processed by visitVariableDefinition
     any visitAssignmentStatement(JabukodParser::AssignmentStatementContext *ctx) override;
-    //any visitFunctionCallStatement(JabukodParser::FunctionCallStatementContext *ctx) override;
-    //any visitReturnStatement(JabukodParser::ReturnStatementContext *ctx) override;
-    //any visitExitStatement(JabukodParser::ExitStatementContext *ctx) override;
-    //any visitSuspendStatement(JabukodParser::SuspendStatementContext *ctx) override;
-    //any visitResumeStatement(JabukodParser::ResumeStatementContext *ctx) override;
-    //any visitContinueStatement(JabukodParser::ContinueStatementContext *ctx) override;
-    //any visitBreakStatement(JabukodParser::BreakStatementContext *ctx) override;
-    //any visitRedoStatement(JabukodParser::RedoStatementContext *ctx) override;
-    //any visitRestartStatement(JabukodParser::RestartStatementContext *ctx) override;
-    //any visitReadStatement(JabukodParser::ReadStatementContext *ctx) override;
-    //any visitWriteStatement(JabukodParser::WriteStatementContext *ctx) override;
-    //any visitAssignment(JabukodParser::AssignmentContext *ctx) override;
+    // any visitFunctionCallStatement(JabukodParser::FunctionCallStatementContext *ctx) override; // processed by functionCall
+    any visitReturnStatement(JabukodParser::ReturnStatementContext *ctx) override;
+    any visitExitStatement(JabukodParser::ExitStatementContext *ctx) override;
+    any visitSuspendStatement(JabukodParser::SuspendStatementContext *ctx) override;
+    any visitResumeStatement(JabukodParser::ResumeStatementContext *ctx) override;
+    any visitContinueStatement(JabukodParser::ContinueStatementContext *ctx) override;
+    any visitBreakStatement(JabukodParser::BreakStatementContext *ctx) override;
+    any visitRedoStatement(JabukodParser::RedoStatementContext *ctx) override;
+    any visitRestartStatement(JabukodParser::RestartStatementContext *ctx) override;
+    any visitReadStatement(JabukodParser::ReadStatementContext *ctx) override;
+    any visitWriteStatement(JabukodParser::WriteStatementContext *ctx) override;
+    any visitAssignment(JabukodParser::AssignmentContext *ctx) override;
     any visitForHeader(JabukodParser::ForHeaderContext *ctx) override;
     // any visitForInitializer(JabukodParser::ForInitializerContext *ctx) override; // default behaviour suffices
     // any visitForeachHeader(JabukodParser::ForeachHeaderContext *ctx) override; // default behaviour suffices
-    //any visitList(JabukodParser::ListContext *ctx) override;
-    //any visitLiteral(JabukodParser::LiteralContext *ctx) override;
-    //any visitType(JabukodParser::TypeContext *ctx) override;
-    //any visitNonVoidType(JabukodParser::NonVoidTypeContext *ctx) override;
-    //any visitListSpecifier(JabukodParser::ListSpecifierContext *ctx) override;
+    //TODO//any visitList(JabukodParser::ListContext *ctx) override;
+    any visitLiteral(JabukodParser::LiteralContext *ctx) override;
+    // any visitType(JabukodParser::TypeContext *ctx) override; // only needed for functions
+     //TODO// půjde s proměnnou do tabulky symbolů //any visitNonVoidType(JabukodParser::NonVoidTypeContext *ctx) override;
+    //TODO//any visitListSpecifier(JabukodParser::ListSpecifierContext *ctx) override;
 
 private:
     AST & ast;
