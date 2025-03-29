@@ -32,6 +32,8 @@ public:
     );
     bool IsVariableNameAvailable(const string & name) const;
 
+    void PrintScope();
+
 private:
     string name;
     Scope scope;

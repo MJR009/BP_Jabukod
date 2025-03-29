@@ -26,6 +26,17 @@ bool FunctionData::IsVariableNameAvailable(const string & name) const {
     return this->scope.IsVariableNameAvailable(name);
 }
 
+void FunctionData::PrintScope() {
+    vector<Variable> variables = this->scope.GetVariables();
+
+    for (int i = 0; i < variables.size(); i++) {
+        variables.at(i).PrintDeclaration();
+        if (i != variables.size() - 1) {
+            cout << DIM << " , " << DEFAULT;
+        }
+    }
+}
+
 
 
 string VariableData::GetName() {

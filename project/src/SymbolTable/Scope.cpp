@@ -24,6 +24,12 @@ bool Scope::IsVariableNameAvailable(const string & name) const {
 
 
 
+vector<Variable> Scope::GetVariables() {
+    return this->variables;
+}
+
+
+
 void Scope::Print() const {
     for (auto & variable : this->variables) {
         variable.Print();

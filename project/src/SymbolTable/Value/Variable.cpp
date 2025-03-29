@@ -16,7 +16,12 @@ void Variable::Print() const {
     cout << DIM << " >" << DEFAULT;
 }
 
-
+void Variable::PrintDeclaration() const {
+    cout <<
+        SpecifierFunctions::SpeficierToString(this->storage) << " " <<
+        TypeFunctions::TypeToString(this->type) << " " <<
+        YELLOW << this->name << DEFAULT;
+}
 
 // PRIVATE:
 

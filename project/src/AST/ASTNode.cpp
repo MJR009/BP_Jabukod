@@ -70,9 +70,9 @@ void ASTNode::Print() {
         FunctionData *data = this->GetData<FunctionData>();
         if (data) {
             cout << DIM << "function " << DEFAULT << YELLOW << data->GetName() << DEFAULT;
-
-            // PRINT WHOLE SCOPE
-            
+            cout << " (" << DIM << " in scope: " << DEFAULT;
+            data->PrintScope();
+            cout << " )";
         } else ERR::BadData();
 
     } else if (this->kind == NodeKind::VARIABLE_DECLARATION) {

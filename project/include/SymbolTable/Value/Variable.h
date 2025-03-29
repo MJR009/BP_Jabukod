@@ -20,6 +20,7 @@ public:
     {}
 
     void Print() const override;
+    void PrintDeclaration() const;
 
 private:
     StorageSpecifier storage;
