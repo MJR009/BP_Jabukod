@@ -25,8 +25,8 @@ enum NODE_KIND {
     ASSIGNMENT, FUNCTION_CALL,
     IF, THEN, ELSE,
     WHILE, FOR, FOREACH,
-    FOR_HEADER1, FOR_HEADER2, FOR_HEADER3,
-    BODY,
+    FOR_HEADER1, FOR_HEADER2, FOR_HEADER3, // needed for diferentiation
+    BODY, // general for all loops
 
     RETURN, EXIT, SUSPEND, RESUME,
     CONTINUE, BREAK, REDO, RESTART,
