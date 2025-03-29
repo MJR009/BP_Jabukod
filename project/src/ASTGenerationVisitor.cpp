@@ -1,13 +1,13 @@
 #include "ASTGenerationVisitor.h"
 
-any ASTGenerationVisitor::visitSourceFile(JabukodParser::SourceFileContext *ctx) {
+any ASTGenerationVisitor::visitSourceFile(JabukodParser::SourceFileContext *ctx) { // TODO SEMANTICS
     this->ast.AddNode(NodeKind::PROGRAM);
     this->visitChildren(ctx);
 
     return OK;
 }
 
-any ASTGenerationVisitor::visitVariableDeclaration(JabukodParser::VariableDeclarationContext *ctx) {
+any ASTGenerationVisitor::visitVariableDeclaration(JabukodParser::VariableDeclarationContext *ctx) { // TODO SEMANTICS
     if (this->ast.CurrentlyIn() != NodeKind::PROGRAM) { // global declarations are already processed
         this->ast.AddNode(NodeKind::VARIABLE_DECLARATION);
         this->visitChildren(ctx);
@@ -17,7 +17,7 @@ any ASTGenerationVisitor::visitVariableDeclaration(JabukodParser::VariableDeclar
     return OK;
 }
 
-any ASTGenerationVisitor::visitVariableDefinition(JabukodParser::VariableDefinitionContext *ctx) {
+any ASTGenerationVisitor::visitVariableDefinition(JabukodParser::VariableDefinitionContext *ctx) { // TODO SEMANTICS
     if (this->ast.CurrentlyIn() != NodeKind::PROGRAM) {
         this->ast.AddNode(NodeKind::VARIABLE_DEFINITION);
         this->visitChildren(ctx);
@@ -29,7 +29,7 @@ any ASTGenerationVisitor::visitVariableDefinition(JabukodParser::VariableDefinit
 
 //any visitStorageSpecifier(JabukodParser::StorageSpecifierContext *ctx) override;
 
-any ASTGenerationVisitor::visitFunctionDefinition(JabukodParser::FunctionDefinitionContext *ctx) {
+any ASTGenerationVisitor::visitFunctionDefinition(JabukodParser::FunctionDefinitionContext *ctx) { // TODO SEMANTICS
     this->ast.AddNode(NodeKind::FUNCTION);
     this->visitChildren(ctx);
     this->ast.MoveToParent();
@@ -37,7 +37,7 @@ any ASTGenerationVisitor::visitFunctionDefinition(JabukodParser::FunctionDefinit
     return OK;
 }
 
-any ASTGenerationVisitor::visitMulDivModExpression(JabukodParser::MulDivModExpressionContext *ctx) {
+any ASTGenerationVisitor::visitMulDivModExpression(JabukodParser::MulDivModExpressionContext *ctx) { // TODO SEMANTICS
     NodeKind sign = NodeKindFunctions::SignToNodeKind( ctx->sign->getText() );
     this->ast.AddNode( sign );
     this->visitChildren(ctx);
@@ -46,7 +46,7 @@ any ASTGenerationVisitor::visitMulDivModExpression(JabukodParser::MulDivModExpre
     return OK;
 }
 
-any ASTGenerationVisitor::visitExponentExpression(JabukodParser::ExponentExpressionContext *ctx) {
+any ASTGenerationVisitor::visitExponentExpression(JabukodParser::ExponentExpressionContext *ctx) { // TODO SEMANTICS
     this->ast.AddNode(NodeKind::POWER);
     this->visitChildren(ctx);
     this->ast.MoveToParent();
@@ -54,7 +54,7 @@ any ASTGenerationVisitor::visitExponentExpression(JabukodParser::ExponentExpress
     return OK;
 }
 
-any ASTGenerationVisitor::visitShiftExpression(JabukodParser::ShiftExpressionContext *ctx) {
+any ASTGenerationVisitor::visitShiftExpression(JabukodParser::ShiftExpressionContext *ctx) { // TODO SEMANTICS
     NodeKind sign = NodeKindFunctions::SignToNodeKind( ctx->sign->getText() );
     this->ast.AddNode( sign );
     this->visitChildren(ctx);
@@ -63,7 +63,7 @@ any ASTGenerationVisitor::visitShiftExpression(JabukodParser::ShiftExpressionCon
     return OK;
 }
 
-any ASTGenerationVisitor::visitBitOrExpression(JabukodParser::BitOrExpressionContext *ctx) {
+any ASTGenerationVisitor::visitBitOrExpression(JabukodParser::BitOrExpressionContext *ctx) { // TODO SEMANTICS
     this->ast.AddNode(NodeKind::BIT_OR);
     this->visitChildren(ctx);
     this->ast.MoveToParent();
@@ -71,7 +71,7 @@ any ASTGenerationVisitor::visitBitOrExpression(JabukodParser::BitOrExpressionCon
     return OK;
 }
 
-any ASTGenerationVisitor::visitAssignExpression(JabukodParser::AssignExpressionContext *ctx) {
+any ASTGenerationVisitor::visitAssignExpression(JabukodParser::AssignExpressionContext *ctx) { // TODO SEMANTICS
     this->ast.AddNode(NodeKind::ASSIGNMENT);
     this->visitChildren(ctx);
     this->ast.MoveToParent();
@@ -79,7 +79,7 @@ any ASTGenerationVisitor::visitAssignExpression(JabukodParser::AssignExpressionC
     return OK;
 }
 
-any ASTGenerationVisitor::visitIdentifierExpression(JabukodParser::IdentifierExpressionContext *ctx) {
+any ASTGenerationVisitor::visitIdentifierExpression(JabukodParser::IdentifierExpressionContext *ctx) { // TODO SEMANTICS
     this->ast.AddNode(NodeKind::VARIABLE);
     this->visitChildren(ctx);
     this->ast.MoveToParent();
@@ -87,7 +87,7 @@ any ASTGenerationVisitor::visitIdentifierExpression(JabukodParser::IdentifierExp
     return OK;
 }
 
-any ASTGenerationVisitor::visitAssSubExpression(JabukodParser::AssSubExpressionContext *ctx) {
+any ASTGenerationVisitor::visitAssSubExpression(JabukodParser::AssSubExpressionContext *ctx) { // TODO SEMANTICS
     NodeKind sign = NodeKindFunctions::SignToNodeKind( ctx->sign->getText() );
     this->ast.AddNode(
         (sign == NodeKind::minus) ? NodeKind::SUBTRACTION : sign
@@ -98,7 +98,7 @@ any ASTGenerationVisitor::visitAssSubExpression(JabukodParser::AssSubExpressionC
     return OK;
 }
 
-any ASTGenerationVisitor::visitBitXorExpression(JabukodParser::BitXorExpressionContext *ctx) {
+any ASTGenerationVisitor::visitBitXorExpression(JabukodParser::BitXorExpressionContext *ctx) { // TODO SEMANTICS
     this->ast.AddNode(NodeKind::BIT_XOR);
     this->visitChildren(ctx);
     this->ast.MoveToParent();
@@ -106,7 +106,7 @@ any ASTGenerationVisitor::visitBitXorExpression(JabukodParser::BitXorExpressionC
     return OK;
 }
 
-any ASTGenerationVisitor::visitOrExpression(JabukodParser::OrExpressionContext *ctx) {
+any ASTGenerationVisitor::visitOrExpression(JabukodParser::OrExpressionContext *ctx) { // TODO SEMANTICS
     this->ast.AddNode(NodeKind::OR);
     this->visitChildren(ctx);
     this->ast.MoveToParent();
@@ -114,7 +114,7 @@ any ASTGenerationVisitor::visitOrExpression(JabukodParser::OrExpressionContext *
     return OK;
 }
 
-any ASTGenerationVisitor::visitAndExpression(JabukodParser::AndExpressionContext *ctx) {
+any ASTGenerationVisitor::visitAndExpression(JabukodParser::AndExpressionContext *ctx) { // TODO SEMANTICS
     this->ast.AddNode(NodeKind::AND);
     this->visitChildren(ctx);
     this->ast.MoveToParent();
@@ -122,7 +122,7 @@ any ASTGenerationVisitor::visitAndExpression(JabukodParser::AndExpressionContext
     return OK;
 }
 
-any ASTGenerationVisitor::visitBitAndExpression(JabukodParser::BitAndExpressionContext *ctx) {
+any ASTGenerationVisitor::visitBitAndExpression(JabukodParser::BitAndExpressionContext *ctx) { // TODO SEMANTICS
     this->ast.AddNode(NodeKind::BIT_AND);
     this->visitChildren(ctx);
     this->ast.MoveToParent();
@@ -130,7 +130,7 @@ any ASTGenerationVisitor::visitBitAndExpression(JabukodParser::BitAndExpressionC
     return OK;
 }
 
-any ASTGenerationVisitor::visitLessMoreExpression(JabukodParser::LessMoreExpressionContext *ctx) {
+any ASTGenerationVisitor::visitLessMoreExpression(JabukodParser::LessMoreExpressionContext *ctx) { // TODO SEMANTICS
     NodeKind sign = NodeKindFunctions::SignToNodeKind( ctx->sign->getText() );
     this->ast.AddNode( sign );
     this->visitChildren(ctx);
@@ -139,7 +139,7 @@ any ASTGenerationVisitor::visitLessMoreExpression(JabukodParser::LessMoreExpress
     return OK;
 }
 
-any ASTGenerationVisitor::visitEqualityExpression(JabukodParser::EqualityExpressionContext *ctx) {
+any ASTGenerationVisitor::visitEqualityExpression(JabukodParser::EqualityExpressionContext *ctx) { // TODO SEMANTICS
     NodeKind sign = NodeKindFunctions::SignToNodeKind( ctx->sign->getText() );
     this->ast.AddNode( sign );
     this->visitChildren(ctx);
@@ -148,7 +148,7 @@ any ASTGenerationVisitor::visitEqualityExpression(JabukodParser::EqualityExpress
     return OK;
 }
 
-any ASTGenerationVisitor::visitPrefixUnaryExpression(JabukodParser::PrefixUnaryExpressionContext *ctx) {
+any ASTGenerationVisitor::visitPrefixUnaryExpression(JabukodParser::PrefixUnaryExpressionContext *ctx) { // TODO SEMANTICS
     NodeKind sign = NodeKindFunctions::SignToNodeKind( ctx->sign->getText() );
     this->ast.AddNode(
         (sign == NodeKind::minus) ? NodeKind::UNARY_MINUS : sign
@@ -159,7 +159,7 @@ any ASTGenerationVisitor::visitPrefixUnaryExpression(JabukodParser::PrefixUnaryE
     return OK;
 }
 
-any ASTGenerationVisitor::visitFunctionCall(JabukodParser::FunctionCallContext *ctx) {
+any ASTGenerationVisitor::visitFunctionCall(JabukodParser::FunctionCallContext *ctx) { // TODO SEMANTICS
     this->ast.AddNode(NodeKind::FUNCTION_CALL);
     this->visitChildren(ctx);
     this->ast.MoveToParent();
@@ -167,7 +167,7 @@ any ASTGenerationVisitor::visitFunctionCall(JabukodParser::FunctionCallContext *
     return OK;
 }
 
-any ASTGenerationVisitor::visitIfStatement(JabukodParser::IfStatementContext *ctx) {
+any ASTGenerationVisitor::visitIfStatement(JabukodParser::IfStatementContext *ctx) { // TODO SEMANTICS
     this->ast.AddNode(NodeKind::IF);
     this->visit(ctx->expression());
 
@@ -187,7 +187,7 @@ any ASTGenerationVisitor::visitIfStatement(JabukodParser::IfStatementContext *ct
     return OK;
 }
 
-any ASTGenerationVisitor::visitWhileStatement(JabukodParser::WhileStatementContext *ctx) {
+any ASTGenerationVisitor::visitWhileStatement(JabukodParser::WhileStatementContext *ctx) { // TODO SEMANTICS
     this->ast.AddNode(NodeKind::WHILE);
     this->visit(ctx->expression());
 
@@ -202,7 +202,7 @@ any ASTGenerationVisitor::visitWhileStatement(JabukodParser::WhileStatementConte
     return OK;
 }
 
-any ASTGenerationVisitor::visitForStatement(JabukodParser::ForStatementContext *ctx) {
+any ASTGenerationVisitor::visitForStatement(JabukodParser::ForStatementContext *ctx) { // TODO SEMANTICS
     this->ast.AddNode(NodeKind::FOR);
     this->visit(ctx->forHeader());
 
@@ -217,7 +217,7 @@ any ASTGenerationVisitor::visitForStatement(JabukodParser::ForStatementContext *
     return OK;
 }
 
-any ASTGenerationVisitor::visitForeachStatement(JabukodParser::ForeachStatementContext *ctx) {
+any ASTGenerationVisitor::visitForeachStatement(JabukodParser::ForeachStatementContext *ctx) { // TODO SEMANTICS
     this->ast.AddNode(NodeKind::FOREACH);
     this->visit(ctx->foreachHeader());
 
@@ -232,7 +232,7 @@ any ASTGenerationVisitor::visitForeachStatement(JabukodParser::ForeachStatementC
     return OK;
 }
 
-any ASTGenerationVisitor::visitAssignmentStatement(JabukodParser::AssignmentStatementContext *ctx) {
+any ASTGenerationVisitor::visitAssignmentStatement(JabukodParser::AssignmentStatementContext *ctx) { // TODO SEMANTICS
     this->ast.AddNode(NodeKind::ASSIGNMENT);
     this->visitChildren(ctx);
     this->ast.MoveToParent();
@@ -240,7 +240,7 @@ any ASTGenerationVisitor::visitAssignmentStatement(JabukodParser::AssignmentStat
     return OK;
 }
 
-any ASTGenerationVisitor::visitReturnStatement(JabukodParser::ReturnStatementContext *ctx) {
+any ASTGenerationVisitor::visitReturnStatement(JabukodParser::ReturnStatementContext *ctx) { // TODO SEMANTICS
     this->ast.AddNode(NodeKind::RETURN);
     this->visitChildren(ctx);
     this->ast.MoveToParent();
@@ -248,7 +248,7 @@ any ASTGenerationVisitor::visitReturnStatement(JabukodParser::ReturnStatementCon
     return OK;
 }
 
-any ASTGenerationVisitor::visitExitStatement(JabukodParser::ExitStatementContext *ctx) {
+any ASTGenerationVisitor::visitExitStatement(JabukodParser::ExitStatementContext *ctx) { // TODO SEMANTICS
     this->ast.AddNode(NodeKind::EXIT);
     this->visitChildren(ctx);
     this->ast.MoveToParent();
@@ -256,7 +256,7 @@ any ASTGenerationVisitor::visitExitStatement(JabukodParser::ExitStatementContext
     return OK;
 }
 
-any ASTGenerationVisitor::visitSuspendStatement(JabukodParser::SuspendStatementContext *ctx) {
+any ASTGenerationVisitor::visitSuspendStatement(JabukodParser::SuspendStatementContext *ctx) { // TODO SEMANTICS
     this->ast.AddNode(NodeKind::SUSPEND);
     this->visitChildren(ctx);
     this->ast.MoveToParent();
@@ -264,7 +264,7 @@ any ASTGenerationVisitor::visitSuspendStatement(JabukodParser::SuspendStatementC
     return OK;
 }
 
-any ASTGenerationVisitor::visitResumeStatement(JabukodParser::ResumeStatementContext *ctx) {
+any ASTGenerationVisitor::visitResumeStatement(JabukodParser::ResumeStatementContext *ctx) { // TODO SEMANTICS
     this->ast.AddNode(NodeKind::RESUME);
     this->visitChildren(ctx);
     this->ast.MoveToParent();
@@ -272,7 +272,7 @@ any ASTGenerationVisitor::visitResumeStatement(JabukodParser::ResumeStatementCon
     return OK;
 }
 
-any ASTGenerationVisitor::visitContinueStatement(JabukodParser::ContinueStatementContext *ctx) {
+any ASTGenerationVisitor::visitContinueStatement(JabukodParser::ContinueStatementContext *ctx) { // TODO SEMANTICS
     this->ast.AddNode(NodeKind::CONTINUE);
     this->visitChildren(ctx);
     this->ast.MoveToParent();
@@ -280,7 +280,7 @@ any ASTGenerationVisitor::visitContinueStatement(JabukodParser::ContinueStatemen
     return OK;
 }
 
-any ASTGenerationVisitor::visitBreakStatement(JabukodParser::BreakStatementContext *ctx) {
+any ASTGenerationVisitor::visitBreakStatement(JabukodParser::BreakStatementContext *ctx) { // TODO SEMANTICS
     this->ast.AddNode(NodeKind::BREAK);
     this->visitChildren(ctx);
     this->ast.MoveToParent();
@@ -288,7 +288,7 @@ any ASTGenerationVisitor::visitBreakStatement(JabukodParser::BreakStatementConte
     return OK;
 }
 
-any ASTGenerationVisitor::visitRedoStatement(JabukodParser::RedoStatementContext *ctx) {
+any ASTGenerationVisitor::visitRedoStatement(JabukodParser::RedoStatementContext *ctx) { // TODO SEMANTICS
     this->ast.AddNode(NodeKind::REDO);
     this->visitChildren(ctx);
     this->ast.MoveToParent();
@@ -296,7 +296,7 @@ any ASTGenerationVisitor::visitRedoStatement(JabukodParser::RedoStatementContext
     return OK;
 }
 
-any ASTGenerationVisitor::visitRestartStatement(JabukodParser::RestartStatementContext *ctx) {
+any ASTGenerationVisitor::visitRestartStatement(JabukodParser::RestartStatementContext *ctx) { // TODO SEMANTICS
     this->ast.AddNode(NodeKind::RESTART);
     this->visitChildren(ctx);
     this->ast.MoveToParent();
@@ -304,7 +304,7 @@ any ASTGenerationVisitor::visitRestartStatement(JabukodParser::RestartStatementC
     return OK;
 }
 
-any ASTGenerationVisitor::visitReadStatement(JabukodParser::ReadStatementContext *ctx) {
+any ASTGenerationVisitor::visitReadStatement(JabukodParser::ReadStatementContext *ctx) { // TODO SEMANTICS
     this->ast.AddNode(NodeKind::READ);
     // TODO MUSÍ ZPRACOVAT IDENTIFIER
     this->visitChildren(ctx);
@@ -313,7 +313,7 @@ any ASTGenerationVisitor::visitReadStatement(JabukodParser::ReadStatementContext
     return OK;
 }
 
-any ASTGenerationVisitor::visitWriteStatement(JabukodParser::WriteStatementContext *ctx) {
+any ASTGenerationVisitor::visitWriteStatement(JabukodParser::WriteStatementContext *ctx) { // TODO SEMANTICS
     this->ast.AddNode(NodeKind::WRITE);
     this->visitChildren(ctx);
     this->ast.MoveToParent();
@@ -322,14 +322,14 @@ any ASTGenerationVisitor::visitWriteStatement(JabukodParser::WriteStatementConte
 }
 
 
-any ASTGenerationVisitor::visitAssignment(JabukodParser::AssignmentContext *ctx) {
+any ASTGenerationVisitor::visitAssignment(JabukodParser::AssignmentContext *ctx) { // TODO SEMANTICS
     // MUSÍ ZPRACOVAT IDENTIFIER, narozdíl od assignmentExpression, je zde na tvrdo vynucen gramatikou
     this->visitChildren(ctx);
 
     return OK;
 }
 
-any ASTGenerationVisitor::visitForHeader(JabukodParser::ForHeaderContext *ctx) {
+any ASTGenerationVisitor::visitForHeader(JabukodParser::ForHeaderContext *ctx) { // TODO SEMANTICS
     if (ctx->init) {
         this->ast.AddNode(NodeKind::FOR_HEADER1);
         this->visit(ctx->init);
@@ -351,7 +351,7 @@ any ASTGenerationVisitor::visitForHeader(JabukodParser::ForHeaderContext *ctx) {
     return OK;
 }
 
-any ASTGenerationVisitor::visitLiteral(JabukodParser::LiteralContext *ctx) {
+any ASTGenerationVisitor::visitLiteral(JabukodParser::LiteralContext *ctx) { // TODO SEMANTICS
     this->ast.AddNode(NodeKind::LITERAL);
     this->visitChildren(ctx);
     this->ast.MoveToParent();
