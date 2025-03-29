@@ -3,8 +3,11 @@
 
 #include "JabukodBaseVisitor.h"
 
+#include "Escapes.h"
 #include "SymbolTable.h"
 #include "AST.h"
+
+#include "LiteralData.h"
 
 class ASTGenerationVisitor : public JabukodBaseVisitor {
 public:

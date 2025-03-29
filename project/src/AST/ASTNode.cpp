@@ -28,26 +28,6 @@ ASTNode *ASTNode::GetParent() {
 
 
 
-void ASTNode::AppendNewChild(ASTNode *newChild) {
-    newChild->parent = this;
-    this->children.push_back(newChild);
-}
-
-
-
-void ASTNode::Print() const {
-    switch (this->kind) {
-        case NodeKind::PROGRAM:
-            cout << DIM << "PROGRAM" << DEFAULT;
-            break;
-
-        default:
-            cout << NodeKindFunctions::NodeKindToString(this->kind);
-            cout << DIM << " < " << DEFAULT;
-            cout << DIM << ">" << DEFAULT;
-    }
-}
-
 vector<bool> ASTNode::IsLastChildAllToRoot() {
     vector<bool> areLast;
 
@@ -64,4 +44,38 @@ vector<bool> ASTNode::IsLastChildAllToRoot() {
     }
 
     return areLast;
+}
+    
+
+
+void ASTNode::AppendNewChild(ASTNode *newChild) {
+    newChild->parent = this;
+    this->children.push_back(newChild);
+}
+
+
+
+void ASTNode::Print() {
+    // mainly needed for debugging
+    void (*BadData)() = [](){ cout << RED << "BAD NODE DATA TYPE" << DEFAULT; };
+
+    NodeKind k = this->kind;
+
+    if (k == NodeKind::PROGRAM) {
+        cout << DIM << "PROGRAM" << DEFAULT;
+
+    } else if (k == NodeKind::LITERAL) {
+        LiteralData *data = this->GetData<LiteralData>(); // data must be cast to check correct specialization
+        if ( ! data) BadData();
+        TypeFunctions::PrintAnyValueByType(data->GetValue(), data->GetType());
+        cout << " - " << TypeFunctions::TypeToString( data->GetType() );
+
+    }
+
+
+
+    else {
+        cout << NodeKindFunctions::NodeKindToString(this->kind);
+        cout << DIM << " <>" << DEFAULT;
+    }
 }

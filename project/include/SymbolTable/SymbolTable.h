@@ -3,6 +3,7 @@
 
 #include "JabukodParser.h"
 
+#include "Escapes.h"
 #include "Scope.h"
 #include "FunctionTable.h"
 #include "EnumTable.h"
@@ -70,6 +71,4 @@ private:
     bool IsLiteralExpression(JabukodParser::ExpressionContext *expression) const;
     any ResolveExplicitDefaultValue(JabukodParser::LiteralContext *defaultValue, Type type) const; // for definitions, also does type checking
     any GetImplicitDefaultValue(Type type) const; // for declarations
-
-    string ReplaceEscapeSequences(const string & str) const;
 };

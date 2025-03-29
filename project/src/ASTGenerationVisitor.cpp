@@ -352,7 +352,29 @@ any ASTGenerationVisitor::visitForHeader(JabukodParser::ForHeaderContext *ctx) {
 }
 
 any ASTGenerationVisitor::visitLiteral(JabukodParser::LiteralContext *ctx) { // TODO SEMANTICS
-    this->ast.AddNode(NodeKind::LITERAL);
+    Type type;
+    any value;
+    if (ctx->INT_LITERAL()) {
+        type = Type::INT;
+        value = any( stoi( ctx->INT_LITERAL()->getText() ) );
+    } else if (ctx->FLOAT_LITERAL()) {
+        type = Type::FLOAT;
+        value = any( stof( ctx->FLOAT_LITERAL()->getText() ) );
+    } else if (ctx->BOOL_LITERAL()) {
+        type = Type::BOOL;
+        value = any(
+            ctx->BOOL_LITERAL()->getText() == "true" ? "true" : "false"
+        );
+    } else if (ctx->STRING_LITERAL()) {
+        type = Type::STRING;
+        value = any (
+            Escapes::ReplaceEscapeSequences( ctx->STRING_LITERAL()->getText() )
+        );
+    }
+
+    LiteralData *data = new LiteralData(type, value);
+
+    this->ast.AddNode(NodeKind::LITERAL, data);
     this->visitChildren(ctx);
     this->ast.MoveToParent();
 
