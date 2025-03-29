@@ -40,7 +40,7 @@ typedef enum NODE_KIND NodeKind;
 namespace NodeKindFunctions {
 
 string NodeKindToString(NodeKind kind);
-// only defined for signs which are parts of a subrule in a single expression expansion
+// only defined for signs which are parts of a subrule within one expression expansion
 NodeKind SignToNodeKind(string sign);
 
 } // namespace NodeKindFunctions

@@ -52,3 +52,20 @@ ROZSAHY
 POPSÁNO PODROBNĚ V KÓDU SymbolTable.cpp
 
 - Položka enumu se chová stejně jako konstantní globální proměnná
+
+suspend, resume:
+- CONTINUATION - struktura se všemi údajiprávě běžícího procesu -> běhové prostředí
+    - vhodné pro výjimky, koprogramy, generátory
+    - stav provádění je ve kterémkoli bodě uložen a lze se k němu vrátit (i opakovaně? spíš stack)
+- continuations, nikoli koprogramy (angl. coroutines)
+- pozastavení funkce, dokud zase není potřeba
+- vhodné pro generátory hodnot (Python)
+- v mém jazyce zjednodušeno skutečně na funkci, která ukládá svůj stav bokem
+- vždy je potřeba dvojice suspend a resume, je to zásobník, suspend -> suspend -> resume -> resume
+- ve funkci, kde je suspend pak musí být resume
+! co když se zavolá resume s prázdným zásobníkem?
+    - nic to neudělá
+    - chyba za běhu
+- suspend v mainu by mohl být problém - nedovolit
+
+- V TEXTU PROVÉST PŘÍKLAD S VÝJIMKAMI, VYTVOŘIT PŘÍKLAD KÓDU
