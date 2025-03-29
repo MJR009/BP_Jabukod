@@ -4,7 +4,7 @@
 #include "NodeKind.h"
 #include "Type.h"
 #include "GenericNodeData.h"
-#include "LiteralData.h"
+#include "SpecificNodeData.h"
 
 class AST;
 

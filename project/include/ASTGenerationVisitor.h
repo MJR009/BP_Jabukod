@@ -7,7 +7,7 @@
 #include "SymbolTable.h"
 #include "AST.h"
 
-#include "LiteralData.h"
+#include "SpecificNodeData.h"
 
 class ASTGenerationVisitor : public JabukodBaseVisitor {
 public:

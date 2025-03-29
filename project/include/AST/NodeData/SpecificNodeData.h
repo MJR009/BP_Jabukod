@@ -1,6 +1,8 @@
 #pragma once
 #include "common.h"
 
+// just one file to greatly simplify includes
+
 #include "GenericNodeData.h"
 
 class LiteralData : public GenericNodeData {

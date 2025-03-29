@@ -1,4 +1,4 @@
-#include "LiteralData.h"
+#include "SpecificNodeData.h"
 
 Type LiteralData::GetType() {
     return this->type;

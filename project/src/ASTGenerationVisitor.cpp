@@ -30,6 +30,10 @@ any ASTGenerationVisitor::visitVariableDefinition(JabukodParser::VariableDefinit
 //any visitStorageSpecifier(JabukodParser::StorageSpecifierContext *ctx) override;
 
 any ASTGenerationVisitor::visitFunctionDefinition(JabukodParser::FunctionDefinitionContext *ctx) { // TODO SEMANTICS
+    
+
+
+
     this->ast.AddNode(NodeKind::FUNCTION);
     this->visitChildren(ctx);
     this->ast.MoveToParent();
@@ -351,7 +355,7 @@ any ASTGenerationVisitor::visitForHeader(JabukodParser::ForHeaderContext *ctx) {
     return OK;
 }
 
-any ASTGenerationVisitor::visitLiteral(JabukodParser::LiteralContext *ctx) { // TODO SEMANTICS
+any ASTGenerationVisitor::visitLiteral(JabukodParser::LiteralContext *ctx) {
     Type type;
     any value;
     if (ctx->INT_LITERAL()) {
