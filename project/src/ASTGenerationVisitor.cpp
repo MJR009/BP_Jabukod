@@ -363,7 +363,7 @@ any ASTGenerationVisitor::visitLiteral(JabukodParser::LiteralContext *ctx) { // 
     } else if (ctx->BOOL_LITERAL()) {
         type = Type::BOOL;
         value = any(
-            ctx->BOOL_LITERAL()->getText() == "true" ? "true" : "false"
+            ctx->BOOL_LITERAL()->getText() == "true" ? true : false
         );
     } else if (ctx->STRING_LITERAL()) {
         type = Type::STRING;

@@ -66,9 +66,10 @@ void ASTNode::Print() {
 
     } else if (k == NodeKind::LITERAL) {
         LiteralData *data = this->GetData<LiteralData>(); // data must be cast to check correct specialization
-        if ( ! data) BadData();
-        TypeFunctions::PrintAnyValueByType(data->GetValue(), data->GetType());
-        cout << " - " << TypeFunctions::TypeToString( data->GetType() );
+        if (data) {
+            TypeFunctions::PrintAnyValueByType(data->GetValue(), data->GetType());
+            cout << DIM << " - " << DEFAULT << TypeFunctions::TypeToString( data->GetType() );
+        } else BadData();
 
     }
 

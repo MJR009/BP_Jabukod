@@ -1,6 +1,8 @@
-int main() {
-    int x;
+bool x = true;
 
-    x = 2;
+int main() {
+    int x = 2;
+    x = x + 3.14159;
     x = "Hello";
+    x = true;
 }
