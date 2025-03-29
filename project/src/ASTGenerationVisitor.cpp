@@ -1,33 +1,62 @@
 #include "ASTGenerationVisitor.h"
 
-any ASTGenerationVisitor::visitSourceFile(JabukodParser::SourceFileContext *ctx) { // TODO SEMANTICS
+any ASTGenerationVisitor::visitSourceFile(JabukodParser::SourceFileContext *ctx) {
     this->ast.AddNode(NodeKind::PROGRAM);
     this->visitChildren(ctx);
 
     return OK;
 }
 
-any ASTGenerationVisitor::visitVariableDeclaration(JabukodParser::VariableDeclarationContext *ctx) { // TODO SEMANTICS
+any ASTGenerationVisitor::visitVariableDeclaration(JabukodParser::VariableDeclarationContext *ctx) {
     if (this->ast.CurrentlyIn() != NodeKind::PROGRAM) { // global declarations are already processed
-        this->ast.AddNode(NodeKind::VARIABLE_DECLARATION);
-        this->visitChildren(ctx);
+        VariableData *data = new VariableData(
+            ctx->IDENTIFIER()->getText()
+        );
+
+        this->ast.AddNode(NodeKind::VARIABLE_DECLARATION, data);
+
+        antlr4::Token *variable = ctx->IDENTIFIER()->getSymbol();
+        JabukodParser::StorageSpecifierContext *storage;
+        if (ctx->storageSpecifier()) {
+            storage = ctx->storageSpecifier();
+        } else {
+            storage = nullptr;
+        }
+        JabukodParser::NonVoidTypeContext *type = ctx->nonVoidType();
+
+        this->ast.PutVariableInScope(variable, storage, type);
+
         this->ast.MoveToParent();
     }
 
     return OK;
 }
 
-any ASTGenerationVisitor::visitVariableDefinition(JabukodParser::VariableDefinitionContext *ctx) { // TODO SEMANTICS
+any ASTGenerationVisitor::visitVariableDefinition(JabukodParser::VariableDefinitionContext *ctx) {
     if (this->ast.CurrentlyIn() != NodeKind::PROGRAM) {
-        this->ast.AddNode(NodeKind::VARIABLE_DEFINITION);
-        this->visitChildren(ctx);
+        VariableData *data = new VariableData(
+            ctx->IDENTIFIER()->getText()
+        );
+
+        this->ast.AddNode(NodeKind::VARIABLE_DEFINITION, data);
+        
+        antlr4::Token *variable = ctx->IDENTIFIER()->getSymbol();
+        JabukodParser::StorageSpecifierContext *storage;
+        if (ctx->storageSpecifier()) {
+            storage = ctx->storageSpecifier();
+        } else {
+            storage = nullptr;
+        }
+        JabukodParser::NonVoidTypeContext *type = ctx->nonVoidType();
+
+        this->ast.PutVariableInScope(variable, storage, type);
+
+        this->visit(ctx->expression());
         this->ast.MoveToParent();
     }
 
     return OK;
 }
-
-//any visitStorageSpecifier(JabukodParser::StorageSpecifierContext *ctx) override;
 
 any ASTGenerationVisitor::visitFunctionDefinition(JabukodParser::FunctionDefinitionContext *ctx) {
     FunctionData *data = new FunctionData(
@@ -379,7 +408,6 @@ any ASTGenerationVisitor::visitLiteral(JabukodParser::LiteralContext *ctx) {
     LiteralData *data = new LiteralData(type, value);
 
     this->ast.AddNode(NodeKind::LITERAL, data);
-    this->visitChildren(ctx);
     this->ast.MoveToParent();
 
     return OK;

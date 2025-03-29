@@ -13,3 +13,9 @@ any LiteralData::GetValue() {
 string FunctionData::GetName() {
     return this->name;
 }
+
+
+
+string VariableData::GetName() {
+    return this->name;
+}

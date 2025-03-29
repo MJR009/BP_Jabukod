@@ -72,8 +72,24 @@ void ASTNode::Print() {
     } else if (this->kind == NodeKind::FUNCTION) {
         FunctionData *data = this->GetData<FunctionData>();
         if (data) {
-            cout << DIM << "function " << DEFAULT << YELLOW << data->GetName() <<  DEFAULT;
+            cout << DIM << "function " << DEFAULT << YELLOW << data->GetName() << DEFAULT;
+
+            // PRINT WHOLE SCOPE
+            
         } else BadData();
+
+    } else if (this->kind == NodeKind::VARIABLE_DECLARATION) {
+        VariableData *data = this->GetData<VariableData>();
+        if (data) {
+            cout << YELLOW << data->GetName() << DEFAULT << DIM << " declaration" << DEFAULT;
+        } else BadData();
+
+    } else if (this->kind == NodeKind::VARIABLE_DEFINITION) {
+        VariableData *data = this->GetData<VariableData>();
+        if (data) {
+            cout << YELLOW << data->GetName() << DEFAULT << DIM << " definition" << DEFAULT;
+        } else BadData();
+
     }
 
 

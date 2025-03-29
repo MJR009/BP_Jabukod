@@ -121,6 +121,19 @@ void SymbolTable::CheckIfIntMainPresent() {
 
 
 
+bool SymbolTable::IsIdFunctionParameter(const string & functionName, const string & identifier) {
+    FunctionTableEntry *function = this->functionTable.GetFunctionByName(functionName);
+    for (auto & parameter : function->GetParameters()) {
+        if (parameter.GetName() == identifier) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+
+
 void SymbolTable::Print() const {
     cout << CYAN << "Functions:\n=====" << DEFAULT << endl;
     this->functionTable.Print();
@@ -180,7 +193,7 @@ bool SymbolTable::IsFunctionNameAvailable(const string & name) const {
     // NESMÍ být stejné jako globální proměnná
     // je PŘEKRYTA lokální proměnnou, ALE až po její definici
     // NESMÍ být stejné jako jiná funkce
-    // MŮŽE být stejné jako parametr funkce, ALE pak ji nelze volat, lokálnní proměnné ji překrývá
+    // MŮŽE být stejné jako parametr funkce, ALE pak ji nelze volat, lokální proměnná ji překrývá
     // MŮŽE být stejné jako název enumu
     // NEMŮŽE být stejné jako položka enumu
 

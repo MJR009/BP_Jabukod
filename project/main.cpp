@@ -46,8 +46,8 @@ int main(int argc, char **argv) {
     GlobalSymbolsVisitor.visit(parseTree);
     // Phase 2: generate abstract syntax tree and do final semantic checks
     //        -> makes the tree, gathers local symbols and checks symbol usage, ensures statement use validity
-    AST ast(&parser);
-    ASTGenerationVisitor astGenerationVisitor(ast, symbolTable);
+    AST ast(&parser, symbolTable);
+    ASTGenerationVisitor astGenerationVisitor(ast);
     astGenerationVisitor.visit(parseTree);
 
 

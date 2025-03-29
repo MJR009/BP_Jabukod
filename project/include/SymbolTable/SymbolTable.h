@@ -41,6 +41,8 @@ public:
 
     void CheckIfIntMainPresent();
 
+    bool IsIdFunctionParameter(const string & functionName, const string & identifier);
+
     void Print() const;
 
 private:

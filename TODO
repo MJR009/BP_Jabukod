@@ -31,6 +31,10 @@ TEXT
 -- odkazovat se na kapitolu obfuskace těsně před jejím začátkem je divný...
 -- zásadní nevýhodOu (u detrimentálnosti obfuskace)
 
+! Rozsahy - funkce se nesmí volat, pokud už byla definována stejnojmenná proměnná !
+
+Pro testování byly vytvořeny detailní výpisy s barvami a všemi infomracemi, včetně zvláštního zdůraznění chybových situací
+
 - OPRAVIT v příloze ne/terminální symboly na ne/terminály !!!
 
 Pomocí ke generování je přednáška 9 z IFJ

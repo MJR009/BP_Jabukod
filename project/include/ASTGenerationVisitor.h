@@ -11,7 +11,7 @@
 
 class ASTGenerationVisitor : public JabukodBaseVisitor {
 public:
-    ASTGenerationVisitor(AST & ast, SymbolTable & symbolTable) : ast(ast), symbolTable(symbolTable) {}
+    ASTGenerationVisitor(AST & ast) : ast(ast) {}
 
     // commented out methods included for completeness, default implementation used ( visitChildren() )
 
@@ -20,7 +20,7 @@ public:
     // any visitDefinition(JabukodParser::DefinitionContext *ctx) override; // needed for parse tree
     any visitVariableDeclaration(JabukodParser::VariableDeclarationContext *ctx) override;
     any visitVariableDefinition(JabukodParser::VariableDefinitionContext *ctx) override;
-     //TODO// půjde k proměnné do tabulky symbolů //any visitStorageSpecifier(JabukodParser::StorageSpecifierContext *ctx) override;
+    // any visitStorageSpecifier(JabukodParser::StorageSpecifierContext *ctx) override; // accessed through variableDefinition/Declaration
     any visitFunctionDefinition(JabukodParser::FunctionDefinitionContext *ctx) override;
     // any visitFunctionParameters(JabukodParser::FunctionParametersContext *ctx) override;
     // any visitFunctionParameter(JabukodParser::FunctionParameterContext *ctx) override;
@@ -82,5 +82,4 @@ public:
 
 private:
     AST & ast;
-    SymbolTable & symbolTable;
 };

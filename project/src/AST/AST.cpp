@@ -44,6 +44,30 @@ void AST::MoveToParent() {
 
 
 
+void AST::PutVariableInScope(
+    antlr4::Token *variable,
+    JabukodParser::StorageSpecifierContext *storageSpecifier,
+    JabukodParser::NonVoidTypeContext *variableType
+) {
+    ASTNode *parent = this->activeNode->GetParent(); // definitions/declarations are always children of a node with scope (according to grammar)
+
+    if (parent->GetKind() == NodeKind::FUNCTION) {
+        string functionName = parent->GetData<FunctionData>()->GetName();
+
+        if (this->symbolTable.IsIdFunctionParameter(functionName, variable->getText())) {
+            this->parser->notifyErrorListeners(variable, VARIABLE_SAME_AS_PARAMETER, nullptr);
+        }
+    }
+    
+    // check current scope
+
+    // TODO EXTEND ACCORDING TO PLACES WITH SCOPES !
+
+    // ADD TO SCOPE
+}
+
+
+
 NodeKind AST::CurrentlyIn() {
     return this->activeNode->GetKind();
 }

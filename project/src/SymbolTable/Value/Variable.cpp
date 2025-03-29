@@ -2,12 +2,18 @@
 
 
 void Variable::Print() const {
+    cout << YELLOW << this->name << DEFAULT;
+
+    cout << DIM << " < " << DEFAULT;
+
     cout <<
         SpecifierFunctions::SpeficierToString(this->storage) << " " <<
         TypeFunctions::TypeToString(this->type) << " , ";
 
     cout << DIM << "default: " << DEFAULT;
     this->PrintDefaultValue();
+
+    cout << DIM << " >" << DEFAULT;
 }
 
 

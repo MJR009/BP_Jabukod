@@ -8,7 +8,7 @@
 
 class AST {
 public:
-    AST(JabukodParser *parser) : parser(parser) {}
+    AST(JabukodParser *parser, SymbolTable & symbolTable) : parser(parser), symbolTable(symbolTable) {}
 
     void PreorderForEachNode( void (*action)(ASTNode *) );
     void PostorderForEachNode( void (*action)(ASTNode *) );
@@ -17,6 +17,12 @@ public:
     void AddNode(NodeKind kind, GenericNodeData *data); // Newly added node is always made active !
     void AddNode(NodeKind kind);
     void MoveToParent();
+
+    void PutVariableInScope(
+        antlr4::Token *variable,
+        JabukodParser::StorageSpecifierContext *storageSpecifier,
+        JabukodParser::NonVoidTypeContext *variableType
+    );
 
     NodeKind CurrentlyIn();
 
@@ -32,6 +38,8 @@ public:
 
 private:
     JabukodParser *parser; // for semantic error reporting
+
+    SymbolTable & symbolTable;
 
     ASTNode *root = nullptr;
     ASTNode *activeNode = nullptr;

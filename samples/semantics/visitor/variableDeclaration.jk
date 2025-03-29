@@ -1,0 +1,7 @@
+int y;
+bool logic;
+
+int main(int y) {
+    float y;
+    int x = 1 + 1;
+}

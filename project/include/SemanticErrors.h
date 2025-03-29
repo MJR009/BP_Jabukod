@@ -16,3 +16,5 @@
 #define MISPLACED_STRING_LITERAL "cannot assign string literal"
 #define CONSTANT_DECLARATION "constant assignment missing value"
 #define REDEFINITION_OF_PARAMETER "identifier used for function parameter is already taken"
+
+#define VARIABLE_SAME_AS_PARAMETER "variable name in functions top scope must not be the same as a its parameter"
