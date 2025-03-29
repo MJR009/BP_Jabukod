@@ -11,7 +11,7 @@
 
 class ASTGenerationVisitor : public JabukodBaseVisitor {
 public:
-    ASTGenerationVisitor(AST & ast) : ast(ast) {}
+    ASTGenerationVisitor(AST & ast, SymbolTable & symbolTable) : ast(ast), symbolTable(symbolTable) {}
 
     // commented out methods included for completeness, default implementation used ( visitChildren() )
 
@@ -82,4 +82,5 @@ public:
 
 private:
     AST & ast;
+    SymbolTable & symbolTable;
 };

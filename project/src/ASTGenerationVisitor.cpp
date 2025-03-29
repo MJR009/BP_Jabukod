@@ -29,12 +29,12 @@ any ASTGenerationVisitor::visitVariableDefinition(JabukodParser::VariableDefinit
 
 //any visitStorageSpecifier(JabukodParser::StorageSpecifierContext *ctx) override;
 
-any ASTGenerationVisitor::visitFunctionDefinition(JabukodParser::FunctionDefinitionContext *ctx) { // TODO SEMANTICS
-    
+any ASTGenerationVisitor::visitFunctionDefinition(JabukodParser::FunctionDefinitionContext *ctx) {
+    FunctionData *data = new FunctionData(
+        ctx->IDENTIFIER()->getText()
+    );
 
-
-
-    this->ast.AddNode(NodeKind::FUNCTION);
+    this->ast.AddNode(NodeKind::FUNCTION, data);
     this->visitChildren(ctx);
     this->ast.MoveToParent();
 

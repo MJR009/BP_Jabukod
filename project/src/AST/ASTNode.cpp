@@ -57,20 +57,23 @@ void ASTNode::AppendNewChild(ASTNode *newChild) {
 
 void ASTNode::Print() {
     // mainly needed for debugging
-    void (*BadData)() = [](){ cout << RED << "BAD NODE DATA TYPE" << DEFAULT; };
+    void (*BadData)() = [](){ cout << RED << BOLD << "BAD NODE DATA TYPE" << DEFAULT; };
 
-    NodeKind k = this->kind;
-
-    if (k == NodeKind::PROGRAM) {
+    if (this->kind == NodeKind::PROGRAM) {
         cout << DIM << "PROGRAM" << DEFAULT;
 
-    } else if (k == NodeKind::LITERAL) {
+    } else if (this->kind == NodeKind::LITERAL) {
         LiteralData *data = this->GetData<LiteralData>(); // data must be cast to check correct specialization
         if (data) {
             TypeFunctions::PrintAnyValueByType(data->GetValue(), data->GetType());
             cout << DIM << " - " << DEFAULT << TypeFunctions::TypeToString( data->GetType() );
         } else BadData();
 
+    } else if (this->kind == NodeKind::FUNCTION) {
+        FunctionData *data = this->GetData<FunctionData>();
+        if (data) {
+            cout << DIM << "function " << DEFAULT << YELLOW << data->GetName() <<  DEFAULT;
+        } else BadData();
     }
 
 

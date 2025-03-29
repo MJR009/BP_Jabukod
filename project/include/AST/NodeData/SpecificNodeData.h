@@ -16,3 +16,13 @@ private:
     Type type;
     any value;
 };
+
+class FunctionData : public GenericNodeData {
+public:
+    FunctionData(const string & name) : name(name) {}
+
+    string GetName();
+
+private:
+    string name;
+};

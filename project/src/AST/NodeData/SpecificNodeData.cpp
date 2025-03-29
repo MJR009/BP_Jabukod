@@ -7,3 +7,9 @@ Type LiteralData::GetType() {
 any LiteralData::GetValue() {
     return this->value;
 }
+
+
+
+string FunctionData::GetName() {
+    return this->name;
+}

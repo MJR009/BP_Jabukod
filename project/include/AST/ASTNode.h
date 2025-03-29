@@ -10,7 +10,6 @@ class AST;
 
 class ASTNode {
 public:
-    ASTNode(NodeKind kind) : kind(kind) {}
     ASTNode(NodeKind kind, GenericNodeData *data) : kind(kind), data(data) {}
 
     void PreorderWalkthorugh( void (*action)(ASTNode *) );

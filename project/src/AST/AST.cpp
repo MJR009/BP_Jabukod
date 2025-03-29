@@ -26,7 +26,7 @@ void AST::AddNode(NodeKind kind, GenericNodeData *data) {
     this->activeNode = newNode;
 }
 
-void AST::AddNode(NodeKind kind) { // used a failsafe, default data is nullptr either way
+void AST::AddNode(NodeKind kind) { // used as failsafe, default data is nullptr either way
     this->AddNode(kind, nullptr);
 }
 
