@@ -9,6 +9,10 @@
 #include "CallGraphListener.h"
 #include "DiagnosticErrorListener.h"
 
+void ERR::BadData() {
+    cerr << RED << BOLD << "BAD NODE DATA TYPE" << DEFAULT;
+}
+
 int OpenSourceFile(char *name, ifstream & stream);
 
 void DumpTokensAndTree(antlr4::CommonTokenStream & tokens, antlr4::tree::ParseTree *parseTree, JabukodParser & parser);

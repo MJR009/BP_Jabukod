@@ -56,9 +56,6 @@ void ASTNode::AppendNewChild(ASTNode *newChild) {
 
 
 void ASTNode::Print() {
-    // mainly needed for debugging
-    void (*BadData)() = [](){ cout << RED << BOLD << "BAD NODE DATA TYPE" << DEFAULT; };
-
     if (this->kind == NodeKind::PROGRAM) {
         cout << DIM << "PROGRAM" << DEFAULT;
 
@@ -67,7 +64,7 @@ void ASTNode::Print() {
         if (data) {
             TypeFunctions::PrintAnyValueByType(data->GetValue(), data->GetType());
             cout << DIM << " - " << DEFAULT << TypeFunctions::TypeToString( data->GetType() );
-        } else BadData();
+        } else ERR::BadData();
 
     } else if (this->kind == NodeKind::FUNCTION) {
         FunctionData *data = this->GetData<FunctionData>();
@@ -76,19 +73,19 @@ void ASTNode::Print() {
 
             // PRINT WHOLE SCOPE
             
-        } else BadData();
+        } else ERR::BadData();
 
     } else if (this->kind == NodeKind::VARIABLE_DECLARATION) {
         VariableData *data = this->GetData<VariableData>();
         if (data) {
             cout << YELLOW << data->GetName() << DEFAULT << DIM << " declaration" << DEFAULT;
-        } else BadData();
+        } else ERR::BadData();
 
     } else if (this->kind == NodeKind::VARIABLE_DEFINITION) {
         VariableData *data = this->GetData<VariableData>();
         if (data) {
             cout << YELLOW << data->GetName() << DEFAULT << DIM << " definition" << DEFAULT;
-        } else BadData();
+        } else ERR::BadData();
 
     }
 

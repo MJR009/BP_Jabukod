@@ -51,19 +51,36 @@ void AST::PutVariableInScope(
 ) {
     ASTNode *parent = this->activeNode->GetParent(); // definitions/declarations are always children of a node with scope (according to grammar)
 
+    if ( ! parent->GetData<FunctionData>()) {
+        ERR::BadData();
+        return;
+    }
+
+    string variableName = variable->getText();
+
     if (parent->GetKind() == NodeKind::FUNCTION) {
         string functionName = parent->GetData<FunctionData>()->GetName();
 
-        if (this->symbolTable.IsIdFunctionParameter(functionName, variable->getText())) {
+        if (this->symbolTable.IsIdFunctionParameter(functionName, variableName)) {
             this->parser->notifyErrorListeners(variable, VARIABLE_SAME_AS_PARAMETER, nullptr);
         }
     }
+
+    StorageSpecifier specifier;
+    if (storageSpecifier) {
+        specifier = SpecifierFunctions::StringToSpecifier( storageSpecifier->getText() );
+    } else {
+        specifier = StorageSpecifier::NONE;
+    }
+    Type type = TypeFunctions::StringToType( variableType->getText() );
     
-    // check current scope
+    if ( parent->GetData<FunctionData>()->IsVariableNameAvailable(variableName) ) {
+        parent->GetData<FunctionData>()->AddVariable(variableName, specifier, type);
+    } else {
+        this->parser->notifyErrorListeners(variable, VARIABLE_REDEFINITION, nullptr);
+    }
 
     // TODO EXTEND ACCORDING TO PLACES WITH SCOPES !
-
-    // ADD TO SCOPE
 }
 
 

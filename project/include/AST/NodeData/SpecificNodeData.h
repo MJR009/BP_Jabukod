@@ -25,6 +25,13 @@ public:
 
     string GetName();
 
+    void AddVariable(
+        const string & name,
+        StorageSpecifier specifier,
+        Type type
+    );
+    bool IsVariableNameAvailable(const string & name) const;
+
 private:
     string name;
     Scope scope;

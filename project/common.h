@@ -30,3 +30,9 @@ using namespace std;
 #define HORIZONTAL "\u2500"
 #define FORK "\u251c"
 #define STOP "\u2514"
+
+namespace ERR {
+
+void BadData();
+
+} // namespace ERR
