@@ -57,5 +57,16 @@ private:
         StorageSpecifier specifier,
         Type type
     );
-
+    void PutVariableInForHeader(
+        antlr4::Token *variable,
+        const string & name,
+        StorageSpecifier specifier,
+        Type type
+    );
+    void PutVariableInForeachHeader(
+        antlr4::Token *variable,
+        const string & name,
+        StorageSpecifier specifier,
+        Type type
+    );
 };    

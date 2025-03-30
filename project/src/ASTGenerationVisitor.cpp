@@ -242,7 +242,9 @@ any ASTGenerationVisitor::visitWhileStatement(JabukodParser::WhileStatementConte
 }
 
 any ASTGenerationVisitor::visitForStatement(JabukodParser::ForStatementContext *ctx) {
-    this->ast.AddNode(NodeKind::FOR);
+    ForData *data = new ForData();
+    this->ast.AddNode(NodeKind::FOR, data);
+
     this->visit(ctx->forHeader());
 
     {
@@ -258,9 +260,11 @@ any ASTGenerationVisitor::visitForStatement(JabukodParser::ForStatementContext *
     return OK;
 }
 
-any ASTGenerationVisitor::visitForeachStatement(JabukodParser::ForeachStatementContext *ctx) { // TODO HEADER
-    this->ast.AddNode(NodeKind::FOREACH);
-    this->visit(ctx->foreachHeader());
+any ASTGenerationVisitor::visitForeachStatement(JabukodParser::ForeachStatementContext *ctx) {
+    ForeachData *data = new ForeachData();
+    this->ast.AddNode(NodeKind::FOREACH, data);
+
+    this->visitChildren(ctx->foreachHeader());
 
     {
         BodyData *data = new BodyData();
@@ -372,10 +376,26 @@ any ASTGenerationVisitor::visitAssignment(JabukodParser::AssignmentContext *ctx)
     return OK;
 }
 
-any ASTGenerationVisitor::visitForHeader(JabukodParser::ForHeaderContext *ctx) { // TODO SEMANTICS
+any ASTGenerationVisitor::visitForHeader(JabukodParser::ForHeaderContext *ctx) { // TODO EXPRESSIONS
     if (ctx->init) {
         this->ast.AddNode(NodeKind::FOR_HEADER1);
-        this->visit(ctx->init);
+
+        JabukodParser::VariableDefinitionContext *definition = nullptr;
+        if (definition = ctx->init->variableDefinition()) {
+            antlr4::Token *variable = definition->IDENTIFIER()->getSymbol();
+            JabukodParser::StorageSpecifierContext *specifier;
+            if (definition->storageSpecifier()) {
+                specifier = definition->storageSpecifier();
+            } else {
+                specifier = nullptr;
+            }
+            JabukodParser::NonVoidTypeContext *type = definition->nonVoidType();
+
+            this->ast.PutVariableInScope(variable, specifier, type);
+
+        }
+        
+        this->visitChildren(ctx);
         this->ast.MoveToParent();
     }
 
@@ -422,5 +442,3 @@ any ASTGenerationVisitor::visitLiteral(JabukodParser::LiteralContext *ctx) {
 
     return OK;
 }
-
-//any visitNonVoidType(JabukodParser::NonVoidTypeContext *ctx) override;

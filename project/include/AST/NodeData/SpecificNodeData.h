@@ -19,6 +19,17 @@ private:
     any value;
 };
 
+// data regarding variable is stored in closest scope, here is just name mainly for debugging
+class VariableData : public GenericNodeData {
+public:
+    VariableData(const string & name) : name(name) {}
+
+    string GetName();
+
+private:
+    string name;
+};
+
 class BodyData : public GenericNodeData {
 public:
     void AddVariable(
@@ -34,7 +45,7 @@ protected:
     Scope scope;
 };
 
-class FunctionData : public BodyData { // <- second specialisation !
+class FunctionData : public BodyData {
 public:
     FunctionData(const string & name) : name(name) {}
 
@@ -44,13 +55,6 @@ private:
     string name;
 };
 
-// data regarding variable is stored in closest scope, here is just name mainly for debugging
-class VariableData : public GenericNodeData {
-public:
-    VariableData(const string & name) : name(name) {}
+class ForData : public BodyData {};
 
-    string GetName();
-
-private:
-    string name;
-};
+class ForeachData : public BodyData {};

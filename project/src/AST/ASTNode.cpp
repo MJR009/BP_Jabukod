@@ -87,16 +87,40 @@ void ASTNode::Print() {
             cout << YELLOW << data->GetName() << DEFAULT << DIM << " definition" << DEFAULT;
         } else ERR::BadData();
 
-    } else if ((this->kind == NodeKind::IF) ||
-               (this->kind == NodeKind::FOR) ||
-               (this->kind == NodeKind::FOREACH)
-    ) {
+    } else if ((this->kind == NodeKind::IF)) {
         cout << NodeKindFunctions::NodeKindToString(this->kind);
 
     } else if (this->kind == NodeKind::BODY) {
         BodyData *data = this->GetData<BodyData>();
         if (data) {
             cout << DIM << "nested block " << DEFAULT;
+            cout << "(" << DIM << " in scope: " << DEFAULT;
+            data->PrintScope();
+            cout << " )";
+        } else ERR::BadData();
+
+    } else if (this->kind == NodeKind::FOR) {
+        ForData *data = this->GetData<ForData>();
+        if (data) {
+            cout << DIM << "FOR header " << DEFAULT;
+            cout << "(" << DIM << " in scope: " << DEFAULT;
+            data->PrintScope();
+            cout << " )";
+        } else ERR::BadData();
+
+    } else if (this->kind == NodeKind::FOR_HEADER1) {
+        cout << DIM << "INIT" << DEFAULT;
+
+    } else if (this->kind == NodeKind::FOR_HEADER2) {
+        cout << DIM << "CONDITION" << DEFAULT;
+
+    } else if (this->kind == NodeKind::FOR_HEADER3) {
+        cout << DIM << "UPDATE" << DEFAULT;
+
+    } else if (this->kind == NodeKind::FOREACH) {
+        ForeachData *data = this->GetData<ForeachData>();
+        if (data) {
+            cout << DIM << "FOREACH header " << DEFAULT;
             cout << "(" << DIM << " in scope: " << DEFAULT;
             data->PrintScope();
             cout << " )";

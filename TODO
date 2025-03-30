@@ -75,3 +75,5 @@ suspend, resume:
 - suspend v mainu by mohl být problém - nedovolit
 
 - V TEXTU PROVÉST PŘÍKLAD S VÝJIMKAMI, VYTVOŘIT PŘÍKLAD KÓDU
+
+- V C může mít definice v hlavičce const specifier, v Jabukódu nesmí mít žádný

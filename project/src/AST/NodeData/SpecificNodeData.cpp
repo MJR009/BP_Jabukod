@@ -10,6 +10,12 @@ any LiteralData::GetValue() {
 
 
 
+string VariableData::GetName() {
+    return this->name;
+}
+
+
+
 void BodyData::AddVariable(
     const string & name,
     StorageSpecifier specifier,
@@ -36,11 +42,5 @@ void BodyData::PrintScope() {
 
 
 string FunctionData::GetName() {
-    return this->name;
-}
-
-
-
-string VariableData::GetName() {
     return this->name;
 }

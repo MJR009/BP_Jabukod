@@ -64,9 +64,11 @@ void AST::PutVariableInScope(
         this->PutVariableInFunctionScope(variable, variableName, specifier, type);
     } else if (parent->GetKind() == NodeKind::BODY) {
         this->PutVariableInNestedScope(variable, variableName, specifier, type);
-    } else {
-        
-    } // TODO - FOR AND FOREACH
+    } else if (parent->GetKind() == NodeKind::FOR) {
+        this->PutVariableInForHeader(variable, variableName, specifier, type);
+    } else if (parent->GetKind() == NodeKind::FOREACH) {
+        this->PutVariableInForeachHeader(variable, variableName, specifier, type);
+    } else ERR::BadData();
 }
 
 
@@ -163,4 +165,44 @@ void AST::PutVariableInNestedScope(
     } else {
         this->parser->notifyErrorListeners(variable, LOCAL_VARIABLE_REDEFINITION, nullptr);
     }
+}
+
+void AST::PutVariableInForHeader(
+    antlr4::Token *variable,
+    const string & name,
+    StorageSpecifier specifier,
+    Type type
+) {
+    ASTNode *parent = this->activeNode->GetParent();
+
+    if ( ! parent->GetData<ForData>()) {
+        ERR::BadData();
+        return;
+    }
+    ForData *data = parent->GetData<ForData>();
+
+    if (specifier != StorageSpecifier::NONE) {
+        this->parser->notifyErrorListeners(variable, FOR_HEADER_DEFINITION_WITH_SPECIFIER, nullptr);
+    }
+
+    data->AddVariable(name, specifier, type); // in for header there can only occur one definition, no need to check
+}
+
+void AST::PutVariableInForeachHeader(
+    antlr4::Token *variable,
+    const string & name,
+    StorageSpecifier specifier,
+    Type type
+) {
+    ASTNode *parent = this->activeNode->GetParent();
+
+    if ( ! parent->GetData<ForeachData>()) {
+        ERR::BadData();
+        return;
+    }
+    ForeachData *data = parent->GetData<ForeachData>();
+
+    // foreach can keep storage specifier, can be const and static might be useful
+
+    data->AddVariable(name, specifier, type);
 }

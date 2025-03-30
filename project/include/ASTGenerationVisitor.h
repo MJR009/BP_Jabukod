@@ -77,7 +77,7 @@ public:
     //TODO//any visitList(JabukodParser::ListContext *ctx) override;
     any visitLiteral(JabukodParser::LiteralContext *ctx) override;
     // any visitType(JabukodParser::TypeContext *ctx) override; // only needed for functions
-     //TODO// půjde s proměnnou do tabulky symbolů //any visitNonVoidType(JabukodParser::NonVoidTypeContext *ctx) override;
+    // any visitNonVoidType(JabukodParser::NonVoidTypeContext *ctx) override; // accesed through parent rules
     //TODO//any visitListSpecifier(JabukodParser::ListSpecifierContext *ctx) override;
 
 private:

@@ -19,3 +19,4 @@
 
 #define VARIABLE_SAME_AS_PARAMETER "variable name in functions top scope must not be the same as a its parameter"
 #define LOCAL_VARIABLE_REDEFINITION "identifier used for variable is already taken in its scope"
+#define FOR_HEADER_DEFINITION_WITH_SPECIFIER "definition in for header must not have a storage specifier"
