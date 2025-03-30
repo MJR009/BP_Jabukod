@@ -200,7 +200,7 @@ any ASTGenerationVisitor::visitFunctionCall(JabukodParser::FunctionCallContext *
     return OK;
 }
 
-any ASTGenerationVisitor::visitIfStatement(JabukodParser::IfStatementContext *ctx) { // TODO SEMANTICS
+any ASTGenerationVisitor::visitIfStatement(JabukodParser::IfStatementContext *ctx) { // TODO CONDITION
     this->ast.AddNode(NodeKind::IF);
     this->visit(ctx->expression());
 

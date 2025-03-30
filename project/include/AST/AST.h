@@ -43,4 +43,19 @@ private:
 
     ASTNode *root = nullptr;
     ASTNode *activeNode = nullptr;
+
+private:
+    void PutVariableInFunctionScope(
+        antlr4::Token *variable,
+        const string & name,
+        StorageSpecifier specifier,
+        Type type
+    );
+    void PutVariableInNestedScope(
+        antlr4::Token *variable,
+        const string & name,
+        StorageSpecifier specifier,
+        Type type
+    );
+
 };    

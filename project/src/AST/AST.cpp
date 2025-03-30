@@ -61,36 +61,9 @@ void AST::PutVariableInScope(
     ASTNode *parent = this->activeNode->GetParent(); // definitions/declarations are always children of a node with scope (according to grammar)
 
     if (parent->GetKind() == NodeKind::FUNCTION) {
-        if ( ! parent->GetData<FunctionData>()) {
-            ERR::BadData();
-            return;
-        }
-        FunctionData *data = parent->GetData<FunctionData>();
-        string functionName = data->GetName();
-
-        if (this->symbolTable.IsIdFunctionParameter(functionName, variableName)) {
-            this->parser->notifyErrorListeners(variable, VARIABLE_SAME_AS_PARAMETER, nullptr);
-        }
-
-        if ( data->IsVariableNameAvailable(variableName) ) {
-            data->AddVariable(variableName, specifier, type);
-        } else {
-            this->parser->notifyErrorListeners(variable, LOCAL_VARIABLE_REDEFINITION, nullptr);
-        }
-
+        this->PutVariableInFunctionScope(variable, variableName, specifier, type);
     } else if (parent->GetKind() == NodeKind::BODY) {
-        if ( ! parent->GetData<BodyData>()) {
-            ERR::BadData();
-            return;
-        }
-        BodyData *data = parent->GetData<BodyData>();
-
-        if ( data->IsVariableNameAvailable(variableName) ) {
-            data->AddVariable(variableName, specifier, type);
-        } else {
-            this->parser->notifyErrorListeners(variable, LOCAL_VARIABLE_REDEFINITION, nullptr);
-        }
-
+        this->PutVariableInNestedScope(variable, variableName, specifier, type);
     } else {
         
     } // TODO - FOR AND FOREACH
@@ -139,4 +112,55 @@ void AST::Print() {
 
     cout << CYAN << "AST:\n=====" << DEFAULT << endl;
     this->PreorderForEachNode(printNode);
+}
+
+
+
+// PRIVATE:
+
+void AST::PutVariableInFunctionScope(
+    antlr4::Token *variable,
+    const string & name,
+    StorageSpecifier specifier,
+    Type type
+) {
+    ASTNode *parent = this->activeNode->GetParent();
+
+    if ( ! parent->GetData<FunctionData>()) {
+        ERR::BadData();
+        return;
+    }
+    FunctionData *data = parent->GetData<FunctionData>();
+    string functionName = data->GetName();
+
+    if (this->symbolTable.IsIdFunctionParameter(functionName, name)) {
+        this->parser->notifyErrorListeners(variable, VARIABLE_SAME_AS_PARAMETER, nullptr);
+    }
+
+    if ( data->IsVariableNameAvailable(name) ) {
+        data->AddVariable(name, specifier, type);
+    } else {
+        this->parser->notifyErrorListeners(variable, LOCAL_VARIABLE_REDEFINITION, nullptr);
+    }
+}
+
+void AST::PutVariableInNestedScope(
+    antlr4::Token *variable,
+    const string & name,
+    StorageSpecifier specifier,
+    Type type
+) {
+    ASTNode *parent = this->activeNode->GetParent();
+
+    if ( ! parent->GetData<BodyData>()) {
+        ERR::BadData();
+        return;
+    }
+    BodyData *data = parent->GetData<BodyData>();
+
+    if ( data->IsVariableNameAvailable(name) ) {
+        data->AddVariable(name, specifier, type);
+    } else {
+        this->parser->notifyErrorListeners(variable, LOCAL_VARIABLE_REDEFINITION, nullptr);
+    }
 }
