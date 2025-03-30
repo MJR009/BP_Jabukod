@@ -42,6 +42,7 @@ public:
     void CheckIfIntMainPresent();
 
     bool IsIdFunctionParameter(const string & functionName, const string & identifier);
+    Variable *IsIdGlobalVariable(const string & name);
 
     void Print() const;
 

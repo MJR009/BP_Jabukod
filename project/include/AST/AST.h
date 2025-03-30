@@ -74,6 +74,7 @@ private:
     );
 
     Variable *IsDefinedLocally(const string & name);
+    Variable *IsDefinedGlobally(const string & name);
 
     bool IsScopeHavingNode(ASTNode *node);
     Variable *IsInThisScope(const string & name, ASTNode *node);

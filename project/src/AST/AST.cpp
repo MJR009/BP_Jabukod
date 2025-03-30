@@ -135,9 +135,11 @@ Variable *AST::CheckIfVariableDefined(antlr4::Token *variableToken) {
     if (variable = this->IsDefinedLocally(name)) {
         return variable;
     }
+    if (variable = this->IsDefinedGlobally(name)) {
+        return variable;
+    }
 
-    // is global?
-    // is from enum?
+    // TODO enum
 
     this->parser->notifyErrorListeners(variableToken, UNDEFINED_VARIABLE, nullptr);
     return nullptr;
@@ -272,7 +274,7 @@ void AST::PutVariableInForeachHeader(
     }
     ForeachData *data = parent->GetData<ForeachData>();
 
-    // foreach can keep storage specifier, can be const and static might be useful
+    // foreach can keep storage specifier, can be const and static (might be useful)
 
     data->AddVariable(name, specifier, type);
 }
@@ -294,6 +296,10 @@ Variable *AST::IsDefinedLocally(const string & name) {
     }
 
     return nullptr;
+}
+
+Variable *AST::IsDefinedGlobally(const string & name) {
+    return this->symbolTable.IsIdGlobalVariable(name);
 }
 
 

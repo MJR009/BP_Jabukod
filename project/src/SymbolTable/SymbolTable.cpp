@@ -132,6 +132,10 @@ bool SymbolTable::IsIdFunctionParameter(const string & functionName, const strin
     return false;
 }
 
+Variable *SymbolTable::IsIdGlobalVariable(const string & name) {
+    return this->globalScope.GetVariable(name);
+}
+
 
 
 void SymbolTable::Print() const {
@@ -321,6 +325,8 @@ bool SymbolTable::IsLiteralExpression(JabukodParser::ExpressionContext *expressi
 }
 
 any SymbolTable::ResolveExplicitDefaultValue(JabukodParser::LiteralContext *defaultValue, Type type) const {
+    // TODO implicit conversions
+
     if (defaultValue->INT_LITERAL()) {
         if (type != Type::INT) {
             this->parser->notifyErrorListeners(defaultValue->INT_LITERAL()->getSymbol(), MISPLACED_INT_LITERAL, nullptr);
