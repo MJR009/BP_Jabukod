@@ -26,6 +26,14 @@ ASTNode *ASTNode::GetParent() {
     return this->parent;
 }
 
+ASTNode *ASTNode::GetChild(int i) {
+    if (i >= this->children.size()) {
+        return nullptr;
+    }
+
+    return this->children.at(i);
+}
+
 
 
 vector<bool> ASTNode::IsLastChildAllToRoot() {

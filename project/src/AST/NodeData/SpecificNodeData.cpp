@@ -52,3 +52,9 @@ void BodyData::PrintScope() {
 string FunctionData::GetName() {
     return this->name;
 }
+
+
+
+Type ExpressionData::GetType() {
+    return this->type;
+}

@@ -124,8 +124,6 @@ void AST::CheckIfNodeWithinLoop(antlr4::Token *token) {
     return;
 }
 
-
-
 Variable *AST::CheckIfVariableDefined(antlr4::Token *variableToken) {
     // at this point, the varaible node itself is not yet created !
 
@@ -143,6 +141,28 @@ Variable *AST::CheckIfVariableDefined(antlr4::Token *variableToken) {
 
     this->parser->notifyErrorListeners(variableToken, UNDEFINED_VARIABLE, nullptr);
     return nullptr;
+}
+
+
+
+Type AST::InferExpressionType(antlr4::Token *start) {
+    Type op1 = this->GetOperand1Type();
+    Type op2 = this->GetOperand2Type();
+
+    if (op1 == op2) {
+        return op1;
+    }
+
+    // types are different -> implicit conversion needed
+
+    //Type typeAfterPromotion = 
+    this->MakeImplicitConversion(op1, op2);
+
+    // can I do an implicit conversion?
+    // add an implicit cast if yes
+    // return type of this expression
+
+    return Type::VOID; // PLACEHOLDER
 }
 
 
@@ -338,4 +358,60 @@ Variable *AST::IsInThisScope(const string & name, ASTNode *node) {
     }
 
     return variable;
+}
+
+
+
+Type AST::GetOperand1Type() const {
+    ASTNode *op1 = this->activeNode->GetChild(0);
+
+    if ( ! op1) {
+        ERR::BadData();
+        return Type::VOID;
+    }
+
+    switch (op1->GetKind()) {
+        case NodeKind::VARIABLE:
+            return op1->GetData<VariableData>()->GetType();
+        case NodeKind::LITERAL:
+            return op1->GetData<LiteralData>()->GetType();
+        default: // expression
+            return op1->GetData<ExpressionData>()->GetType();
+    }
+}
+
+Type AST::GetOperand2Type() const {
+    ASTNode *op2 = this->activeNode->GetChild(1);
+
+    if ( ! op2) {
+        ERR::BadData();
+        return Type::VOID;
+    }
+
+    switch (op2->GetKind()) {
+        case NodeKind::VARIABLE:
+            return op2->GetData<VariableData>()->GetType();
+        case NodeKind::LITERAL:
+            return op2->GetData<LiteralData>()->GetType();
+        default: // expression
+            return op2->GetData<ExpressionData>()->GetType();
+    }
+}
+
+void AST::MakeImplicitConversion(Type type1, Type type2) {
+    void (*EMPTY)() = [](){};
+
+    void (*IntToFloat1)() = [](){ cout << "FIRST INT 2 FLOAT" << endl; };
+    void (*IntToFloat2)() = [](){ cout << "SECOND INT 2 FLOAT" << endl; };
+
+    vector<vector<void (*)()>> conversions = {    // op1 //
+        // INT // FLOAT // BOOL // STRING // VOID // ~~~ // op 2 //
+        {EMPTY, IntToFloat1, [](){}, [](){}, EMPTY}, // INT
+        {IntToFloat2, EMPTY, [](){}, [](){}, EMPTY}, // FLOAT
+        {[](){}, [](){}, EMPTY, [](){}, EMPTY}, // BOOL
+        {[](){}, [](){}, [](){}, EMPTY, EMPTY}, // STRING
+        {EMPTY, EMPTY, EMPTY, EMPTY, EMPTY}  // VOID
+    };
+
+    conversions[type1][type2]();
 }

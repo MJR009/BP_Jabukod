@@ -60,3 +60,13 @@ private:
 class ForData : public BodyData {};
 
 class ForeachData : public BodyData {};
+
+class ExpressionData : public GenericNodeData {
+public:
+    ExpressionData(const Type type) : type(type) {}
+
+    Type GetType();
+
+private:
+    Type type;
+};

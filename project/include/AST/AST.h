@@ -29,6 +29,8 @@ public:
     void CheckIfNodeWithinLoop(antlr4::Token *token);
     Variable *CheckIfVariableDefined(antlr4::Token *variableToken);
 
+    Type InferExpressionType(antlr4::Token *start);
+
     void Print();
 
     ~AST() {
@@ -78,4 +80,8 @@ private:
 
     bool IsScopeHavingNode(ASTNode *node);
     Variable *IsInThisScope(const string & name, ASTNode *node);
+
+    Type GetOperand1Type() const;
+    Type GetOperand2Type() const;
+    void MakeImplicitConversion(Type type1, Type type2);
 };    

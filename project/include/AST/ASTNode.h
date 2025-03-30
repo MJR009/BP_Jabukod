@@ -17,6 +17,7 @@ public:
 
     NodeKind GetKind();
     ASTNode *GetParent();
+    ASTNode *GetChild(int i);
 
     // whole definition in header: https://isocpp.org/wiki/faq/templates#separate-template-fn-defn-from-decl
     template <typename T>

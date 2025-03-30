@@ -136,7 +136,11 @@ any ASTGenerationVisitor::visitAssSubExpression(JabukodParser::AssSubExpressionC
     this->ast.AddNode(
         (sign == NodeKind::minus) ? NodeKind::SUBTRACTION : sign
     );
+
     this->visitChildren(ctx);
+
+    Type type = this->ast.InferExpressionType(ctx->getStart());
+
     this->ast.MoveToParent();
 
     return OK;
