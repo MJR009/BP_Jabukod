@@ -4,6 +4,8 @@ any ASTGenerationVisitor::visitSourceFile(JabukodParser::SourceFileContext *ctx)
     this->ast.AddNode(NodeKind::PROGRAM);
     this->visitChildren(ctx);
 
+    // TODO CHECK WHETHER ALL FUNCTIONS RETURN WHAT THEY SHOULD
+
     return OK;
 }
 
@@ -279,7 +281,7 @@ any ASTGenerationVisitor::visitForeachStatement(JabukodParser::ForeachStatementC
     return OK;
 }
 
-any ASTGenerationVisitor::visitAssignmentStatement(JabukodParser::AssignmentStatementContext *ctx) { // TODO SEMANTICS
+any ASTGenerationVisitor::visitAssignmentStatement(JabukodParser::AssignmentStatementContext *ctx) { // works as forced assignment expression// TODO SEMANTICS
     this->ast.AddNode(NodeKind::ASSIGNMENT);
     this->visitChildren(ctx);
     this->ast.MoveToParent();
@@ -287,17 +289,25 @@ any ASTGenerationVisitor::visitAssignmentStatement(JabukodParser::AssignmentStat
     return OK;
 }
 
-any ASTGenerationVisitor::visitReturnStatement(JabukodParser::ReturnStatementContext *ctx) { // TODO SEMANTICS
+any ASTGenerationVisitor::visitReturnStatement(JabukodParser::ReturnStatementContext *ctx) { // TODO expression, correct return type, must be in every path
     this->ast.AddNode(NodeKind::RETURN);
-    this->visitChildren(ctx);
+
+    if (ctx->expression()) {
+        this->visit(ctx->expression());
+    }
+
     this->ast.MoveToParent();
 
     return OK;
 }
 
-any ASTGenerationVisitor::visitExitStatement(JabukodParser::ExitStatementContext *ctx) { // TODO SEMANTICS
+any ASTGenerationVisitor::visitExitStatement(JabukodParser::ExitStatementContext *ctx) { // TODO expression, must be int, must be in every path
     this->ast.AddNode(NodeKind::EXIT);
-    this->visitChildren(ctx);
+
+    if (ctx->expression()) {
+        this->visit(ctx->expression());
+    }
+    
     this->ast.MoveToParent();
 
     return OK;
@@ -319,17 +329,17 @@ any ASTGenerationVisitor::visitResumeStatement(JabukodParser::ResumeStatementCon
     return OK;
 }
 
-any ASTGenerationVisitor::visitContinueStatement(JabukodParser::ContinueStatementContext *ctx) { // TODO SEMANTICS
+any ASTGenerationVisitor::visitContinueStatement(JabukodParser::ContinueStatementContext *ctx) {
     this->ast.AddNode(NodeKind::CONTINUE);
-    this->visitChildren(ctx);
+    this->ast.CheckIfNodeWithinLoop(ctx->getStart());
     this->ast.MoveToParent();
 
     return OK;
 }
 
-any ASTGenerationVisitor::visitBreakStatement(JabukodParser::BreakStatementContext *ctx) { // TODO SEMANTICS
+any ASTGenerationVisitor::visitBreakStatement(JabukodParser::BreakStatementContext *ctx) {
     this->ast.AddNode(NodeKind::BREAK);
-    this->visitChildren(ctx);
+    this->ast.CheckIfNodeWithinLoop(ctx->getStart());
     this->ast.MoveToParent();
 
     return OK;

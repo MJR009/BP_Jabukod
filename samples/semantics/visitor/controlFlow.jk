@@ -1,0 +1,8 @@
+int main() {
+    foreach (int x:y) {
+        if (true) {
+            continue;
+            break;
+        }
+    }
+}

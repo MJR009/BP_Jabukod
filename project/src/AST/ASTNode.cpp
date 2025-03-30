@@ -87,7 +87,10 @@ void ASTNode::Print() {
             cout << YELLOW << data->GetName() << DEFAULT << DIM << " definition" << DEFAULT;
         } else ERR::BadData();
 
-    } else if ((this->kind == NodeKind::IF)) {
+    } else if ((this->kind == NodeKind::IF) ||
+               (this->kind == NodeKind::CONTINUE) ||
+               (this->kind == NodeKind::BREAK)
+    ) {
         cout << NodeKindFunctions::NodeKindToString(this->kind);
 
     } else if (this->kind == NodeKind::BODY) {
@@ -102,7 +105,7 @@ void ASTNode::Print() {
     } else if (this->kind == NodeKind::FOR) {
         ForData *data = this->GetData<ForData>();
         if (data) {
-            cout << DIM << "FOR header " << DEFAULT;
+            cout << NodeKindFunctions::NodeKindToString(this->kind) << DIM << " header " << DEFAULT;
             cout << "(" << DIM << " in scope: " << DEFAULT;
             data->PrintScope();
             cout << " )";
@@ -120,7 +123,7 @@ void ASTNode::Print() {
     } else if (this->kind == NodeKind::FOREACH) {
         ForeachData *data = this->GetData<ForeachData>();
         if (data) {
-            cout << DIM << "FOREACH header " << DEFAULT;
+            cout << NodeKindFunctions::NodeKindToString(this->kind) << DIM << " header " << DEFAULT;
             cout << "(" << DIM << " in scope: " << DEFAULT;
             data->PrintScope();
             cout << " )";

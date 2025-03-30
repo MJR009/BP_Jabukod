@@ -26,6 +26,8 @@ public:
 
     NodeKind CurrentlyIn();
 
+    void CheckIfNodeWithinLoop(antlr4::Token *token);
+
     void Print();
 
     ~AST() {

@@ -79,6 +79,39 @@ NodeKind AST::CurrentlyIn() {
 
 
 
+void AST::CheckIfNodeWithinLoop(antlr4::Token *token) {
+    if ( ! this->activeNode) { // do nothing on empty tree
+        return;
+    }
+
+    ASTNode *aux = this->activeNode;
+    if ( ! aux->GetParent()) { // do nothing on root
+        return;
+    }
+    NodeKind kind = aux->GetKind();
+
+    while (kind != NodeKind::PROGRAM) {
+        if ((kind == NodeKind::WHILE) ||
+            (kind == NodeKind::FOR) ||
+            (kind == NodeKind::FOREACH)
+        ) {
+            return;
+        }
+
+        aux = aux->GetParent();
+        kind = aux->GetKind();
+    }
+
+    if (this->activeNode->GetKind() == NodeKind::BREAK) {
+        this->parser->notifyErrorListeners(token, BREAK_OUT_OF_LOOP, nullptr);
+    } else if (this->activeNode->GetKind() == NodeKind::CONTINUE) {
+        this->parser->notifyErrorListeners(token, CONTINUE_OUT_OF_LOOP, nullptr);
+    }
+    return;
+}
+
+
+
 void AST::Print() {
     void (*printNode)(ASTNode *) = [](ASTNode *node) {
         if (node) {
