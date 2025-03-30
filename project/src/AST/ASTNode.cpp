@@ -87,7 +87,10 @@ void ASTNode::Print() {
             cout << YELLOW << data->GetName() << DEFAULT << DIM << " definition" << DEFAULT;
         } else ERR::BadData();
 
-    } else if (this->kind == NodeKind::IF) {
+    } else if ((this->kind == NodeKind::IF) ||
+               (this->kind == NodeKind::FOR) ||
+               (this->kind == NodeKind::FOREACH)
+    ) {
         cout << NodeKindFunctions::NodeKindToString(this->kind);
 
     } else if (this->kind == NodeKind::BODY) {

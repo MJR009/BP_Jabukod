@@ -224,12 +224,14 @@ any ASTGenerationVisitor::visitIfStatement(JabukodParser::IfStatementContext *ct
     return OK;
 }
 
-any ASTGenerationVisitor::visitWhileStatement(JabukodParser::WhileStatementContext *ctx) { // TODO SEMANTICS
+any ASTGenerationVisitor::visitWhileStatement(JabukodParser::WhileStatementContext *ctx) { // TODO CONDITION
     this->ast.AddNode(NodeKind::WHILE);
     this->visit(ctx->expression());
 
     {
-        this->ast.AddNode(NodeKind::BODY);
+        BodyData *data = new BodyData();
+
+        this->ast.AddNode(NodeKind::BODY, data);
         this->visit(ctx->statementBlock());
         this->ast.MoveToParent();
     }
@@ -239,12 +241,14 @@ any ASTGenerationVisitor::visitWhileStatement(JabukodParser::WhileStatementConte
     return OK;
 }
 
-any ASTGenerationVisitor::visitForStatement(JabukodParser::ForStatementContext *ctx) { // TODO SEMANTICS
+any ASTGenerationVisitor::visitForStatement(JabukodParser::ForStatementContext *ctx) {
     this->ast.AddNode(NodeKind::FOR);
     this->visit(ctx->forHeader());
 
     {
-        this->ast.AddNode(NodeKind::BODY);
+        BodyData *data = new BodyData();
+
+        this->ast.AddNode(NodeKind::BODY, data);
         this->visit(ctx->statementBlock());
         this->ast.MoveToParent();
     }
@@ -254,12 +258,14 @@ any ASTGenerationVisitor::visitForStatement(JabukodParser::ForStatementContext *
     return OK;
 }
 
-any ASTGenerationVisitor::visitForeachStatement(JabukodParser::ForeachStatementContext *ctx) { // TODO SEMANTICS
+any ASTGenerationVisitor::visitForeachStatement(JabukodParser::ForeachStatementContext *ctx) { // TODO HEADER
     this->ast.AddNode(NodeKind::FOREACH);
     this->visit(ctx->foreachHeader());
 
     {
-        this->ast.AddNode(NodeKind::BODY);
+        BodyData *data = new BodyData();
+
+        this->ast.AddNode(NodeKind::BODY, data);
         this->visit(ctx->statementBlock());
         this->ast.MoveToParent();
     }

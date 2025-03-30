@@ -3,14 +3,28 @@ int x;
 int main() {
     int x = 0;
 
+/*
     if (y == 0) {
         float z = 3.14;
+
+        while(true) {
+        int x;
+    }
     } else {
         const bool a = true;
         string b;
     }
 
     int z;
+*/
 
+    for (int x = 0; x < 10; x = x + 1) {
+        string x;
+    }
+
+    foreach (string char : str) {
+        int char;
+    }
+ 
     return 0;
 }

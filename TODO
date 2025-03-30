@@ -57,6 +57,8 @@ POPSÁNO PODROBNĚ V KÓDU SymbolTable.cpp
 
 - Položka enumu se chová stejně jako konstantní globální proměnná
 
+- Hlavička for cyklu je vlastní scope - stejně pojmenovaná proměnná z incializační části definovaná v těle ji překryje
+
 suspend, resume:
 - CONTINUATION - struktura se všemi údajiprávě běžícího procesu -> běhové prostředí
     - vhodné pro výjimky, koprogramy, generátory
