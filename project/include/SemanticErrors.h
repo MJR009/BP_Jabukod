@@ -22,3 +22,5 @@
 #define FOR_HEADER_DEFINITION_WITH_SPECIFIER "definition in for header must not have a storage specifier"
 #define BREAK_OUT_OF_LOOP "a break statement must be used within a loop"
 #define CONTINUE_OUT_OF_LOOP "a continue statement must be used within a loop"
+#define REDO_OUT_OF_LOOP "a redo statement must be used within a loop"
+#define RESTART_OUT_OF_LOOP "a restart statement must be used within a loop"

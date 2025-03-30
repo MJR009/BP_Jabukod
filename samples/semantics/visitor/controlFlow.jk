@@ -1,8 +1,10 @@
 int main() {
-    foreach (int x:y) {
+    //foreach (int x:y) {
         if (true) {
             continue;
             break;
+            redo;
+            restart;
         }
-    }
+    //}
 }

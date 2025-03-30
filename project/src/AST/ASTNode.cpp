@@ -89,7 +89,9 @@ void ASTNode::Print() {
 
     } else if ((this->kind == NodeKind::IF) ||
                (this->kind == NodeKind::CONTINUE) ||
-               (this->kind == NodeKind::BREAK)
+               (this->kind == NodeKind::BREAK) ||
+               (this->kind == NodeKind::REDO) ||
+               (this->kind == NodeKind::RESTART)
     ) {
         cout << NodeKindFunctions::NodeKindToString(this->kind);
 

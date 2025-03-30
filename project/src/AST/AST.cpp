@@ -102,11 +102,25 @@ void AST::CheckIfNodeWithinLoop(antlr4::Token *token) {
         kind = aux->GetKind();
     }
 
-    if (this->activeNode->GetKind() == NodeKind::BREAK) {
-        this->parser->notifyErrorListeners(token, BREAK_OUT_OF_LOOP, nullptr);
-    } else if (this->activeNode->GetKind() == NodeKind::CONTINUE) {
-        this->parser->notifyErrorListeners(token, CONTINUE_OUT_OF_LOOP, nullptr);
+    switch (this->activeNode->GetKind()) {
+        case NodeKind::BREAK:
+            this->parser->notifyErrorListeners(token, BREAK_OUT_OF_LOOP, nullptr);
+            break;
+        case NodeKind::CONTINUE:
+            this->parser->notifyErrorListeners(token, CONTINUE_OUT_OF_LOOP, nullptr);
+            break;
+        case NodeKind::REDO:
+            this->parser->notifyErrorListeners(token, REDO_OUT_OF_LOOP, nullptr);
+            break;
+        case NodeKind::RESTART:
+            this->parser->notifyErrorListeners(token, RESTART_OUT_OF_LOOP, nullptr);
+            break;
+
+        default:
+            ERR::BadData();
+            break;
     }
+
     return;
 }
 

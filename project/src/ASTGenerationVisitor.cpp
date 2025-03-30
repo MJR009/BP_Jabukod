@@ -345,17 +345,17 @@ any ASTGenerationVisitor::visitBreakStatement(JabukodParser::BreakStatementConte
     return OK;
 }
 
-any ASTGenerationVisitor::visitRedoStatement(JabukodParser::RedoStatementContext *ctx) { // TODO SEMANTICS
+any ASTGenerationVisitor::visitRedoStatement(JabukodParser::RedoStatementContext *ctx) {
     this->ast.AddNode(NodeKind::REDO);
-    this->visitChildren(ctx);
+    this->ast.CheckIfNodeWithinLoop(ctx->getStart());
     this->ast.MoveToParent();
 
     return OK;
 }
 
-any ASTGenerationVisitor::visitRestartStatement(JabukodParser::RestartStatementContext *ctx) { // TODO SEMANTICS
+any ASTGenerationVisitor::visitRestartStatement(JabukodParser::RestartStatementContext *ctx) {
     this->ast.AddNode(NodeKind::RESTART);
-    this->visitChildren(ctx);
+    this->ast.CheckIfNodeWithinLoop(ctx->getStart());
     this->ast.MoveToParent();
 
     return OK;
