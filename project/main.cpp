@@ -63,6 +63,8 @@ int main(int argc, char **argv) {
     symbolTable.Print();
     ast.Print();
 
+    cout << BOLD << CYAN << "Compiled successfully!" << DEFAULT << endl;
+
     return OK;
 }
 

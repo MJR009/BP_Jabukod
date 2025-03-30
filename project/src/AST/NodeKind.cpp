@@ -38,8 +38,6 @@ string NodeKindFunctions::NodeKindToString(NodeKind kind) {
         Conversion_case(ASSIGNMENT);
         Conversion_case(FUNCTION_CALL);
         Conversion_case(IF);
-        Conversion_case(THEN);
-        Conversion_case(ELSE);
         Conversion_case(WHILE);
         Conversion_case(FOR);
         Conversion_case(FOREACH);

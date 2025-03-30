@@ -19,12 +19,8 @@ private:
     any value;
 };
 
-class FunctionData : public GenericNodeData {
+class BodyData : public GenericNodeData {
 public:
-    FunctionData(const string & name) : name(name) {}
-
-    string GetName();
-
     void AddVariable(
         const string & name,
         StorageSpecifier specifier,
@@ -34,9 +30,18 @@ public:
 
     void PrintScope();
 
+protected:
+    Scope scope;
+};
+
+class FunctionData : public BodyData { // <- second specialisation !
+public:
+    FunctionData(const string & name) : name(name) {}
+
+    string GetName();
+
 private:
     string name;
-    Scope scope;
 };
 
 // data regarding variable is stored in closest scope, here is just name mainly for debugging

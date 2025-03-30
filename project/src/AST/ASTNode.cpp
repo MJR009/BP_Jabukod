@@ -87,6 +87,18 @@ void ASTNode::Print() {
             cout << YELLOW << data->GetName() << DEFAULT << DIM << " definition" << DEFAULT;
         } else ERR::BadData();
 
+    } else if (this->kind == NodeKind::IF) {
+        cout << NodeKindFunctions::NodeKindToString(this->kind);
+
+    } else if (this->kind == NodeKind::BODY) {
+        BodyData *data = this->GetData<BodyData>();
+        if (data) {
+            cout << DIM << "nested block " << DEFAULT;
+            cout << "(" << DIM << " in scope: " << DEFAULT;
+            data->PrintScope();
+            cout << " )";
+        } else ERR::BadData();
+
     }
 
 

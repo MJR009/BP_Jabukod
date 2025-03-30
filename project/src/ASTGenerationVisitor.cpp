@@ -32,7 +32,7 @@ any ASTGenerationVisitor::visitVariableDeclaration(JabukodParser::VariableDeclar
     return OK;
 }
 
-any ASTGenerationVisitor::visitVariableDefinition(JabukodParser::VariableDefinitionContext *ctx) {
+any ASTGenerationVisitor::visitVariableDefinition(JabukodParser::VariableDefinitionContext *ctx) { // TODO EXPRESSION TYPE
     if (this->ast.CurrentlyIn() != NodeKind::PROGRAM) {
         VariableData *data = new VariableData(
             ctx->IDENTIFIER()->getText()
@@ -192,7 +192,7 @@ any ASTGenerationVisitor::visitPrefixUnaryExpression(JabukodParser::PrefixUnaryE
     return OK;
 }
 
-any ASTGenerationVisitor::visitFunctionCall(JabukodParser::FunctionCallContext *ctx) { // TODO SEMANTICS
+any ASTGenerationVisitor::visitFunctionCall(JabukodParser::FunctionCallContext *ctx) { // covers functionCallExpression // TODO SEMANTICS
     this->ast.AddNode(NodeKind::FUNCTION_CALL);
     this->visitChildren(ctx);
     this->ast.MoveToParent();
@@ -205,12 +205,16 @@ any ASTGenerationVisitor::visitIfStatement(JabukodParser::IfStatementContext *ct
     this->visit(ctx->expression());
 
     {
-        this->ast.AddNode(NodeKind::THEN);
+        BodyData *data = new BodyData();
+
+        this->ast.AddNode(NodeKind::BODY, data);
         this->visit(ctx->statementBlock(0));
         this->ast.MoveToParent();
     }
     if (ctx->statementBlock().size() != 1) {
-        this->ast.AddNode(NodeKind::ELSE);
+        BodyData *data = new BodyData();
+
+        this->ast.AddNode(NodeKind::BODY, data);
         this->visit(ctx->statementBlock(1));
         this->ast.MoveToParent();
     }

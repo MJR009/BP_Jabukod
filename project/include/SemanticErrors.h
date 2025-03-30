@@ -18,3 +18,4 @@
 #define REDEFINITION_OF_PARAMETER "identifier used for function parameter is already taken"
 
 #define VARIABLE_SAME_AS_PARAMETER "variable name in functions top scope must not be the same as a its parameter"
+#define LOCAL_VARIABLE_REDEFINITION "identifier used for variable is already taken in its scope"

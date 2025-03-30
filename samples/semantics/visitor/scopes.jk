@@ -1,0 +1,16 @@
+int x;
+
+int main() {
+    int x = 0;
+
+    if (y == 0) {
+        float z = 3.14;
+    } else {
+        const bool a = true;
+        string b;
+    }
+
+    int z;
+
+    return 0;
+}

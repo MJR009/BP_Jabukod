@@ -10,11 +10,7 @@ any LiteralData::GetValue() {
 
 
 
-string FunctionData::GetName() {
-    return this->name;
-}
-
-void FunctionData::AddVariable(
+void BodyData::AddVariable(
     const string & name,
     StorageSpecifier specifier,
     Type type
@@ -22,11 +18,11 @@ void FunctionData::AddVariable(
     this->scope.AddEntry(name, specifier, type);
 }
 
-bool FunctionData::IsVariableNameAvailable(const string & name) const {
+bool BodyData::IsVariableNameAvailable(const string & name) const {
     return this->scope.IsVariableNameAvailable(name);
 }
 
-void FunctionData::PrintScope() {
+void BodyData::PrintScope() {
     vector<Variable> variables = this->scope.GetVariables();
 
     for (int i = 0; i < variables.size(); i++) {
@@ -35,6 +31,12 @@ void FunctionData::PrintScope() {
             cout << DIM << " , " << DEFAULT;
         }
     }
+}
+
+
+
+string FunctionData::GetName() {
+    return this->name;
 }
 
 

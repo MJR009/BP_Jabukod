@@ -23,8 +23,7 @@ enum NODE_KIND {
     VARIABLE, LITERAL,
 
     ASSIGNMENT, FUNCTION_CALL,
-    IF, THEN, ELSE,
-    WHILE, FOR, FOREACH,
+    IF, WHILE, FOR, FOREACH,
     FOR_HEADER1, FOR_HEADER2, FOR_HEADER3, // needed for diferentiation
     BODY, // general for all loops
 
