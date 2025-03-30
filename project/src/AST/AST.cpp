@@ -64,7 +64,7 @@ void AST::PutVariableInScope(
         this->PutVariableInFunctionScope(variable, variableName, specifier, type);
     } else if (parent->GetKind() == NodeKind::BODY) {
         this->PutVariableInNestedScope(variable, variableName, specifier, type);
-    } else if (parent->GetKind() == NodeKind::FOR) {
+    } else if (parent->GetKind() == NodeKind::FOR_HEADER1) {
         this->PutVariableInForHeader(variable, variableName, specifier, type);
     } else if (parent->GetKind() == NodeKind::FOREACH) {
         this->PutVariableInForeachHeader(variable, variableName, specifier, type);
@@ -126,6 +126,25 @@ void AST::CheckIfNodeWithinLoop(antlr4::Token *token) {
 
 
 
+Variable *AST::CheckIfVariableDefined(antlr4::Token *variableToken) {
+    // at this point, the varaible node itself is not yet created !
+
+    string name = variableToken->getText();
+    Variable *variable = nullptr;
+    
+    if (variable = this->IsDefinedLocally(name)) {
+        return variable;
+    }
+
+    // is global?
+    // is from enum?
+
+    this->parser->notifyErrorListeners(variableToken, UNDEFINED_VARIABLE, nullptr);
+    return nullptr;
+}
+
+
+
 void AST::Print() {
     void (*printNode)(ASTNode *) = [](ASTNode *node) {
         if (node) {
@@ -159,7 +178,10 @@ void AST::Print() {
         }
     };
 
-    cout << CYAN << "AST:\n=====" << DEFAULT << endl;
+    cout << CYAN << "AST:\n=====" << DEFAULT << endl << endl;
+    cout << YELLOW << "YELLOW - Creation" << DEFAULT << endl;
+    cout << ORANGE << "ORANGE - Usage" << DEFAULT << endl;
+    cout << MAGENTA << "MAGENTA - Type upon use" << DEFAULT << endl << endl;
     this->PreorderForEachNode(printNode);
 }
 
@@ -220,13 +242,14 @@ void AST::PutVariableInForHeader(
     StorageSpecifier specifier,
     Type type
 ) {
-    ASTNode *parent = this->activeNode->GetParent();
+    // there is one more intermediate node, DEF. -> FOR_HEADER1 -> FOR hierarchy
+    ASTNode *grandparent = this->activeNode->GetParent()->GetParent();
 
-    if ( ! parent->GetData<ForData>()) {
+    if ( ! grandparent->GetData<ForData>()) {
         ERR::BadData();
         return;
     }
-    ForData *data = parent->GetData<ForData>();
+    ForData *data = grandparent->GetData<ForData>();
 
     if (specifier != StorageSpecifier::NONE) {
         this->parser->notifyErrorListeners(variable, FOR_HEADER_DEFINITION_WITH_SPECIFIER, nullptr);
@@ -252,4 +275,61 @@ void AST::PutVariableInForeachHeader(
     // foreach can keep storage specifier, can be const and static might be useful
 
     data->AddVariable(name, specifier, type);
+}
+
+
+
+Variable *AST::IsDefinedLocally(const string & name) {
+    ASTNode *current = this->activeNode;
+    Variable *variable = nullptr;
+
+    while (current->GetKind() != NodeKind::PROGRAM) {
+        if (this->IsScopeHavingNode(current)) {
+            if (variable = this->IsInThisScope(name, current)) {
+                return variable;
+            }
+        }
+
+        current = current->GetParent();
+    }
+
+    return nullptr;
+}
+
+
+
+bool AST::IsScopeHavingNode(ASTNode *node) {
+    vector<NodeKind> haveScope = {
+        NodeKind::BODY, NodeKind::FUNCTION,
+        NodeKind::FOR, NodeKind::FOREACH
+    };
+    
+    vector<NodeKind>::iterator position = find(haveScope.begin(), haveScope.end(), node->GetKind());
+
+    if (position != haveScope.end()) {
+        return true;
+    }
+
+    return false;
+}
+
+Variable *AST::IsInThisScope(const string & name, ASTNode *node) {
+    Variable *variable = nullptr;
+
+    switch (node->GetKind()) {
+        case NodeKind::BODY:
+            variable = node->GetData<BodyData>()->GetVariable(name);
+            break;
+        case NodeKind::FUNCTION:
+            variable = node->GetData<FunctionData>()->GetVariable(name);
+            break;
+        case NodeKind::FOR:
+            variable = node->GetData<ForData>()->GetVariable(name);
+            break;
+        case NodeKind::FOREACH:
+            variable = node->GetData<ForeachData>()->GetVariable(name);
+            break;
+    }
+
+    return variable;
 }

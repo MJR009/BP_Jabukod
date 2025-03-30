@@ -4,14 +4,13 @@ any ASTGenerationVisitor::visitSourceFile(JabukodParser::SourceFileContext *ctx)
     this->ast.AddNode(NodeKind::PROGRAM);
     this->visitChildren(ctx);
 
-    // TODO CHECK WHETHER ALL FUNCTIONS RETURN WHAT THEY SHOULD
-
     return OK;
 }
 
 any ASTGenerationVisitor::visitVariableDeclaration(JabukodParser::VariableDeclarationContext *ctx) {
     if (this->ast.CurrentlyIn() != NodeKind::PROGRAM) { // global declarations are already processed
         VariableData *data = new VariableData(
+            TypeFunctions::StringToType( ctx->nonVoidType()->getText() ), // needed during symbol usage, stored for generality
             ctx->IDENTIFIER()->getText()
         );
 
@@ -37,6 +36,7 @@ any ASTGenerationVisitor::visitVariableDeclaration(JabukodParser::VariableDeclar
 any ASTGenerationVisitor::visitVariableDefinition(JabukodParser::VariableDefinitionContext *ctx) { // TODO EXPRESSION TYPE
     if (this->ast.CurrentlyIn() != NodeKind::PROGRAM) {
         VariableData *data = new VariableData(
+            TypeFunctions::StringToType( ctx->nonVoidType()->getText() ),
             ctx->IDENTIFIER()->getText()
         );
 
@@ -114,9 +114,18 @@ any ASTGenerationVisitor::visitAssignExpression(JabukodParser::AssignExpressionC
     return OK;
 }
 
-any ASTGenerationVisitor::visitIdentifierExpression(JabukodParser::IdentifierExpressionContext *ctx) { // TODO SEMANTICS
-    this->ast.AddNode(NodeKind::VARIABLE);
-    this->visitChildren(ctx);
+any ASTGenerationVisitor::visitIdentifierExpression(JabukodParser::IdentifierExpressionContext *ctx) { // concerns only variables
+    string variableName = ctx->IDENTIFIER()->getText();
+    Type realType = Type::VOID;
+
+    Variable *variableInScope = this->ast.CheckIfVariableDefined(ctx->IDENTIFIER()->getSymbol());
+    if (variableInScope) {
+        realType = variableInScope->GetType();
+    }
+
+    VariableData *data = new VariableData(realType, variableName);
+
+    this->ast.AddNode(NodeKind::VARIABLE, data);
     this->ast.MoveToParent();
 
     return OK;
@@ -266,7 +275,7 @@ any ASTGenerationVisitor::visitForeachStatement(JabukodParser::ForeachStatementC
     ForeachData *data = new ForeachData();
     this->ast.AddNode(NodeKind::FOREACH, data);
 
-    this->visitChildren(ctx->foreachHeader());
+    this->visit(ctx->foreachHeader());
 
     {
         BodyData *data = new BodyData();
@@ -390,22 +399,12 @@ any ASTGenerationVisitor::visitForHeader(JabukodParser::ForHeaderContext *ctx) {
     if (ctx->init) {
         this->ast.AddNode(NodeKind::FOR_HEADER1);
 
-        JabukodParser::VariableDefinitionContext *definition = nullptr;
-        if (definition = ctx->init->variableDefinition()) {
-            antlr4::Token *variable = definition->IDENTIFIER()->getSymbol();
-            JabukodParser::StorageSpecifierContext *specifier;
-            if (definition->storageSpecifier()) {
-                specifier = definition->storageSpecifier();
-            } else {
-                specifier = nullptr;
-            }
-            JabukodParser::NonVoidTypeContext *type = definition->nonVoidType();
-
-            this->ast.PutVariableInScope(variable, specifier, type);
-
+        if (ctx->init->variableDefinition()) {
+            this->visit(ctx->init->variableDefinition());
+        } else if (ctx->init->expression()) {
+            this->visit(ctx->init->expression());
         }
         
-        this->visitChildren(ctx);
         this->ast.MoveToParent();
     }
 

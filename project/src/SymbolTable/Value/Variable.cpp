@@ -1,5 +1,10 @@
 #include "Variable.h"
 
+Type Variable::GetType() {
+    return this->type;
+}
+
+
 
 void Variable::Print() const {
     cout << YELLOW << this->name << DEFAULT;

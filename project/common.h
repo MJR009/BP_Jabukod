@@ -23,6 +23,7 @@ using namespace std;
 #define YELLOW "\033[33m"
 #define ORANGE "\033[38;2;255;165;0m"
 #define CYAN "\033[36m"
+#define MAGENTA "\033[35m"
 
 #define DEFAULT "\033[0m"
 

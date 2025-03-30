@@ -19,6 +19,8 @@ public:
         defaultValue(defaultValue)
     {}
 
+    Type GetType();
+
     void Print() const override;
     void PrintDeclaration() const;
 

@@ -24,3 +24,4 @@
 #define CONTINUE_OUT_OF_LOOP "a continue statement must be used within a loop"
 #define REDO_OUT_OF_LOOP "a redo statement must be used within a loop"
 #define RESTART_OUT_OF_LOOP "a restart statement must be used within a loop"
+#define UNDEFINED_VARIABLE "variable is undefined"

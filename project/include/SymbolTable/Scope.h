@@ -14,6 +14,7 @@ public:
 
     bool IsVariableNameAvailable(const string & name) const;
 
+    Variable *GetVariable(const string & name);
     vector<Variable> GetVariables(); // used for printing
 
     void Print() const;

@@ -10,6 +10,10 @@ any LiteralData::GetValue() {
 
 
 
+Type VariableData::GetType() {
+    return this->type;
+}
+
 string VariableData::GetName() {
     return this->name;
 }
@@ -26,6 +30,10 @@ void BodyData::AddVariable(
 
 bool BodyData::IsVariableNameAvailable(const string & name) const {
     return this->scope.IsVariableNameAvailable(name);
+}
+
+Variable *BodyData::GetVariable(const string & name) {
+    return this->scope.GetVariable(name);
 }
 
 void BodyData::PrintScope() {

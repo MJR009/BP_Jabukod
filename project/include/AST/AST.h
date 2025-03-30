@@ -27,6 +27,7 @@ public:
     NodeKind CurrentlyIn();
 
     void CheckIfNodeWithinLoop(antlr4::Token *token);
+    Variable *CheckIfVariableDefined(antlr4::Token *variableToken);
 
     void Print();
 
@@ -71,4 +72,9 @@ private:
         StorageSpecifier specifier,
         Type type
     );
+
+    Variable *IsDefinedLocally(const string & name);
+
+    bool IsScopeHavingNode(ASTNode *node);
+    Variable *IsInThisScope(const string & name, ASTNode *node);
 };    

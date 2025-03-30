@@ -60,7 +60,7 @@ POPSÁNO PODROBNĚ V KÓDU SymbolTable.cpp
 - Hlavička for cyklu je vlastní scope - stejně pojmenovaná proměnná z incializační části definovaná v těle ji překryje
 
 suspend, resume:
-- CONTINUATION - struktura se všemi údajiprávě běžícího procesu -> běhové prostředí
+- CONTINUATION - struktura se všemi údaji právě běžícího procesu -> běhové prostředí
     - vhodné pro výjimky, koprogramy, generátory
     - stav provádění je ve kterémkoli bodě uložen a lze se k němu vrátit (i opakovaně? spíš stack)
 - continuations, nikoli koprogramy (angl. coroutines)
@@ -68,7 +68,7 @@ suspend, resume:
 - vhodné pro generátory hodnot (Python)
 - v mém jazyce zjednodušeno skutečně na funkci, která ukládá svůj stav bokem
 - vždy je potřeba dvojice suspend a resume, je to zásobník, suspend -> suspend -> resume -> resume
-- ve funkci, kde je suspend pak musí být resume
+- ve funkci, kde je suspend, pak v té nad ní musí být resume
 ! co když se zavolá resume s prázdným zásobníkem?
     - nic to neudělá
     - chyba za běhu
@@ -77,3 +77,12 @@ suspend, resume:
 - V TEXTU PROVÉST PŘÍKLAD S VÝJIMKAMI, VYTVOŘIT PŘÍKLAD KÓDU
 
 - V C může mít definice v hlavičce const specifier, v Jabukódu nesmí mít žádný
+
+! KONVERZE !
+
+IMPLICITNÍ POVÝŠENÍ
+bool -> int -> float
+string
+
+IMPLICITNÍ DEGRADACE
+u přiřazení

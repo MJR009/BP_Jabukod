@@ -19,14 +19,15 @@ private:
     any value;
 };
 
-// data regarding variable is stored in closest scope, here is just name mainly for debugging
 class VariableData : public GenericNodeData {
 public:
-    VariableData(const string & name) : name(name) {}
+    VariableData(Type type, const string & name) : type(type), name(name) {}
 
+    Type GetType();
     string GetName();
 
 private:
+    Type type;
     string name;
 };
 
@@ -38,6 +39,7 @@ public:
         Type type
     );
     bool IsVariableNameAvailable(const string & name) const;
+    Variable *GetVariable(const string & name);
 
     void PrintScope();
 

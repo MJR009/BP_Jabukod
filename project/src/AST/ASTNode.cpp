@@ -63,7 +63,8 @@ void ASTNode::Print() {
         LiteralData *data = this->GetData<LiteralData>(); // data must be cast to check correct specialization
         if (data) {
             TypeFunctions::PrintAnyValueByType(data->GetValue(), data->GetType());
-            cout << DIM << " - " << DEFAULT << TypeFunctions::TypeToString( data->GetType() );
+            cout << DIM << " - " << DEFAULT;
+            cout << MAGENTA << TypeFunctions::TypeToString( data->GetType() ) << DEFAULT;
         } else ERR::BadData();
 
     } else if (this->kind == NodeKind::FUNCTION) {
@@ -78,13 +79,17 @@ void ASTNode::Print() {
     } else if (this->kind == NodeKind::VARIABLE_DECLARATION) {
         VariableData *data = this->GetData<VariableData>();
         if (data) {
-            cout << YELLOW << data->GetName() << DEFAULT << DIM << " declaration" << DEFAULT;
+            cout << MAGENTA << TypeFunctions::TypeToString( data->GetType() ) << DEFAULT << " ";
+            cout << YELLOW << data->GetName() << DEFAULT;
+            cout << DIM << " declaration" << DEFAULT;
         } else ERR::BadData();
 
     } else if (this->kind == NodeKind::VARIABLE_DEFINITION) {
         VariableData *data = this->GetData<VariableData>();
         if (data) {
-            cout << YELLOW << data->GetName() << DEFAULT << DIM << " definition" << DEFAULT;
+            cout << MAGENTA << TypeFunctions::TypeToString( data->GetType() ) << DEFAULT << " ";
+            cout << YELLOW << data->GetName() << DEFAULT;
+            cout << DIM << " definition" << DEFAULT;
         } else ERR::BadData();
 
     } else if ((this->kind == NodeKind::IF) ||
@@ -129,6 +134,14 @@ void ASTNode::Print() {
             cout << "(" << DIM << " in scope: " << DEFAULT;
             data->PrintScope();
             cout << " )";
+        } else ERR::BadData();
+
+    } else if (this->kind == NodeKind::VARIABLE) {
+        VariableData *data = this->GetData<VariableData>();
+        if (data) {
+            cout << ORANGE << data->GetName() << DEFAULT;
+            cout << DIM << " - " << DEFAULT;
+            cout << MAGENTA << TypeFunctions::TypeToString( data->GetType() ) << DEFAULT;
         } else ERR::BadData();
 
     }
