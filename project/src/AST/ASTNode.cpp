@@ -63,6 +63,22 @@ void ASTNode::AppendNewChild(ASTNode *newChild) {
 
 
 
+void ASTNode::InsertAfter(ASTNode *newChild, int childIdx) {
+    ASTNode *aux = this->children.at(childIdx);
+
+    newChild->parent = this;
+    newChild->children.push_back(aux);
+
+    aux->parent = newChild;
+    this->children.at(childIdx) = newChild;
+}
+
+void ASTNode::SetData(GenericNodeData *data) {
+    this->data = data;
+}
+
+
+
 void ASTNode::Print() {
     if (this->kind == NodeKind::PROGRAM) {
         cout << DIM << "PROGRAM" << DEFAULT;
@@ -148,6 +164,19 @@ void ASTNode::Print() {
         VariableData *data = this->GetData<VariableData>();
         if (data) {
             cout << ORANGE << data->GetName() << DEFAULT;
+            cout << DIM << " - " << DEFAULT;
+            cout << MAGENTA << TypeFunctions::TypeToString( data->GetType() ) << DEFAULT;
+        } else ERR::BadData();
+
+    } else if (this->kind == NodeKind::INT2FLOAT) {
+        cout << "(" << MAGENTA << "float" << DEFAULT << ")";
+
+    } else if ((this->kind == NodeKind::ADDITION) ||
+               (this->kind == NodeKind::SUBTRACTION)
+    ) {
+        ExpressionData *data = this->GetData<ExpressionData>();
+        if (data) {
+            cout << CYAN << "(" << NodeKindFunctions::NodeKindToSign(this->kind) << ")" << DEFAULT;
             cout << DIM << " - " << DEFAULT;
             cout << MAGENTA << TypeFunctions::TypeToString( data->GetType() ) << DEFAULT;
         } else ERR::BadData();

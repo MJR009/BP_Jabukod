@@ -18,6 +18,8 @@ public:
     void AddNode(NodeKind kind);
     void MoveToParent();
 
+    void GiveActiveNodeData(GenericNodeData *data);
+
     void PutVariableInScope(
         antlr4::Token *variable,
         JabukodParser::StorageSpecifierContext *storageSpecifier,
@@ -83,5 +85,5 @@ private:
 
     Type GetOperand1Type() const;
     Type GetOperand2Type() const;
-    void MakeImplicitConversion(Type type1, Type type2);
+    Type MakeImplicitConversion(Type type1, Type type2);
 };    

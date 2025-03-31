@@ -6,8 +6,6 @@
 #include "GenericNodeData.h"
 #include "SpecificNodeData.h"
 
-class AST;
-
 class ASTNode {
 public:
     ASTNode(NodeKind kind, GenericNodeData *data) : kind(kind), data(data) {}
@@ -30,6 +28,9 @@ public:
     vector<bool> IsLastChildAllToRoot();
 
     void AppendNewChild(ASTNode *newChild);
+
+    void InsertAfter(ASTNode *newChild, int childIdx);
+    void SetData(GenericNodeData *data);
 
     void Print();
 

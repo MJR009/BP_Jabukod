@@ -4,6 +4,7 @@
 #include <filesystem>
 #include <algorithm>
 #include <memory>
+#include <functional>
 
 #include "SemanticErrors.h"
 

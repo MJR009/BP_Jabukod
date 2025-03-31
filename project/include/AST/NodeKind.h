@@ -32,6 +32,8 @@ enum NODE_KIND {
 
     READ, WRITE,
 
+    INT2FLOAT,
+
     invalid
 };
 typedef enum NODE_KIND NodeKind;
@@ -41,5 +43,6 @@ namespace NodeKindFunctions {
 string NodeKindToString(NodeKind kind);
 // only defined for signs which are parts of a subrule within one expression expansion
 NodeKind SignToNodeKind(string sign);
+string NodeKindToSign(NodeKind kind);
 
 } // namespace NodeKindFunctions

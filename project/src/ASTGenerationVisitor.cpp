@@ -131,7 +131,7 @@ any ASTGenerationVisitor::visitIdentifierExpression(JabukodParser::IdentifierExp
     return OK;
 }
 
-any ASTGenerationVisitor::visitAssSubExpression(JabukodParser::AssSubExpressionContext *ctx) { // TODO SEMANTICS
+any ASTGenerationVisitor::visitAssSubExpression(JabukodParser::AssSubExpressionContext *ctx) {
     NodeKind sign = NodeKindFunctions::SignToNodeKind( ctx->sign->getText() );
     this->ast.AddNode(
         (sign == NodeKind::minus) ? NodeKind::SUBTRACTION : sign
@@ -140,6 +140,8 @@ any ASTGenerationVisitor::visitAssSubExpression(JabukodParser::AssSubExpressionC
     this->visitChildren(ctx);
 
     Type type = this->ast.InferExpressionType(ctx->getStart());
+    ExpressionData *data = new ExpressionData(type);
+    this->ast.GiveActiveNodeData(data);
 
     this->ast.MoveToParent();
 

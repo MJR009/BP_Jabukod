@@ -58,6 +58,8 @@ string NodeKindFunctions::NodeKindToString(NodeKind kind) {
         Conversion_case(READ);
         Conversion_case(WRITE);
 
+        Conversion_case(INT2FLOAT);
+
         Conversion_case(invalid);        
     }
 
@@ -83,4 +85,13 @@ NodeKind NodeKindFunctions::SignToNodeKind(string sign) {
     if (sign == "-") return NodeKind::minus;
 
     return NodeKind::invalid;
+}
+
+string NodeKindFunctions::NodeKindToSign(NodeKind kind) {
+    switch (kind) {
+        case NodeKind::ADDITION: return "+";
+        case NodeKind::SUBTRACTION: return "-";   
+    }
+
+    return "";
 }

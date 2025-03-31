@@ -44,6 +44,12 @@ void AST::MoveToParent() {
 
 
 
+void AST::GiveActiveNodeData(GenericNodeData *data) {
+    this->activeNode->SetData(data);
+}
+
+
+
 void AST::PutVariableInScope(
     antlr4::Token *variable,
     JabukodParser::StorageSpecifierContext *storageSpecifier,
@@ -153,16 +159,8 @@ Type AST::InferExpressionType(antlr4::Token *start) {
         return op1;
     }
 
-    // types are different -> implicit conversion needed
-
-    //Type typeAfterPromotion = 
-    this->MakeImplicitConversion(op1, op2);
-
-    // can I do an implicit conversion?
-    // add an implicit cast if yes
-    // return type of this expression
-
-    return Type::VOID; // PLACEHOLDER
+    Type typeAfterPromotion = this->MakeImplicitConversion(op1, op2);
+    return typeAfterPromotion;
 }
 
 
@@ -393,25 +391,36 @@ Type AST::GetOperand2Type() const {
             return op2->GetData<VariableData>()->GetType();
         case NodeKind::LITERAL:
             return op2->GetData<LiteralData>()->GetType();
-        default: // expression
+        default:
             return op2->GetData<ExpressionData>()->GetType();
     }
 }
 
-void AST::MakeImplicitConversion(Type type1, Type type2) {
-    void (*EMPTY)() = [](){};
+#define TODO [](){ return Type::VOID; }
 
-    void (*IntToFloat1)() = [](){ cout << "FIRST INT 2 FLOAT" << endl; };
-    void (*IntToFloat2)() = [](){ cout << "SECOND INT 2 FLOAT" << endl; };
+Type AST::MakeImplicitConversion(Type type1, Type type2) {
+    function<Type()> EMPTY = [](){ return Type::VOID; };
 
-    vector<vector<void (*)()>> conversions = {    // op1 //
-        // INT // FLOAT // BOOL // STRING // VOID // ~~~ // op 2 //
-        {EMPTY, IntToFloat1, [](){}, [](){}, EMPTY}, // INT
-        {IntToFloat2, EMPTY, [](){}, [](){}, EMPTY}, // FLOAT
-        {[](){}, [](){}, EMPTY, [](){}, EMPTY}, // BOOL
-        {[](){}, [](){}, [](){}, EMPTY, EMPTY}, // STRING
-        {EMPTY, EMPTY, EMPTY, EMPTY, EMPTY}  // VOID
+    function<Type()> IntToFloat1 = [this](){
+        ASTNode *conversionNode = new ASTNode(NodeKind::INT2FLOAT, nullptr);
+        this->activeNode->InsertAfter(conversionNode, 0);
+        return Type::FLOAT;
+    };
+    function<Type()> IntToFloat2 = [this](){
+        ASTNode *conversionNode = new ASTNode(NodeKind::INT2FLOAT, nullptr);
+        this->activeNode->InsertAfter(conversionNode, 1);
+        return Type::FLOAT;
     };
 
-    conversions[type1][type2]();
+    vector<vector< function<Type()> >> conversions = {
+           /*  op1   */
+    // op2 /* ~~~~~~ */ INT / FLOAT / BOOL / STRING / VOID //
+           /* INT    */{EMPTY, IntToFloat1, TODO, TODO, EMPTY},
+           /* FLOAT  */{IntToFloat2, EMPTY, TODO, TODO, EMPTY},
+           /* BOOL   */{TODO, TODO, EMPTY, TODO, EMPTY},
+           /* STRING */{TODO, TODO, TODO, EMPTY, EMPTY},
+           /* VOID   */{EMPTY, EMPTY, EMPTY, EMPTY, EMPTY}
+    };
+
+    return conversions[type1][type2]();
 }
