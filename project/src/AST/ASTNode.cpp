@@ -171,6 +171,9 @@ void ASTNode::Print() {
     } else if (this->kind == NodeKind::INT2FLOAT) {
         cout << "(" << MAGENTA << "float" << DEFAULT << ")";
 
+    } else if (this->kind == NodeKind::BOOL2INT) {
+        cout << "(" << MAGENTA << "int" << DEFAULT << ")";
+
     } else if ((this->kind == NodeKind::ADDITION) ||
                (this->kind == NodeKind::SUBTRACTION)
     ) {

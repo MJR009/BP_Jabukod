@@ -139,7 +139,7 @@ any ASTGenerationVisitor::visitAssSubExpression(JabukodParser::AssSubExpressionC
 
     this->visitChildren(ctx);
 
-    Type type = this->ast.InferExpressionType(ctx->getStart());
+    Type type = this->ast.InferArithmeticExpressionType(ctx->getStart());
     ExpressionData *data = new ExpressionData(type);
     this->ast.GiveActiveNodeData(data);
 

@@ -1,11 +1,12 @@
 int x = 3;
 //float x = 3.14;
+//bool x = false;
 
 int main() {
 
     for (int i = 0; ; ) {
         if (0) {
-            x = 1 - x + 1.41;
+            x = x - 1.2;
         }
     }
 

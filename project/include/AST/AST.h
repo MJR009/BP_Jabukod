@@ -6,6 +6,9 @@
 #include "SymbolTable.h"
 #include "ASTNode.h"
 
+typedef function<Type(int)> GenericConversion;
+typedef function<Type()> Conversion;
+
 class AST {
 public:
     AST(JabukodParser *parser, SymbolTable & symbolTable) : parser(parser), symbolTable(symbolTable) {}
@@ -31,7 +34,7 @@ public:
     void CheckIfNodeWithinLoop(antlr4::Token *token);
     Variable *CheckIfVariableDefined(antlr4::Token *variableToken);
 
-    Type InferExpressionType(antlr4::Token *start);
+    Type InferArithmeticExpressionType(antlr4::Token *start);
 
     void Print();
 
@@ -83,7 +86,6 @@ private:
     bool IsScopeHavingNode(ASTNode *node);
     Variable *IsInThisScope(const string & name, ASTNode *node);
 
-    Type GetOperand1Type() const;
-    Type GetOperand2Type() const;
+    Type GetOperandType(int i) const;
     Type MakeImplicitConversion(Type type1, Type type2);
 };    

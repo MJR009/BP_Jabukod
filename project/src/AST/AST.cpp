@@ -151,9 +151,9 @@ Variable *AST::CheckIfVariableDefined(antlr4::Token *variableToken) {
 
 
 
-Type AST::InferExpressionType(antlr4::Token *start) {
-    Type op1 = this->GetOperand1Type();
-    Type op2 = this->GetOperand2Type();
+Type AST::InferArithmeticExpressionType(antlr4::Token *start) {
+    Type op1 = this->GetOperandType(0);
+    Type op2 = this->GetOperandType(1);
 
     if (op1 == op2) {
         return op1;
@@ -360,64 +360,64 @@ Variable *AST::IsInThisScope(const string & name, ASTNode *node) {
 
 
 
-Type AST::GetOperand1Type() const {
-    ASTNode *op1 = this->activeNode->GetChild(0);
+Type AST::GetOperandType(int i) const {
+    ASTNode *op = this->activeNode->GetChild(i);
 
-    if ( ! op1) {
+    if ( ! op) {
         ERR::BadData();
         return Type::VOID;
     }
 
-    switch (op1->GetKind()) {
+    switch (op->GetKind()) {
         case NodeKind::VARIABLE:
-            return op1->GetData<VariableData>()->GetType();
+            return op->GetData<VariableData>()->GetType();
         case NodeKind::LITERAL:
-            return op1->GetData<LiteralData>()->GetType();
+            return op->GetData<LiteralData>()->GetType();
         default: // expression
-            return op1->GetData<ExpressionData>()->GetType();
+            return op->GetData<ExpressionData>()->GetType();
     }
 }
 
-Type AST::GetOperand2Type() const {
-    ASTNode *op2 = this->activeNode->GetChild(1);
-
-    if ( ! op2) {
-        ERR::BadData();
-        return Type::VOID;
-    }
-
-    switch (op2->GetKind()) {
-        case NodeKind::VARIABLE:
-            return op2->GetData<VariableData>()->GetType();
-        case NodeKind::LITERAL:
-            return op2->GetData<LiteralData>()->GetType();
-        default:
-            return op2->GetData<ExpressionData>()->GetType();
-    }
-}
-
-#define TODO [](){ return Type::VOID; }
+#define TODO []() { return Type::VOID; }
 
 Type AST::MakeImplicitConversion(Type type1, Type type2) {
-    function<Type()> EMPTY = [](){ return Type::VOID; };
+    Conversion EMPTY = []() { return Type::VOID; };
 
-    function<Type()> IntToFloat1 = [this](){
+    //Conversion INVALID = [this]() {
+    //    this->parser->notifyErrorListeners("");
+    //};
+
+    GenericConversion IntToFloat = [this](int i) {
         ASTNode *conversionNode = new ASTNode(NodeKind::INT2FLOAT, nullptr);
-        this->activeNode->InsertAfter(conversionNode, 0);
+        this->activeNode->InsertAfter(conversionNode, i);
         return Type::FLOAT;
     };
-    function<Type()> IntToFloat2 = [this](){
-        ASTNode *conversionNode = new ASTNode(NodeKind::INT2FLOAT, nullptr);
-        this->activeNode->InsertAfter(conversionNode, 1);
+    GenericConversion BoolToInt = [this](int i) {
+        ASTNode *conversionNode = new ASTNode(NodeKind::BOOL2INT, nullptr);
+        this->activeNode->InsertAfter(conversionNode, i);
+        return Type::INT;
+    };
+    GenericConversion BoolToFloat = [this](int i) {
+        ASTNode *conversionNode = new ASTNode(NodeKind::BOOL2INT, nullptr);
+        this->activeNode->InsertAfter(conversionNode, i);
+        conversionNode = new ASTNode(NodeKind::INT2FLOAT, nullptr);
+        this->activeNode->InsertAfter(conversionNode, i);
         return Type::FLOAT;
     };
 
-    vector<vector< function<Type()> >> conversions = {
+    Conversion I2F_1 = [IntToFloat]() { return IntToFloat(0); };
+    Conversion I2F_2 = [IntToFloat]() { return IntToFloat(1); };
+    Conversion B2I_1 = [BoolToInt]() { return BoolToInt(0); };
+    Conversion B2I_2 = [BoolToInt]() { return BoolToInt(1); };
+    Conversion B2F_1 = [BoolToFloat]() { return BoolToFloat(0); };
+    Conversion B2F_2 = [BoolToFloat]() { return BoolToFloat(1); };
+
+    const vector<vector<Conversion>> conversions = {
            /*  op1   */
     // op2 /* ~~~~~~ */ INT / FLOAT / BOOL / STRING / VOID //
-           /* INT    */{EMPTY, IntToFloat1, TODO, TODO, EMPTY},
-           /* FLOAT  */{IntToFloat2, EMPTY, TODO, TODO, EMPTY},
-           /* BOOL   */{TODO, TODO, EMPTY, TODO, EMPTY},
+           /* INT    */{EMPTY, I2F_1, B2I_2, TODO, EMPTY},
+           /* FLOAT  */{I2F_2, EMPTY, B2F_2, TODO, EMPTY},
+           /* BOOL   */{B2I_1, B2F_1, EMPTY, TODO, EMPTY},
            /* STRING */{TODO, TODO, TODO, EMPTY, EMPTY},
            /* VOID   */{EMPTY, EMPTY, EMPTY, EMPTY, EMPTY}
     };
