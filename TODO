@@ -86,3 +86,5 @@ string
 
 IMPLICITNÍ DEGRADACE
 u přiřazení
+
+Precedence ** je převzata z Pythonu - nejvyšší mezi operátory

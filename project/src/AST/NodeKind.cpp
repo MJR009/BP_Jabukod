@@ -90,7 +90,13 @@ NodeKind NodeKindFunctions::SignToNodeKind(string sign) {
 string NodeKindFunctions::NodeKindToSign(NodeKind kind) {
     switch (kind) {
         case NodeKind::ADDITION: return "+";
-        case NodeKind::SUBTRACTION: return "-";   
+        case NodeKind::SUBTRACTION: return "-";
+
+        case NodeKind::MULTIPLICATION: return "*";
+        case NodeKind::DIVISION: return "/";
+        case NodeKind::MODULO: return "%";
+
+        case NodeKind::POWER: return "**";
     }
 
     return "";

@@ -175,7 +175,11 @@ void ASTNode::Print() {
         cout << "(" << MAGENTA << "int" << DEFAULT << ")";
 
     } else if ((this->kind == NodeKind::ADDITION) ||
-               (this->kind == NodeKind::SUBTRACTION)
+               (this->kind == NodeKind::SUBTRACTION) ||
+               (this->kind == NodeKind::MULTIPLICATION) ||
+               (this->kind == NodeKind::DIVISION) ||
+               (this->kind == NodeKind::MODULO) ||
+               (this->kind == NodeKind::POWER)
     ) {
         ExpressionData *data = this->GetData<ExpressionData>();
         if (data) {

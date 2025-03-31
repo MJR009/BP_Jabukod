@@ -1,0 +1,9 @@
+int x = 0;
+bool y = true;
+
+int main() {
+    float z = (x - y) / true;
+    float a = z % 3 ** 1/2;
+
+    return 1 + z;
+}

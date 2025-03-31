@@ -72,18 +72,28 @@ any ASTGenerationVisitor::visitFunctionDefinition(JabukodParser::FunctionDefinit
     return OK;
 }
 
-any ASTGenerationVisitor::visitMulDivModExpression(JabukodParser::MulDivModExpressionContext *ctx) { // TODO SEMANTICS
+any ASTGenerationVisitor::visitMulDivModExpression(JabukodParser::MulDivModExpressionContext *ctx) {
     NodeKind sign = NodeKindFunctions::SignToNodeKind( ctx->sign->getText() );
     this->ast.AddNode( sign );
     this->visitChildren(ctx);
+
+    Type type = this->ast.ProcessImplicitArithmeticConversions(ctx->getStart());
+    ExpressionData *data = new ExpressionData(type);
+    this->ast.GiveActiveNodeData(data);
+
     this->ast.MoveToParent();
 
     return OK;
 }
 
-any ASTGenerationVisitor::visitExponentExpression(JabukodParser::ExponentExpressionContext *ctx) { // TODO SEMANTICS
+any ASTGenerationVisitor::visitExponentExpression(JabukodParser::ExponentExpressionContext *ctx) {
     this->ast.AddNode(NodeKind::POWER);
     this->visitChildren(ctx);
+
+    Type type = this->ast.ProcessImplicitArithmeticConversions(ctx->getStart());
+    ExpressionData *data = new ExpressionData(type);
+    this->ast.GiveActiveNodeData(data);
+
     this->ast.MoveToParent();
 
     return OK;

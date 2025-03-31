@@ -1,11 +1,12 @@
-float x = 0.0;
-float y = 1.1;
+int x = 0;
+bool y = true;
 
 int main() {
 
     for (int i = 0; ; ) {
         if (0) {
             int z = x - y;
+            float a = z * 3;
         }
     }
 
