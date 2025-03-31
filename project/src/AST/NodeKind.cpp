@@ -59,6 +59,7 @@ string NodeKindFunctions::NodeKindToString(NodeKind kind) {
         Conversion_case(WRITE);
 
         Conversion_case(INT2FLOAT);
+        Conversion_case(BOOL2INT);
 
         Conversion_case(invalid);        
     }

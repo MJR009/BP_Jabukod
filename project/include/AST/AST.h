@@ -5,9 +5,7 @@
 
 #include "SymbolTable.h"
 #include "ASTNode.h"
-
-typedef function<void(int)> ConversionNodeAdder;
-typedef function<Type()> Conversion;
+#include "Conversion.h"
 
 class AST {
 public:
@@ -34,7 +32,7 @@ public:
     void CheckIfNodeWithinLoop(antlr4::Token *token);
     Variable *CheckIfVariableDefined(antlr4::Token *variableToken);
 
-    Type ProcessImplicitArithmeticConversions(antlr4::Token *expressionStart);
+    Type ProcessImplicitConversions(antlr4::Token *expressionStart, ConversionType conversion);
 
     void Print();
 
@@ -88,6 +86,8 @@ private:
 
     Type GetOperandType(int i) const;
 
-    // Also has to return resulting expressions type
+    // return resulting expressions type
     Type ApplyArithmeticConversions(Type type1, Type type2, antlr4::Token *expressionStart);
+    //Type ApplyLogicConversions(Type type1, Type type2, antlr4::Token *expressionStart);
+    //Type ApplyBitConversions(Type type1, Type type2, antlr4::Token *expressionStart);
 };    

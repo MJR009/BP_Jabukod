@@ -151,15 +151,34 @@ Variable *AST::CheckIfVariableDefined(antlr4::Token *variableToken) {
 
 
 
-Type AST::ProcessImplicitArithmeticConversions(antlr4::Token *expressionStart) {
+Type AST::ProcessImplicitConversions(antlr4::Token *expressionStart, ConversionType conversion) {
     Type op1 = this->GetOperandType(0);
     Type op2 = this->GetOperandType(1);
 
-    Type typeAfterPromotion = this->ApplyArithmeticConversions(op1, op2, expressionStart);
-    if (typeAfterPromotion == Type::VOID) { // this implies error, return float to continue semantic checks
-        return Type::FLOAT;
+    cout << expressionStart->getText() << endl;
+    
+    Type subexpressionType;
+
+    switch (conversion) {
+        case ConversionType::ARITHMETIC:
+            subexpressionType = this->ApplyArithmeticConversions(op1, op2, expressionStart);
+            if (subexpressionType == Type::VOID) { // this implies error, return float to continue semantic checks
+                return Type::FLOAT;
+            }
+            break;
+
+        case ConversionType::LOGIC:
+            break;
+
+        case ConversionType::BIT:
+            //Type subexpressionType = this->ApplyBitConversions(op1, op2, expressionStart);
+            //if (subexpressionType == Type::VOID) {
+            //    return Type::BOOL;
+            //}
+            break;
     }
-    return typeAfterPromotion;
+
+    return subexpressionType;
 }
 
 
@@ -372,7 +391,7 @@ Type AST::GetOperandType(int i) const {
             return op->GetData<VariableData>()->GetType();
         case NodeKind::LITERAL:
             return op->GetData<LiteralData>()->GetType();
-        default: // expression
+        default: // NodeKind::EXPRESSION
             return op->GetData<ExpressionData>()->GetType();
     }
 }
@@ -380,44 +399,46 @@ Type AST::GetOperandType(int i) const {
 
 
 Type AST::ApplyArithmeticConversions(Type type1, Type type2, antlr4::Token *expressionStart) {
-    ConversionNodeAdder IntToFloat = [this](int i) {
-        ASTNode *conversionNode = new ASTNode(NodeKind::INT2FLOAT, nullptr);
-        this->activeNode->InsertAfter(conversionNode, i);
+    Conversion NO_CV = [ type1 ](ASTNode *) { // no conversion
+        return type1;
     };
-    ConversionNodeAdder BoolToInt = [this](int i) {
-        ASTNode *conversionNode = new ASTNode(NodeKind::BOOL2INT, nullptr);
-        this->activeNode->InsertAfter(conversionNode, i);
-    };
-    ConversionNodeAdder BoolToFloat = [this](int i) {
-        ASTNode *conversionNode = new ASTNode(NodeKind::BOOL2INT, nullptr);
-        this->activeNode->InsertAfter(conversionNode, i);
-        conversionNode = new ASTNode(NodeKind::INT2FLOAT, nullptr);
-        this->activeNode->InsertAfter(conversionNode, i);
-    };
-    function<void()> Invalid = [this, expressionStart]() {
+    Conversion INVAL = [ this, expressionStart ](ASTNode *) { // trigger error
         this->parser->notifyErrorListeners(expressionStart, STRING_IN_ARITHMETIC_EXPRESSION, nullptr);
+        return Type::VOID;
     };
 
-    Conversion NOCON = [ type1 ]()          { return type1; }; // no conversion
-    Conversion I2F_1 = [ IntToFloat ]()     { IntToFloat(0); return Type::FLOAT; };
-    Conversion I2F_2 = [ IntToFloat ]()     { IntToFloat(1); return Type::FLOAT; };
-    Conversion B2I_1 = [ BoolToInt ]()      { BoolToInt(0); return Type::INT; };
-    Conversion B2I_2 = [ BoolToInt ]()      { BoolToInt(1); return Type::INT; };
-    Conversion B2F_1 = [ BoolToFloat ]()    { BoolToFloat(0); return Type::FLOAT; };
-    Conversion B2F_2 = [ BoolToFloat ]()    { BoolToFloat(1); return Type::FLOAT; };
-    Conversion B2I_B = [ BoolToInt ]()      { BoolToInt(0); BoolToInt(1); return Type::INT; }; // both operands
-    Conversion INVAL = [ Invalid ]()        { Invalid(); return Type::VOID; }; // trigger error
+    { using namespace ConversionFunctions;
 
     const vector<vector<Conversion>> conversions =
     {
            /*  op1   */
     // op2 /* ~~~~~~ */ INT / FLOAT / BOOL / STRING / VOID //
-           /* INT    */{NOCON, I2F_1, B2I_2, INVAL, NOCON},
-           /* FLOAT  */{I2F_2, NOCON, B2F_2, INVAL, NOCON},
-           /* BOOL   */{B2I_1, B2F_1, B2I_B, INVAL, NOCON},
-           /* STRING */{INVAL, INVAL, INVAL, NOCON, NOCON}, // TODO zkontrolovat pro řetězce !!!
-           /* VOID   */{NOCON, NOCON, NOCON, NOCON, NOCON}
+           /* INT    */{NO_CV, I2F_1, B2I_2, INVAL, NO_CV},
+           /* FLOAT  */{I2F_2, NO_CV, B2F_2, INVAL, NO_CV},
+           /* BOOL   */{B2I_1, B2F_1, B2I_B, INVAL, NO_CV},
+           /* STRING */{INVAL, INVAL, INVAL, NO_CV, NO_CV}, // TODO zkontrolovat pro řetězce !!!
+           /* VOID   */{NO_CV, NO_CV, NO_CV, NO_CV, NO_CV}
     };
 
-    return conversions[type1][type2]();
+    Type inferedSubexpressionType = conversions[type1][type2]( this->activeNode );
+    return inferedSubexpressionType;
+
+    }
 }
+
+//Type AST::ApplyLogicConversions(Type type1, Type type2, antlr4::Token *expressionStart);
+
+//Type AST::ApplyBitConversions(Type type1, Type type2, antlr4::Token *expressionStart) {
+//    const vector<vector<Conversion>> conversions =
+//    {
+//           /*  op1   */
+//    // op2 /* ~~~~~~ */ INT / FLOAT / BOOL / STRING / VOID //
+//           /* INT    *///{NOCON, I2F_1, B2I_2, INVAL, NOCON},
+//           /* FLOAT  *///{I2F_2, NOCON, B2F_2, INVAL, NOCON},
+//           /* BOOL   *///{B2I_1, B2F_1, B2I_B, INVAL, NOCON},
+//           /* STRING *///{INVAL, INVAL, INVAL, NOCON, NOCON}, // TODO zkontrolovat pro řetězce !!!
+//           /* VOID   *///{NOCON, NOCON, NOCON, NOCON, NOCON}
+//    };
+//
+//    return conversions[type1][type2]();
+//}
