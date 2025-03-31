@@ -5,6 +5,7 @@
 #include <algorithm>
 #include <memory>
 #include <functional>
+#include <cmath> // trunc
 
 #include "SemanticErrors.h"
 

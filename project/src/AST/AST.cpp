@@ -151,15 +151,14 @@ Variable *AST::CheckIfVariableDefined(antlr4::Token *variableToken) {
 
 
 
-Type AST::InferArithmeticExpressionType(antlr4::Token *start) {
+Type AST::ProcessImplicitArithmeticConversions(antlr4::Token *expressionStart) {
     Type op1 = this->GetOperandType(0);
     Type op2 = this->GetOperandType(1);
 
-    if (op1 == op2) {
-        return op1;
+    Type typeAfterPromotion = this->ApplyArithmeticConversions(op1, op2, expressionStart);
+    if (typeAfterPromotion == Type::VOID) { // this implies error, return float to continue semantic checks
+        return Type::FLOAT;
     }
-
-    Type typeAfterPromotion = this->MakeImplicitConversion(op1, op2);
     return typeAfterPromotion;
 }
 
@@ -378,48 +377,46 @@ Type AST::GetOperandType(int i) const {
     }
 }
 
-#define TODO []() { return Type::VOID; }
 
-Type AST::MakeImplicitConversion(Type type1, Type type2) {
-    Conversion EMPTY = []() { return Type::VOID; };
 
-    //Conversion INVALID = [this]() {
-    //    this->parser->notifyErrorListeners("");
-    //};
-
-    GenericConversion IntToFloat = [this](int i) {
+Type AST::ApplyArithmeticConversions(Type type1, Type type2, antlr4::Token *expressionStart) {
+    ConversionNodeAdder IntToFloat = [this](int i) {
         ASTNode *conversionNode = new ASTNode(NodeKind::INT2FLOAT, nullptr);
         this->activeNode->InsertAfter(conversionNode, i);
-        return Type::FLOAT;
     };
-    GenericConversion BoolToInt = [this](int i) {
+    ConversionNodeAdder BoolToInt = [this](int i) {
         ASTNode *conversionNode = new ASTNode(NodeKind::BOOL2INT, nullptr);
         this->activeNode->InsertAfter(conversionNode, i);
-        return Type::INT;
     };
-    GenericConversion BoolToFloat = [this](int i) {
+    ConversionNodeAdder BoolToFloat = [this](int i) {
         ASTNode *conversionNode = new ASTNode(NodeKind::BOOL2INT, nullptr);
         this->activeNode->InsertAfter(conversionNode, i);
         conversionNode = new ASTNode(NodeKind::INT2FLOAT, nullptr);
         this->activeNode->InsertAfter(conversionNode, i);
-        return Type::FLOAT;
+    };
+    function<void()> Invalid = [this, expressionStart]() {
+        this->parser->notifyErrorListeners(expressionStart, STRING_IN_ARITHMETIC_EXPRESSION, nullptr);
     };
 
-    Conversion I2F_1 = [IntToFloat]() { return IntToFloat(0); };
-    Conversion I2F_2 = [IntToFloat]() { return IntToFloat(1); };
-    Conversion B2I_1 = [BoolToInt]() { return BoolToInt(0); };
-    Conversion B2I_2 = [BoolToInt]() { return BoolToInt(1); };
-    Conversion B2F_1 = [BoolToFloat]() { return BoolToFloat(0); };
-    Conversion B2F_2 = [BoolToFloat]() { return BoolToFloat(1); };
+    Conversion NOCON = [ type1 ]()          { return type1; }; // no conversion
+    Conversion I2F_1 = [ IntToFloat ]()     { IntToFloat(0); return Type::FLOAT; };
+    Conversion I2F_2 = [ IntToFloat ]()     { IntToFloat(1); return Type::FLOAT; };
+    Conversion B2I_1 = [ BoolToInt ]()      { BoolToInt(0); return Type::INT; };
+    Conversion B2I_2 = [ BoolToInt ]()      { BoolToInt(1); return Type::INT; };
+    Conversion B2F_1 = [ BoolToFloat ]()    { BoolToFloat(0); return Type::FLOAT; };
+    Conversion B2F_2 = [ BoolToFloat ]()    { BoolToFloat(1); return Type::FLOAT; };
+    Conversion B2I_B = [ BoolToInt ]()      { BoolToInt(0); BoolToInt(1); return Type::INT; }; // both operands
+    Conversion INVAL = [ Invalid ]()        { Invalid(); return Type::VOID; }; // trigger error
 
-    const vector<vector<Conversion>> conversions = {
+    const vector<vector<Conversion>> conversions =
+    {
            /*  op1   */
     // op2 /* ~~~~~~ */ INT / FLOAT / BOOL / STRING / VOID //
-           /* INT    */{EMPTY, I2F_1, B2I_2, TODO, EMPTY},
-           /* FLOAT  */{I2F_2, EMPTY, B2F_2, TODO, EMPTY},
-           /* BOOL   */{B2I_1, B2F_1, EMPTY, TODO, EMPTY},
-           /* STRING */{TODO, TODO, TODO, EMPTY, EMPTY},
-           /* VOID   */{EMPTY, EMPTY, EMPTY, EMPTY, EMPTY}
+           /* INT    */{NOCON, I2F_1, B2I_2, INVAL, NOCON},
+           /* FLOAT  */{I2F_2, NOCON, B2F_2, INVAL, NOCON},
+           /* BOOL   */{B2I_1, B2F_1, B2I_B, INVAL, NOCON},
+           /* STRING */{INVAL, INVAL, INVAL, NOCON, NOCON}, // TODO zkontrolovat pro řetězce !!!
+           /* VOID   */{NOCON, NOCON, NOCON, NOCON, NOCON}
     };
 
     return conversions[type1][type2]();

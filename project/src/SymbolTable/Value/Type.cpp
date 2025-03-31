@@ -53,7 +53,7 @@ void TypeFunctions::PrintAnyValueByType(any value, Type type) {
             break;
 
         case Type::FLOAT:
-            if (any_cast<float>( value ) == 0.0) {
+            if (any_cast<float>( value ) == trunc( any_cast<float>( value ) )) {
                 cout << fixed << setprecision(1) << any_cast<float>( value );
             } else {
                 cout << any_cast<float>( value );

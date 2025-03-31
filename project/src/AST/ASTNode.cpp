@@ -36,6 +36,12 @@ ASTNode *ASTNode::GetChild(int i) {
 
 
 
+void ASTNode::SetData(GenericNodeData *data) {
+    this->data = data;
+}
+
+
+
 vector<bool> ASTNode::IsLastChildAllToRoot() {
     vector<bool> areLast;
 
@@ -61,8 +67,6 @@ void ASTNode::AppendNewChild(ASTNode *newChild) {
     this->children.push_back(newChild);
 }
 
-
-
 void ASTNode::InsertAfter(ASTNode *newChild, int childIdx) {
     ASTNode *aux = this->children.at(childIdx);
 
@@ -71,10 +75,6 @@ void ASTNode::InsertAfter(ASTNode *newChild, int childIdx) {
 
     aux->parent = newChild;
     this->children.at(childIdx) = newChild;
-}
-
-void ASTNode::SetData(GenericNodeData *data) {
-    this->data = data;
 }
 
 

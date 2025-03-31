@@ -16,21 +16,19 @@ public:
     NodeKind GetKind();
     ASTNode *GetParent();
     ASTNode *GetChild(int i);
-
-    // whole definition in header: https://isocpp.org/wiki/faq/templates#separate-template-fn-defn-from-decl
     template <typename T>
     T *GetData() {
         return dynamic_cast<T *>( this->data );
     }
+
+    void SetData(GenericNodeData *data);
 
     // returns whether the current node is a last child of the previous node for every node all the way to root
     // goes from this node to root, first item represents this and last the root
     vector<bool> IsLastChildAllToRoot();
 
     void AppendNewChild(ASTNode *newChild);
-
     void InsertAfter(ASTNode *newChild, int childIdx);
-    void SetData(GenericNodeData *data);
 
     void Print();
 
