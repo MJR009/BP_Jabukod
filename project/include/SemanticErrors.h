@@ -26,3 +26,4 @@
 #define RESTART_OUT_OF_LOOP "a restart statement must be used within a loop"
 #define UNDEFINED_VARIABLE "variable is undefined"
 #define STRING_IN_ARITHMETIC_EXPRESSION "cannot perform implicit conversion on subexpression of type string"
+#define MODULE_ON_FLOAT "operator \"\%\" operands must not have float type"

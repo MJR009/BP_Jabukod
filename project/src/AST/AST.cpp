@@ -151,17 +151,18 @@ Variable *AST::CheckIfVariableDefined(antlr4::Token *variableToken) {
 
 
 
-Type AST::ProcessImplicitConversions(antlr4::Token *expressionStart, ConversionType conversion) {
+Type AST::ProcessImplicitConversions(JabukodParser::ExpressionContext *ctx, ConversionType conversion) {
     Type op1 = this->GetOperandType(0);
     Type op2 = this->GetOperandType(1);
-
-    cout << expressionStart->getText() << endl;
     
     Type subexpressionType;
 
     switch (conversion) {
         case ConversionType::ARITHMETIC:
-            subexpressionType = this->ApplyArithmeticConversions(op1, op2, expressionStart);
+            if ((op1 == Type::FLOAT) || (op2 == Type::FLOAT)) {
+                this->CheckIfExpressionModulo(ctx);
+            }
+            subexpressionType = this->ApplyArithmeticConversions(op1, op2, ctx->getStart());
             if (subexpressionType == Type::VOID) { // this implies error, return float to continue semantic checks
                 return Type::FLOAT;
             }
@@ -442,3 +443,14 @@ Type AST::ApplyArithmeticConversions(Type type1, Type type2, antlr4::Token *expr
 //
 //    return conversions[type1][type2]();
 //}
+
+
+
+void AST::CheckIfExpressionModulo(JabukodParser::ExpressionContext *ctx) {
+    JabukodParser::MulDivModExpressionContext *potentialMod;
+    if (potentialMod = dynamic_cast<JabukodParser::MulDivModExpressionContext *>(ctx)) {
+        if (potentialMod->sign->getText() == NodeKindFunctions::NodeKindToSign(NodeKind::MODULO)) {
+            this->parser->notifyErrorListeners(potentialMod->sign, MODULE_ON_FLOAT, nullptr);
+        }
+    }
+}

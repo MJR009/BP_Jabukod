@@ -77,7 +77,7 @@ any ASTGenerationVisitor::visitMulDivModExpression(JabukodParser::MulDivModExpre
     this->ast.AddNode( sign );
     this->visitChildren(ctx);
 
-    Type type = this->ast.ProcessImplicitConversions(ctx->getStart(), ConversionType::ARITHMETIC);
+    Type type = this->ast.ProcessImplicitConversions(ctx, ConversionType::ARITHMETIC);
     ExpressionData *data = new ExpressionData(type);
     this->ast.GiveActiveNodeData(data);
 
@@ -90,7 +90,7 @@ any ASTGenerationVisitor::visitExponentExpression(JabukodParser::ExponentExpress
     this->ast.AddNode(NodeKind::POWER);
     this->visitChildren(ctx);
 
-    Type type = this->ast.ProcessImplicitConversions(ctx->getStart(), ConversionType::ARITHMETIC);
+    Type type = this->ast.ProcessImplicitConversions(ctx, ConversionType::ARITHMETIC);
     ExpressionData *data = new ExpressionData(type);
     this->ast.GiveActiveNodeData(data);
 
@@ -149,7 +149,7 @@ any ASTGenerationVisitor::visitAssSubExpression(JabukodParser::AssSubExpressionC
 
     this->visitChildren(ctx);
 
-    Type type = this->ast.ProcessImplicitConversions(ctx->getStart(), ConversionType::ARITHMETIC);
+    Type type = this->ast.ProcessImplicitConversions(ctx, ConversionType::ARITHMETIC);
     ExpressionData *data = new ExpressionData(type);
     this->ast.GiveActiveNodeData(data);
 

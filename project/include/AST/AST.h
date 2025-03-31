@@ -32,7 +32,7 @@ public:
     void CheckIfNodeWithinLoop(antlr4::Token *token);
     Variable *CheckIfVariableDefined(antlr4::Token *variableToken);
 
-    Type ProcessImplicitConversions(antlr4::Token *expressionStart, ConversionType conversion);
+    Type ProcessImplicitConversions(JabukodParser::ExpressionContext *ctx, ConversionType conversion);
 
     void Print();
 
@@ -90,4 +90,6 @@ private:
     Type ApplyArithmeticConversions(Type type1, Type type2, antlr4::Token *expressionStart);
     //Type ApplyLogicConversions(Type type1, Type type2, antlr4::Token *expressionStart);
     //Type ApplyBitConversions(Type type1, Type type2, antlr4::Token *expressionStart);
+
+    void CheckIfExpressionModulo(JabukodParser::ExpressionContext *ctx);
 };    
