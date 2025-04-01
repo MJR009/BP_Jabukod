@@ -60,8 +60,10 @@ string NodeKindFunctions::NodeKindToString(NodeKind kind) {
 
         Conversion_case(INT2FLOAT);
         Conversion_case(BOOL2INT);
+        Conversion_case(INT2BOOL);
+        Conversion_case(FLOAT2INT);
 
-        Conversion_case(invalid);        
+        Conversion_case(invalid);
     }
 
     return "ERR";
@@ -105,6 +107,9 @@ string NodeKindFunctions::NodeKindToSign(NodeKind kind) {
         case NodeKind::BIT_AND: return "&";
         case NodeKind::BIT_XOR: return "^";
         case NodeKind::BIT_OR: return "|";
+
+        case NodeKind::OR: return "||";
+        case NodeKind::AND: return "&&";
     }
 
     return "ERR";

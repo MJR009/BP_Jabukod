@@ -171,7 +171,9 @@ void ASTNode::Print() {
     } else if (this->kind == NodeKind::INT2FLOAT) {
         cout << "(" << MAGENTA << "float" << DEFAULT << ")";
 
-    } else if (this->kind == NodeKind::BOOL2INT) {
+    } else if ((this->kind == NodeKind::BOOL2INT) ||
+               (this->kind == NodeKind::FLOAT2INT)
+    ) {
         cout << "(" << MAGENTA << "int" << DEFAULT << ")";
 
     } else if ((this->kind == NodeKind::ADDITION) ||
@@ -184,7 +186,9 @@ void ASTNode::Print() {
                (this->kind == NodeKind::RIGHT_SHIFT) ||
                (this->kind == NodeKind::BIT_AND) ||
                (this->kind == NodeKind::BIT_XOR) ||
-               (this->kind == NodeKind::BIT_OR)
+               (this->kind == NodeKind::BIT_OR) ||
+               (this->kind == NodeKind::OR) ||
+               (this->kind == NodeKind::AND)
     ) {
         ExpressionData *data = this->GetData<ExpressionData>();
         if (data) {
@@ -192,6 +196,9 @@ void ASTNode::Print() {
             cout << DIM << " - " << DEFAULT;
             cout << MAGENTA << TypeFunctions::TypeToString( data->GetType() ) << DEFAULT;
         } else ERR::BadData();
+
+    } else if (this->kind == NodeKind::INT2BOOL) {
+        cout << "(" << MAGENTA << "bool" << DEFAULT << ")";
 
     }
 

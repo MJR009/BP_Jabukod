@@ -88,7 +88,7 @@ private:
 
     // return resulting expressions type
     Type ApplyArithmeticConversions(Type type1, Type type2, antlr4::Token *expressionStart);
-    //Type ApplyLogicConversions(Type type1, Type type2, antlr4::Token *expressionStart);
+    Type ApplyLogicConversions(Type type1, Type type2, antlr4::Token *expressionStart);
     Type ApplyBitConversions(Type type1, Type type2, antlr4::Token *expressionStart);
 
     void CheckIfExpressionModulo(JabukodParser::ExpressionContext *ctx);

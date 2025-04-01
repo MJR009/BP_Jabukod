@@ -181,17 +181,27 @@ any ASTGenerationVisitor::visitBitXorExpression(JabukodParser::BitXorExpressionC
     return OK;
 }
 
-any ASTGenerationVisitor::visitOrExpression(JabukodParser::OrExpressionContext *ctx) { // TODO SEMANTICS
+any ASTGenerationVisitor::visitOrExpression(JabukodParser::OrExpressionContext *ctx) {
     this->ast.AddNode(NodeKind::OR);
     this->visitChildren(ctx);
+
+    Type type = this->ast.ProcessImplicitConversions(ctx, ConversionType::LOGIC);
+    ExpressionData *data = new ExpressionData(type);
+    this->ast.GiveActiveNodeData(data);
+
     this->ast.MoveToParent();
 
     return OK;
 }
 
-any ASTGenerationVisitor::visitAndExpression(JabukodParser::AndExpressionContext *ctx) { // TODO SEMANTICS
+any ASTGenerationVisitor::visitAndExpression(JabukodParser::AndExpressionContext *ctx) {
     this->ast.AddNode(NodeKind::AND);
     this->visitChildren(ctx);
+
+    Type type = this->ast.ProcessImplicitConversions(ctx, ConversionType::LOGIC);
+    ExpressionData *data = new ExpressionData(type);
+    this->ast.GiveActiveNodeData(data);
+
     this->ast.MoveToParent();
 
     return OK;
@@ -200,7 +210,7 @@ any ASTGenerationVisitor::visitAndExpression(JabukodParser::AndExpressionContext
 any ASTGenerationVisitor::visitBitAndExpression(JabukodParser::BitAndExpressionContext *ctx) {
     this->ast.AddNode(NodeKind::BIT_AND);
     this->visitChildren(ctx);
-    
+
     Type type = this->ast.ProcessImplicitConversions(ctx, ConversionType::BIT);
     ExpressionData *data = new ExpressionData(type);
     this->ast.GiveActiveNodeData(data);

@@ -28,3 +28,4 @@
 #define IMPLICIT_STRING_CONVERSION "cannot perform implicit conversion on subexpression of type string"
 #define MODULE_ON_FLOAT "operator \"\%\" operands must not have type float"
 #define BIT_FLOAT_OPERAND "bitwise operator operands must not have type float"
+#define BIT_STRING_OPERAND "bitwise operator operands must not have type string"

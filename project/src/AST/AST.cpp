@@ -169,6 +169,10 @@ Type AST::ProcessImplicitConversions(JabukodParser::ExpressionContext *ctx, Conv
             break;
 
         case ConversionType::LOGIC:
+            subexpressionType = this->ApplyLogicConversions(op1, op2, ctx->getStart());
+            if (subexpressionType == Type::VOID) {
+                return Type::BOOL;
+            }
             break;
 
         case ConversionType::BIT:
@@ -399,6 +403,8 @@ Type AST::GetOperandType(int i) const {
 
 
 
+// TODO ŘETĚZCE - KDE JSOU INVAL !!!
+
 Type AST::ApplyArithmeticConversions(Type type1, Type type2, antlr4::Token *expressionStart) {
     Conversion NO_CV = [ type1 ](ASTNode *) { // no conversion
         return type1;
@@ -417,7 +423,7 @@ Type AST::ApplyArithmeticConversions(Type type1, Type type2, antlr4::Token *expr
            /* INT    */{NO_CV, I2F_1, B2I_2, INVAL, NO_CV},
            /* FLOAT  */{I2F_2, NO_CV, B2F_2, INVAL, NO_CV},
            /* BOOL   */{B2I_1, B2F_1, B2I_B, INVAL, NO_CV},
-           /* STRING */{INVAL, INVAL, INVAL, NO_CV, NO_CV}, // TODO zkontrolovat pro řetězce !!!
+           /* STRING */{INVAL, INVAL, INVAL, INVAL, NO_CV}, // TODO zkontrolovat pro řetězce !!!
            /* VOID   */{NO_CV, NO_CV, NO_CV, NO_CV, NO_CV}
     };
 
@@ -427,7 +433,34 @@ Type AST::ApplyArithmeticConversions(Type type1, Type type2, antlr4::Token *expr
     }
 }
 
-//Type AST::ApplyLogicConversions(Type type1, Type type2, antlr4::Token *expressionStart);
+Type AST::ApplyLogicConversions(Type type1, Type type2, antlr4::Token *expressionStart) {
+    Conversion NO_CV = [ type1 ](ASTNode *) {
+        return type1;
+    };
+    Conversion INVAL = [ this, expressionStart ](ASTNode *) { // trigger error
+        this->parser->notifyErrorListeners(expressionStart, IMPLICIT_STRING_CONVERSION, nullptr);
+        return Type::VOID;
+    };
+
+    { using namespace ConversionFunctions;
+
+    const vector<vector<Conversion>> conversions =
+    {
+           /*  op1   */
+    // op2 /* ~~~~~~ */ INT / FLOAT / BOOL / STRING / VOID //
+           /* INT    */{I2B_B, IF2B_, I2B_1, INVAL, NO_CV},
+           /* FLOAT  */{FI2B_, F2B_B, F2B_1, INVAL, NO_CV},
+           /* BOOL   */{I2B_2, F2B_2, NO_CV, INVAL, NO_CV},
+           /* STRING */{INVAL, INVAL, INVAL, INVAL, NO_CV}, // TODO zkontrolovat pro řetězce !!!
+           /* VOID   */{NO_CV, NO_CV, NO_CV, NO_CV, NO_CV}
+    };
+
+    Type inferedSubexpressionType = conversions[type1][type2]( this->activeNode );
+    return inferedSubexpressionType;
+
+    }
+
+}
 
 Type AST::ApplyBitConversions(Type type1, Type type2, antlr4::Token *expressionStart) {
     Conversion NO_CV = [ type1 ](ASTNode *) {
@@ -438,7 +471,7 @@ Type AST::ApplyBitConversions(Type type1, Type type2, antlr4::Token *expressionS
         return Type::VOID;
     };
     Conversion INVST = [ this, expressionStart ](ASTNode *) {
-        this->parser->notifyErrorListeners(expressionStart, IMPLICIT_STRING_CONVERSION, nullptr);
+        this->parser->notifyErrorListeners(expressionStart, BIT_STRING_OPERAND, nullptr);
         return Type::VOID;
     };
 

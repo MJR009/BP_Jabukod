@@ -33,6 +33,7 @@ enum NODE_KIND {
     READ, WRITE,
 
     INT2FLOAT, BOOL2INT,
+    INT2BOOL, FLOAT2INT,
 
     invalid
 };
