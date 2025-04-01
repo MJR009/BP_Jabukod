@@ -88,3 +88,54 @@ IMPLICITNÍ DEGRADACE
 u přiřazení
 
 Precedence ** je převzata z Pythonu - nejvyšší mezi operátory
+
+
+Dostupnost symbolů (než zjistím kam to dat...)
+
+Globální proměnné
+    // NEMOHOU být dvě stejně se jmenující globální proměnné
+    // lokální proměnná PŘEKRYJE globální
+    // NEMŮŽE být stejně jako funkce, před ani za
+    // parametr funkce JI PŘEKRYJE
+    // MŮŽE být stejná jako název enumu, před i za
+    // NEMŮŽE být stejná jako položka enumu, před ani za
+
+Lokální proměnné
+    // lokální proměnná PŘEKRYJE globální proměnnou
+    // nelze mít v jednom rozsahu dvě stejné lokální proměnné, PŘEKRÝVÁ vyšší rozsahy
+    // !!!!! PŘEKRYJE název funkce, ALE funkce nepřekryje ji pokud je volaná před její definicí
+    // NEMŮŽE být stejné jako parametr své funkce -> !!!!! parametry a nejvyšší scope funkce jsou jeden scope !!!!!
+    // MŮŽE být stejné jako název enumu
+    // PŘEKRYJE položku enumu
+
+Funkce
+    // NESMÍ být stejné jako globální proměnná
+    // je PŘEKRYTA lokální proměnnou, ALE až po její definici
+    // NESMÍ být stejné jako jiná funkce
+    // MŮŽE být stejné jako parametr funkce, ALE pak ji nelze volat, lokální proměnná ji překrývá
+    // MŮŽE být stejné jako název enumu
+    // NEMŮŽE být stejné jako položka enumu
+
+Parametry funkce
+    // PŘEKRYJE globální proměnnou
+    // STEJNÝ SCOPE - nelze mít stejnou lokální proměnnou
+    // PŘEKRYJE název jakékoli funkce (pokud pak byla funkce zavolána, nastane chyba)
+    // NESMÍ být dva stejné parametry funkce
+    // MŮŽE být stejné jako název enumu
+    // PŘEKRYJE položku enumu
+
+Enum
+    // MŮŽE být stejné jako globální proměnná, před i za
+    // MŮŽE být stejné jako lokální proměnná, před i za ní
+    // MŮŽE být stejné jako název funkce, před i za
+    // MŮŽE být stejné jako parametr funkce, před i za
+    // NEMŮŽE být stejné jako už existující enum
+    // MŮŽE být stejné jako položka už existujícího enumu, před i za
+
+Položka enumu
+    // NEMŮŽE být stejné jako globální proměnná, před ani za
+    // MŮŽE být stejhný jako lokální proměnná, JE JÍ PŘEKRYT
+    // NEMŮŽE být stejné jako název funkce, před ani za
+    // MŮŽE být stejné jako parametr funkce, před i za
+    // MŮŽE být stejné jako název svého enumu a i jiného enumu
+    // NEMŮŽE být stejné jako jiná položka stejného enumu ANI JINÉHO ENUMU

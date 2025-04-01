@@ -60,7 +60,6 @@ private:
 
 private:
     bool IsGlobalVariableNameAvailable(const string & name) const;
-    bool IsVariableNameAvailable(const string & name, Scope & scope) const;
     bool IsFunctionNameAvailable(const string & name) const;
     bool IsFunctionParameterNameAvailable(const string & name) const; // checks in currentFunction
     bool IsEnumNameAvailable(const string & name) const;

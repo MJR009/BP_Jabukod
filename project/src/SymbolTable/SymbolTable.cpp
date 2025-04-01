@@ -160,13 +160,6 @@ void SymbolTable::Print() const {
 // PRIVATE: 
 
 bool SymbolTable::IsGlobalVariableNameAvailable(const string & name) const {
-    // NEMOHOU být dvě stejně se jmenující globální proměnné
-    // lokální proměnná PŘEKRYJE globální
-    // NEMŮŽE být stejně jako funkce, před ani za
-    // parametr funkce JI PŘEKRYJE
-    // MŮŽE být stejná jako název enumu, před i za
-    // NEMŮŽE být stejná jako položka enumu, před ani za
-
     if ( ! this->globalScope.IsVariableNameAvailable(name)) {
         return false;
     }
@@ -180,29 +173,7 @@ bool SymbolTable::IsGlobalVariableNameAvailable(const string & name) const {
     return true;
 }
 
-bool SymbolTable::IsVariableNameAvailable(const string & name, Scope & scope) const {
-    // lokální proměnná PŘEKRYJE globální proměnnou
-    // nelze mít v jednom rozsahu dvě stejné lokální proměnné, PŘEKRÝVÁ vyšší rozsahy
-    // !!!!! PŘEKRYJE název funkce, ALE funkce nepřekryje ji pokud je volaná před její definicí
-    // NEMŮŽE být stejné jako parametr své funkce -> !!!!! parametry a nejvyšší scope funkce jsou jeden scope !!!!!
-    // MŮŽE být stejné jako název enumu
-    // PŘEKRYJE položku enumu
-
-    // TODO celkové zpracování lokálních proměnných
-
-    return true;
-}
-
 bool SymbolTable::IsFunctionNameAvailable(const string & name) const {
-    // NESMÍ být stejné jako globální proměnná
-    // je PŘEKRYTA lokální proměnnou, ALE až po její definici
-    // NESMÍ být stejné jako jiná funkce
-    // MŮŽE být stejné jako parametr funkce, ALE pak ji nelze volat, lokální proměnná ji překrývá
-    // MŮŽE být stejné jako název enumu
-    // NEMŮŽE být stejné jako položka enumu
-
-    // TODO kontrola pro lokální proměnné
-
     if ( ! this->globalScope.IsVariableNameAvailable(name)) {
         return false;
     }
@@ -217,15 +188,6 @@ bool SymbolTable::IsFunctionNameAvailable(const string & name) const {
 }
 
 bool SymbolTable::IsFunctionParameterNameAvailable(const string & name) const { // checks in currentFunction
-    // PŘEKRYJE globální proměnnou
-    // STEJNÝ SCOPE - nelze mít stejnou lokální proměnnou
-    // PŘEKRYJE název jakékoli funkce (pokud pak byla funkce zavolána, nastane chyba)
-    // NESMÍ být dva stejné parametry funkce
-    // MŮŽE být stejné jako název enumu
-    // PŘEKRYJE položku enumu
-
-    // TODO kontrola pro lokální scope funkce
-
     if (this->currentFunction) {
         if ( ! this->functionTable.IsParameterNameAvailable(name, this->currentFunction)) {
             return false;
@@ -236,24 +198,10 @@ bool SymbolTable::IsFunctionParameterNameAvailable(const string & name) const { 
 }
 
 bool SymbolTable::IsEnumNameAvailable(const string & name) const {
-    // MŮŽE být stejné jako globální proměnná, před i za
-    // MŮŽE být stejné jako lokální proměnná, před i za ní
-    // MŮŽE být stejné jako název funkce, před i za
-    // MŮŽE být stejné jako parametr funkce, před i za
-    // NEMŮŽE být stejné jako už existující enum
-    // MŮŽE být stejné jako položka už existujícího enumu, před i za
-
     return this->enumTable.IsNameAvailable(name);
 }
 
 bool SymbolTable::IsEnumItemNameAvailable(const string & name) const { // checks in currentEnum
-    // NEMŮŽE být stejné jako globální proměnná, před ani za
-    // MŮŽE být stejhný jako lokální proměnná, JE JÍ PŘEKRYT
-    // NEMŮŽE být stejné jako název funkce, před ani za
-    // MŮŽE být stejné jako parametr funkce, před i za
-    // MŮŽE být stejné jako název svého enumu a i jiného enumu
-    // NEMŮŽE být stejné jako jiná položka stejného enumu ANI JINÉHO ENUMU
-
     if ( ! this->globalScope.IsVariableNameAvailable(name)) {
         return false;
     }
