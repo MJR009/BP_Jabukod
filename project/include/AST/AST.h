@@ -33,6 +33,7 @@ public:
     Variable *CheckIfVariableDefined(antlr4::Token *variableToken);
 
     Type ProcessImplicitConversions(JabukodParser::ExpressionContext *ctx, ConversionType conversion);
+    Type ProcessUnaryImplicitConversions(JabukodParser::PrefixUnaryExpressionContext *ctx);
 
     void Print();
 
@@ -91,6 +92,9 @@ private:
     Type ApplyLogicConversions(Type type1, Type type2, antlr4::Token *expressionStart);
     Type ApplyComparisonConversions(Type type1, Type type2, antlr4::Token *expressionStart);
     Type ApplyBitConversions(Type type1, Type type2, antlr4::Token *expressionStart);
+    Type ApplyUnaryArithmeticConversions(Type type, antlr4::Token *expressionStart);
+    Type ApplyUnaryLogicConversions(Type type, antlr4::Token *expressionStart);
+    Type ApplyUnaryBitConversions(Type type, antlr4::Token *expressionStart);
 
     void CheckIfExpressionModulo(JabukodParser::ExpressionContext *ctx);
 };    

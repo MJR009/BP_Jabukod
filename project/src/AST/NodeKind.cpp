@@ -93,7 +93,9 @@ NodeKind NodeKindFunctions::SignToNodeKind(string sign) {
 string NodeKindFunctions::NodeKindToSign(NodeKind kind) {
     switch (kind) {
         case NodeKind::ADDITION: return "+";
-        case NodeKind::SUBTRACTION: return "-";
+        case NodeKind::SUBTRACTION:
+        case NodeKind::UNARY_MINUS:
+            return "-";
 
         case NodeKind::MULTIPLICATION: return "*";
         case NodeKind::DIVISION: return "/";
@@ -117,6 +119,9 @@ string NodeKindFunctions::NodeKindToSign(NodeKind kind) {
         case NodeKind::GREATER_EQUAL: return ">=";
         case NodeKind::EQUAL: return "==";
         case NodeKind::NOT_EQUAL: return "!=";
+
+        case NodeKind::NOT: return "!";
+        case NodeKind::BIT_NOT: return "~";
     }
 
     return "ERR";

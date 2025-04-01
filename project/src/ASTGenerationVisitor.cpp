@@ -238,7 +238,7 @@ any ASTGenerationVisitor::visitEqualityExpression(JabukodParser::EqualityExpress
     NodeKind sign = NodeKindFunctions::SignToNodeKind( ctx->sign->getText() );
     this->ast.AddNode( sign );
     this->visitChildren(ctx);
-    
+
     Type type = this->ast.ProcessImplicitConversions(ctx, ConversionType::COMPARISON);
     ExpressionData *data = new ExpressionData(type);
     this->ast.GiveActiveNodeData(data);
@@ -248,12 +248,17 @@ any ASTGenerationVisitor::visitEqualityExpression(JabukodParser::EqualityExpress
     return OK;
 }
 
-any ASTGenerationVisitor::visitPrefixUnaryExpression(JabukodParser::PrefixUnaryExpressionContext *ctx) { // TODO SEMANTICS
+any ASTGenerationVisitor::visitPrefixUnaryExpression(JabukodParser::PrefixUnaryExpressionContext *ctx) {
     NodeKind sign = NodeKindFunctions::SignToNodeKind( ctx->sign->getText() );
     this->ast.AddNode(
         (sign == NodeKind::minus) ? NodeKind::UNARY_MINUS : sign
     );
     this->visitChildren(ctx);
+
+    Type type = this->ast.ProcessUnaryImplicitConversions(ctx);
+    ExpressionData *data = new ExpressionData(type);
+    this->ast.GiveActiveNodeData(data);
+
     this->ast.MoveToParent();
 
     return OK;

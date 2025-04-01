@@ -194,7 +194,10 @@ void ASTNode::Print() {
                (this->kind == NodeKind::GREATER) ||
                (this->kind == NodeKind::GREATER_EQUAL) ||
                (this->kind == NodeKind::EQUAL) ||
-               (this->kind == NodeKind::NOT_EQUAL)
+               (this->kind == NodeKind::NOT_EQUAL) ||
+               (this->kind == NodeKind::UNARY_MINUS) ||
+               (this->kind == NodeKind::NOT) ||
+               (this->kind == NodeKind::BIT_NOT)
     ) {
         ExpressionData *data = this->GetData<ExpressionData>();
         if (data) {
