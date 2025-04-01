@@ -56,11 +56,9 @@ void AST::PutVariableInScope(
     JabukodParser::NonVoidTypeContext *variableType
 ) {
     string variableName = variable->getText();
-    StorageSpecifier specifier;
+    StorageSpecifier specifier = StorageSpecifier::NONE;
     if (storageSpecifier) {
-        specifier = SpecifierFunctions::StringToSpecifier( storageSpecifier->getText() );
-    } else {
-        specifier = StorageSpecifier::NONE;
+        specifier = StorageSpecifier::toSpecifier( storageSpecifier->getText() );
     }
     Type type = TypeFunctions::StringToType( variableType->getText() );
 

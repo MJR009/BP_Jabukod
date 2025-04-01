@@ -1,28 +1,19 @@
 #include "Specifier.h"
 
-string SpecifierFunctions::SpeficierToString(StorageSpecifier specifier) {
-    switch (specifier) {
-        case StorageSpecifier::NONE:
-            return "-";
-        case StorageSpecifier::CONST:
-            return "const";
-        case StorageSpecifier::STATIC:
-            return "static";
+string StorageSpecifier::toString() const {
+    switch (this->value) {
+        case NONE: return "-";
+        case CONST: return "const";
+        case STATIC: return "static";
     }
 
     return "ERR";
 }
 
-StorageSpecifier SpecifierFunctions::StringToSpecifier(const string & specifier) {
-    if (specifier == "-") {
-        return StorageSpecifier::NONE;
-    }
-    if (specifier == "const") {
-        return StorageSpecifier::CONST;
-    }
-    if (specifier == "static") {
-        return StorageSpecifier::STATIC;
-    }
+StorageSpecifier StorageSpecifier::toSpecifier(const string & str) {
+    if (str == "-") return NONE;
+    if (str == "const") return CONST;
+    if (str == "static") return STATIC;
 
-    return StorageSpecifier::NONE;
+    return NONE;
 }

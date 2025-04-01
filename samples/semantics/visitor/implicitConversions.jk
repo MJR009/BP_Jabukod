@@ -4,7 +4,7 @@ int main() {
     //bool z = (x - y) / true;
     //float a = z % 3 ** 1/2;
 
-    int y = ~x;
+    const int y = ~x;
 
     return 0;
 }

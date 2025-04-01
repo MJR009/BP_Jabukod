@@ -14,7 +14,6 @@ public:
     void PreorderForEachNode( void (*action)(ASTNode *) );
     void PostorderForEachNode( void (*action)(ASTNode *) );
 
-    // Generation:
     void AddNode(NodeKind kind, GenericNodeData *data); // Newly added node is always made active !
     void AddNode(NodeKind kind);
     void MoveToParent();

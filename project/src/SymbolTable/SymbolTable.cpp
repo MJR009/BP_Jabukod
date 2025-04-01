@@ -8,11 +8,9 @@ void SymbolTable::AddGlobalVariable(
 ) {
     string name = variable->getText();
 
-    StorageSpecifier storage;
+    StorageSpecifier storage = StorageSpecifier::NONE;
     if (storageSpecifier) {
         storage = this->ResolveStorageSpecifier(storageSpecifier);
-    } else {
-        storage = StorageSpecifier::NONE;
     }
     Type type = TypeFunctions::StringToType(variableType->getText());
     any value = this->ResolveDefaultValue(defaultValue, type); // returns default to process as many errors as possible
@@ -226,16 +224,18 @@ bool SymbolTable::IsEnumItemValueAvailable(const int & value) const { // -//-
 
 
 StorageSpecifier SymbolTable::ResolveStorageSpecifier(JabukodParser::StorageSpecifierContext *specifier) const {
-    StorageSpecifier specifierKind = SpecifierFunctions::StringToSpecifier(specifier->getText());
+    StorageSpecifier specifierKind = StorageSpecifier::toSpecifier( specifier->getText() );
 
     switch (specifierKind) {
         case StorageSpecifier::NONE:
             break;
+
         case StorageSpecifier::CONST:
             if (this->IsFromDeclaration(specifier)) {
                 this->parser->notifyErrorListeners(specifier->getStart(), CONSTANT_DECLARATION, nullptr);
             }
             break;
+            
         case StorageSpecifier::STATIC:
             this->parser->notifyErrorListeners(specifier->getStart(), STATIC_GLOBAL_VARIABLE, nullptr);
             break;

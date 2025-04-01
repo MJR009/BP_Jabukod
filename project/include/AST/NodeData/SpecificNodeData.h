@@ -19,6 +19,8 @@ private:
     any value;
 };
 
+
+
 class VariableData : public GenericNodeData {
 public:
     VariableData(Type type, const string & name) : type(type), name(name) {}
@@ -30,6 +32,8 @@ private:
     Type type;
     string name;
 };
+
+
 
 class BodyData : public GenericNodeData {
 public:
@@ -47,6 +51,8 @@ protected:
     Scope scope;
 };
 
+
+
 class FunctionData : public BodyData {
 public:
     FunctionData(const string & name) : name(name) {}
@@ -57,9 +63,15 @@ private:
     string name;
 };
 
+
+
 class ForData : public BodyData {};
 
+
+
 class ForeachData : public BodyData {};
+
+
 
 class ExpressionData : public GenericNodeData {
 public:
