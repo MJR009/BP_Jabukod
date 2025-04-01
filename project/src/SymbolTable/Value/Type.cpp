@@ -1,50 +1,30 @@
 #include "Type.h"
 
-string TypeFunctions::TypeToString(Type type) {
-    switch(type) {
-        case Type::INT:
-            return "int";
-            break;
-        case Type::FLOAT:
-            return "float";
-            break;
-        case Type::BOOL:
-            return "bool";
-            break;
-        case Type::STRING:
-            return "string";
-            break;
-        case Type::VOID:
-            return "void";
-            break;
+string Type::toString() const {
+    switch (this->value) {
+        case INT: return "int";
+        case FLOAT: return "float";
+        case BOOL: return "bool";
+        case STRING: return "string";
+        case VOID: return "void";
     }
 
     return "ERR";
 }
 
-Type TypeFunctions::StringToType(const string & type) {
-    if (type == "int") {
-        return Type::INT;
-    }
-    if (type == "float") {
-        return Type::FLOAT;
-    }
-    if (type == "bool") {
-        return Type::BOOL;
-    }
-    if (type == "string") {
-        return Type::STRING;
-    }
-    if (type == "void") {
-        return Type::VOID;
-    }
+Type Type::toType(const string & str) {
+    if (str == "int") return INT;
+    if (str == "float") return FLOAT;
+    if (str == "bool") return BOOL;
+    if (str == "string") return STRING;
+    if (str == "void") return VOID;
 
-    return Type::VOID;
+    return VOID;
 }
 
 
 
-void TypeFunctions::PrintAnyValueByType(any value, Type type) {
+void Type::PrintAnyValueByType(any value, Type type) {
     cout << ORANGE;
 
     switch (type) {

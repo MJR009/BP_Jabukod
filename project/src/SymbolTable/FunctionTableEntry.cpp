@@ -24,10 +24,8 @@ vector<Parameter> FunctionTableEntry::GetParameters() const {
 void FunctionTableEntry::Print() const {
     cout << YELLOW << this->name << DEFAULT << endl;
 
-    cout << DIM << "  < returns: " << DEFAULT <<
-        TypeFunctions::TypeToString(this->returnType) <<
-        DIM << " >" << DEFAULT <<
-    endl;
+    cout << DIM << "  < returns: " << DEFAULT;
+    cout << this->returnType.toString() << DIM << " >" << DEFAULT << endl;
 
     cout << DIM << "  < parameters: " << DEFAULT;
     bool first = true;

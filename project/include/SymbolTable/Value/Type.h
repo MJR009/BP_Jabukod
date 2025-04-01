@@ -1,17 +1,23 @@
 #pragma once
 #include "common.h"
 
-enum TYPE {
-    INT, FLOAT, BOOL, STRING,
-    VOID
+class Type {
+public:
+    enum Options {
+        INT, FLOAT, BOOL, STRING,
+        VOID
+    };
+
+public:
+    Type(Options value) : value(value) {}
+
+    operator Options() const { return value; }
+
+    string toString() const;
+    static Type toType(const string & str);
+
+    static void PrintAnyValueByType(any value, Type type);
+
+private:
+    Options value;
 };
-typedef enum TYPE Type;
-
-namespace TypeFunctions {
-
-string TypeToString(Type type);
-Type StringToType(const string & type);
-
-void PrintAnyValueByType(any value, Type type);
-
-} // namespace TypeFuntions

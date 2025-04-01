@@ -7,5 +7,5 @@ Type Parameter::GetType() const {
 
 
 void Parameter::Print() const {
-    cout << TypeFunctions::TypeToString(this->type) << " " << this->name;
+    cout << this->type.toString() << " " << this->name;
 }

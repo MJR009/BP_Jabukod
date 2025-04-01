@@ -86,9 +86,9 @@ void ASTNode::Print() {
     } else if (this->kind == NodeKind::LITERAL) {
         LiteralData *data = this->GetData<LiteralData>(); // data must be cast to check correct specialization
         if (data) {
-            TypeFunctions::PrintAnyValueByType(data->GetValue(), data->GetType());
+            Type::PrintAnyValueByType(data->GetValue(), data->GetType());
             cout << DIM << " - " << DEFAULT;
-            cout << MAGENTA << TypeFunctions::TypeToString( data->GetType() ) << DEFAULT;
+            cout << MAGENTA << data->GetType().toString() << DEFAULT;
         } else ERR::BadData();
 
     } else if (this->kind == NodeKind::FUNCTION) {
@@ -103,7 +103,7 @@ void ASTNode::Print() {
     } else if (this->kind == NodeKind::VARIABLE_DECLARATION) {
         VariableData *data = this->GetData<VariableData>();
         if (data) {
-            cout << MAGENTA << TypeFunctions::TypeToString( data->GetType() ) << DEFAULT << " ";
+            cout << MAGENTA << data->GetType().toString() << DEFAULT << " ";
             cout << YELLOW << data->GetName() << DEFAULT;
             cout << DIM << " declaration" << DEFAULT;
         } else ERR::BadData();
@@ -111,7 +111,7 @@ void ASTNode::Print() {
     } else if (this->kind == NodeKind::VARIABLE_DEFINITION) {
         VariableData *data = this->GetData<VariableData>();
         if (data) {
-            cout << MAGENTA << TypeFunctions::TypeToString( data->GetType() ) << DEFAULT << " ";
+            cout << MAGENTA << data->GetType().toString() << DEFAULT << " ";
             cout << YELLOW << data->GetName() << DEFAULT;
             cout << DIM << " definition" << DEFAULT;
         } else ERR::BadData();
@@ -165,7 +165,7 @@ void ASTNode::Print() {
         if (data) {
             cout << ORANGE << data->GetName() << DEFAULT;
             cout << DIM << " - " << DEFAULT;
-            cout << MAGENTA << TypeFunctions::TypeToString( data->GetType() ) << DEFAULT;
+            cout << MAGENTA << data->GetType().toString() << DEFAULT;
         } else ERR::BadData();
 
     } else if (this->kind == NodeKind::INT2FLOAT) {
@@ -203,7 +203,7 @@ void ASTNode::Print() {
         if (data) {
             cout << CYAN << "(" << NodeKindFunctions::NodeKindToSign(this->kind) << ")" << DEFAULT;
             cout << DIM << " - " << DEFAULT;
-            cout << MAGENTA << TypeFunctions::TypeToString( data->GetType() ) << DEFAULT;
+            cout << MAGENTA << data->GetType().toString() << DEFAULT;
         } else ERR::BadData();
 
     } else if (this->kind == NodeKind::INT2BOOL) {

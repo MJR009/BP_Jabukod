@@ -12,7 +12,7 @@ void SymbolTable::AddGlobalVariable(
     if (storageSpecifier) {
         storage = this->ResolveStorageSpecifier(storageSpecifier);
     }
-    Type type = TypeFunctions::StringToType(variableType->getText());
+    Type type = Type::toType( variableType->getText() );
     any value = this->ResolveDefaultValue(defaultValue, type); // returns default to process as many errors as possible
 
     if (this->IsGlobalVariableNameAvailable(name)) {
@@ -24,7 +24,7 @@ void SymbolTable::AddGlobalVariable(
 
 FunctionTableEntry *SymbolTable::AddFunction(antlr4::Token *function, JabukodParser::TypeContext *returnType) {
     string name = function->getText();
-    Type type = TypeFunctions::StringToType(returnType->getText());
+    Type type = Type::toType( returnType->getText() );
 
     if (this->IsFunctionNameAvailable(name)) {
         return this->functionTable.AddEntry(name, type);
@@ -35,7 +35,7 @@ FunctionTableEntry *SymbolTable::AddFunction(antlr4::Token *function, JabukodPar
 }
 
 void SymbolTable::AddFunctionParameter(JabukodParser::NonVoidTypeContext *parameterType, antlr4::Token *parameterName) {
-    Type type = TypeFunctions::StringToType(parameterType->getText());
+    Type type = Type::toType( parameterType->getText() );
 
     string name = parameterName->getText();
     if ( ! this->IsFunctionParameterNameAvailable(name)) {

@@ -11,7 +11,7 @@ void Variable::Print() const {
 
     cout << DIM << " < " << DEFAULT;
 
-    cout << this->storage.toString() << " " << TypeFunctions::TypeToString(this->type) << " , ";
+    cout << this->storage.toString() << " " << this->type.toString() << " , ";
 
     cout << DIM << "default: " << DEFAULT;
     this->PrintDefaultValue();
@@ -22,12 +22,12 @@ void Variable::Print() const {
 void Variable::PrintDeclaration() const {
     cout <<
         this->storage.toString() << " " <<
-        TypeFunctions::TypeToString(this->type) << " " <<
+        this->type.toString() << " " <<
         YELLOW << this->name << DEFAULT;
 }
 
 // PRIVATE:
 
 void Variable::PrintDefaultValue() const {
-    TypeFunctions::PrintAnyValueByType(this->defaultValue, this->type);
+    Type::PrintAnyValueByType( this->defaultValue, this->type );
 }

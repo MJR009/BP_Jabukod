@@ -60,7 +60,7 @@ void AST::PutVariableInScope(
     if (storageSpecifier) {
         specifier = StorageSpecifier::toSpecifier( storageSpecifier->getText() );
     }
-    Type type = TypeFunctions::StringToType( variableType->getText() );
+    Type type = Type::toType(variableType->getText());
 
     ASTNode *parent = this->activeNode->GetParent(); // definitions/declarations are always children of a node with scope (according to grammar)
 
@@ -153,9 +153,9 @@ Type AST::ProcessImplicitConversions(JabukodParser::ExpressionContext *ctx, Conv
     Type op1 = this->GetOperandType(0);
     Type op2 = this->GetOperandType(1);
     
-    Type subexpressionType;
+    Type subexpressionType = Type::VOID;
 
-    switch (conversion) {
+    switch (conversion) {;
         case ConversionType::ARITHMETIC:
             if ((op1 == Type::FLOAT) || (op2 == Type::FLOAT)) {
                 this->CheckIfExpressionModulo(ctx);
@@ -191,7 +191,7 @@ Type AST::ProcessUnaryImplicitConversions(JabukodParser::PrefixUnaryExpressionCo
     Type op = this->GetOperandType(0);
     NodeKind sign = NodeKindFunctions::SignToNodeKind( ctx->sign->getText() );
 
-    Type subexpressionType;
+    Type subexpressionType = Type::VOID;
 
     switch (sign) {
         case NodeKind::minus:

@@ -10,7 +10,7 @@ any ASTGenerationVisitor::visitSourceFile(JabukodParser::SourceFileContext *ctx)
 any ASTGenerationVisitor::visitVariableDeclaration(JabukodParser::VariableDeclarationContext *ctx) {
     if (this->ast.CurrentlyIn() != NodeKind::PROGRAM) { // global declarations are already processed
         VariableData *data = new VariableData(
-            TypeFunctions::StringToType( ctx->nonVoidType()->getText() ), // needed during symbol usage, stored for generality
+            Type::toType( ctx->nonVoidType()->getText() ), // needed during symbol usage, stored for generality
             ctx->IDENTIFIER()->getText()
         );
 
@@ -36,7 +36,7 @@ any ASTGenerationVisitor::visitVariableDeclaration(JabukodParser::VariableDeclar
 any ASTGenerationVisitor::visitVariableDefinition(JabukodParser::VariableDefinitionContext *ctx) { // TODO EXPRESSION TYPE
     if (this->ast.CurrentlyIn() != NodeKind::PROGRAM) {
         VariableData *data = new VariableData(
-            TypeFunctions::StringToType( ctx->nonVoidType()->getText() ),
+            Type::toType( ctx->nonVoidType()->getText() ),
             ctx->IDENTIFIER()->getText()
         );
 
@@ -485,7 +485,7 @@ any ASTGenerationVisitor::visitForHeader(JabukodParser::ForHeaderContext *ctx) {
 }
 
 any ASTGenerationVisitor::visitLiteral(JabukodParser::LiteralContext *ctx) {
-    Type type;
+    Type type = Type::VOID;
     any value;
     if (ctx->INT_LITERAL()) {
         type = Type::INT;
