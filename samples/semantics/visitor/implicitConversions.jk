@@ -1,11 +1,11 @@
-int x;
-float y;
+float x;
+bool y;
 
 int main() {
     //bool z = (x - y) / true;
     //float a = z % 3 ** 1/2;
 
-    bool z = x && y;
+    bool z = x == y;
 
     return 0;
 }

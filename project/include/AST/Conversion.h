@@ -6,6 +6,7 @@
 enum CONV_TYPE {
     ARITHMETIC,
     LOGIC,
+    COMPARISON,
     BIT
 };
 typedef enum CONV_TYPE ConversionType; 

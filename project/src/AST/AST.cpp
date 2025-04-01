@@ -175,6 +175,9 @@ Type AST::ProcessImplicitConversions(JabukodParser::ExpressionContext *ctx, Conv
             }
             break;
 
+        case ConversionType::COMPARISON:
+            return this->ApplyComparisonConversions(op1, op2, ctx->getStart());
+
         case ConversionType::BIT:
             subexpressionType = this->ApplyBitConversions(op1, op2, ctx->getStart());
             if (subexpressionType == Type::VOID) {
@@ -459,7 +462,34 @@ Type AST::ApplyLogicConversions(Type type1, Type type2, antlr4::Token *expressio
     return inferedSubexpressionType;
 
     }
+}
 
+Type AST::ApplyComparisonConversions(Type type1, Type type2, antlr4::Token *expressionStart) {
+    Conversion NO_CV = [ type1 ](ASTNode *) {
+        return type1;
+    };
+    Conversion INVAL = [ this, expressionStart ](ASTNode *) { // trigger error
+        this->parser->notifyErrorListeners(expressionStart, IMPLICIT_STRING_CONVERSION, nullptr);
+        return Type::VOID;
+    };
+
+    { using namespace ConversionFunctions;
+
+    const vector<vector<Conversion>> conversions =
+    {
+           /*  op1   */
+    // op2 /* ~~~~~~ */ INT / FLOAT / BOOL / STRING / VOID //
+           /* INT    */{NO_CV, I2F_1, B2F_1, INVAL, NO_CV},
+           /* FLOAT  */{I2F_2, NO_CV, B2F_2, INVAL, NO_CV},
+           /* BOOL   */{B2I_1, B2F_1, NO_CV, INVAL, NO_CV},
+           /* STRING */{INVAL, INVAL, INVAL, INVAL, NO_CV}, // TODO zkontrolovat pro řetězce !!!
+           /* VOID   */{NO_CV, NO_CV, NO_CV, NO_CV, NO_CV}
+    };
+
+    conversions[type1][type2]( this->activeNode );
+    return Type::BOOL;
+
+    }
 }
 
 Type AST::ApplyBitConversions(Type type1, Type type2, antlr4::Token *expressionStart) {

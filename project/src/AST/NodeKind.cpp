@@ -110,6 +110,13 @@ string NodeKindFunctions::NodeKindToSign(NodeKind kind) {
 
         case NodeKind::OR: return "||";
         case NodeKind::AND: return "&&";
+
+        case NodeKind::LESS: return "<";
+        case NodeKind::LESS_EQUAL: return "<=";
+        case NodeKind::GREATER: return ">";
+        case NodeKind::GREATER_EQUAL: return ">=";
+        case NodeKind::EQUAL: return "==";
+        case NodeKind::NOT_EQUAL: return "!=";
     }
 
     return "ERR";

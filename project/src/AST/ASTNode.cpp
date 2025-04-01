@@ -188,7 +188,13 @@ void ASTNode::Print() {
                (this->kind == NodeKind::BIT_XOR) ||
                (this->kind == NodeKind::BIT_OR) ||
                (this->kind == NodeKind::OR) ||
-               (this->kind == NodeKind::AND)
+               (this->kind == NodeKind::AND) ||
+               (this->kind == NodeKind::LESS) ||
+               (this->kind == NodeKind::LESS_EQUAL) ||
+               (this->kind == NodeKind::GREATER) ||
+               (this->kind == NodeKind::GREATER_EQUAL) ||
+               (this->kind == NodeKind::EQUAL) ||
+               (this->kind == NodeKind::NOT_EQUAL)
     ) {
         ExpressionData *data = this->GetData<ExpressionData>();
         if (data) {

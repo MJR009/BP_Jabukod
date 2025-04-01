@@ -220,19 +220,29 @@ any ASTGenerationVisitor::visitBitAndExpression(JabukodParser::BitAndExpressionC
     return OK;
 }
 
-any ASTGenerationVisitor::visitLessMoreExpression(JabukodParser::LessMoreExpressionContext *ctx) { // TODO SEMANTICS
+any ASTGenerationVisitor::visitLessMoreExpression(JabukodParser::LessMoreExpressionContext *ctx) {
     NodeKind sign = NodeKindFunctions::SignToNodeKind( ctx->sign->getText() );
     this->ast.AddNode( sign );
     this->visitChildren(ctx);
+
+    Type type = this->ast.ProcessImplicitConversions(ctx, ConversionType::COMPARISON);
+    ExpressionData *data = new ExpressionData(type);
+    this->ast.GiveActiveNodeData(data);
+
     this->ast.MoveToParent();
 
     return OK;
 }
 
-any ASTGenerationVisitor::visitEqualityExpression(JabukodParser::EqualityExpressionContext *ctx) { // TODO SEMANTICS
+any ASTGenerationVisitor::visitEqualityExpression(JabukodParser::EqualityExpressionContext *ctx) {
     NodeKind sign = NodeKindFunctions::SignToNodeKind( ctx->sign->getText() );
     this->ast.AddNode( sign );
     this->visitChildren(ctx);
+    
+    Type type = this->ast.ProcessImplicitConversions(ctx, ConversionType::COMPARISON);
+    ExpressionData *data = new ExpressionData(type);
+    this->ast.GiveActiveNodeData(data);
+
     this->ast.MoveToParent();
 
     return OK;
