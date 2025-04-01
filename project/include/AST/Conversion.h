@@ -29,4 +29,4 @@ Type B2F_1(ASTNode *expressionRoot);
 Type B2F_2(ASTNode *expressionRoot);
 Type B2I_B(ASTNode *expressionRoot);
 
-} // namespace Conversion
+} // namespace ConversionFunctions

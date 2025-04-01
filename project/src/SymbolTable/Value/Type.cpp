@@ -19,7 +19,7 @@ string TypeFunctions::TypeToString(Type type) {
             break;
     }
 
-    return "";
+    return "ERR";
 }
 
 Type TypeFunctions::StringToType(const string & type) {

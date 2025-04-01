@@ -10,7 +10,7 @@ string SpecifierFunctions::SpeficierToString(StorageSpecifier specifier) {
             return "static";
     }
 
-    return "";
+    return "ERR";
 }
 
 StorageSpecifier SpecifierFunctions::StringToSpecifier(const string & specifier) {

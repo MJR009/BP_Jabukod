@@ -172,10 +172,10 @@ Type AST::ProcessImplicitConversions(JabukodParser::ExpressionContext *ctx, Conv
             break;
 
         case ConversionType::BIT:
-            //Type subexpressionType = this->ApplyBitConversions(op1, op2, expressionStart);
-            //if (subexpressionType == Type::VOID) {
-            //    return Type::BOOL;
-            //}
+            subexpressionType = this->ApplyBitConversions(op1, op2, ctx->getStart());
+            if (subexpressionType == Type::VOID) {
+                return Type::INT;
+            }
             break;
     }
 
@@ -404,7 +404,7 @@ Type AST::ApplyArithmeticConversions(Type type1, Type type2, antlr4::Token *expr
         return type1;
     };
     Conversion INVAL = [ this, expressionStart ](ASTNode *) { // trigger error
-        this->parser->notifyErrorListeners(expressionStart, STRING_IN_ARITHMETIC_EXPRESSION, nullptr);
+        this->parser->notifyErrorListeners(expressionStart, IMPLICIT_STRING_CONVERSION, nullptr);
         return Type::VOID;
     };
 
@@ -429,25 +429,43 @@ Type AST::ApplyArithmeticConversions(Type type1, Type type2, antlr4::Token *expr
 
 //Type AST::ApplyLogicConversions(Type type1, Type type2, antlr4::Token *expressionStart);
 
-//Type AST::ApplyBitConversions(Type type1, Type type2, antlr4::Token *expressionStart) {
-//    const vector<vector<Conversion>> conversions =
-//    {
-//           /*  op1   */
-//    // op2 /* ~~~~~~ */ INT / FLOAT / BOOL / STRING / VOID //
-//           /* INT    *///{NOCON, I2F_1, B2I_2, INVAL, NOCON},
-//           /* FLOAT  *///{I2F_2, NOCON, B2F_2, INVAL, NOCON},
-//           /* BOOL   *///{B2I_1, B2F_1, B2I_B, INVAL, NOCON},
-//           /* STRING *///{INVAL, INVAL, INVAL, NOCON, NOCON}, // TODO zkontrolovat pro řetězce !!!
-//           /* VOID   *///{NOCON, NOCON, NOCON, NOCON, NOCON}
-//    };
-//
-//    return conversions[type1][type2]();
-//}
+Type AST::ApplyBitConversions(Type type1, Type type2, antlr4::Token *expressionStart) {
+    Conversion NO_CV = [ type1 ](ASTNode *) {
+        return type1;
+    };
+    Conversion INVFL = [ this, expressionStart ](ASTNode *) {
+        this->parser->notifyErrorListeners(expressionStart, BIT_FLOAT_OPERAND, nullptr);
+        return Type::VOID;
+    };
+    Conversion INVST = [ this, expressionStart ](ASTNode *) {
+        this->parser->notifyErrorListeners(expressionStart, IMPLICIT_STRING_CONVERSION, nullptr);
+        return Type::VOID;
+    };
+
+    { using namespace ConversionFunctions;
+
+    const vector<vector<Conversion>> conversions =
+    {
+           /*  op1   */
+    // op2 /* ~~~~~~ */ INT / FLOAT / BOOL / STRING / VOID //
+           /* INT    */{NO_CV, INVFL, B2I_2, INVST, NO_CV},
+           /* FLOAT  */{INVFL, INVFL, INVFL, INVFL, NO_CV},
+           /* BOOL   */{B2I_1, INVFL, B2I_B, INVST, NO_CV},
+           /* STRING */{INVST, INVST, INVST, INVST, NO_CV}, // TODO zkontrolovat pro řetězce !!!
+           /* VOID   */{NO_CV, NO_CV, NO_CV, NO_CV, NO_CV}
+    };
+
+    Type inferedSubexpressionType = conversions[type1][type2]( this->activeNode );
+    return inferedSubexpressionType;
+
+    }
+}
 
 
 
 void AST::CheckIfExpressionModulo(JabukodParser::ExpressionContext *ctx) {
     JabukodParser::MulDivModExpressionContext *potentialMod;
+
     if (potentialMod = dynamic_cast<JabukodParser::MulDivModExpressionContext *>(ctx)) {
         if (potentialMod->sign->getText() == NodeKindFunctions::NodeKindToSign(NodeKind::MODULO)) {
             this->parser->notifyErrorListeners(potentialMod->sign, MODULE_ON_FLOAT, nullptr);

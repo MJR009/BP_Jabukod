@@ -64,7 +64,7 @@ string NodeKindFunctions::NodeKindToString(NodeKind kind) {
         Conversion_case(invalid);        
     }
 
-    return "";
+    return "ERR";
 }
 
 NodeKind NodeKindFunctions::SignToNodeKind(string sign) {
@@ -98,7 +98,14 @@ string NodeKindFunctions::NodeKindToSign(NodeKind kind) {
         case NodeKind::MODULO: return "%";
 
         case NodeKind::POWER: return "**";
+
+        case NodeKind::LEFT_SHIFT: return "<<";
+        case NodeKind::RIGHT_SHIFT: return ">>";
+
+        case NodeKind::BIT_AND: return "&";
+        case NodeKind::BIT_XOR: return "^";
+        case NodeKind::BIT_OR: return "|";
     }
 
-    return "";
+    return "ERR";
 }

@@ -179,7 +179,12 @@ void ASTNode::Print() {
                (this->kind == NodeKind::MULTIPLICATION) ||
                (this->kind == NodeKind::DIVISION) ||
                (this->kind == NodeKind::MODULO) ||
-               (this->kind == NodeKind::POWER)
+               (this->kind == NodeKind::POWER) ||
+               (this->kind == NodeKind::LEFT_SHIFT) ||
+               (this->kind == NodeKind::RIGHT_SHIFT) ||
+               (this->kind == NodeKind::BIT_AND) ||
+               (this->kind == NodeKind::BIT_XOR) ||
+               (this->kind == NodeKind::BIT_OR)
     ) {
         ExpressionData *data = this->GetData<ExpressionData>();
         if (data) {
