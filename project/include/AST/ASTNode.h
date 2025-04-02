@@ -15,6 +15,7 @@ public:
 
     NodeKind GetKind();
     ASTNode *GetParent();
+    ASTNode *GetChild(int order);
     template <typename T>
     T *GetData() {
         return dynamic_cast<T *>( this->data );
@@ -22,6 +23,7 @@ public:
 
     // used for expressions
     Type GetOperandType(int i) const;
+    int GetChildrenCount() const;
 
     void SetData(GenericNodeData *data);
 

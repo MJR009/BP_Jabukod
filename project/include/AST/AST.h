@@ -30,8 +30,9 @@ public:
 
     void CheckIfNodeWithinLoop(antlr4::Token *token);
     Variable *CheckIfVariableDefined(antlr4::Token *variableToken);
-    void CheckIfEligableForRead(antlr4::Token *variableToken);
     void CheckIfConstantDeclaration(StorageSpecifier specifier, antlr4::Token *variableToken);
+    void CheckIfEligableForRead(antlr4::Token *variableToken);
+    void CheckIfEligableForWrite(antlr4::Token *toWrite);
 
     Type ConvertExpressionBinaryArithmetic(antlr4::Token *expressionStart);
     Type ConvertExpressionBinaryLogical(antlr4::Token *expressionStart);

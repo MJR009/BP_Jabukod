@@ -1,3 +1,6 @@
 int main() {
-    const float x = 0;
+    write true;
+    //write "Jabukod";
 }
+
+int x;

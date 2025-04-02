@@ -461,7 +461,10 @@ any ASTGenerationVisitor::visitReadStatement(JabukodParser::ReadStatementContext
 
 any ASTGenerationVisitor::visitWriteStatement(JabukodParser::WriteStatementContext *ctx) { // TODO SEMANTICS
     this->ast.AddNode(NodeKind::WRITE);
-    this->visitChildren(ctx);
+    this->visit(ctx->expression());
+    
+    this->ast.CheckIfEligableForWrite(ctx->expression()->getStart());
+
     this->ast.MoveToParent();
 
     return OK;

@@ -26,6 +26,14 @@ ASTNode *ASTNode::GetParent() {
     return this->parent;
 }
 
+ASTNode *ASTNode::GetChild(int order) {
+    if (this->children.size() <= order) {
+        return nullptr;
+    }
+
+    return this->children.at(order);
+}
+
 
 
 Type ASTNode::GetOperandType(int i) const {
@@ -43,6 +51,10 @@ Type ASTNode::GetOperandType(int i) const {
         default: // expression nodes
             return operand->GetData<ExpressionData>()->GetType();
     }
+}
+
+int ASTNode::GetChildrenCount() const {
+    return this->children.size();
 }
 
 
@@ -233,6 +245,10 @@ void ASTNode::Print() {
             if (readData) {
                 cout << "READ " << DIM << "into " << DEFAULT << ORANGE << readData->GetTarget() << DEFAULT;
             } else ERR::BadData();
+            break;
+
+        case NodeKind::WRITE:
+            cout << "WRITE";
             break;
 
 

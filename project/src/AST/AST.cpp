@@ -147,6 +147,12 @@ Variable *AST::CheckIfVariableDefined(antlr4::Token *variableToken) {
     return nullptr;
 }
 
+void AST::CheckIfConstantDeclaration(StorageSpecifier specifier, antlr4::Token *variableToken) {
+    if (specifier == StorageSpecifier::CONST) {
+        this->parser->notifyErrorListeners(variableToken, CONSTANT_DECLARATION, nullptr);
+    }
+}
+
 void AST::CheckIfEligableForRead(antlr4::Token *variableToken) {
     Variable *targetVariable = this->CheckIfVariableDefined(variableToken);
 
@@ -161,9 +167,25 @@ void AST::CheckIfEligableForRead(antlr4::Token *variableToken) {
     }
 }
 
-void AST::CheckIfConstantDeclaration(StorageSpecifier specifier, antlr4::Token *variableToken) {
-    if (specifier == StorageSpecifier::CONST) {
-        this->parser->notifyErrorListeners(variableToken, CONSTANT_DECLARATION, nullptr);
+void AST::CheckIfEligableForWrite(antlr4::Token *toWrite) {
+    ASTNode *operand = this->activeNode->GetChild(0);
+    NodeKind operandKind = operand->GetKind();
+
+    if (operandKind == NodeKind::VARIABLE) {
+        Variable *variable = this->CheckIfVariableDefined(toWrite);
+        if (variable->GetType() != Type::STRING) {
+            this->parser->notifyErrorListeners(toWrite, WRITE_NOT_STRING, nullptr);
+        }
+
+    } else if (operandKind == NodeKind::LITERAL) {
+        LiteralData *data = operand->GetData<LiteralData>();
+        if (data->GetType() != Type::STRING) {
+            this->parser->notifyErrorListeners(toWrite, WRITE_NOT_STRING, nullptr);
+        }
+
+    } else {
+        this->parser->notifyErrorListeners(toWrite, WRITE_EXPRESSION, nullptr);
+        
     }
 }
 
