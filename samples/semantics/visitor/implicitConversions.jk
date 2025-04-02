@@ -1,5 +1,27 @@
-bool x;
-
 int main() {
-    int z = ~x;
+    return 0;
 }
+
+int a;
+int b = 12;
+int c = 1.2e3;
+int d = true;
+//int e = "int";
+
+float f;
+float g = 22;
+float h = 3.14159;
+float i = true;
+//float j = "float";
+
+bool k;
+bool l = 120;
+bool m = 0.0;
+bool n = true;
+//bool o = "bool";
+
+string p;
+//string q = 1;
+//string r = 1.32;
+//string s = true;
+string t = "string";

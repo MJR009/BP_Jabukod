@@ -33,11 +33,7 @@ void Type::PrintAnyValueByType(any value, Type type) {
             break;
 
         case Type::FLOAT:
-            if (any_cast<float>( value ) == trunc( any_cast<float>( value ) )) {
-                cout << fixed << setprecision(1) << any_cast<float>( value );
-            } else {
-                cout << any_cast<float>( value );
-            }
+            cout << any_cast<float>( value );
             break;
 
         case Type::BOOL:

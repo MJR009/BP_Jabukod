@@ -71,6 +71,7 @@ private:
 
     any ResolveDefaultValue(JabukodParser::ExpressionContext *expression, Type type) const;
     bool IsLiteralExpression(JabukodParser::ExpressionContext *expression) const;
-    any ResolveExplicitDefaultValue(JabukodParser::LiteralContext *defaultValue, Type type) const; // for definitions, also does type checking
+    any ResolveExplicitDefaultValue(JabukodParser::LiteralContext *defaultValue, Type variableType) const; // for definitions, also does conversions
     any GetImplicitDefaultValue(Type type) const; // for declarations
+    any ConvertLiteralByType(JabukodParser::LiteralContext *defaultValue, Type literalType, Type variableType) const;
 };

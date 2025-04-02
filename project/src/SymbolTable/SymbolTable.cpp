@@ -272,39 +272,28 @@ bool SymbolTable::IsLiteralExpression(JabukodParser::ExpressionContext *expressi
     return dynamic_cast<JabukodParser::LiteralExpressionContext *>( expression );
 }
 
-any SymbolTable::ResolveExplicitDefaultValue(JabukodParser::LiteralContext *defaultValue, Type type) const {
-    // TODO implicit conversions
+any SymbolTable::ResolveExplicitDefaultValue(JabukodParser::LiteralContext *defaultValue, Type variableType) const {
+    Type literalType = Type::VOID;
+    if (defaultValue->INT_LITERAL()) literalType = Type::INT;
+    else if (defaultValue->FLOAT_LITERAL()) literalType = Type::FLOAT;
+    else if (defaultValue->BOOL_LITERAL()) literalType = Type::BOOL;
+    else if (defaultValue->STRING_LITERAL()) literalType = Type::STRING;
 
-    if (defaultValue->INT_LITERAL()) {
-        if (type != Type::INT) {
-            this->parser->notifyErrorListeners(defaultValue->INT_LITERAL()->getSymbol(), MISPLACED_INT_LITERAL, nullptr);
-        }
-        return any( stoi( defaultValue->INT_LITERAL()->getText() ) );   
-    }
+    switch (literalType) {
+        case Type::INT: case Type::FLOAT: case Type::BOOL:
+            if (variableType == Type::STRING) {
+                this->parser->notifyErrorListeners(defaultValue->getStart(), MISPLACED_STRING_VARIABLE, nullptr);
+            }
+            return this->ConvertLiteralByType(defaultValue, literalType, variableType);
 
-    if (defaultValue->FLOAT_LITERAL()) {
-        if (type != Type::FLOAT) {
-            this->parser->notifyErrorListeners(defaultValue->FLOAT_LITERAL()->getSymbol(), MISPLACED_FLOAT_LITERAL, nullptr);
-        }
-        return any( stof( defaultValue->FLOAT_LITERAL()->getText() ) );
-    }
+        case Type::STRING:
+            if (variableType != Type::STRING) {
+                this->parser->notifyErrorListeners(defaultValue->STRING_LITERAL()->getSymbol(), MISPLACED_STRING_LITERAL, nullptr);
+            }
+            return any( Escapes::ReplaceEscapeSequences( defaultValue->STRING_LITERAL()->getText() ) );
 
-    if (defaultValue->BOOL_LITERAL()) {
-        if (type != Type::BOOL) {
-            this->parser->notifyErrorListeners(defaultValue->BOOL_LITERAL()->getSymbol(), MISPLACED_BOOL_LITERAL, nullptr);
-        }
-        if (defaultValue->BOOL_LITERAL()->getText() == "true") {
-            return any( true );
-        } else {
-            return any( false );
-        }
-    }
-
-    if (defaultValue->STRING_LITERAL()) {
-        if (type != Type::STRING) {
-            this->parser->notifyErrorListeners(defaultValue->STRING_LITERAL()->getSymbol(), MISPLACED_STRING_LITERAL, nullptr);
-        }
-        return any( Escapes::ReplaceEscapeSequences( defaultValue->STRING_LITERAL()->getText() ) );
+        default:
+            break;
     }
 
     return any( 0 ); // suppress warning
@@ -323,4 +312,51 @@ any SymbolTable::GetImplicitDefaultValue(Type type) const {
     }
 
     return any( 0 ); // suppress warning
+}
+
+any SymbolTable::ConvertLiteralByType(JabukodParser::LiteralContext *defaultValue, Type literalType, Type variableType) const {
+    any value;
+
+    if (literalType == Type::INT) {
+        value = any( stoi( defaultValue->INT_LITERAL()->getText() ) );
+        switch (variableType) {
+            case Type::INT:
+                break;
+            case Type::FLOAT:
+                value = any( static_cast<float>( any_cast<int>( value ) ) );
+                break;
+            case Type::BOOL:
+                value = (any_cast<int>( value ) == 0) ? any( false ) : any( true );
+                break;
+        }
+
+    } else if (literalType == Type::FLOAT) {
+        value = any( stof( defaultValue->FLOAT_LITERAL()->getText() ) );
+        switch (variableType) {
+            case Type::INT:
+                value = any( static_cast<int>( any_cast<float>( value ) ) );
+                break;
+            case Type::FLOAT:
+                break;
+            case Type::BOOL:
+                value = (any_cast<float>( value ) == 0.0f) ? any( false ) : any( true );
+                break;
+        }
+
+    } else if (literalType == Type::BOOL) {
+        value = (defaultValue->BOOL_LITERAL()->getText() == "true") ? any( true ) : any( false );
+        switch (variableType) {
+            case Type::INT:
+                value = (any_cast<bool>( value )) ? any( 1 ) : any( 0 );
+                break;
+            case Type::FLOAT:
+                value = (any_cast<bool>( value )) ? any( 1.0f ) : any( 0.0f );
+                break;
+            case Type::BOOL:
+                break;
+        }
+
+    }
+
+    return value;
 }

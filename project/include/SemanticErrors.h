@@ -14,6 +14,7 @@
 #define MISPLACED_FLOAT_LITERAL "cannot assign float literal"
 #define MISPLACED_BOOL_LITERAL "cannot assign bool literal"
 #define MISPLACED_STRING_LITERAL "cannot assign string literal"
+#define MISPLACED_STRING_VARIABLE "cannot assign literal other than type string"
 #define CONSTANT_DECLARATION "constant assignment missing value"
 #define REDEFINITION_OF_PARAMETER "identifier used for function parameter is already taken"
 
