@@ -1,9 +1,8 @@
-int x;
+int y;
 
 int main() {
     int x = 0;
 
-/*
     if (y == 0) {
         float z = 3.14;
 
@@ -16,13 +15,14 @@ int main() {
     }
 
     int z;
-*/
-/*
+
     for (int x = 0; x < 10; x = x + 1) {
         string x;
         bool hello = false;
     }
-*/
+
+    string str;
+
     foreach (const string char: str) {
         float x = 0;
     }

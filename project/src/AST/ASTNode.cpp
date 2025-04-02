@@ -91,141 +91,145 @@ void ASTNode::InsertAfter(ASTNode *newChild, int childIdx) {
 
 
 void ASTNode::Print() {
-    if (this->kind == NodeKind::PROGRAM) {
-        cout << DIM << "PROGRAM" << DEFAULT;
+    // helper pointers:
+    LiteralData *literalData;
+    FunctionData *functionData;
+    VariableData *variableData;
+    BodyData *bodyData;
+    ForData *forData;
+    ForeachData *foreachData;
+    ExpressionData *expressionData;
 
-    } else if (this->kind == NodeKind::LITERAL) {
-        LiteralData *data = this->GetData<LiteralData>(); // data must be cast to check correct specialization
-        if (data) {
-            Type::PrintAnyValueByType(data->GetValue(), data->GetType());
-            cout << DIM << " - " << DEFAULT;
-            cout << MAGENTA << data->GetType().toString() << DEFAULT;
-        } else ERR::BadData();
+    switch (this->kind) {
+        case NodeKind::PROGRAM:
+            cout << DIM << "PROGRAM" << DEFAULT;
+            break;
 
-    } else if (this->kind == NodeKind::FUNCTION) {
-        FunctionData *data = this->GetData<FunctionData>();
-        if (data) {
-            cout << DIM << "function " << DEFAULT << YELLOW << data->GetName() << DEFAULT;
-            cout << " (" << DIM << " in scope: " << DEFAULT;
-            data->PrintScope();
-            cout << " )";
-        } else ERR::BadData();
+        case NodeKind::IF: case NodeKind::WHILE:
+        case NodeKind::CONTINUE: case NodeKind::BREAK:
+        case NodeKind::REDO: case NodeKind::RESTART:
+            cout << NodeKindFunctions::NodeKindToString(this->kind);
+            break;
+    
+        case NodeKind::LITERAL:
+            literalData = this->GetData<LiteralData>();
+            if (literalData) {
+                Type::PrintAnyValueByType(literalData->GetValue(), literalData->GetType());
+                cout << DIM << " - " << DEFAULT;
+                cout << MAGENTA << literalData->GetType().toString() << DEFAULT;
+            } else ERR::BadData();
+            break;
 
-    } else if (this->kind == NodeKind::VARIABLE_DECLARATION) {
-        VariableData *data = this->GetData<VariableData>();
-        if (data) {
-            cout << MAGENTA << data->GetType().toString() << DEFAULT << " ";
-            cout << YELLOW << data->GetName() << DEFAULT;
-            cout << DIM << " declaration" << DEFAULT;
-        } else ERR::BadData();
+        case NodeKind::FUNCTION:
+            functionData = this->GetData<FunctionData>();
+            if (functionData) {
+                cout << DIM << "function " << DEFAULT << YELLOW << functionData->GetName() << DEFAULT;
+                cout << " (" << DIM << " in scope: " << DEFAULT;
+                functionData->PrintScope();
+                cout << " )";
+            } else ERR::BadData();
+            break;
 
-    } else if (this->kind == NodeKind::VARIABLE_DEFINITION) {
-        VariableData *data = this->GetData<VariableData>();
-        if (data) {
-            cout << MAGENTA << data->GetType().toString() << DEFAULT << " ";
-            cout << YELLOW << data->GetName() << DEFAULT;
-            cout << DIM << " definition" << DEFAULT;
-        } else ERR::BadData();
+        case NodeKind::VARIABLE_DECLARATION:
+            variableData = this->GetData<VariableData>();
+            if (variableData) {
+                cout << MAGENTA << variableData->GetType().toString() << DEFAULT << " ";
+                cout << YELLOW << variableData->GetName() << DEFAULT;
+                cout << DIM << " declaration" << DEFAULT;
+            } else ERR::BadData();
+            break;
+            
+        case NodeKind::VARIABLE_DEFINITION:
+            variableData = this->GetData<VariableData>();
+            if (variableData) {
+                cout << MAGENTA << variableData->GetType().toString() << DEFAULT << " ";
+                cout << YELLOW << variableData->GetName() << DEFAULT;
+                cout << DIM << " definition" << DEFAULT;
+            } else ERR::BadData();
+            break;
 
-    } else if ((this->kind == NodeKind::IF) ||
-               (this->kind == NodeKind::CONTINUE) ||
-               (this->kind == NodeKind::BREAK) ||
-               (this->kind == NodeKind::REDO) ||
-               (this->kind == NodeKind::RESTART)
-    ) {
-        cout << NodeKindFunctions::NodeKindToString(this->kind);
+        case NodeKind::VARIABLE:
+            variableData = this->GetData<VariableData>();
+            if (variableData) {
+                cout << ORANGE << variableData->GetName() << DEFAULT;
+                cout << DIM << " - " << DEFAULT;
+                cout << MAGENTA << variableData->GetType().toString() << DEFAULT;
+            } else ERR::BadData();
+            break;
 
-    } else if (this->kind == NodeKind::BODY) {
-        BodyData *data = this->GetData<BodyData>();
-        if (data) {
-            cout << DIM << "nested block " << DEFAULT;
-            cout << "(" << DIM << " in scope: " << DEFAULT;
-            data->PrintScope();
-            cout << " )";
-        } else ERR::BadData();
+        case NodeKind::BODY:
+            bodyData = this->GetData<BodyData>();
+            if (bodyData) {
+                cout << DIM << "nested block " << DEFAULT;
+                cout << "(" << DIM << " in scope: " << DEFAULT;
+                bodyData->PrintScope();
+                cout << " )";
+            } else ERR::BadData();
+            break;
 
-    } else if (this->kind == NodeKind::FOR) {
-        ForData *data = this->GetData<ForData>();
-        if (data) {
-            cout << NodeKindFunctions::NodeKindToString(this->kind) << DIM << " header " << DEFAULT;
-            cout << "(" << DIM << " in scope: " << DEFAULT;
-            data->PrintScope();
-            cout << " )";
-        } else ERR::BadData();
+        case NodeKind::FOR:
+            forData = this->GetData<ForData>();
+            if (forData) {
+                cout << "FOR" << DIM << " header " << DEFAULT;
+                cout << "(" << DIM << " in scope: " << DEFAULT;
+                forData->PrintScope();
+                cout << " )";
+            } else ERR::BadData();
+            break;
 
-    } else if (this->kind == NodeKind::FOR_HEADER1) {
-        cout << DIM << "INIT" << DEFAULT;
+        case NodeKind::FOR_HEADER1:
+            cout << DIM << "INIT" << DEFAULT;
+            break;
 
-    } else if (this->kind == NodeKind::FOR_HEADER2) {
-        cout << DIM << "CONDITION" << DEFAULT;
+        case NodeKind::FOR_HEADER2:
+            cout << DIM << "CONDITION" << DEFAULT;
+            break;
 
-    } else if (this->kind == NodeKind::FOR_HEADER3) {
-        cout << DIM << "UPDATE" << DEFAULT;
+        case NodeKind::FOR_HEADER3:
+            cout << DIM << "UPDATE" << DEFAULT;
+            break;
 
-    } else if (this->kind == NodeKind::FOREACH) {
-        ForeachData *data = this->GetData<ForeachData>();
-        if (data) {
-            cout << NodeKindFunctions::NodeKindToString(this->kind) << DIM << " header " << DEFAULT;
-            cout << "(" << DIM << " in scope: " << DEFAULT;
-            data->PrintScope();
-            cout << " )";
-        } else ERR::BadData();
+        case NodeKind::FOREACH:
+            foreachData = this->GetData<ForeachData>();
+            if (foreachData) {
+                cout << "FOREACH" << DIM << " header " << DEFAULT;
+                cout << "(" << DIM << " in scope: " << DEFAULT;
+                foreachData->PrintScope();
+                cout << " )";
+            } else ERR::BadData();
+            break;
+        
+        case NodeKind::INT2FLOAT:
+            cout << "(" << MAGENTA << "float" << DEFAULT << ")";
+            break;
 
-    } else if (this->kind == NodeKind::VARIABLE) {
-        VariableData *data = this->GetData<VariableData>();
-        if (data) {
-            cout << ORANGE << data->GetName() << DEFAULT;
-            cout << DIM << " - " << DEFAULT;
-            cout << MAGENTA << data->GetType().toString() << DEFAULT;
-        } else ERR::BadData();
+        case NodeKind::BOOL2INT: case NodeKind::FLOAT2INT:
+            cout << "(" << MAGENTA << "int" << DEFAULT << ")";
+            break;
 
-    } else if (this->kind == NodeKind::INT2FLOAT) {
-        cout << "(" << MAGENTA << "float" << DEFAULT << ")";
+        case NodeKind::INT2BOOL:
+            cout << "(" << MAGENTA << "bool" << DEFAULT << ")";
+            break;
 
-    } else if ((this->kind == NodeKind::BOOL2INT) ||
-               (this->kind == NodeKind::FLOAT2INT)
-    ) {
-        cout << "(" << MAGENTA << "int" << DEFAULT << ")";
+        case NodeKind::ADDITION: case NodeKind::SUBTRACTION: case NodeKind::MULTIPLICATION:
+        case NodeKind::DIVISION: case NodeKind::MODULO: case NodeKind::POWER:
+        case NodeKind::LEFT_SHIFT: case NodeKind::RIGHT_SHIFT: case NodeKind::BIT_AND:
+        case NodeKind::BIT_XOR: case NodeKind::BIT_OR: case NodeKind::OR:
+        case NodeKind::AND: case NodeKind::LESS: case NodeKind::LESS_EQUAL:
+        case NodeKind::GREATER: case NodeKind::GREATER_EQUAL: case NodeKind::EQUAL:
+        case NodeKind::NOT_EQUAL: case NodeKind::UNARY_MINUS: case NodeKind::NOT:
+        case NodeKind::BIT_NOT:
+            expressionData = this->GetData<ExpressionData>();
+            if (expressionData) {
+                cout << CYAN << "(" << NodeKindFunctions::NodeKindToSign(this->kind) << ")" << DEFAULT;
+                cout << DIM << " - " << DEFAULT;
+                cout << MAGENTA << expressionData->GetType().toString() << DEFAULT;
+            } else ERR::BadData();
+            break;
 
-    } else if ((this->kind == NodeKind::ADDITION) ||
-               (this->kind == NodeKind::SUBTRACTION) ||
-               (this->kind == NodeKind::MULTIPLICATION) ||
-               (this->kind == NodeKind::DIVISION) ||
-               (this->kind == NodeKind::MODULO) ||
-               (this->kind == NodeKind::POWER) ||
-               (this->kind == NodeKind::LEFT_SHIFT) ||
-               (this->kind == NodeKind::RIGHT_SHIFT) ||
-               (this->kind == NodeKind::BIT_AND) ||
-               (this->kind == NodeKind::BIT_XOR) ||
-               (this->kind == NodeKind::BIT_OR) ||
-               (this->kind == NodeKind::OR) ||
-               (this->kind == NodeKind::AND) ||
-               (this->kind == NodeKind::LESS) ||
-               (this->kind == NodeKind::LESS_EQUAL) ||
-               (this->kind == NodeKind::GREATER) ||
-               (this->kind == NodeKind::GREATER_EQUAL) ||
-               (this->kind == NodeKind::EQUAL) ||
-               (this->kind == NodeKind::NOT_EQUAL) ||
-               (this->kind == NodeKind::UNARY_MINUS) ||
-               (this->kind == NodeKind::NOT) ||
-               (this->kind == NodeKind::BIT_NOT)
-    ) {
-        ExpressionData *data = this->GetData<ExpressionData>();
-        if (data) {
-            cout << CYAN << "(" << NodeKindFunctions::NodeKindToSign(this->kind) << ")" << DEFAULT;
-            cout << DIM << " - " << DEFAULT;
-            cout << MAGENTA << data->GetType().toString() << DEFAULT;
-        } else ERR::BadData();
-
-    } else if (this->kind == NodeKind::INT2BOOL) {
-        cout << "(" << MAGENTA << "bool" << DEFAULT << ")";
-
-    }
-
-
-
-    else {
-        cout << NodeKindFunctions::NodeKindToString(this->kind);
-        cout << DIM << " <>" << DEFAULT;
+        default:
+            cout << RED << BOLD << NodeKindFunctions::NodeKindToString(this->kind);
+            cout << " <>" << DEFAULT;
+            break;
     }
 }
