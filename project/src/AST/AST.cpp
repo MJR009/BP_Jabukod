@@ -149,74 +149,67 @@ Variable *AST::CheckIfVariableDefined(antlr4::Token *variableToken) {
 
 
 
-Type AST::ProcessImplicitConversions(JabukodParser::ExpressionContext *ctx, ConversionType conversion) {
-    Type op1 = this->GetOperandType(0);
-    Type op2 = this->GetOperandType(1);
-    
-    Type subexpressionType = Type::VOID;
-
-    switch (conversion) {;
-        case ConversionType::ARITHMETIC:
-            if ((op1 == Type::FLOAT) || (op2 == Type::FLOAT)) {
-                this->CheckIfExpressionModulo(ctx);
-            }
-            subexpressionType = this->ApplyArithmeticConversions(op1, op2, ctx->getStart());
-            if (subexpressionType == Type::VOID) { // this implies error, return float to continue semantic checks
-                return Type::FLOAT;
-            }
-            break;
-
-        case ConversionType::LOGIC:
-            subexpressionType = this->ApplyLogicConversions(op1, op2, ctx->getStart());
-            if (subexpressionType == Type::VOID) {
-                return Type::BOOL;
-            }
-            break;
-
-        case ConversionType::COMPARISON:
-            return this->ApplyComparisonConversions(op1, op2, ctx->getStart());
-
-        case ConversionType::BIT:
-            subexpressionType = this->ApplyBitConversions(op1, op2, ctx->getStart());
-            if (subexpressionType == Type::VOID) {
-                return Type::INT;
-            }
-            break;
+Type AST::ConvertExpressionBinaryArithmetic() {
+    try {
+        Type inferedType = Conversion::ExpressionBinaryArithmetic();
+        return inferedType;
+    } catch (const char *msg) {
+        this->parser->notifyErrorListeners(, msg, nullptr);
     }
-
-    return subexpressionType;
 }
 
-Type AST::ProcessUnaryImplicitConversions(JabukodParser::PrefixUnaryExpressionContext *ctx) {
-    Type op = this->GetOperandType(0);
-    NodeKind sign = NodeKindFunctions::SignToNodeKind( ctx->sign->getText() );
-
-    Type subexpressionType = Type::VOID;
-
-    switch (sign) {
-        case NodeKind::minus:
-            subexpressionType = this->ApplyUnaryArithmeticConversions(op, ctx->getStart());
-            if (subexpressionType == Type::VOID) {
-                return Type::FLOAT;
-            }
-            break;
-
-        case NodeKind::BIT_NOT:
-            subexpressionType = this->ApplyUnaryBitConversions(op, ctx->getStart());
-            if (subexpressionType == Type::VOID) {
-                return Type::INT;
-            }
-            break;
-
-        case NodeKind::NOT:
-            subexpressionType = this->ApplyUnaryLogicConversions(op, ctx->getStart());
-            if (subexpressionType == Type::VOID) {
-                return Type::BOOL;
-            }
-            break;
+Type AST::ConvertExpressionBinaryLogical() {
+    try {
+        Type inferedType = Conversion::ExpressionBinaryLogical();
+        return inferedType;
+    } catch (const char *msg) {
+        this->parser->notifyErrorListeners(, msg, nullptr);
     }
+}
 
-    return subexpressionType;
+Type AST::ConvertExpressionBinaryRelational() {
+    try {
+        Type inferedType = Conversion::ExpressionBinaryRelational();
+        return inferedType;
+    } catch (const char *msg) {
+        this->parser->notifyErrorListeners(, msg, nullptr);
+    }
+}
+
+Type AST::ConvertExpressionBinaryBitwise() {
+    try {
+        Type inferedType = Conversion::ExpressionBinaryBitwise();
+        return inferedType;
+    } catch (const char *msg) {
+        this->parser->notifyErrorListeners(, msg, nullptr);
+    }
+}
+
+Type AST::ConvertExpressionUnaryArithmetic() {
+    try {
+        Type inferedType = Conversion::ExpressionUnaryArithmetic();
+        return inferedType;
+    } catch (const char *msg) {
+        this->parser->notifyErrorListeners(, msg, nullptr);
+    }
+}
+
+Type AST::ConvertExpressionUnaryLogical() {
+    try {
+        Type inferedType = Conversion::ExpressionUnaryLogical();
+        return inferedType;
+    } catch (const char *msg) {
+        this->parser->notifyErrorListeners(, msg, nullptr);
+    }
+}
+
+Type AST::ConvertExpressionUnaryBitwise() {
+    try {
+        Type inferedType = Conversion::ExpressionUnaryBitwise();
+        return inferedType;
+    } catch (const char *msg) {
+        this->parser->notifyErrorListeners(, msg, nullptr);
+    }
 }
 
 
@@ -412,213 +405,6 @@ Variable *AST::IsInThisScope(const string & name, ASTNode *node) {
     }
 
     return variable;
-}
-
-
-
-Type AST::GetOperandType(int i) const {
-    ASTNode *op = this->activeNode->GetChild(i);
-
-    if ( ! op) {
-        ERR::BadData();
-        return Type::VOID;
-    }
-
-    switch (op->GetKind()) {
-        case NodeKind::VARIABLE:
-            return op->GetData<VariableData>()->GetType();
-        case NodeKind::LITERAL:
-            return op->GetData<LiteralData>()->GetType();
-        default: // NodeKind::EXPRESSION
-            return op->GetData<ExpressionData>()->GetType();
-    }
-}
-
-
-
-// TODO ŘETĚZCE - KDE JSOU INVAL !!!
-
-Type AST::ApplyArithmeticConversions(Type type1, Type type2, antlr4::Token *expressionStart) {
-    Conversion NO_CV = [ type1 ](ASTNode *) { // no conversion
-        return type1;
-    };
-    Conversion INVAL = [ this, expressionStart ](ASTNode *) { // trigger error
-        this->parser->notifyErrorListeners(expressionStart, IMPLICIT_STRING_CONVERSION, nullptr);
-        return Type::VOID;
-    };
-
-    { using namespace ConversionFunctions;
-
-    const vector<vector<Conversion>> conversions =
-    {
-           /*  op1   */
-    // op2 /* ~~~~~~ */ INT / FLOAT / BOOL / STRING / VOID //
-           /* INT    */{NO_CV, I2F_1, B2I_2, INVAL, NO_CV},
-           /* FLOAT  */{I2F_2, NO_CV, B2F_2, INVAL, NO_CV},
-           /* BOOL   */{B2I_1, B2F_1, B2I_B, INVAL, NO_CV},
-           /* STRING */{INVAL, INVAL, INVAL, INVAL, NO_CV}, // TODO zkontrolovat pro řetězce !!!
-           /* VOID   */{NO_CV, NO_CV, NO_CV, NO_CV, NO_CV}
-    };
-
-    Type inferedSubexpressionType = conversions[type1][type2]( this->activeNode );
-    return inferedSubexpressionType;
-
-    }
-}
-
-Type AST::ApplyLogicConversions(Type type1, Type type2, antlr4::Token *expressionStart) {
-    Conversion NO_CV = [ type1 ](ASTNode *) {
-        return type1;
-    };
-    Conversion INVAL = [ this, expressionStart ](ASTNode *) { // trigger error
-        this->parser->notifyErrorListeners(expressionStart, IMPLICIT_STRING_CONVERSION, nullptr);
-        return Type::VOID;
-    };
-
-    { using namespace ConversionFunctions;
-
-    const vector<vector<Conversion>> conversions =
-    {
-           /*  op1   */
-    // op2 /* ~~~~~~ */ INT / FLOAT / BOOL / STRING / VOID //
-           /* INT    */{I2B_B, IF2B_, I2B_1, INVAL, NO_CV},
-           /* FLOAT  */{FI2B_, F2B_B, F2B_1, INVAL, NO_CV},
-           /* BOOL   */{I2B_2, F2B_2, NO_CV, INVAL, NO_CV},
-           /* STRING */{INVAL, INVAL, INVAL, INVAL, NO_CV}, // TODO zkontrolovat pro řetězce !!!
-           /* VOID   */{NO_CV, NO_CV, NO_CV, NO_CV, NO_CV}
-    };
-
-    Type inferedSubexpressionType = conversions[type1][type2]( this->activeNode );
-    return inferedSubexpressionType;
-
-    }
-}
-
-Type AST::ApplyComparisonConversions(Type type1, Type type2, antlr4::Token *expressionStart) {
-    Conversion NO_CV = [ type1 ](ASTNode *) {
-        return type1;
-    };
-    Conversion INVAL = [ this, expressionStart ](ASTNode *) { // trigger error
-        this->parser->notifyErrorListeners(expressionStart, IMPLICIT_STRING_CONVERSION, nullptr);
-        return Type::VOID;
-    };
-
-    { using namespace ConversionFunctions;
-
-    const vector<vector<Conversion>> conversions =
-    {
-           /*  op1   */
-    // op2 /* ~~~~~~ */ INT / FLOAT / BOOL / STRING / VOID //
-           /* INT    */{NO_CV, I2F_1, B2F_1, INVAL, NO_CV},
-           /* FLOAT  */{I2F_2, NO_CV, B2F_2, INVAL, NO_CV},
-           /* BOOL   */{B2I_1, B2F_1, NO_CV, INVAL, NO_CV},
-           /* STRING */{INVAL, INVAL, INVAL, INVAL, NO_CV}, // TODO zkontrolovat pro řetězce !!!
-           /* VOID   */{NO_CV, NO_CV, NO_CV, NO_CV, NO_CV}
-    };
-
-    conversions[type1][type2]( this->activeNode );
-    return Type::BOOL;
-
-    }
-}
-
-Type AST::ApplyBitConversions(Type type1, Type type2, antlr4::Token *expressionStart) {
-    Conversion NO_CV = [ type1 ](ASTNode *) {
-        return type1;
-    };
-    Conversion INVFL = [ this, expressionStart ](ASTNode *) {
-        this->parser->notifyErrorListeners(expressionStart, BIT_FLOAT_OPERAND, nullptr);
-        return Type::VOID;
-    };
-    Conversion INVST = [ this, expressionStart ](ASTNode *) {
-        this->parser->notifyErrorListeners(expressionStart, BIT_STRING_OPERAND, nullptr);
-        return Type::VOID;
-    };
-
-    { using namespace ConversionFunctions;
-
-    const vector<vector<Conversion>> conversions =
-    {
-           /*  op1   */
-    // op2 /* ~~~~~~ */ INT / FLOAT / BOOL / STRING / VOID //
-           /* INT    */{NO_CV, INVFL, B2I_2, INVST, NO_CV},
-           /* FLOAT  */{INVFL, INVFL, INVFL, INVFL, NO_CV},
-           /* BOOL   */{B2I_1, INVFL, B2I_B, INVST, NO_CV},
-           /* STRING */{INVST, INVST, INVST, INVST, NO_CV}, // TODO zkontrolovat pro řetězce !!!
-           /* VOID   */{NO_CV, NO_CV, NO_CV, NO_CV, NO_CV}
-    };
-
-    Type inferedSubexpressionType = conversions[type1][type2]( this->activeNode );
-    return inferedSubexpressionType;
-
-    }
-}
-
-Type AST::ApplyUnaryArithmeticConversions(Type type, antlr4::Token *expressionStart) {
-    Conversion NO_CV = [ type ](ASTNode *) {
-        return type;
-    };
-    Conversion INVAL = [ this, expressionStart ](ASTNode *) { // trigger error
-        this->parser->notifyErrorListeners(expressionStart, IMPLICIT_STRING_CONVERSION, nullptr);
-        return Type::VOID;
-    };
-
-    { using namespace ConversionFunctions;
-
-    const vector<Conversion> conversions =
-    // INT / FLOAT / BOOL / STRING / VOID //
-    {NO_CV, NO_CV, B2I_1, INVAL, NO_CV};
-
-    Type inferedSubexpressionType = conversions[type]( this->activeNode );
-    return inferedSubexpressionType;
-
-    }
-}
-
-Type AST::ApplyUnaryLogicConversions(Type type, antlr4::Token *expressionStart) {
-    Conversion NO_CV = [ type ](ASTNode *) {
-        return type;
-    };
-    Conversion INVAL = [ this, expressionStart ](ASTNode *) { // trigger error
-        this->parser->notifyErrorListeners(expressionStart, IMPLICIT_STRING_CONVERSION, nullptr);
-        return Type::VOID;
-    };
-
-    { using namespace ConversionFunctions;
-
-    const vector<Conversion> conversions =
-    // INT / FLOAT / BOOL / STRING / VOID //
-    {I2B_1, F2B_1, NO_CV, INVAL, NO_CV};
-
-    Type inferedSubexpressionType = conversions[type]( this->activeNode );
-    return inferedSubexpressionType;
-
-    }
-}
-
-Type AST::ApplyUnaryBitConversions(Type type, antlr4::Token *expressionStart) {
-    Conversion NO_CV = [ type ](ASTNode *) {
-        return type;
-    };
-    Conversion INVFL = [ this, expressionStart ](ASTNode *) {
-        this->parser->notifyErrorListeners(expressionStart, BIT_FLOAT_OPERAND, nullptr);
-        return Type::VOID;
-    };
-    Conversion INVST = [ this, expressionStart ](ASTNode *) {
-        this->parser->notifyErrorListeners(expressionStart, BIT_STRING_OPERAND, nullptr);
-        return Type::VOID;
-    };
-
-    { using namespace ConversionFunctions;
-
-    const vector<Conversion> conversions =
-    // INT / FLOAT / BOOL / STRING / VOID //
-    {NO_CV, INVFL, B2I_1, INVST, NO_CV};
-
-    Type inferedSubexpressionType = conversions[type]( this->activeNode );
-    return inferedSubexpressionType;
-
-    } 
 }
 
 

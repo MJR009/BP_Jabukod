@@ -77,7 +77,9 @@ any ASTGenerationVisitor::visitMulDivModExpression(JabukodParser::MulDivModExpre
     this->ast.AddNode( sign );
     this->visitChildren(ctx);
 
-    Type type = this->ast.ProcessImplicitConversions(ctx, ConversionType::ARITHMETIC);
+    // TODO kontrola operátorů pro modulo !!!
+
+    Type type = this->ast.ConvertExpressionBinaryArithmetic();
     ExpressionData *data = new ExpressionData(type);
     this->ast.GiveActiveNodeData(data);
 
@@ -90,7 +92,7 @@ any ASTGenerationVisitor::visitExponentExpression(JabukodParser::ExponentExpress
     this->ast.AddNode(NodeKind::POWER);
     this->visitChildren(ctx);
 
-    Type type = this->ast.ProcessImplicitConversions(ctx, ConversionType::ARITHMETIC);
+    Type type = this->ast.ConvertExpressionBinaryArithmetic();
     ExpressionData *data = new ExpressionData(type);
     this->ast.GiveActiveNodeData(data);
 
@@ -104,7 +106,7 @@ any ASTGenerationVisitor::visitShiftExpression(JabukodParser::ShiftExpressionCon
     this->ast.AddNode( sign );
     this->visitChildren(ctx);
 
-    Type type = this->ast.ProcessImplicitConversions(ctx, ConversionType::BIT);
+    Type type = this->ast.ConvertExpressionBinaryBitwise();
     ExpressionData *data = new ExpressionData(type);
     this->ast.GiveActiveNodeData(data);
 
@@ -117,7 +119,7 @@ any ASTGenerationVisitor::visitBitOrExpression(JabukodParser::BitOrExpressionCon
     this->ast.AddNode(NodeKind::BIT_OR);
     this->visitChildren(ctx);
 
-    Type type = this->ast.ProcessImplicitConversions(ctx, ConversionType::BIT);
+    Type type = this->ast.ConvertExpressionBinaryBitwise();
     ExpressionData *data = new ExpressionData(type);
     this->ast.GiveActiveNodeData(data);
 
@@ -159,7 +161,7 @@ any ASTGenerationVisitor::visitAssSubExpression(JabukodParser::AssSubExpressionC
 
     this->visitChildren(ctx);
 
-    Type type = this->ast.ProcessImplicitConversions(ctx, ConversionType::ARITHMETIC);
+    Type type = this->ast.ConvertExpressionBinaryArithmetic();
     ExpressionData *data = new ExpressionData(type);
     this->ast.GiveActiveNodeData(data);
 
@@ -172,7 +174,7 @@ any ASTGenerationVisitor::visitBitXorExpression(JabukodParser::BitXorExpressionC
     this->ast.AddNode(NodeKind::BIT_XOR);
     this->visitChildren(ctx);
 
-    Type type = this->ast.ProcessImplicitConversions(ctx, ConversionType::BIT);
+    Type type = this->ast.ConvertExpressionBinaryBitwise();
     ExpressionData *data = new ExpressionData(type);
     this->ast.GiveActiveNodeData(data);
 
@@ -185,7 +187,7 @@ any ASTGenerationVisitor::visitOrExpression(JabukodParser::OrExpressionContext *
     this->ast.AddNode(NodeKind::OR);
     this->visitChildren(ctx);
 
-    Type type = this->ast.ProcessImplicitConversions(ctx, ConversionType::LOGIC);
+    Type type = this->ast.ConvertExpressionBinaryLogical();
     ExpressionData *data = new ExpressionData(type);
     this->ast.GiveActiveNodeData(data);
 
@@ -198,7 +200,7 @@ any ASTGenerationVisitor::visitAndExpression(JabukodParser::AndExpressionContext
     this->ast.AddNode(NodeKind::AND);
     this->visitChildren(ctx);
 
-    Type type = this->ast.ProcessImplicitConversions(ctx, ConversionType::LOGIC);
+    Type type = this->ast.ConvertExpressionBinaryLogical();
     ExpressionData *data = new ExpressionData(type);
     this->ast.GiveActiveNodeData(data);
 
@@ -211,7 +213,7 @@ any ASTGenerationVisitor::visitBitAndExpression(JabukodParser::BitAndExpressionC
     this->ast.AddNode(NodeKind::BIT_AND);
     this->visitChildren(ctx);
 
-    Type type = this->ast.ProcessImplicitConversions(ctx, ConversionType::BIT);
+    Type type = this->ast.ConvertExpressionBinaryBitwise();
     ExpressionData *data = new ExpressionData(type);
     this->ast.GiveActiveNodeData(data);
 
@@ -225,7 +227,7 @@ any ASTGenerationVisitor::visitLessMoreExpression(JabukodParser::LessMoreExpress
     this->ast.AddNode( sign );
     this->visitChildren(ctx);
 
-    Type type = this->ast.ProcessImplicitConversions(ctx, ConversionType::COMPARISON);
+    Type type = this->ast.ConvertExpressionBinaryRelational();
     ExpressionData *data = new ExpressionData(type);
     this->ast.GiveActiveNodeData(data);
 
@@ -239,7 +241,7 @@ any ASTGenerationVisitor::visitEqualityExpression(JabukodParser::EqualityExpress
     this->ast.AddNode( sign );
     this->visitChildren(ctx);
 
-    Type type = this->ast.ProcessImplicitConversions(ctx, ConversionType::COMPARISON);
+    Type type = this->ast.ConvertExpressionBinaryRelational();
     ExpressionData *data = new ExpressionData(type);
     this->ast.GiveActiveNodeData(data);
 
@@ -255,7 +257,18 @@ any ASTGenerationVisitor::visitPrefixUnaryExpression(JabukodParser::PrefixUnaryE
     );
     this->visitChildren(ctx);
 
-    Type type = this->ast.ProcessUnaryImplicitConversions(ctx);
+    Type type = Type::VOID;
+    switch (sign) {
+        case NodeKind::minus:
+            type = this->ast.ConvertExpressionUnaryArithmetic();
+            break;
+        case NodeKind::BIT_NOT:
+            type = this->ast.ConvertExpressionUnaryBitwise();
+            break;
+        case NodeKind::NOT:
+            type = this->ast.ConvertExpressionUnaryLogical();
+            break;
+    }
     ExpressionData *data = new ExpressionData(type);
     this->ast.GiveActiveNodeData(data);
 
@@ -487,22 +500,27 @@ any ASTGenerationVisitor::visitForHeader(JabukodParser::ForHeaderContext *ctx) {
 any ASTGenerationVisitor::visitLiteral(JabukodParser::LiteralContext *ctx) {
     Type type = Type::VOID;
     any value;
+
     if (ctx->INT_LITERAL()) {
         type = Type::INT;
         value = any( stoi( ctx->INT_LITERAL()->getText() ) );
+
     } else if (ctx->FLOAT_LITERAL()) {
         type = Type::FLOAT;
         value = any( stof( ctx->FLOAT_LITERAL()->getText() ) );
+
     } else if (ctx->BOOL_LITERAL()) {
         type = Type::BOOL;
         value = any(
             ctx->BOOL_LITERAL()->getText() == "true" ? true : false
         );
+
     } else if (ctx->STRING_LITERAL()) {
         type = Type::STRING;
         value = any (
             Escapes::ReplaceEscapeSequences( ctx->STRING_LITERAL()->getText() )
         );
+        
     }
 
     LiteralData *data = new LiteralData(type, value);

@@ -26,12 +26,23 @@ ASTNode *ASTNode::GetParent() {
     return this->parent;
 }
 
-ASTNode *ASTNode::GetChild(int i) {
-    if (i >= this->children.size()) {
-        return nullptr;
+
+
+Type ASTNode::GetOperandType(int i) const {
+    if (this->children.size() <= i) { // no operands to get the type of
+        return Type::VOID;
     }
 
-    return this->children.at(i);
+    ASTNode* operand = this->children.at(i);
+
+    switch (operand->GetKind()) {
+        case NodeKind::VARIABLE:
+            return operand->GetData<VariableData>()->GetType();
+        case NodeKind::LITERAL:
+            return operand->GetData<LiteralData>()->GetType();
+        default: // expression nodes
+            return operand->GetData<ExpressionData>()->GetType();
+    }
 }
 
 

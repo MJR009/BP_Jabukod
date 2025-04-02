@@ -31,8 +31,13 @@ public:
     void CheckIfNodeWithinLoop(antlr4::Token *token);
     Variable *CheckIfVariableDefined(antlr4::Token *variableToken);
 
-    Type ProcessImplicitConversions(JabukodParser::ExpressionContext *ctx, ConversionType conversion);
-    Type ProcessUnaryImplicitConversions(JabukodParser::PrefixUnaryExpressionContext *ctx);
+    Type ConvertExpressionBinaryArithmetic();
+    Type ConvertExpressionBinaryLogical();
+    Type ConvertExpressionBinaryRelational();
+    Type ConvertExpressionBinaryBitwise();
+    Type ConvertExpressionUnaryArithmetic();
+    Type ConvertExpressionUnaryLogical();
+    Type ConvertExpressionUnaryBitwise();
 
     void Print();
 
@@ -83,17 +88,6 @@ private:
 
     bool IsScopeHavingNode(ASTNode *node);
     Variable *IsInThisScope(const string & name, ASTNode *node);
-
-    Type GetOperandType(int i) const;
-
-    // return resulting expressions type
-    Type ApplyArithmeticConversions(Type type1, Type type2, antlr4::Token *expressionStart);
-    Type ApplyLogicConversions(Type type1, Type type2, antlr4::Token *expressionStart);
-    Type ApplyComparisonConversions(Type type1, Type type2, antlr4::Token *expressionStart);
-    Type ApplyBitConversions(Type type1, Type type2, antlr4::Token *expressionStart);
-    Type ApplyUnaryArithmeticConversions(Type type, antlr4::Token *expressionStart);
-    Type ApplyUnaryLogicConversions(Type type, antlr4::Token *expressionStart);
-    Type ApplyUnaryBitConversions(Type type, antlr4::Token *expressionStart);
 
     void CheckIfExpressionModulo(JabukodParser::ExpressionContext *ctx);
 };    

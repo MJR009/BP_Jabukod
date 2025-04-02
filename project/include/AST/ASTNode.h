@@ -15,11 +15,13 @@ public:
 
     NodeKind GetKind();
     ASTNode *GetParent();
-    ASTNode *GetChild(int i);
     template <typename T>
     T *GetData() {
         return dynamic_cast<T *>( this->data );
     }
+
+    // used for expressions
+    Type GetOperandType(int i) const;
 
     void SetData(GenericNodeData *data);
 
