@@ -77,9 +77,9 @@ any ASTGenerationVisitor::visitMulDivModExpression(JabukodParser::MulDivModExpre
     this->ast.AddNode( sign );
     this->visitChildren(ctx);
 
-    // TODO kontrola operátorů pro modulo !!!
+    this->ast.CheckIfModuloFloatOperands(ctx);
 
-    Type type = this->ast.ConvertExpressionBinaryArithmetic();
+    Type type = this->ast.ConvertExpressionBinaryArithmetic(ctx->getStart());
     ExpressionData *data = new ExpressionData(type);
     this->ast.GiveActiveNodeData(data);
 
@@ -92,7 +92,7 @@ any ASTGenerationVisitor::visitExponentExpression(JabukodParser::ExponentExpress
     this->ast.AddNode(NodeKind::POWER);
     this->visitChildren(ctx);
 
-    Type type = this->ast.ConvertExpressionBinaryArithmetic();
+    Type type = this->ast.ConvertExpressionBinaryArithmetic(ctx->getStart());
     ExpressionData *data = new ExpressionData(type);
     this->ast.GiveActiveNodeData(data);
 
@@ -106,7 +106,7 @@ any ASTGenerationVisitor::visitShiftExpression(JabukodParser::ShiftExpressionCon
     this->ast.AddNode( sign );
     this->visitChildren(ctx);
 
-    Type type = this->ast.ConvertExpressionBinaryBitwise();
+    Type type = this->ast.ConvertExpressionBinaryBitwise(ctx->getStart());
     ExpressionData *data = new ExpressionData(type);
     this->ast.GiveActiveNodeData(data);
 
@@ -119,7 +119,7 @@ any ASTGenerationVisitor::visitBitOrExpression(JabukodParser::BitOrExpressionCon
     this->ast.AddNode(NodeKind::BIT_OR);
     this->visitChildren(ctx);
 
-    Type type = this->ast.ConvertExpressionBinaryBitwise();
+    Type type = this->ast.ConvertExpressionBinaryBitwise(ctx->getStart());
     ExpressionData *data = new ExpressionData(type);
     this->ast.GiveActiveNodeData(data);
 
@@ -161,7 +161,7 @@ any ASTGenerationVisitor::visitAssSubExpression(JabukodParser::AssSubExpressionC
 
     this->visitChildren(ctx);
 
-    Type type = this->ast.ConvertExpressionBinaryArithmetic();
+    Type type = this->ast.ConvertExpressionBinaryArithmetic(ctx->getStart());
     ExpressionData *data = new ExpressionData(type);
     this->ast.GiveActiveNodeData(data);
 
@@ -174,7 +174,7 @@ any ASTGenerationVisitor::visitBitXorExpression(JabukodParser::BitXorExpressionC
     this->ast.AddNode(NodeKind::BIT_XOR);
     this->visitChildren(ctx);
 
-    Type type = this->ast.ConvertExpressionBinaryBitwise();
+    Type type = this->ast.ConvertExpressionBinaryBitwise(ctx->getStart());
     ExpressionData *data = new ExpressionData(type);
     this->ast.GiveActiveNodeData(data);
 
@@ -187,7 +187,7 @@ any ASTGenerationVisitor::visitOrExpression(JabukodParser::OrExpressionContext *
     this->ast.AddNode(NodeKind::OR);
     this->visitChildren(ctx);
 
-    Type type = this->ast.ConvertExpressionBinaryLogical();
+    Type type = this->ast.ConvertExpressionBinaryLogical(ctx->getStart());
     ExpressionData *data = new ExpressionData(type);
     this->ast.GiveActiveNodeData(data);
 
@@ -200,7 +200,7 @@ any ASTGenerationVisitor::visitAndExpression(JabukodParser::AndExpressionContext
     this->ast.AddNode(NodeKind::AND);
     this->visitChildren(ctx);
 
-    Type type = this->ast.ConvertExpressionBinaryLogical();
+    Type type = this->ast.ConvertExpressionBinaryLogical(ctx->getStart());
     ExpressionData *data = new ExpressionData(type);
     this->ast.GiveActiveNodeData(data);
 
@@ -213,7 +213,7 @@ any ASTGenerationVisitor::visitBitAndExpression(JabukodParser::BitAndExpressionC
     this->ast.AddNode(NodeKind::BIT_AND);
     this->visitChildren(ctx);
 
-    Type type = this->ast.ConvertExpressionBinaryBitwise();
+    Type type = this->ast.ConvertExpressionBinaryBitwise(ctx->getStart());
     ExpressionData *data = new ExpressionData(type);
     this->ast.GiveActiveNodeData(data);
 
@@ -227,7 +227,7 @@ any ASTGenerationVisitor::visitLessMoreExpression(JabukodParser::LessMoreExpress
     this->ast.AddNode( sign );
     this->visitChildren(ctx);
 
-    Type type = this->ast.ConvertExpressionBinaryRelational();
+    Type type = this->ast.ConvertExpressionBinaryRelational(ctx->getStart());
     ExpressionData *data = new ExpressionData(type);
     this->ast.GiveActiveNodeData(data);
 
@@ -241,7 +241,7 @@ any ASTGenerationVisitor::visitEqualityExpression(JabukodParser::EqualityExpress
     this->ast.AddNode( sign );
     this->visitChildren(ctx);
 
-    Type type = this->ast.ConvertExpressionBinaryRelational();
+    Type type = this->ast.ConvertExpressionBinaryRelational(ctx->getStart());
     ExpressionData *data = new ExpressionData(type);
     this->ast.GiveActiveNodeData(data);
 
@@ -260,13 +260,13 @@ any ASTGenerationVisitor::visitPrefixUnaryExpression(JabukodParser::PrefixUnaryE
     Type type = Type::VOID;
     switch (sign) {
         case NodeKind::minus:
-            type = this->ast.ConvertExpressionUnaryArithmetic();
+            type = this->ast.ConvertExpressionUnaryArithmetic(ctx->getStart());
             break;
         case NodeKind::BIT_NOT:
-            type = this->ast.ConvertExpressionUnaryBitwise();
+            type = this->ast.ConvertExpressionUnaryBitwise(ctx->getStart());
             break;
         case NodeKind::NOT:
-            type = this->ast.ConvertExpressionUnaryLogical();
+            type = this->ast.ConvertExpressionUnaryLogical(ctx->getStart());
             break;
     }
     ExpressionData *data = new ExpressionData(type);

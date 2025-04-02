@@ -31,13 +31,15 @@ public:
     void CheckIfNodeWithinLoop(antlr4::Token *token);
     Variable *CheckIfVariableDefined(antlr4::Token *variableToken);
 
-    Type ConvertExpressionBinaryArithmetic();
-    Type ConvertExpressionBinaryLogical();
-    Type ConvertExpressionBinaryRelational();
-    Type ConvertExpressionBinaryBitwise();
-    Type ConvertExpressionUnaryArithmetic();
-    Type ConvertExpressionUnaryLogical();
-    Type ConvertExpressionUnaryBitwise();
+    Type ConvertExpressionBinaryArithmetic(antlr4::Token *expressionStart);
+    Type ConvertExpressionBinaryLogical(antlr4::Token *expressionStart);
+    Type ConvertExpressionBinaryRelational(antlr4::Token *expressionStart);
+    Type ConvertExpressionBinaryBitwise(antlr4::Token *expressionStart);
+    Type ConvertExpressionUnaryArithmetic(antlr4::Token *expressionStart);
+    Type ConvertExpressionUnaryLogical(antlr4::Token *expressionStart);
+    Type ConvertExpressionUnaryBitwise(antlr4::Token *expressionStart);
+
+    void CheckIfModuloFloatOperands(JabukodParser::MulDivModExpressionContext *ctx);
 
     void Print();
 
@@ -88,6 +90,4 @@ private:
 
     bool IsScopeHavingNode(ASTNode *node);
     Variable *IsInThisScope(const string & name, ASTNode *node);
-
-    void CheckIfExpressionModulo(JabukodParser::ExpressionContext *ctx);
 };    

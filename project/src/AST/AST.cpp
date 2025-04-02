@@ -149,66 +149,118 @@ Variable *AST::CheckIfVariableDefined(antlr4::Token *variableToken) {
 
 
 
-Type AST::ConvertExpressionBinaryArithmetic() {
+Type AST::ConvertExpressionBinaryArithmetic(antlr4::Token *expressionStart) {
+    Type op1 = this->activeNode->GetOperandType(0);
+    Type op2 = this->activeNode->GetOperandType(1);
+
+    Type inferedType = Type::VOID;
+
     try {
-        Type inferedType = Conversion::ExpressionBinaryArithmetic();
-        return inferedType;
+        inferedType = Conversion::ExpressionBinaryArithmetic(op1, op2, this->activeNode);
     } catch (const char *msg) {
-        this->parser->notifyErrorListeners(, msg, nullptr);
+        this->parser->notifyErrorListeners(expressionStart, msg, nullptr);
     }
+
+    return inferedType;
 }
 
-Type AST::ConvertExpressionBinaryLogical() {
+Type AST::ConvertExpressionBinaryLogical(antlr4::Token *expressionStart) {
+    Type op1 = this->activeNode->GetOperandType(0);
+    Type op2 = this->activeNode->GetOperandType(1);
+
+    Type inferedType = Type::VOID;
+
     try {
-        Type inferedType = Conversion::ExpressionBinaryLogical();
-        return inferedType;
+        inferedType = Conversion::ExpressionBinaryLogical(op1, op2, this->activeNode);
     } catch (const char *msg) {
-        this->parser->notifyErrorListeners(, msg, nullptr);
+        this->parser->notifyErrorListeners(expressionStart, msg, nullptr);
     }
+
+    return inferedType;
 }
 
-Type AST::ConvertExpressionBinaryRelational() {
+Type AST::ConvertExpressionBinaryRelational(antlr4::Token *expressionStart) {
+    Type op1 = this->activeNode->GetOperandType(0);
+    Type op2 = this->activeNode->GetOperandType(1);
+
+    Type inferedType = Type::VOID;
+
     try {
-        Type inferedType = Conversion::ExpressionBinaryRelational();
-        return inferedType;
+        inferedType = Conversion::ExpressionBinaryRelational(op1, op2, this->activeNode);
     } catch (const char *msg) {
-        this->parser->notifyErrorListeners(, msg, nullptr);
+        this->parser->notifyErrorListeners(expressionStart, msg, nullptr);
     }
+
+    return inferedType;
 }
 
-Type AST::ConvertExpressionBinaryBitwise() {
+Type AST::ConvertExpressionBinaryBitwise(antlr4::Token *expressionStart) {
+    Type op1 = this->activeNode->GetOperandType(0);
+    Type op2 = this->activeNode->GetOperandType(1);
+
+    Type inferedType = Type::VOID;
+
     try {
-        Type inferedType = Conversion::ExpressionBinaryBitwise();
-        return inferedType;
+        inferedType = Conversion::ExpressionBinaryBitwise(op1, op2, this->activeNode);
     } catch (const char *msg) {
-        this->parser->notifyErrorListeners(, msg, nullptr);
+        this->parser->notifyErrorListeners(expressionStart, msg, nullptr);
     }
+
+    return inferedType;
 }
 
-Type AST::ConvertExpressionUnaryArithmetic() {
+Type AST::ConvertExpressionUnaryArithmetic(antlr4::Token *expressionStart) {
+    Type op = this->activeNode->GetOperandType(0);
+
+    Type inferedType = Type::VOID;
+
     try {
-        Type inferedType = Conversion::ExpressionUnaryArithmetic();
-        return inferedType;
+        inferedType = Conversion::ExpressionUnaryArithmetic(op, this->activeNode);
     } catch (const char *msg) {
-        this->parser->notifyErrorListeners(, msg, nullptr);
+        this->parser->notifyErrorListeners(expressionStart, msg, nullptr);
     }
+    
+    return inferedType;
 }
 
-Type AST::ConvertExpressionUnaryLogical() {
+Type AST::ConvertExpressionUnaryLogical(antlr4::Token *expressionStart) {
+    Type op = this->activeNode->GetOperandType(0);
+
+    Type inferedType = Type::VOID;
+
     try {
-        Type inferedType = Conversion::ExpressionUnaryLogical();
-        return inferedType;
+        inferedType = Conversion::ExpressionUnaryLogical(op, this->activeNode);
     } catch (const char *msg) {
-        this->parser->notifyErrorListeners(, msg, nullptr);
+        this->parser->notifyErrorListeners(expressionStart, msg, nullptr);
     }
+
+    return inferedType;
 }
 
-Type AST::ConvertExpressionUnaryBitwise() {
+Type AST::ConvertExpressionUnaryBitwise(antlr4::Token *expressionStart) {
+    Type op = this->activeNode->GetOperandType(0);
+
+    Type inferedType = Type::VOID;
+
     try {
-        Type inferedType = Conversion::ExpressionUnaryBitwise();
-        return inferedType;
+        inferedType = Conversion::ExpressionUnaryBitwise(op, this->activeNode);
     } catch (const char *msg) {
-        this->parser->notifyErrorListeners(, msg, nullptr);
+        this->parser->notifyErrorListeners(expressionStart, msg, nullptr);
+    }
+
+    return inferedType;
+}
+
+
+
+void AST::CheckIfModuloFloatOperands(JabukodParser::MulDivModExpressionContext *ctx) {
+    if (ctx->sign->getText() == "%") {
+        Type op1 = this->activeNode->GetOperandType(0);
+        Type op2 = this->activeNode->GetOperandType(1);
+
+        if ((op1 == Type::FLOAT) || (op2 == Type::FLOAT)) {
+            this->parser->notifyErrorListeners(ctx->sign, MODULE_ON_FLOAT, nullptr);
+        }
     }
 }
 
@@ -405,16 +457,4 @@ Variable *AST::IsInThisScope(const string & name, ASTNode *node) {
     }
 
     return variable;
-}
-
-
-
-void AST::CheckIfExpressionModulo(JabukodParser::ExpressionContext *ctx) {
-    JabukodParser::MulDivModExpressionContext *potentialMod;
-
-    if (potentialMod = dynamic_cast<JabukodParser::MulDivModExpressionContext *>(ctx)) {
-        if (potentialMod->sign->getText() == NodeKindFunctions::NodeKindToSign(NodeKind::MODULO)) {
-            this->parser->notifyErrorListeners(potentialMod->sign, MODULE_ON_FLOAT, nullptr);
-        }
-    }
 }
