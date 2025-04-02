@@ -1,49 +1,54 @@
 #pragma once
 #include "common.h"
 
-enum NODE_KIND {
-    PROGRAM, 
-    VARIABLE_DECLARATION, VARIABLE_DEFINITION,
-    FUNCTION,
+class NodeKind {
+public:
+    enum Options {
+        PROGRAM, 
+        VARIABLE_DECLARATION, VARIABLE_DEFINITION,
+        FUNCTION,
+    
+        MULTIPLICATION, DIVISION, MODULO,
+        POWER,
+        LEFT_SHIFT, RIGHT_SHIFT,
+        BIT_OR,
+        ADDITION, SUBTRACTION,
+        BIT_XOR,
+        OR,
+        AND,
+        BIT_AND,
+        LESS, LESS_EQUAL, GREATER, GREATER_EQUAL,
+        EQUAL, NOT_EQUAL,
+        UNARY_MINUS, BIT_NOT, NOT,
+        minus, // universal option for unary and binary minus, which one resolved in respective context
+    
+        VARIABLE, LITERAL,
+    
+        ASSIGNMENT, FUNCTION_CALL,
+        IF, WHILE, FOR, FOREACH,
+        FOR_HEADER1, FOR_HEADER2, FOR_HEADER3, // needed for diferentiation
+        BODY, // general for all structured control flow
+    
+        RETURN, EXIT, SUSPEND, RESUME,
+        CONTINUE, BREAK, REDO, RESTART,
+    
+        READ, WRITE,
+    
+        INT2FLOAT, BOOL2INT,
+        INT2BOOL, FLOAT2INT,
+    
+        invalid
+    };
+    
+public:
+    NodeKind(Options value) : value(value) {}
 
-    MULTIPLICATION, DIVISION, MODULO,
-    POWER,
-    LEFT_SHIFT, RIGHT_SHIFT,
-    BIT_OR,
-    ADDITION, SUBTRACTION,
-    BIT_XOR,
-    OR,
-    AND,
-    BIT_AND,
-    LESS, LESS_EQUAL, GREATER, GREATER_EQUAL,
-    EQUAL, NOT_EQUAL,
-    UNARY_MINUS, BIT_NOT, NOT,
-    minus, // universal option for unary and binary minus, which one resolved in respective context
+    operator Options() const { return value; }
 
-    VARIABLE, LITERAL,
+    string toString() const;
+    string toSign() const;
+    static NodeKind toNodeKind(const string & sign);
 
-    ASSIGNMENT, FUNCTION_CALL,
-    IF, WHILE, FOR, FOREACH,
-    FOR_HEADER1, FOR_HEADER2, FOR_HEADER3, // needed for diferentiation
-    BODY, // general for all structured control flow
-
-    RETURN, EXIT, SUSPEND, RESUME,
-    CONTINUE, BREAK, REDO, RESTART,
-
-    READ, WRITE,
-
-    INT2FLOAT, BOOL2INT,
-    INT2BOOL, FLOAT2INT,
-
-    invalid
+private:
+    Options value;
 };
-typedef enum NODE_KIND NodeKind;
-
-namespace NodeKindFunctions {
-
-string NodeKindToString(NodeKind kind);
-// only defined for signs which are parts of a subrule within one expression expansion
-NodeKind SignToNodeKind(string sign);
-string NodeKindToSign(NodeKind kind);
-
-} // namespace NodeKindFunctions

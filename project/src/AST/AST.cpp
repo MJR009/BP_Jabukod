@@ -147,6 +147,23 @@ Variable *AST::CheckIfVariableDefined(antlr4::Token *variableToken) {
     return nullptr;
 }
 
+Variable *AST::GetVariable(antlr4::Token *variableToken) {
+    // here we get a variable we know exists !
+    // fallback is nullptr
+
+    string name = variableToken->getText();
+    Variable *variable = nullptr;
+    
+    if (variable = this->IsDefinedLocally(name)) {
+        return variable;
+    }
+    if (variable = this->IsDefinedGlobally(name)) {
+        return variable;
+    }
+
+    return nullptr;
+}
+
 void AST::CheckIfConstantDeclaration(StorageSpecifier specifier, antlr4::Token *variableToken) {
     if (specifier == StorageSpecifier::CONST) {
         this->parser->notifyErrorListeners(variableToken, CONSTANT_DECLARATION, nullptr);
@@ -172,7 +189,10 @@ void AST::CheckIfEligableForWrite(antlr4::Token *toWrite) {
     NodeKind operandKind = operand->GetKind();
 
     if (operandKind == NodeKind::VARIABLE) {
-        Variable *variable = this->CheckIfVariableDefined(toWrite);
+        Variable *variable = this->GetVariable(toWrite);
+        if ( ! variable) {
+            return;
+        }
         if (variable->GetType() != Type::STRING) {
             this->parser->notifyErrorListeners(toWrite, WRITE_NOT_STRING, nullptr);
         }
@@ -185,7 +205,7 @@ void AST::CheckIfEligableForWrite(antlr4::Token *toWrite) {
 
     } else {
         this->parser->notifyErrorListeners(toWrite, WRITE_EXPRESSION, nullptr);
-        
+
     }
 }
 
@@ -291,6 +311,22 @@ Type AST::ConvertExpressionUnaryBitwise(antlr4::Token *expressionStart) {
     }
 
     return inferedType;
+}
+
+void AST::ConvertExpressionDefinition(antlr4::Token *expressionStart) {
+    Type lside = this->activeNode->GetData<VariableData>()->GetType();
+    Type rside = this->activeNode->GetOperandType(0);
+
+    try {
+        Conversion::ExpressionDefinition(lside, rside, this->activeNode);
+    } catch (const char *msg) {
+        this->parser->notifyErrorListeners(expressionStart, msg, nullptr);
+    }
+}
+
+void AST::ConvertExpressionAssignment(antlr4::Token *expressionStart) {
+    return;
+    // TODO
 }
 
 

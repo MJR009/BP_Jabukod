@@ -2,8 +2,8 @@
 
 #define Conversion_case(item) case NodeKind::item: return #item
 
-string NodeKindFunctions::NodeKindToString(NodeKind kind) {
-    switch (kind) {
+string NodeKind::toString() const {
+    switch (this->value) {
         Conversion_case(PROGRAM);
         Conversion_case(VARIABLE_DECLARATION);
         Conversion_case(VARIABLE_DEFINITION);
@@ -69,33 +69,10 @@ string NodeKindFunctions::NodeKindToString(NodeKind kind) {
     return "ERR";
 }
 
-NodeKind NodeKindFunctions::SignToNodeKind(string sign) {
-    if (sign == "*") return NodeKind::MULTIPLICATION;
-    if (sign == "/") return NodeKind::DIVISION;
-    if (sign == "%") return NodeKind::MODULO;
-    if (sign == "<<") return NodeKind::LEFT_SHIFT;
-    if (sign == ">>") return NodeKind::RIGHT_SHIFT;
-    if (sign == "+") return NodeKind::ADDITION;
-    if (sign == "<") return NodeKind::LESS;
-    if (sign == "<=") return NodeKind::LESS_EQUAL;
-    if (sign == ">") return NodeKind::GREATER;
-    if (sign == ">=") return NodeKind::GREATER_EQUAL;
-    if (sign == "==") return NodeKind::EQUAL;
-    if (sign == "!=") return NodeKind::NOT_EQUAL;
-    if (sign == "~") return NodeKind::BIT_NOT;
-    if (sign == "!") return NodeKind::NOT;
-
-    if (sign == "-") return NodeKind::minus;
-
-    return NodeKind::invalid;
-}
-
-string NodeKindFunctions::NodeKindToSign(NodeKind kind) {
-    switch (kind) {
+string NodeKind::toSign() const {
+    switch (this->value) {
         case NodeKind::ADDITION: return "+";
-        case NodeKind::SUBTRACTION:
-        case NodeKind::UNARY_MINUS:
-            return "-";
+        case NodeKind::SUBTRACTION: case NodeKind::UNARY_MINUS: return "-";
 
         case NodeKind::MULTIPLICATION: return "*";
         case NodeKind::DIVISION: return "/";
@@ -125,4 +102,25 @@ string NodeKindFunctions::NodeKindToSign(NodeKind kind) {
     }
 
     return "ERR";
+}
+
+NodeKind NodeKind::toNodeKind(const string & sign) {
+    if (sign == "*") return NodeKind::MULTIPLICATION;
+    if (sign == "/") return NodeKind::DIVISION;
+    if (sign == "%") return NodeKind::MODULO;
+    if (sign == "<<") return NodeKind::LEFT_SHIFT;
+    if (sign == ">>") return NodeKind::RIGHT_SHIFT;
+    if (sign == "+") return NodeKind::ADDITION;
+    if (sign == "<") return NodeKind::LESS;
+    if (sign == "<=") return NodeKind::LESS_EQUAL;
+    if (sign == ">") return NodeKind::GREATER;
+    if (sign == ">=") return NodeKind::GREATER_EQUAL;
+    if (sign == "==") return NodeKind::EQUAL;
+    if (sign == "!=") return NodeKind::NOT_EQUAL;
+    if (sign == "~") return NodeKind::BIT_NOT;
+    if (sign == "!") return NodeKind::NOT;
+
+    if (sign == "-") return NodeKind::minus;
+
+    return NodeKind::invalid;
 }

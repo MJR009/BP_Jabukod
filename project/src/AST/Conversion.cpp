@@ -67,6 +67,16 @@ Type Conversion::ExpressionUnaryBitwise(Type op, ASTNode *expressionRoot) {
 
 
 
+void Conversion::ExpressionDefinition(Type lside, Type rside, ASTNode *expressionRoot) {
+    try {
+        Conversion::definitionTable[lside][rside](expressionRoot);
+    } catch (...) {
+        throw;
+    }
+}
+
+
+
 // PRIVATE:
 
 Type (*Conversion::arithmeticBinaryTable[5][5])(ASTNode *) =
@@ -126,6 +136,20 @@ Type (*Conversion::logicalUnaryTable[5])(ASTNode *) =
 Type (*Conversion::bitwiseUnaryTable[5])(ASTNode *) =
 // op // INT / FLOAT / BOOL / STRING / VOID //
         {NOCVI, e_BFO, B2I_1, e_BSO, INVAL};
+
+
+
+// the rside is the second operand, first operand conversion is used since definition has lside in its data, not as a child
+Type (*Conversion::definitionTable[5][5])(ASTNode *) =
+{
+       /*  op1   */
+// op2 /* ~~~~~~ */ INT / FLOAT / BOOL / STRING / VOID //
+       /* INT    */{NOCVI, F2I_1, B2I_1, e_SAA, INVAL},
+       /* FLOAT  */{I2F_1, NOCVF, B2F_1, e_SAA, INVAL},
+       /* BOOL   */{I2B_1, F2B_1, NOCVB, e_SAA, INVAL},
+       /* STRING */{e_ATS, e_ATS, e_ATS, NOCVS, INVAL},
+       /* VOID   */{INVAL, INVAL, INVAL, INVAL, INVAL}
+};
 
 
 
@@ -211,6 +235,16 @@ Type Conversion::FI2B_(ASTNode *expressionRoot) {
     return Type::BOOL;
 }
 
+Type Conversion::F2I_1(ASTNode *expressionRoot) {
+    FloatToInt(expressionRoot, 0);
+    return Type::INT;
+}
+
+Type Conversion::F2I_2(ASTNode *expressionRoot) {
+    FloatToInt(expressionRoot, 1);
+    return Type::INT;
+}
+
 
 
 Type Conversion::NOCVI(ASTNode *expressionRoot) {
@@ -223,6 +257,10 @@ Type Conversion::NOCVF(ASTNode *expressionRoot) {
 
 Type Conversion::NOCVB(ASTNode *expressionRoot) {
     return Type::BOOL;
+}
+
+Type Conversion::NOCVS(ASTNode *expressionRoot) {
+    return Type::STRING;
 }
 
 
@@ -245,6 +283,16 @@ Type Conversion::e_BFO(ASTNode *expressionRoot) {
 
 Type Conversion::e_BSO(ASTNode *expressionRoot) {
     throw BIT_STRING_OPERAND;
+    return Type::VOID;
+}
+
+Type Conversion::e_SAA(ASTNode *expressionRoot) {
+    throw ASSIGN_STRING_TO_OTHER;
+    return Type::VOID;
+}
+
+Type Conversion::e_ATS(ASTNode *expressionRoot) {
+    throw ASSING_OTHER_TO_STRING;
     return Type::VOID;
 }
 
@@ -271,6 +319,11 @@ void Conversion::BoolToFloat(ASTNode *expressionRoot, int operandIdx) {
 }
 
 
+
+void Conversion::FloatToInt(ASTNode *expressionRoot, int operandIdx) {
+    ASTNode *conversionNode = new ASTNode(NodeKind::FLOAT2INT, nullptr);
+    expressionRoot->InsertAfter(conversionNode, operandIdx);
+}
 
 void Conversion::IntToBool(ASTNode *expressionRoot, int operandIdx) {
     ASTNode *conversionNode = new ASTNode(NodeKind::INT2BOOL, nullptr);

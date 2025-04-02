@@ -34,3 +34,5 @@
 #define READ_INTO_CONSTANT "cannot read into a constant variable"
 #define WRITE_EXPRESSION "write argument may only be a single literal or variable of type string"
 #define WRITE_NOT_STRING "write must be used with a variable of type string or a string literal"
+#define ASSIGN_STRING_TO_OTHER "cannot assign value of type string"
+#define ASSING_OTHER_TO_STRING "assigned value must be of type string"

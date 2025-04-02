@@ -121,7 +121,7 @@ void ASTNode::Print() {
         case NodeKind::IF: case NodeKind::WHILE:
         case NodeKind::CONTINUE: case NodeKind::BREAK:
         case NodeKind::REDO: case NodeKind::RESTART:
-            cout << NodeKindFunctions::NodeKindToString(this->kind);
+            cout << this->kind.toString();
             break;
     
         case NodeKind::LITERAL:
@@ -234,7 +234,7 @@ void ASTNode::Print() {
         case NodeKind::BIT_NOT:
             expressionData = this->GetData<ExpressionData>();
             if (expressionData) {
-                cout << CYAN << "(" << NodeKindFunctions::NodeKindToSign(this->kind) << ")" << DEFAULT;
+                cout << CYAN << "(" << this->kind.toSign() << ")" << DEFAULT;
                 cout << DIM << " - " << DEFAULT;
                 cout << MAGENTA << expressionData->GetType().toString() << DEFAULT;
             } else ERR::BadData();
@@ -254,7 +254,7 @@ void ASTNode::Print() {
 
 
         default:
-            cout << RED << BOLD << NodeKindFunctions::NodeKindToString(this->kind);
+            cout << RED << BOLD << this->kind.toString();
             cout << " <>" << DEFAULT;
             break;
     }

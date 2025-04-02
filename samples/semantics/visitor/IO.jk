@@ -1,6 +1,8 @@
 int main() {
-    write true;
+    int x = 1 + 2 + 3;
+
+    write str;
     //write "Jabukod";
 }
 
-int x;
+string str = "nelze nic";

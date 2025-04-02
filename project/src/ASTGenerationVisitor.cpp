@@ -25,16 +25,15 @@ any ASTGenerationVisitor::visitVariableDeclaration(JabukodParser::VariableDeclar
             storage = nullptr;
         }
         JabukodParser::NonVoidTypeContext *type = ctx->nonVoidType();
-
         this->ast.PutVariableInScope(variable, storage, type);
-
+        
         this->ast.MoveToParent();
     }
 
     return OK;
 }
 
-any ASTGenerationVisitor::visitVariableDefinition(JabukodParser::VariableDefinitionContext *ctx) { // TODO EXPRESSION TYPE
+any ASTGenerationVisitor::visitVariableDefinition(JabukodParser::VariableDefinitionContext *ctx) {
     if (this->ast.CurrentlyIn() != NodeKind::PROGRAM) {
         VariableData *data = new VariableData(
             Type::toType( ctx->nonVoidType()->getText() ),
@@ -51,10 +50,10 @@ any ASTGenerationVisitor::visitVariableDefinition(JabukodParser::VariableDefinit
             storage = nullptr;
         }
         JabukodParser::NonVoidTypeContext *type = ctx->nonVoidType();
-
         this->ast.PutVariableInScope(variable, storage, type);
 
         this->visit(ctx->expression());
+        this->ast.ConvertExpressionDefinition(ctx->getStart());
         this->ast.MoveToParent();
     }
 
@@ -74,7 +73,7 @@ any ASTGenerationVisitor::visitFunctionDefinition(JabukodParser::FunctionDefinit
 }
 
 any ASTGenerationVisitor::visitMulDivModExpression(JabukodParser::MulDivModExpressionContext *ctx) {
-    NodeKind sign = NodeKindFunctions::SignToNodeKind( ctx->sign->getText() );
+    NodeKind sign = NodeKind::toNodeKind( ctx->sign->getText() );
     this->ast.AddNode( sign );
     this->visitChildren(ctx);
 
@@ -103,7 +102,7 @@ any ASTGenerationVisitor::visitExponentExpression(JabukodParser::ExponentExpress
 }
 
 any ASTGenerationVisitor::visitShiftExpression(JabukodParser::ShiftExpressionContext *ctx) {
-    NodeKind sign = NodeKindFunctions::SignToNodeKind( ctx->sign->getText() );
+    NodeKind sign = NodeKind::toNodeKind( ctx->sign->getText() );
     this->ast.AddNode( sign );
     this->visitChildren(ctx);
 
@@ -155,10 +154,11 @@ any ASTGenerationVisitor::visitIdentifierExpression(JabukodParser::IdentifierExp
 }
 
 any ASTGenerationVisitor::visitAddSubExpression(JabukodParser::AddSubExpressionContext *ctx) {
-    NodeKind sign = NodeKindFunctions::SignToNodeKind( ctx->sign->getText() );
-    this->ast.AddNode(
-        (sign == NodeKind::minus) ? NodeKind::SUBTRACTION : sign
-    );
+    NodeKind sign = NodeKind::toNodeKind( ctx->sign->getText() );
+    if (sign == NodeKind::minus) {
+        sign = NodeKind::SUBTRACTION;
+    }
+    this->ast.AddNode(sign);
 
     this->visitChildren(ctx);
 
@@ -224,7 +224,7 @@ any ASTGenerationVisitor::visitBitAndExpression(JabukodParser::BitAndExpressionC
 }
 
 any ASTGenerationVisitor::visitLessMoreExpression(JabukodParser::LessMoreExpressionContext *ctx) {
-    NodeKind sign = NodeKindFunctions::SignToNodeKind( ctx->sign->getText() );
+    NodeKind sign = NodeKind::toNodeKind( ctx->sign->getText() );
     this->ast.AddNode( sign );
     this->visitChildren(ctx);
 
@@ -238,7 +238,7 @@ any ASTGenerationVisitor::visitLessMoreExpression(JabukodParser::LessMoreExpress
 }
 
 any ASTGenerationVisitor::visitEqualityExpression(JabukodParser::EqualityExpressionContext *ctx) {
-    NodeKind sign = NodeKindFunctions::SignToNodeKind( ctx->sign->getText() );
+    NodeKind sign = NodeKind::toNodeKind( ctx->sign->getText() );
     this->ast.AddNode( sign );
     this->visitChildren(ctx);
 
@@ -252,10 +252,11 @@ any ASTGenerationVisitor::visitEqualityExpression(JabukodParser::EqualityExpress
 }
 
 any ASTGenerationVisitor::visitPrefixUnaryExpression(JabukodParser::PrefixUnaryExpressionContext *ctx) {
-    NodeKind sign = NodeKindFunctions::SignToNodeKind( ctx->sign->getText() );
-    this->ast.AddNode(
-        (sign == NodeKind::minus) ? NodeKind::UNARY_MINUS : sign
-    );
+    NodeKind sign = NodeKind::toNodeKind( ctx->sign->getText() );
+    if (sign == NodeKind::minus) {
+        sign = NodeKind::UNARY_MINUS;
+    }
+    this->ast.AddNode(sign);
     this->visitChildren(ctx);
 
     Type type = Type::VOID;
@@ -459,7 +460,7 @@ any ASTGenerationVisitor::visitReadStatement(JabukodParser::ReadStatementContext
     return OK;
 }
 
-any ASTGenerationVisitor::visitWriteStatement(JabukodParser::WriteStatementContext *ctx) { // TODO SEMANTICS
+any ASTGenerationVisitor::visitWriteStatement(JabukodParser::WriteStatementContext *ctx) {
     this->ast.AddNode(NodeKind::WRITE);
     this->visit(ctx->expression());
     
