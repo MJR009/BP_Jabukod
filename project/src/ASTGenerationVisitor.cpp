@@ -153,7 +153,7 @@ any ASTGenerationVisitor::visitIdentifierExpression(JabukodParser::IdentifierExp
     return OK;
 }
 
-any ASTGenerationVisitor::visitAssSubExpression(JabukodParser::AssSubExpressionContext *ctx) {
+any ASTGenerationVisitor::visitAddSubExpression(JabukodParser::AddSubExpressionContext *ctx) {
     NodeKind sign = NodeKindFunctions::SignToNodeKind( ctx->sign->getText() );
     this->ast.AddNode(
         (sign == NodeKind::minus) ? NodeKind::SUBTRACTION : sign

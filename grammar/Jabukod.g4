@@ -65,7 +65,7 @@ expression
     | <assoc=right> expression '**' expression                  # exponentExpression
     | <assoc=right> sign=( '-' | '~' | '!' ) expression         # prefixUnaryExpression
     | expression sign=( '*' | '/' | '%' ) expression            # mulDivModExpression
-    | expression sign=( '+' | '-' ) expression                  # assSubExpression
+    | expression sign=( '+' | '-' ) expression                  # addSubExpression
     | expression sign=( '<<' | '>>' ) expression                # shiftExpression
     | expression sign=( '<' | '<=' | '>' | '>=' ) expression    # lessMoreExpression
     | expression sign=( '==' | '!=' ) expression                # equalityExpression

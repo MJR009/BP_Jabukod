@@ -35,7 +35,7 @@ public:
     any visitAssignExpression(JabukodParser::AssignExpressionContext *ctx) override;
     any visitIdentifierExpression(JabukodParser::IdentifierExpressionContext *ctx) override;
     // any visitParenthesisExpression(JabukodParser::ParenthesisExpressionContext *ctx) override; // only enforces precedence, in AST can be ignored
-    any visitAssSubExpression(JabukodParser::AssSubExpressionContext *ctx) override;
+    any visitAddSubExpression(JabukodParser::AddSubExpressionContext *ctx) override;
     any visitBitXorExpression(JabukodParser::BitXorExpressionContext *ctx) override;
     any visitOrExpression(JabukodParser::OrExpressionContext *ctx) override;
     any visitAndExpression(JabukodParser::AndExpressionContext *ctx) override;
