@@ -99,6 +99,7 @@ void ASTNode::Print() {
     ForData *forData;
     ForeachData *foreachData;
     ExpressionData *expressionData;
+    ReadData *readData;
 
     switch (this->kind) {
         case NodeKind::PROGRAM:
@@ -226,6 +227,15 @@ void ASTNode::Print() {
                 cout << MAGENTA << expressionData->GetType().toString() << DEFAULT;
             } else ERR::BadData();
             break;
+
+        case NodeKind::READ:
+            readData = this->GetData<ReadData>();
+            if (readData) {
+                cout << "READ " << DIM << "into " << DEFAULT << ORANGE << readData->GetTarget() << DEFAULT;
+            } else ERR::BadData();
+            break;
+
+
 
         default:
             cout << RED << BOLD << NodeKindFunctions::NodeKindToString(this->kind);

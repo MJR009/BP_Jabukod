@@ -20,6 +20,7 @@ public:
     {}
 
     Type GetType();
+    StorageSpecifier GetSpecifier();
 
     void Print() const override;
     void PrintDeclaration() const;

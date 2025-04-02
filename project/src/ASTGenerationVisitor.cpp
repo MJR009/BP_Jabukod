@@ -20,6 +20,7 @@ any ASTGenerationVisitor::visitVariableDeclaration(JabukodParser::VariableDeclar
         JabukodParser::StorageSpecifierContext *storage;
         if (ctx->storageSpecifier()) {
             storage = ctx->storageSpecifier();
+            this->ast.CheckIfConstantDeclaration(StorageSpecifier::toSpecifier(storage->getText()), variable);
         } else {
             storage = nullptr;
         }
@@ -444,10 +445,15 @@ any ASTGenerationVisitor::visitRestartStatement(JabukodParser::RestartStatementC
     return OK;
 }
 
-any ASTGenerationVisitor::visitReadStatement(JabukodParser::ReadStatementContext *ctx) { // TODO SEMANTICS
-    this->ast.AddNode(NodeKind::READ);
-    // TODO MUSÍ ZPRACOVAT IDENTIFIER
-    this->visitChildren(ctx);
+any ASTGenerationVisitor::visitReadStatement(JabukodParser::ReadStatementContext *ctx) {
+    antlr4::Token *readTarget = ctx->IDENTIFIER()->getSymbol();
+
+    this->ast.CheckIfEligableForRead(readTarget);
+
+    string targetName = ctx->IDENTIFIER()->getText();
+    ReadData *data = new ReadData(targetName);
+
+    this->ast.AddNode(NodeKind::READ, data);
     this->ast.MoveToParent();
 
     return OK;

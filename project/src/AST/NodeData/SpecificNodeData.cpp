@@ -58,3 +58,9 @@ string FunctionData::GetName() {
 Type ExpressionData::GetType() {
     return this->type;
 }
+
+
+
+string ReadData::GetTarget() {
+    return this->into;
+}

@@ -4,6 +4,10 @@ Type Variable::GetType() {
     return this->type;
 }
 
+StorageSpecifier Variable::GetSpecifier() {
+    return this->storage;
+}
+
 
 
 void Variable::Print() const {

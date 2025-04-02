@@ -30,3 +30,5 @@
 #define MODULE_ON_FLOAT "operator \"\%\" operands must not have type float"
 #define BIT_FLOAT_OPERAND "bitwise operator operands must not have type float"
 #define BIT_STRING_OPERAND "bitwise operator operands must not have type string"
+#define READ_NOT_STRING "read must be used with a variable of type string"
+#define READ_INTO_CONSTANT "cannot read into a constant variable"

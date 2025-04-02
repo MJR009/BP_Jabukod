@@ -82,3 +82,15 @@ public:
 private:
     Type type;
 };
+
+
+
+class ReadData : public GenericNodeData {
+public:
+    ReadData(const string & into) : into(into) {}
+
+    string GetTarget();
+
+private:
+    string into;
+};

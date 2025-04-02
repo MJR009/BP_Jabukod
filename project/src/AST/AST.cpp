@@ -147,6 +147,26 @@ Variable *AST::CheckIfVariableDefined(antlr4::Token *variableToken) {
     return nullptr;
 }
 
+void AST::CheckIfEligableForRead(antlr4::Token *variableToken) {
+    Variable *targetVariable = this->CheckIfVariableDefined(variableToken);
+
+    if (targetVariable) {
+        if (targetVariable->GetType() != Type::STRING) {
+            this->parser->notifyErrorListeners(variableToken, READ_NOT_STRING, nullptr);
+        }
+
+        if (targetVariable->GetSpecifier() == StorageSpecifier::CONST) {
+            this->parser->notifyErrorListeners(variableToken, READ_INTO_CONSTANT, nullptr);
+        }
+    }
+}
+
+void AST::CheckIfConstantDeclaration(StorageSpecifier specifier, antlr4::Token *variableToken) {
+    if (specifier == StorageSpecifier::CONST) {
+        this->parser->notifyErrorListeners(variableToken, CONSTANT_DECLARATION, nullptr);
+    }
+}
+
 
 
 Type AST::ConvertExpressionBinaryArithmetic(antlr4::Token *expressionStart) {
