@@ -252,12 +252,12 @@ void AST::CheckIfCorrectArgumentCount(int countInTable, antlr4::Token *functionT
 
 
 Type AST::ConvertExpressionBinaryArithmetic(antlr4::Token *expressionStart) {
-    Type op1 = this->activeNode->GetOperandType(0);
-    Type op2 = this->activeNode->GetOperandType(1);
-
     Type inferedType = Type::VOID;
-
+    
     try {
+        Type op1 = this->activeNode->GetOperandType(0);
+        Type op2 = this->activeNode->GetOperandType(1);
+
         inferedType = Conversion::ExpressionBinaryArithmetic(op1, op2, this->activeNode);
     } catch (const char *msg) {
         this->parser->notifyErrorListeners(expressionStart, msg, nullptr);
@@ -267,12 +267,12 @@ Type AST::ConvertExpressionBinaryArithmetic(antlr4::Token *expressionStart) {
 }
 
 Type AST::ConvertExpressionBinaryLogical(antlr4::Token *expressionStart) {
-    Type op1 = this->activeNode->GetOperandType(0);
-    Type op2 = this->activeNode->GetOperandType(1);
-
     Type inferedType = Type::VOID;
 
     try {
+        Type op1 = this->activeNode->GetOperandType(0);
+        Type op2 = this->activeNode->GetOperandType(1);
+
         inferedType = Conversion::ExpressionBinaryLogical(op1, op2, this->activeNode);
     } catch (const char *msg) {
         this->parser->notifyErrorListeners(expressionStart, msg, nullptr);
@@ -282,12 +282,12 @@ Type AST::ConvertExpressionBinaryLogical(antlr4::Token *expressionStart) {
 }
 
 Type AST::ConvertExpressionBinaryRelational(antlr4::Token *expressionStart) {
-    Type op1 = this->activeNode->GetOperandType(0);
-    Type op2 = this->activeNode->GetOperandType(1);
-
     Type inferedType = Type::VOID;
 
     try {
+        Type op1 = this->activeNode->GetOperandType(0);
+        Type op2 = this->activeNode->GetOperandType(1);
+
         inferedType = Conversion::ExpressionBinaryRelational(op1, op2, this->activeNode);
     } catch (const char *msg) {
         this->parser->notifyErrorListeners(expressionStart, msg, nullptr);
@@ -297,12 +297,12 @@ Type AST::ConvertExpressionBinaryRelational(antlr4::Token *expressionStart) {
 }
 
 Type AST::ConvertExpressionBinaryBitwise(antlr4::Token *expressionStart) {
-    Type op1 = this->activeNode->GetOperandType(0);
-    Type op2 = this->activeNode->GetOperandType(1);
-
     Type inferedType = Type::VOID;
 
     try {
+        Type op1 = this->activeNode->GetOperandType(0);
+        Type op2 = this->activeNode->GetOperandType(1);
+
         inferedType = Conversion::ExpressionBinaryBitwise(op1, op2, this->activeNode);
     } catch (const char *msg) {
         this->parser->notifyErrorListeners(expressionStart, msg, nullptr);
@@ -312,25 +312,25 @@ Type AST::ConvertExpressionBinaryBitwise(antlr4::Token *expressionStart) {
 }
 
 Type AST::ConvertExpressionUnaryArithmetic(antlr4::Token *expressionStart) {
-    Type op = this->activeNode->GetOperandType(0);
-
     Type inferedType = Type::VOID;
-
+    
     try {
+        Type op = this->activeNode->GetOperandType(0);
+
         inferedType = Conversion::ExpressionUnaryArithmetic(op, this->activeNode);
     } catch (const char *msg) {
         this->parser->notifyErrorListeners(expressionStart, msg, nullptr);
     }
-    
+
     return inferedType;
 }
 
 Type AST::ConvertExpressionUnaryLogical(antlr4::Token *expressionStart) {
-    Type op = this->activeNode->GetOperandType(0);
-
     Type inferedType = Type::VOID;
 
     try {
+        Type op = this->activeNode->GetOperandType(0);
+
         inferedType = Conversion::ExpressionUnaryLogical(op, this->activeNode);
     } catch (const char *msg) {
         this->parser->notifyErrorListeners(expressionStart, msg, nullptr);
@@ -340,11 +340,11 @@ Type AST::ConvertExpressionUnaryLogical(antlr4::Token *expressionStart) {
 }
 
 Type AST::ConvertExpressionUnaryBitwise(antlr4::Token *expressionStart) {
-    Type op = this->activeNode->GetOperandType(0);
-
     Type inferedType = Type::VOID;
 
     try {
+        Type op = this->activeNode->GetOperandType(0);
+
         inferedType = Conversion::ExpressionUnaryBitwise(op, this->activeNode);
     } catch (const char *msg) {
         this->parser->notifyErrorListeners(expressionStart, msg, nullptr);
@@ -354,10 +354,10 @@ Type AST::ConvertExpressionUnaryBitwise(antlr4::Token *expressionStart) {
 }
 
 void AST::ConvertExpressionDefinition(antlr4::Token *expressionStart) {
-    Type lside = this->activeNode->GetData<VariableData>()->GetType();
-    Type rside = this->activeNode->GetOperandType(0);
-
     try {
+        Type lside = this->activeNode->GetData<VariableData>()->GetType();
+        Type rside = this->activeNode->GetOperandType(0);
+
         Conversion::ExpressionDefinition(lside, rside, this->activeNode);
     } catch (const char *msg) {
         this->parser->notifyErrorListeners(expressionStart, msg, nullptr);
@@ -378,12 +378,12 @@ Type AST::ConvertExpressionAssignment(antlr4::Token *expressionStart) {
         }
     }
 
-    Type lside = assignmentTarget->GetData<VariableData>()->GetType();
-    Type rside = this->activeNode->GetOperandType(1);
-
     Type inferedType = Type::VOID;
 
     try {
+        Type lside = assignmentTarget->GetData<VariableData>()->GetType();
+        Type rside = this->activeNode->GetOperandType(1);
+
         inferedType = Conversion::ExpressionAssignment(lside, rside, this->activeNode);
     } catch (const char *msg) {
         this->parser->notifyErrorListeners(expressionStart, msg, nullptr);

@@ -42,6 +42,7 @@ Type ASTNode::GetOperandType(int i) const {
     }
 
     ASTNode* operand = this->children.at(i);
+    Type aux = Type::VOID;
 
     switch (operand->GetKind()) {
         case NodeKind::VARIABLE:
@@ -49,7 +50,11 @@ Type ASTNode::GetOperandType(int i) const {
         case NodeKind::LITERAL:
             return operand->GetData<LiteralData>()->GetType();
         case NodeKind::FUNCTION_CALL:
-            return operand->GetData<FunctionCallData>()->GetReturnType();
+            aux = operand->GetData<FunctionCallData>()->GetReturnType();
+            if (aux == Type::VOID) {
+                throw VOID_FUNCTION_IN_EXPRESSION;
+            }
+            return aux;
         default: // expression nodes
             return operand->GetData<ExpressionData>()->GetType();
     }

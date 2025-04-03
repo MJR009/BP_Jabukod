@@ -40,3 +40,4 @@
 #define CONSTANT_ASSIGNMENT "cannot assign to a constant variable"
 #define UNDEFINED_FUNCTION "function is undefined"
 #define BAD_ARGUMENT_COUNT "function called has incorrect amount of arguments"
+#define VOID_FUNCTION_IN_EXPRESSION "function used in an expression has return type void"
