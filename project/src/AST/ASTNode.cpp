@@ -107,6 +107,10 @@ void ASTNode::InsertAfter(ASTNode *newChild, int childIdx) {
     this->children.at(childIdx) = newChild;
 }
 
+void ASTNode::AdjustArguments() {
+    rotate(this->children.begin(), this->children.begin() + 1, this->children.end());
+}
+
 
 
 void ASTNode::Print() {

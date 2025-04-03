@@ -392,6 +392,23 @@ Type AST::ConvertExpressionAssignment(antlr4::Token *expressionStart) {
     return inferedType;
 }
 
+void AST::ConvertFunctionArguments(JabukodParser::FunctionArgumentsContext *arguments, FunctionTableEntry *function) {
+    int argumentCount = this->activeNode->GetChildrenCount();
+
+    for (int i = 0; i < argumentCount; i++) {
+        try {
+            Type presentType = this->activeNode->GetOperandType(0);
+            Type actualType = function->GetParameters().at(i).GetType();
+
+            Conversion::Arguments(actualType, presentType, this->activeNode);
+        } catch (const char *msg) {
+            this->parser->notifyErrorListeners(arguments->functionArgument().at(i)->getStart(), msg, nullptr);
+        }
+
+        this->activeNode->AdjustArguments();
+    }
+}
+
 
 
 void AST::Print() {

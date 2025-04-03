@@ -284,7 +284,7 @@ any ASTGenerationVisitor::visitPrefixUnaryExpression(JabukodParser::PrefixUnaryE
     return OK;
 }
 
-any ASTGenerationVisitor::visitFunctionCall(JabukodParser::FunctionCallContext *ctx) { // covers functionCallExpression // TODO SEMANTICS
+any ASTGenerationVisitor::visitFunctionCall(JabukodParser::FunctionCallContext *ctx) { // covers functionCallExpression
     FunctionTableEntry *function = this->ast.CheckIfFunctionDefined( ctx->IDENTIFIER()->getSymbol() );
     this->ast.AddNode(NodeKind::FUNCTION_CALL);
 
@@ -299,8 +299,7 @@ any ASTGenerationVisitor::visitFunctionCall(JabukodParser::FunctionCallContext *
         exists = true;
         returnType = function->GetReturnType();
         this->ast.CheckIfCorrectArgumentCount(function->GetParameters().size(), ctx->getStart());
-        // TODO has correct types of arguments? do conversions!
-        // TODO void funkce nesmí být použita ve výrazu !!! -> už tam je throw, teď invokovat conversion check
+        this->ast.ConvertFunctionArguments(ctx->functionArguments(), function);
     }
 
     FunctionCallData *data = new FunctionCallData(ctx->IDENTIFIER()->getText(), returnType, exists);

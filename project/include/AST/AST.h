@@ -48,6 +48,7 @@ public:
     Type ConvertExpressionUnaryBitwise(antlr4::Token *expressionStart);
     void ConvertExpressionDefinition(antlr4::Token *expressionStart);
     Type ConvertExpressionAssignment(antlr4::Token *expressionStart); // also checks for variable presence and const
+    void ConvertFunctionArguments(JabukodParser::FunctionArgumentsContext *arguments, FunctionTableEntry *function);
 
     void Print();
 

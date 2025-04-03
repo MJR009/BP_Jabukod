@@ -84,6 +84,14 @@ Type Conversion::ExpressionAssignment(Type lside, Type rside, ASTNode *expressio
     }
 }
 
+void Conversion::Arguments(Type actual, Type given, ASTNode *expressionRoot) {
+    try {
+        Conversion::argumentTable[actual][given](expressionRoot);
+    } catch (...) {
+        throw;
+    }
+}
+
 
 
 // PRIVATE:
@@ -168,6 +176,17 @@ Type (*Conversion::assignmentTable[5][5])(ASTNode *) =
        /* FLOAT  */{I2F_2, NOCVF, B2F_2, e_SAA, INVAL},
        /* BOOL   */{I2B_2, F2B_2, NOCVB, e_SAA, INVAL},
        /* STRING */{e_ATS, e_ATS, e_ATS, NOCVS, INVAL},
+       /* VOID   */{INVAL, INVAL, INVAL, INVAL, INVAL}
+};
+
+Type (*Conversion::argumentTable[5][5])(ASTNode *) =
+{
+       /*  op1   */
+// op2 /* ~~~~~~ */ INT / FLOAT / BOOL / STRING / VOID //
+       /* INT    */{NOCVI, F2I_1, B2I_1, e_PSA, INVAL},
+       /* FLOAT  */{I2F_1, NOCVF, B2F_1, e_PSA, INVAL},
+       /* BOOL   */{I2B_1, F2B_1, NOCVB, e_PSA, INVAL},
+       /* STRING */{e_SAE, e_SAE, e_SAE, NOCVS, INVAL},
        /* VOID   */{INVAL, INVAL, INVAL, INVAL, INVAL}
 };
 
@@ -313,6 +332,16 @@ Type Conversion::e_SAA(ASTNode *expressionRoot) {
 
 Type Conversion::e_ATS(ASTNode *expressionRoot) {
     throw ASSING_OTHER_TO_STRING;
+    return Type::VOID;
+}
+
+Type Conversion::e_PSA(ASTNode *expressionRoot) {
+    throw BAD_STRING_ARGUMENT;
+    return Type::VOID;
+}
+
+Type Conversion::e_SAE(ASTNode *expressionRoot) {
+    throw STRING_ARGUMENT_EXPECTED;
     return Type::VOID;
 }
 

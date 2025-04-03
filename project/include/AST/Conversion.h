@@ -19,6 +19,7 @@ public:
 
     static void ExpressionDefinition(Type lside, Type rside, ASTNode *expressionRoot);
     static Type ExpressionAssignment(Type lside, Type rside, ASTNode *expressionRoot);
+    static void Arguments(Type actual, Type given, ASTNode *expressionRoot);
 
 private:
     static Type (*arithmeticBinaryTable[5][5])(ASTNode *);
@@ -32,6 +33,7 @@ private:
 
     static Type (*definitionTable[5][5])(ASTNode *);
     static Type (*assignmentTable[5][5])(ASTNode *);
+    static Type (*argumentTable[5][5])(ASTNode *);
 
     // actual conversions:
     static Type I2F_1(ASTNode *expressionRoot); // int to float first
@@ -66,6 +68,8 @@ private:
     static Type e_BSO(ASTNode *expressionRoot); // bitwise string operand
     static Type e_SAA(ASTNode *expressionRoot); // string assignment attempt
     static Type e_ATS(ASTNode *expressionRoot); // assignment to string
+    static Type e_PSA(ASTNode *expressionRoot); // pass string as argument
+    static Type e_SAE(ASTNode *expressionRoot); // string argument expected
 
     // upcasts:
     static void IntToFloat(ASTNode *expressionRoot, int operandIdx);
