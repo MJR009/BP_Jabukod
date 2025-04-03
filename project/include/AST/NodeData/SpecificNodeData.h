@@ -99,11 +99,13 @@ private:
 
 class FunctionCallData : public GenericNodeData {
 public:
-    FunctionCallData(const string & name, Type type) : name(name), returnType(type) {}
+    FunctionCallData(const string & name, Type type, bool exists) : name(name), returnType(type), exists(exists) {}
 
     string GetName();
     Type GetReturnType();
-    
+
+    bool exists;
+
 private:
     string name;
     Type returnType;

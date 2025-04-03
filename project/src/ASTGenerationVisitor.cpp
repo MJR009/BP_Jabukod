@@ -293,14 +293,17 @@ any ASTGenerationVisitor::visitFunctionCall(JabukodParser::FunctionCallContext *
     }
 
     Type returnType = Type::VOID;
+    bool exists = false;
 
     if (function) {
+        exists = true;
+        returnType = function->GetReturnType();
         this->ast.CheckIfCorrectArgumentCount(function->GetParameters().size(), ctx->getStart());
         // TODO has correct types of arguments? do conversions!
         // TODO void funkce nesmí být použita ve výrazu !!! -> už tam je throw, teď invokovat conversion check
     }
 
-    FunctionCallData *data = new FunctionCallData(ctx->IDENTIFIER()->getText(), returnType);
+    FunctionCallData *data = new FunctionCallData(ctx->IDENTIFIER()->getText(), returnType, exists);
     this->ast.GiveActiveNodeData(data);
 
     this->ast.MoveToParent();
