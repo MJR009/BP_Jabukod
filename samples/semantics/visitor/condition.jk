@@ -7,7 +7,7 @@ int main() {
 
     i = 2;
 
-    for (i = i = i + 2;;) {
+    for (i = 2 + true;i | 10;i = 1+2) {
         write "true";
     }
 }

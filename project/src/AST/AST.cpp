@@ -249,6 +249,17 @@ void AST::CheckIfCorrectArgumentCount(int countInTable, antlr4::Token *functionT
     }
 }
 
+void AST::CheckIfPlainAssignment(antlr4::Token *expressionToken, bool initOrUpdate) {
+    NodeKind potentialAssignment = this->activeNode->GetChild(0)->GetKind();
+    if (potentialAssignment != NodeKind::ASSIGNMENT) {
+        this->parser->notifyErrorListeners(
+            expressionToken,
+            initOrUpdate ? FOR_HEADER_INIT_EXPRESSION : FOR_HEADER_UPDATE_EXPRESSION,
+            nullptr
+        );
+    }
+}
+
 
 
 Type AST::ConvertExpressionBinaryArithmetic(antlr4::Token *expressionStart) {

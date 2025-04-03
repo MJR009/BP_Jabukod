@@ -38,6 +38,7 @@ public:
     void CheckIfEligableForRead(antlr4::Token *variableToken);
     void CheckIfEligableForWrite(antlr4::Token *toWrite);
     void CheckIfCorrectArgumentCount(int countInTable, antlr4::Token *functionToken);
+    void CheckIfPlainAssignment(antlr4::Token *expressionToken, bool initOrUpdate);
 
     Type ConvertExpressionBinaryArithmetic(antlr4::Token *expressionStart);
     Type ConvertExpressionBinaryLogical(antlr4::Token *expressionStart);
