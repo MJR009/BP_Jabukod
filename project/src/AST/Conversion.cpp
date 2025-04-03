@@ -92,6 +92,14 @@ void Conversion::Arguments(Type actual, Type given, ASTNode *expressionRoot) {
     }
 }
 
+void Conversion::Condition(Type condition, ASTNode *expressionRoot) {
+    try {
+        Conversion::conditionTable[condition](expressionRoot);
+    } catch (...) {
+        throw;
+    }
+}
+
 
 
 // PRIVATE:
@@ -189,6 +197,10 @@ Type (*Conversion::argumentTable[5][5])(ASTNode *) =
        /* STRING */{e_SAE, e_SAE, e_SAE, NOCVS, INVAL},
        /* VOID   */{INVAL, INVAL, INVAL, INVAL, INVAL}
 };
+
+Type (*Conversion::conditionTable[5])(ASTNode *) =
+// op // INT / FLOAT / BOOL / STRING / VOID //
+        {I2B_1, F2B_1, NOCVB, e_CNL, INVAL};
 
 
 
@@ -342,6 +354,11 @@ Type Conversion::e_PSA(ASTNode *expressionRoot) {
 
 Type Conversion::e_SAE(ASTNode *expressionRoot) {
     throw STRING_ARGUMENT_EXPECTED;
+    return Type::VOID;
+}
+
+Type Conversion::e_CNL(ASTNode *expressionRoot) {
+    throw STRING_CONDITION;
     return Type::VOID;
 }
 

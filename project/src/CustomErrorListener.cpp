@@ -8,20 +8,20 @@ void CustomErrorListener::syntaxError(
     const string & msg, // original text of the error
     exception_ptr e
 ) {
-    cerr << BOLD;
+    cerr << BOLD << flush;
 
     if (this->phase == Phase::SYNTAX) {
-        cerr << RED << "Syntax error\t";
+        cerr << RED << "Syntax error\t" << flush;
     } else {
-        cerr << ORANGE << "Semantic error\t";
+        cerr << ORANGE << "Semantic error\t" << flush;
     }
 
-    cerr << DEFAULT;
+    cerr << DEFAULT << flush;
 
     cerr <<
         "at line " << BOLD << line << ":" << charPositionInLine << DEFAULT <<
         "\t" << DIM << msg << DEFAULT <<
-    endl;
+    endl << flush;
 }
 
 

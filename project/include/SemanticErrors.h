@@ -43,3 +43,4 @@
 #define VOID_FUNCTION_IN_EXPRESSION "function used in an expression has return type void"
 #define BAD_STRING_ARGUMENT "value of type string cannot be passed as argument here"
 #define STRING_ARGUMENT_EXPECTED "argument of type string was expected here"
+#define STRING_CONDITION "cannot evaluate value of type string as a condition"

@@ -1,0 +1,13 @@
+int main() {
+    //float x = 10;
+
+    //int hi = x ** 3;
+
+    int i;
+
+    i = 2;
+
+    for (i = i = i + 2;;) {
+        write "true";
+    }
+}

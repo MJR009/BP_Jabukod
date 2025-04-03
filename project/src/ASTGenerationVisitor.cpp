@@ -310,9 +310,11 @@ any ASTGenerationVisitor::visitFunctionCall(JabukodParser::FunctionCallContext *
     return OK;
 }
 
-any ASTGenerationVisitor::visitIfStatement(JabukodParser::IfStatementContext *ctx) { // TODO CONDITION
+any ASTGenerationVisitor::visitIfStatement(JabukodParser::IfStatementContext *ctx) {
     this->ast.AddNode(NodeKind::IF);
     this->visit(ctx->expression());
+
+    this->ast.ConvertCondition(ctx->expression()->getStart());
 
     {
         BodyData *data = new BodyData();
@@ -334,9 +336,11 @@ any ASTGenerationVisitor::visitIfStatement(JabukodParser::IfStatementContext *ct
     return OK;
 }
 
-any ASTGenerationVisitor::visitWhileStatement(JabukodParser::WhileStatementContext *ctx) { // TODO CONDITION
+any ASTGenerationVisitor::visitWhileStatement(JabukodParser::WhileStatementContext *ctx) {
     this->ast.AddNode(NodeKind::WHILE);
     this->visit(ctx->expression());
+
+    this->ast.ConvertCondition(ctx->expression()->getStart());
 
     {
         BodyData *data = new BodyData();
@@ -512,22 +516,21 @@ any ASTGenerationVisitor::visitAssignment(JabukodParser::AssignmentContext *ctx)
     return OK;
 }
 
-any ASTGenerationVisitor::visitForHeader(JabukodParser::ForHeaderContext *ctx) { // TODO EXPRESSIONS
+any ASTGenerationVisitor::visitForHeader(JabukodParser::ForHeaderContext *ctx) {
     if (ctx->init) {
         this->ast.AddNode(NodeKind::FOR_HEADER1);
-
-        if (ctx->init->variableDefinition()) {
-            this->visit(ctx->init->variableDefinition());
-        } else if (ctx->init->expression()) {
-            this->visit(ctx->init->expression());
-        }
         
+        this->visit(ctx->init);
+
         this->ast.MoveToParent();
     }
 
     if (ctx->condition) {
         this->ast.AddNode(NodeKind::FOR_HEADER2);
         this->visit(ctx->condition);
+
+        this->ast.ConvertCondition(ctx->condition->getStart());
+
         this->ast.MoveToParent();
     }
 
