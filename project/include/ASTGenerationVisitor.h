@@ -58,7 +58,7 @@ public:
     // any visitSimpleStatementStatement(JabukodParser::SimpleStatementStatementContext *ctx) override; // needed for parse tree
     // any visitVariableDeclarationStatement(JabukodParser::VariableDeclarationStatementContext *ctx) override; // processed by visitVariableDeclaration
     // any visitVariableDefinitionStatement(JabukodParser::VariableDefinitionStatementContext *ctx) override; // processed by visitVariableDefinition
-    any visitAssignmentStatement(JabukodParser::AssignmentStatementContext *ctx) override;
+    // any visitAssignmentStatement(JabukodParser::AssignmentStatementContext *ctx) override; // processed by assignment
     // any visitFunctionCallStatement(JabukodParser::FunctionCallStatementContext *ctx) override; // processed by functionCall
     any visitReturnStatement(JabukodParser::ReturnStatementContext *ctx) override;
     any visitExitStatement(JabukodParser::ExitStatementContext *ctx) override;

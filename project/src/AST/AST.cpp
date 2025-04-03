@@ -343,8 +343,10 @@ Type AST::ConvertExpressionAssignment(antlr4::Token *expressionStart) {
     }
 
     Variable *variable = this->GetVariable(expressionStart);
-    if (variable->GetSpecifier() == StorageSpecifier::CONST) {
-        this->parser->notifyErrorListeners(expressionStart, CONSTANT_ASSIGNMENT, nullptr);
+    if (variable) {
+        if (variable->GetSpecifier() == StorageSpecifier::CONST) {
+            this->parser->notifyErrorListeners(expressionStart, CONSTANT_ASSIGNMENT, nullptr);
+        }
     }
 
     Type lside = assignmentTarget->GetData<VariableData>()->GetType();

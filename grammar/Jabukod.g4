@@ -137,8 +137,6 @@ simpleStatement
 
 // potential extensions:
 //      yield
-//      potentially define "assignment" 
-// May be better to segment into more rules
 
 assignment
     : IDENTIFIER listAccess? '=' expression

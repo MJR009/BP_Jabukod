@@ -371,14 +371,6 @@ any ASTGenerationVisitor::visitForeachStatement(JabukodParser::ForeachStatementC
     return OK;
 }
 
-any ASTGenerationVisitor::visitAssignmentStatement(JabukodParser::AssignmentStatementContext *ctx) { // works as forced assignment expression// TODO SEMANTICS
-    this->ast.AddNode(NodeKind::ASSIGNMENT);
-    this->visitChildren(ctx);
-    this->ast.MoveToParent();
-
-    return OK;
-}
-
 any ASTGenerationVisitor::visitReturnStatement(JabukodParser::ReturnStatementContext *ctx) { // TODO expression, correct return type, must be in every path
     this->ast.AddNode(NodeKind::RETURN);
 
@@ -477,9 +469,27 @@ any ASTGenerationVisitor::visitWriteStatement(JabukodParser::WriteStatementConte
 }
 
 
-any ASTGenerationVisitor::visitAssignment(JabukodParser::AssignmentContext *ctx) { // TODO SEMANTICS
-    // MUSÍ ZPRACOVAT IDENTIFIER, narozdíl od assignmentExpression, je zde na tvrdo vynucen gramatikou
-    this->visitChildren(ctx);
+any ASTGenerationVisitor::visitAssignment(JabukodParser::AssignmentContext *ctx) { // forced assignment expression
+    this->ast.AddNode(NodeKind::ASSIGNMENT);
+
+    this->ast.AddNode(NodeKind::VARIABLE);
+    Type variableType = Type::VOID;
+    string variableName = ctx->IDENTIFIER()->getText();
+    Variable *variable = this->ast.CheckIfVariableDefined( ctx->IDENTIFIER()->getSymbol() );
+    if (variable) {
+        variableType = variable->GetType();
+    }
+    VariableData *lSideData = new VariableData(variableType, variableName);
+    this->ast.GiveActiveNodeData(lSideData);
+    this->ast.MoveToParent();
+
+    this->visit(ctx->expression());
+
+    Type type = this->ast.ConvertExpressionAssignment(ctx->getStart());
+    ExpressionData *rSideData = new ExpressionData(type);
+    this->ast.GiveActiveNodeData(rSideData);
+
+    this->ast.MoveToParent();
 
     return OK;
 }
