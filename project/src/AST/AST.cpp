@@ -441,6 +441,32 @@ void AST::ConvertCondition(antlr4::Token *expressionStart) {
     }
 }
 
+void AST::ConvertReturn(antlr4::Token *returnToken) {
+    try {
+        Type functionReturn = this->CurrentlyInFunction()->GetReturnType();
+        Type presentReturn = Type::VOID;
+        if (this->activeNode->GetChildrenCount() != 0) {
+            presentReturn = this->activeNode->GetOperandType(0);
+        }
+
+        Conversion::Return(functionReturn, presentReturn, this->activeNode);
+
+    } catch (const char *msg) {
+        this->parser->notifyErrorListeners(returnToken, msg, nullptr);
+    }
+}
+
+void AST::ConvertExit(antlr4::Token *exitToken) {
+    try {
+        Type presentExit = this->activeNode->GetOperandType(0);
+
+        Conversion::Exit(presentExit, this->activeNode);
+
+    } catch (const char *msg) {
+        this->parser->notifyErrorListeners(exitToken, msg, nullptr);
+    }
+}
+
 
 
 void AST::Print() {
@@ -638,4 +664,18 @@ Variable *AST::IsInThisScope(const string & name, ASTNode *node) {
     }
 
     return variable;
+}
+
+
+
+FunctionTableEntry *AST::CurrentlyInFunction() {
+    ASTNode *aux = this->activeNode;
+
+    while(aux->GetKind() != NodeKind::FUNCTION) {
+        aux = aux->GetParent();
+    }
+
+    string name = aux->GetData<FunctionData>()->GetName();
+
+    return this->symbolTable.IsIdFunction(name); // we are inside this function, so it has to be defined
 }

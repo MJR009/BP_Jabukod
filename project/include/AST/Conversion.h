@@ -21,6 +21,8 @@ public:
     static Type ExpressionAssignment(Type lside, Type rside, ASTNode *expressionRoot);
     static void Arguments(Type actual, Type given, ASTNode *expressionRoot);
     static void Condition(Type condition, ASTNode *expressionRoot);
+    static void Return(Type function, Type present, ASTNode *expressionRoot);
+    static void Exit(Type present, ASTNode *expressionRoot);
 
 private:
     static Type (*arithmeticBinaryTable[5][5])(ASTNode *);
@@ -36,6 +38,8 @@ private:
     static Type (*assignmentTable[5][5])(ASTNode *);
     static Type (*argumentTable[5][5])(ASTNode *);
     static Type (*conditionTable[5])(ASTNode *);
+    static Type (*returnTable[5][5])(ASTNode *);
+    static Type (*exitTable[5])(ASTNode *);
 
     // actual conversions:
     static Type I2F_1(ASTNode *expressionRoot); // int to float first
@@ -62,8 +66,9 @@ private:
     static Type NOCVF(ASTNode *expressionRoot);
     static Type NOCVB(ASTNode *expressionRoot);
     static Type NOCVS(ASTNode *expressionRoot);
+    static Type NOCVV(ASTNode *expressionRoot); // return void - same as INVAL, for better documentation in return
 
-    static Type INVAL(ASTNode *expressionRoot); // invalid - return void; due to undefined variables, void subexpression may still occur and need to be accounted for
+    static Type INVAL(ASTNode *expressionRoot); // invalid - return void; due to undefined variables, void subexpression may still occur
 
     static Type e_ISC(ASTNode *expressionRoot); // implicit string conversion
     static Type e_BFO(ASTNode *expressionRoot); // bitwise float operand
@@ -73,6 +78,8 @@ private:
     static Type e_PSA(ASTNode *expressionRoot); // pass string as argument
     static Type e_SAE(ASTNode *expressionRoot); // string argument expected
     static Type e_CNL(ASTNode *expressionRoot); // condition not logical value
+    static Type e_BRT(ASTNode *expressionRoot); // bad return type
+    static Type e_BET(ASTNode *expressionRoot); // bad exit type
 
     // upcasts:
     static void IntToFloat(ASTNode *expressionRoot, int operandIdx);

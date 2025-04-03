@@ -133,6 +133,8 @@ void ASTNode::Print() {
         case NodeKind::IF: case NodeKind::WHILE:
         case NodeKind::CONTINUE: case NodeKind::BREAK:
         case NodeKind::REDO: case NodeKind::RESTART:
+        case NodeKind::RETURN: case NodeKind::EXIT:
+        case NodeKind::SUSPEND: case NodeKind::RESUME:
             cout << this->kind.toString();
             break;
     

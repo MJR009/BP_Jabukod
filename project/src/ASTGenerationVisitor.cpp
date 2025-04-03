@@ -4,6 +4,10 @@ any ASTGenerationVisitor::visitSourceFile(JabukodParser::SourceFileContext *ctx)
     this->ast.AddNode(NodeKind::PROGRAM);
     this->visitChildren(ctx);
 
+    // TODO //
+    // suspend, resume pair occurence
+    // return, exit in every path
+
     return OK;
 }
 
@@ -393,31 +397,31 @@ any ASTGenerationVisitor::visitForeachStatement(JabukodParser::ForeachStatementC
     return OK;
 }
 
-any ASTGenerationVisitor::visitReturnStatement(JabukodParser::ReturnStatementContext *ctx) { // TODO expression, correct return type, must be in every path
+any ASTGenerationVisitor::visitReturnStatement(JabukodParser::ReturnStatementContext *ctx) {
     this->ast.AddNode(NodeKind::RETURN);
 
     if (ctx->expression()) {
         this->visit(ctx->expression());
     }
+    this->ast.ConvertReturn(ctx->getStart());
 
     this->ast.MoveToParent();
 
     return OK;
 }
 
-any ASTGenerationVisitor::visitExitStatement(JabukodParser::ExitStatementContext *ctx) { // TODO expression, must be int, must be in every path
+any ASTGenerationVisitor::visitExitStatement(JabukodParser::ExitStatementContext *ctx) {
     this->ast.AddNode(NodeKind::EXIT);
 
-    if (ctx->expression()) {
-        this->visit(ctx->expression());
-    }
+    this->visit(ctx->expression());
+    this->ast.ConvertExit(ctx->getStart());
     
     this->ast.MoveToParent();
 
     return OK;
 }
 
-any ASTGenerationVisitor::visitSuspendStatement(JabukodParser::SuspendStatementContext *ctx) { // TODO SEMANTICS
+any ASTGenerationVisitor::visitSuspendStatement(JabukodParser::SuspendStatementContext *ctx) {
     this->ast.AddNode(NodeKind::SUSPEND);
     this->visitChildren(ctx);
     this->ast.MoveToParent();
@@ -425,7 +429,7 @@ any ASTGenerationVisitor::visitSuspendStatement(JabukodParser::SuspendStatementC
     return OK;
 }
 
-any ASTGenerationVisitor::visitResumeStatement(JabukodParser::ResumeStatementContext *ctx) { // TODO SEMANTICS
+any ASTGenerationVisitor::visitResumeStatement(JabukodParser::ResumeStatementContext *ctx) {
     this->ast.AddNode(NodeKind::RESUME);
     this->visitChildren(ctx);
     this->ast.MoveToParent();

@@ -124,7 +124,7 @@ simpleStatement
     | functionCall                                                  # functionCallStatement
     //| expression // covers functionCall and assignment
     | 'return' expression?                                          # returnStatement
-    | 'exit' expression?                                            # exitStatement
+    | 'exit' expression                                             # exitStatement
     | 'suspend'                                                     # suspendStatement
     | 'resume'                                                      # resumeStatement
     | 'continue'                                                    # continueStatement

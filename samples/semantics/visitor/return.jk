@@ -1,0 +1,24 @@
+int x() {
+    return 1.0 ;    
+}
+
+void y() {
+    return;
+}
+
+string z() {
+    string x = "hello";
+
+    return x;//+1;
+}
+
+int main() {
+
+    exit 1.0;
+    exit 0;
+    exit false;
+
+    //exit "Jabukod";
+
+    return 0;
+}

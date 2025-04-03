@@ -100,6 +100,22 @@ void Conversion::Condition(Type condition, ASTNode *expressionRoot) {
     }
 }
 
+void Conversion::Return(Type function, Type present, ASTNode *expressionRoot) {
+    try {
+        Conversion::returnTable[function][present](expressionRoot);
+    } catch (...) {
+        throw;
+    }
+}
+
+void Conversion::Exit(Type present, ASTNode *expressionRoot) {
+    try {
+        Conversion::exitTable[present](expressionRoot);
+    } catch (...) {
+        throw;
+    }
+}
+
 
 
 // PRIVATE:
@@ -201,6 +217,21 @@ Type (*Conversion::argumentTable[5][5])(ASTNode *) =
 Type (*Conversion::conditionTable[5])(ASTNode *) =
 // op // INT / FLOAT / BOOL / STRING / VOID //
         {I2B_1, F2B_1, NOCVB, e_CNL, INVAL};
+
+Type (*Conversion::returnTable[5][5])(ASTNode *) =
+{
+       /*  op1   */
+// op2 /* ~~~~~~ */ INT / FLOAT / BOOL / STRING / VOID //
+       /* INT    */{NOCVI, F2I_1, B2I_1, e_BRT, e_BRT},
+       /* FLOAT  */{I2F_1, NOCVF, B2F_1, e_BRT, e_BRT},
+       /* BOOL   */{I2B_1, F2B_1, NOCVB, e_BRT, e_BRT},
+       /* STRING */{e_BRT, e_BRT, e_BRT, NOCVS, e_BRT},
+       /* VOID   */{e_BRT, e_BRT, e_BRT, e_BRT, NOCVV}
+};
+
+Type (*Conversion::exitTable[5])(ASTNode *) =
+// op // INT / FLOAT / BOOL / STRING / VOID //
+        {NOCVI, F2I_1, B2I_1, e_BET, e_BET};
 
 
 
@@ -314,6 +345,10 @@ Type Conversion::NOCVS(ASTNode *expressionRoot) {
     return Type::STRING;
 }
 
+Type Conversion::NOCVV(ASTNode *expressionRoot) {
+    return Type::VOID;
+}
+
 
 
 Type Conversion::INVAL(ASTNode *expressionRoot) {
@@ -359,6 +394,16 @@ Type Conversion::e_SAE(ASTNode *expressionRoot) {
 
 Type Conversion::e_CNL(ASTNode *expressionRoot) {
     throw STRING_CONDITION;
+    return Type::VOID;
+}
+
+Type Conversion::e_BRT(ASTNode *expressionRoot) {
+    throw BAD_RETURN_TYPE;
+    return Type::VOID;
+}
+
+Type Conversion::e_BET(ASTNode *expressionRoot) {
+    throw BAD_EXIT_TYPE;
     return Type::VOID;
 }
 

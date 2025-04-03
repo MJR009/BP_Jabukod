@@ -51,6 +51,8 @@ public:
     Type ConvertExpressionAssignment(antlr4::Token *expressionStart); // also checks for variable presence and const
     void ConvertFunctionArguments(JabukodParser::FunctionArgumentsContext *arguments, FunctionTableEntry *function);
     void ConvertCondition(antlr4::Token *expressionStart);
+    void ConvertReturn(antlr4::Token *returnToken);
+    void ConvertExit(antlr4::Token *exitToken);
 
     void Print();
 
@@ -102,4 +104,6 @@ private:
 
     bool IsScopeHavingNode(ASTNode *node);
     Variable *IsInThisScope(const string & name, ASTNode *node);
+
+    FunctionTableEntry *CurrentlyInFunction();
 };    
