@@ -31,6 +31,7 @@ public:
     void CheckIfNodeWithinLoop(antlr4::Token *token);
     Variable *CheckIfVariableDefined(antlr4::Token *variableToken);
     Variable *GetVariable(antlr4::Token *variableToken);
+    void CheckIfModuloFloatOperands(JabukodParser::MulDivModExpressionContext *ctx);
     void CheckIfConstantDeclaration(StorageSpecifier specifier, antlr4::Token *variableToken);
     void CheckIfEligableForRead(antlr4::Token *variableToken);
     void CheckIfEligableForWrite(antlr4::Token *toWrite);
@@ -43,9 +44,7 @@ public:
     Type ConvertExpressionUnaryLogical(antlr4::Token *expressionStart);
     Type ConvertExpressionUnaryBitwise(antlr4::Token *expressionStart);
     void ConvertExpressionDefinition(antlr4::Token *expressionStart);
-    void ConvertExpressionAssignment(antlr4::Token *expressionStart);
-
-    void CheckIfModuloFloatOperands(JabukodParser::MulDivModExpressionContext *ctx);
+    Type ConvertExpressionAssignment(antlr4::Token *expressionStart); // also checks for variable presence and const
 
     void Print();
 

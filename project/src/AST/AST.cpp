@@ -164,6 +164,17 @@ Variable *AST::GetVariable(antlr4::Token *variableToken) {
     return nullptr;
 }
 
+void AST::CheckIfModuloFloatOperands(JabukodParser::MulDivModExpressionContext *ctx) {
+    if (ctx->sign->getText() == "%") {
+        Type op1 = this->activeNode->GetOperandType(0);
+        Type op2 = this->activeNode->GetOperandType(1);
+
+        if ((op1 == Type::FLOAT) || (op2 == Type::FLOAT)) {
+            this->parser->notifyErrorListeners(ctx->sign, MODULE_ON_FLOAT, nullptr);
+        }
+    }
+}
+
 void AST::CheckIfConstantDeclaration(StorageSpecifier specifier, antlr4::Token *variableToken) {
     if (specifier == StorageSpecifier::CONST) {
         this->parser->notifyErrorListeners(variableToken, CONSTANT_DECLARATION, nullptr);
@@ -324,22 +335,30 @@ void AST::ConvertExpressionDefinition(antlr4::Token *expressionStart) {
     }
 }
 
-void AST::ConvertExpressionAssignment(antlr4::Token *expressionStart) {
-    return;
-    // TODO
-}
-
-
-
-void AST::CheckIfModuloFloatOperands(JabukodParser::MulDivModExpressionContext *ctx) {
-    if (ctx->sign->getText() == "%") {
-        Type op1 = this->activeNode->GetOperandType(0);
-        Type op2 = this->activeNode->GetOperandType(1);
-
-        if ((op1 == Type::FLOAT) || (op2 == Type::FLOAT)) {
-            this->parser->notifyErrorListeners(ctx->sign, MODULE_ON_FLOAT, nullptr);
-        }
+Type AST::ConvertExpressionAssignment(antlr4::Token *expressionStart) {
+    ASTNode* assignmentTarget = this->activeNode->GetChild(0);
+    if (assignmentTarget->GetKind() != NodeKind::VARIABLE) {
+        this->parser->notifyErrorListeners(expressionStart, LSIDE_NOT_ASSIGNABLE, nullptr);
+        return Type::VOID;
     }
+
+    Variable *variable = this->GetVariable(expressionStart);
+    if (variable->GetSpecifier() == StorageSpecifier::CONST) {
+        this->parser->notifyErrorListeners(expressionStart, CONSTANT_ASSIGNMENT, nullptr);
+    }
+
+    Type lside = assignmentTarget->GetData<VariableData>()->GetType();
+    Type rside = this->activeNode->GetOperandType(1);
+
+    Type inferedType = Type::VOID;
+
+    try {
+        inferedType = Conversion::ExpressionAssignment(lside, rside, this->activeNode);
+    } catch (const char *msg) {
+        this->parser->notifyErrorListeners(expressionStart, msg, nullptr);
+    }
+
+    return inferedType;
 }
 
 

@@ -1,11 +1,18 @@
 int main() {
-    bool a = 3.14;
-    float z = true;
+    /*
+    const bool a = 2;
+    const float z = true + a;
     string x = "huhu";
     string y = x;
+    */
+
+    float x = 1;
+    int y = 2+(x = 10);
 
     return 0;
 }
+
+const int x = 10;
 
 /*
 int a;

@@ -75,6 +75,15 @@ void Conversion::ExpressionDefinition(Type lside, Type rside, ASTNode *expressio
     }
 }
 
+Type Conversion::ExpressionAssignment(Type lside, Type rside, ASTNode *expressionRoot) {
+    try {
+        Type inferedSubexpressionType = Conversion::assignmentTable[lside][rside](expressionRoot);
+        return inferedSubexpressionType;
+    } catch (...) {
+        throw;
+    }
+}
+
 
 
 // PRIVATE:
@@ -147,6 +156,17 @@ Type (*Conversion::definitionTable[5][5])(ASTNode *) =
        /* INT    */{NOCVI, F2I_1, B2I_1, e_SAA, INVAL},
        /* FLOAT  */{I2F_1, NOCVF, B2F_1, e_SAA, INVAL},
        /* BOOL   */{I2B_1, F2B_1, NOCVB, e_SAA, INVAL},
+       /* STRING */{e_ATS, e_ATS, e_ATS, NOCVS, INVAL},
+       /* VOID   */{INVAL, INVAL, INVAL, INVAL, INVAL}
+};
+
+Type (*Conversion::assignmentTable[5][5])(ASTNode *) =
+{
+       /*  op1   */
+// op2 /* ~~~~~~ */ INT / FLOAT / BOOL / STRING / VOID //
+       /* INT    */{NOCVI, F2I_2, B2I_2, e_SAA, INVAL},
+       /* FLOAT  */{I2F_2, NOCVF, B2F_2, e_SAA, INVAL},
+       /* BOOL   */{I2B_2, F2B_2, NOCVB, e_SAA, INVAL},
        /* STRING */{e_ATS, e_ATS, e_ATS, NOCVS, INVAL},
        /* VOID   */{INVAL, INVAL, INVAL, INVAL, INVAL}
 };

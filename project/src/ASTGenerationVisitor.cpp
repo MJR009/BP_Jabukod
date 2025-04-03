@@ -128,9 +128,14 @@ any ASTGenerationVisitor::visitBitOrExpression(JabukodParser::BitOrExpressionCon
     return OK;
 }
 
-any ASTGenerationVisitor::visitAssignExpression(JabukodParser::AssignExpressionContext *ctx) { // TODO SEMANTICS
+any ASTGenerationVisitor::visitAssignExpression(JabukodParser::AssignExpressionContext *ctx) {
     this->ast.AddNode(NodeKind::ASSIGNMENT);
     this->visitChildren(ctx);
+
+    Type type = this->ast.ConvertExpressionAssignment(ctx->getStart());
+    ExpressionData *data = new ExpressionData(type);
+    this->ast.GiveActiveNodeData(data);
+
     this->ast.MoveToParent();
 
     return OK;

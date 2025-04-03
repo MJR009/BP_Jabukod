@@ -99,6 +99,8 @@ string NodeKind::toSign() const {
 
         case NodeKind::NOT: return "!";
         case NodeKind::BIT_NOT: return "~";
+
+        case NodeKind::ASSIGNMENT: return "=";
     }
 
     return "ERR";

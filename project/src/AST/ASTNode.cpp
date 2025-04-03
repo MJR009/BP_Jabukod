@@ -231,7 +231,7 @@ void ASTNode::Print() {
         case NodeKind::AND: case NodeKind::LESS: case NodeKind::LESS_EQUAL:
         case NodeKind::GREATER: case NodeKind::GREATER_EQUAL: case NodeKind::EQUAL:
         case NodeKind::NOT_EQUAL: case NodeKind::UNARY_MINUS: case NodeKind::NOT:
-        case NodeKind::BIT_NOT:
+        case NodeKind::BIT_NOT: case NodeKind::ASSIGNMENT:
             expressionData = this->GetData<ExpressionData>();
             if (expressionData) {
                 cout << CYAN << "(" << this->kind.toSign() << ")" << DEFAULT;

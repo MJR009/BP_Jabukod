@@ -18,6 +18,7 @@ public:
     static Type ExpressionUnaryBitwise(Type op, ASTNode *expressionRoot);
 
     static void ExpressionDefinition(Type lside, Type rside, ASTNode *expressionRoot);
+    static Type ExpressionAssignment(Type lside, Type rside, ASTNode *expressionRoot);
 
 private:
     static Type (*arithmeticBinaryTable[5][5])(ASTNode *);
@@ -30,6 +31,7 @@ private:
     static Type (*bitwiseUnaryTable[5])(ASTNode *);
 
     static Type (*definitionTable[5][5])(ASTNode *);
+    static Type (*assignmentTable[5][5])(ASTNode *);
 
     // actual conversions:
     static Type I2F_1(ASTNode *expressionRoot); // int to float first
