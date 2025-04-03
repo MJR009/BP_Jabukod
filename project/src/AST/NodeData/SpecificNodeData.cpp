@@ -64,3 +64,13 @@ Type ExpressionData::GetType() {
 string ReadData::GetTarget() {
     return this->into;
 }
+
+
+
+string FunctionCallData::GetName() {
+    return this->name;
+}
+
+Type FunctionCallData::GetReturnType() {
+    return this->returnType;
+}

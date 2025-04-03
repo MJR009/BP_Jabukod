@@ -48,6 +48,8 @@ Type ASTNode::GetOperandType(int i) const {
             return operand->GetData<VariableData>()->GetType();
         case NodeKind::LITERAL:
             return operand->GetData<LiteralData>()->GetType();
+        case NodeKind::FUNCTION_CALL:
+            return operand->GetData<FunctionCallData>()->GetReturnType();
         default: // expression nodes
             return operand->GetData<ExpressionData>()->GetType();
     }
@@ -112,6 +114,7 @@ void ASTNode::Print() {
     ForeachData *foreachData;
     ExpressionData *expressionData;
     ReadData *readData;
+    FunctionCallData *functionCallData;
 
     switch (this->kind) {
         case NodeKind::PROGRAM:
@@ -251,6 +254,15 @@ void ASTNode::Print() {
             cout << "WRITE";
             break;
 
+        case NodeKind::FUNCTION_CALL:
+            functionCallData = this->GetData<FunctionCallData>();
+            if (functionCallData) {
+                cout << DIM << "call to " << DEFAULT;
+                cout << ORANGE << functionCallData->GetName() << DEFAULT;
+                cout << DIM << " - " << DEFAULT;
+                cout << MAGENTA << functionCallData->GetReturnType().toString() << DEFAULT;
+            } else ERR::BadData();
+            break;
 
 
         default:

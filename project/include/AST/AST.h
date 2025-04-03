@@ -31,10 +31,13 @@ public:
     void CheckIfNodeWithinLoop(antlr4::Token *token);
     Variable *CheckIfVariableDefined(antlr4::Token *variableToken);
     Variable *GetVariable(antlr4::Token *variableToken);
+    FunctionTableEntry *CheckIfFunctionDefined(antlr4::Token *functionToken);
+    FunctionTableEntry *GetFunction(antlr4::Token *functionToken);
     void CheckIfModuloFloatOperands(JabukodParser::MulDivModExpressionContext *ctx);
     void CheckIfConstantDeclaration(StorageSpecifier specifier, antlr4::Token *variableToken);
     void CheckIfEligableForRead(antlr4::Token *variableToken);
     void CheckIfEligableForWrite(antlr4::Token *toWrite);
+    void CheckIfCorrectArgumentCount(int countInTable, antlr4::Token *functionToken);
 
     Type ConvertExpressionBinaryArithmetic(antlr4::Token *expressionStart);
     Type ConvertExpressionBinaryLogical(antlr4::Token *expressionStart);
@@ -92,6 +95,7 @@ private:
 
     Variable *IsDefinedLocally(const string & name);
     Variable *IsDefinedGlobally(const string & name);
+    FunctionTableEntry *IsFunctionDefined(const string & name);
 
     bool IsScopeHavingNode(ASTNode *node);
     Variable *IsInThisScope(const string & name, ASTNode *node);

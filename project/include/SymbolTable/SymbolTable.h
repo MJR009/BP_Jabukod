@@ -43,6 +43,7 @@ public:
 
     bool IsIdFunctionParameter(const string & functionName, const string & identifier);
     Variable *IsIdGlobalVariable(const string & name);
+    FunctionTableEntry *IsIdFunction(const string & name);
 
     void Print() const;
 

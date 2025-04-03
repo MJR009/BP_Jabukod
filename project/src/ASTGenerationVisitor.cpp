@@ -285,8 +285,24 @@ any ASTGenerationVisitor::visitPrefixUnaryExpression(JabukodParser::PrefixUnaryE
 }
 
 any ASTGenerationVisitor::visitFunctionCall(JabukodParser::FunctionCallContext *ctx) { // covers functionCallExpression // TODO SEMANTICS
+    FunctionTableEntry *function = this->ast.CheckIfFunctionDefined( ctx->IDENTIFIER()->getSymbol() );
     this->ast.AddNode(NodeKind::FUNCTION_CALL);
-    this->visitChildren(ctx);
+
+    if (ctx->functionArguments()) {
+        this->visit(ctx->functionArguments());
+    }
+
+    Type returnType = Type::VOID;
+
+    if (function) {
+        this->ast.CheckIfCorrectArgumentCount(function->GetParameters().size(), ctx->getStart());
+        // TODO has correct types of arguments? do conversions!
+        // TODO void funkce nesmí být použita ve výrazu !!!
+    }
+
+    FunctionCallData *data = new FunctionCallData(ctx->IDENTIFIER()->getText(), returnType);
+    this->ast.GiveActiveNodeData(data);
+
     this->ast.MoveToParent();
 
     return OK;

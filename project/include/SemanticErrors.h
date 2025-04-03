@@ -38,3 +38,5 @@
 #define ASSING_OTHER_TO_STRING "assigned value must be of type string"
 #define LSIDE_NOT_ASSIGNABLE "left sign of assignment must be a variable"
 #define CONSTANT_ASSIGNMENT "cannot assign to a constant variable"
+#define UNDEFINED_FUNCTION "function is undefined"
+#define BAD_ARGUMENT_COUNT "function called has incorrect amount of arguments"

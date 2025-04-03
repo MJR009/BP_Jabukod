@@ -94,3 +94,17 @@ public:
 private:
     string into;
 };
+
+
+
+class FunctionCallData : public GenericNodeData {
+public:
+    FunctionCallData(const string & name, Type type) : name(name), returnType(type) {}
+
+    string GetName();
+    Type GetReturnType();
+    
+private:
+    string name;
+    Type returnType;
+};

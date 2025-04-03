@@ -164,6 +164,29 @@ Variable *AST::GetVariable(antlr4::Token *variableToken) {
     return nullptr;
 }
 
+FunctionTableEntry *AST::CheckIfFunctionDefined(antlr4::Token *functionToken) {
+    string name = functionToken->getText();
+    FunctionTableEntry *function = nullptr;
+
+    if (function = this->IsFunctionDefined(name)) {
+        return function;
+    }
+
+    this->parser->notifyErrorListeners(functionToken, UNDEFINED_FUNCTION, nullptr);
+    return nullptr;
+}
+
+FunctionTableEntry *AST::GetFunction(antlr4::Token *functionToken) {
+    string name = functionToken->getText();
+    FunctionTableEntry *function = nullptr;
+
+    if (function = this->IsFunctionDefined(name)) {
+        return function;
+    }
+
+    return nullptr;
+}
+
 void AST::CheckIfModuloFloatOperands(JabukodParser::MulDivModExpressionContext *ctx) {
     if (ctx->sign->getText() == "%") {
         Type op1 = this->activeNode->GetOperandType(0);
@@ -217,6 +240,12 @@ void AST::CheckIfEligableForWrite(antlr4::Token *toWrite) {
     } else {
         this->parser->notifyErrorListeners(toWrite, WRITE_EXPRESSION, nullptr);
 
+    }
+}
+
+void AST::CheckIfCorrectArgumentCount(int countInTable, antlr4::Token *functionToken) {
+    if (countInTable != this->activeNode->GetChildrenCount()) {
+        this->parser->notifyErrorListeners(functionToken, BAD_ARGUMENT_COUNT, nullptr);
     }
 }
 
@@ -518,6 +547,10 @@ Variable *AST::IsDefinedLocally(const string & name) {
 
 Variable *AST::IsDefinedGlobally(const string & name) {
     return this->symbolTable.IsIdGlobalVariable(name);
+}
+
+FunctionTableEntry *AST::IsFunctionDefined(const string & name) {
+    return this->symbolTable.IsIdFunction(name);
 }
 
 

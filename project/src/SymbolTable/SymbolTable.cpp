@@ -134,6 +134,10 @@ Variable *SymbolTable::IsIdGlobalVariable(const string & name) {
     return this->globalScope.GetVariable(name);
 }
 
+FunctionTableEntry *SymbolTable::IsIdFunction(const string & name) {
+    return this->functionTable.GetFunctionByName(name);
+}
+
 
 
 void SymbolTable::Print() const {
