@@ -73,7 +73,7 @@ int OpenSourceFile(char *name, ifstream & stream) {
     error_code ec;
     if ( ! filesystem::is_regular_file(fileName, ec)) {
         cerr << RED << BOLD << "Input error" << "\t" << DEFAULT;
-        cerr << DIM << name << " is not a file" << endl;
+        cerr << DIM << name << " is not a file" << endl << DEFAULT;
         return NOK;
     }
 
