@@ -17,7 +17,7 @@ int Assembler::Link(const string & outputPath) {
 
     int ret = system(command.c_str());
     if (ret != 0) {
-        throw "failed to link file " + outputPath + ".o";
+        throw ("failed to link file " + outputPath + ".o");
     }
 
     cout << BOLD << "Linked " << DEFAULT << outputPath << " from " << outputPath << ".o" << endl;

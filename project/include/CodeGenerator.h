@@ -27,6 +27,7 @@ public:
 private:
     AST & ast;
     
+    // ostringstream code = "";
     ofstream code;
 
 private:

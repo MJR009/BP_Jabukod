@@ -23,8 +23,8 @@ void Generator::GenerateNode(ASTNode *node) {
 
 void Generator::GeneratePROGRAM(ASTNode *node) {
     code << ".data" << endl;
-    code << "hello: .asciz \"Hello world!\\n\"" << endl;
-    code << "hello_len: .long .-hello" << endl;
+    code << "  hello: .asciz \"Hello world!\\n\"" << endl;
+    code << "  hello_len: .long .-hello" << endl;
     code << ".text" << endl;
     code << endl;
     code << ".globl _start" << endl;
