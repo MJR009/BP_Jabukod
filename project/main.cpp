@@ -4,6 +4,8 @@
 #include "SymbolTable.h"
 #include "GlobalSymbolsVisitor.h"
 #include "ASTGenerationVisitor.h"
+#include "CodeGenerator.h"
+#include "Assembler.h"
 
 // Development and debugging:
 #include "CallGraphListener.h"
@@ -42,32 +44,45 @@ int main(int argc, char **argv) {
 
     // SEMANTIC CHECKS
     customErrorListener.SetSemanticPhase();
-    // Phase 0: instantiate a symbol table
-    SymbolTable symbolTable(&parser);
+
     // Phase 1: get and check all globally available symbols;
     //        -> function and enum identifiers, also global variables (generaly stuff that should not be in AST)
+    SymbolTable symbolTable(&parser);
     GlobalSymbolsVisitor GlobalSymbolsVisitor(symbolTable);
     GlobalSymbolsVisitor.visit(parseTree);
+
     // Phase 2: generate abstract syntax tree and do final semantic checks
     //        -> makes the tree, gathers local symbols and checks symbol usage, ensures statement use validity
     AST ast(&parser, symbolTable);
     ASTGenerationVisitor astGenerationVisitor(ast);
     astGenerationVisitor.visit(parseTree);
-    // Phase 3: generate assembly from AST
-    
 
-
-    
+    // Phase 3: if there were errors, do not generate code
     if (parser.getNumberOfSyntaxErrors() != 0) {
         return NOK;
     }
-    
     symbolTable.Print();
     ast.Print();
 
-    cout << BOLD << CYAN << "Compiled successfully!" << DEFAULT << endl;
+    try {
+    // Phase 4: generate target code and output to a file
+        Generator generator(ast);
+        generator.Generate();
 
-    return OK;
+        cout << CYAN << "Generated output.s from ~~~file name~~~" << endl << DEFAULT;
+        
+    // Phase 5: assemble and link generated code to create executable
+        Assembler::Assemble();
+        Assembler::Link();
+
+        cout << BOLD << CYAN << "Compiled successfully!" << DEFAULT << endl;
+        return 0;
+
+    } catch (const char *msg) {
+        cerr << RED << BOLD << "Compilation error\t" << DEFAULT;
+        cerr << DIM << msg << endl << DEFAULT;
+        return NOK;
+    }
 }
 
 

@@ -14,11 +14,13 @@ public:
     void PreorderForEachNode( void (*action)(ASTNode *) );
     void PostorderForEachNode( void (*action)(ASTNode *) );
 
-    void AddNode(NodeKind kind, GenericNodeData *data); // Newly added node is always made active !
+    // AST generation:
     void AddNode(NodeKind kind);
-    void MoveToParent();
-
+    void AddNode(NodeKind kind, GenericNodeData *data); // Newly added node is always made active !
     void GiveActiveNodeData(GenericNodeData *data);
+    void MoveToParent();
+    // Code generation:
+    ASTNode* GetRoot();
 
     void PutVariableInScope(
         antlr4::Token *variable,

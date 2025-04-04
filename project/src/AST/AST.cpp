@@ -14,6 +14,10 @@ void AST::PostorderForEachNode( void (*action)(ASTNode *) ) {
 
 
 
+void AST::AddNode(NodeKind kind) {
+    this->AddNode(kind, nullptr);
+}
+
 void AST::AddNode(NodeKind kind, GenericNodeData *data) {
     ASTNode *newNode = new ASTNode(kind, data);
 
@@ -26,8 +30,8 @@ void AST::AddNode(NodeKind kind, GenericNodeData *data) {
     this->activeNode = newNode;
 }
 
-void AST::AddNode(NodeKind kind) { // used as failsafe, default data is nullptr either way
-    this->AddNode(kind, nullptr);
+void AST::GiveActiveNodeData(GenericNodeData *data) {
+    this->activeNode->SetData(data);
 }
 
 void AST::MoveToParent() {
@@ -44,8 +48,8 @@ void AST::MoveToParent() {
 
 
 
-void AST::GiveActiveNodeData(GenericNodeData *data) {
-    this->activeNode->SetData(data);
+ASTNode* AST::GetRoot() {
+    return this->root;
 }
 
 
