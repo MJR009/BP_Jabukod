@@ -3,6 +3,6 @@
 
 class Assembler {
 public:
-    static int Assemble();
-    static int Link();
+    static int Assemble(const string & outputPath);
+    static int Link(const string & outputPath);
 };

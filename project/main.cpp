@@ -1,5 +1,11 @@
 #include "common.h"
 
+void ERR::BadData() {
+    cerr << RED << BOLD << "BAD NODE DATA TYPE" << DEFAULT;
+}
+
+#include "main.h"
+
 #include "CustomErrorListener.h"
 #include "SymbolTable.h"
 #include "GlobalSymbolsVisitor.h"
@@ -11,23 +17,25 @@
 #include "CallGraphListener.h"
 #include "DiagnosticErrorListener.h"
 
-void ERR::BadData() {
-    cerr << RED << BOLD << "BAD NODE DATA TYPE" << DEFAULT;
-}
-
-int OpenSourceFile(char *name, ifstream & stream);
-
-void DumpTokensAndTree(antlr4::CommonTokenStream & tokens, antlr4::tree::ParseTree *parseTree, JabukodParser & parser);
-void DumpCallGraph(antlr4::tree::ParseTree *parseTree);
-
 int main(int argc, char **argv) {
-    if (argc != 2) {
-        cout << "Usage: ./jabukod <path_to_program>" << endl;
+    PrepareArguments *args = nullptr;
+    try {
+        args = new PrepareArguments(argc, argv);
+
+    } catch (const PrintHelp & help) {
+        return OK;
+    } catch (const char *msg) {
+        cerr << RED << BOLD << "Input error" << "\t" << DEFAULT;
+        cerr << DIM << msg << endl << DEFAULT;
         return NOK;
     }
 
+    string inputFile = args->inputFile;
+    string outputFile = args->outputFile;
+    delete args;
+
     ifstream stream;
-    if (OpenSourceFile(argv[1], stream) == 1) {
+    if (OpenSourceFile(inputFile.data(), stream) == 1) {
         return NOK;
     }
 
@@ -66,20 +74,20 @@ int main(int argc, char **argv) {
 
     try {
     // Phase 4: generate target code and output to a file
-        Generator generator(ast);
+        Generator generator(outputFile, ast);
         generator.Generate();
 
-        cout << CYAN << "Generated output.s from ~~~file name~~~" << endl << DEFAULT;
+        cout << BOLD << "Compiled " << DEFAULT << outputFile << ".s from " << inputFile << endl;
         
     // Phase 5: assemble and link generated code to create executable
-        Assembler::Assemble();
-        Assembler::Link();
+        Assembler::Assemble(outputFile);
+        Assembler::Link(outputFile);
 
-        cout << BOLD << CYAN << "Compiled successfully!" << DEFAULT << endl;
+        cout << BOLD << CYAN << "Executable " << outputFile << " created successfully!" << DEFAULT << endl;
         return 0;
 
-    } catch (const char *msg) {
-        cerr << RED << BOLD << "Compilation error\t" << DEFAULT;
+    } catch (const string & msg) {
+        cerr << RED << BOLD << "Compilation error" << "\t" << DEFAULT;
         cerr << DIM << msg << endl << DEFAULT;
         return NOK;
     }
@@ -106,7 +114,7 @@ int OpenSourceFile(char *name, ifstream & stream) {
 
 
 
-void DumpTokensAndTree(
+void PrintTokensAndTree(
     antlr4::CommonTokenStream & tokens,
     antlr4::tree::ParseTree *parseTree,
     JabukodParser & parser
@@ -121,7 +129,7 @@ void DumpTokensAndTree(
     cout << parseTree->toStringTree(&parser, true) << endl;
 }
 
-void DumpCallGraph(antlr4::tree::ParseTree *parseTree) {
+void PrintCallGraph(antlr4::tree::ParseTree *parseTree) {
     antlr4::tree::ParseTreeWalker walker;
     CallGraphListener listener;
 

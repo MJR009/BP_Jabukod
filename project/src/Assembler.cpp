@@ -1,19 +1,25 @@
 #include "Assembler.h"
 
-int Assembler::Assemble() {
-    int ret = system("as -o output.o output.s");
+int Assembler::Assemble(const string & outputPath) {
+    string command = "as -o " + outputPath + ".o " + outputPath + ".s";
+
+    int ret = system(command.c_str());
     if (ret != 0) {
-        throw "failed to assemble file output.s";
+        throw ("failed to assemble file " + outputPath + ".s");
     }
-    cout << CYAN << "Generated output.o from output.s" << endl << DEFAULT;
+
+    cout << BOLD << "Assembled " << DEFAULT << outputPath << ".o from " << outputPath << ".s" << endl;
     return ret;
 }
 
-int Assembler::Link() {
-    int ret = system("ld -o output output.o");
+int Assembler::Link(const string & outputPath) {
+    string command = "ld -o " + outputPath + " " + outputPath + ".o";
+
+    int ret = system(command.c_str());
     if (ret != 0) {
-        throw "failed to link file output.o";
+        throw "failed to link file " + outputPath + ".o";
     }
-    cout << CYAN << "Generated output from output.o" << endl << DEFAULT;
+
+    cout << BOLD << "Linked " << DEFAULT << outputPath << " from " << outputPath << ".o" << endl;
     return ret;
 }

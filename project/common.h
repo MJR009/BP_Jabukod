@@ -7,11 +7,11 @@
 #include <functional>
 #include <cmath> // trunc
 
-#include "SemanticErrors.h"
-
 #include "antlr4-runtime.h"
 #include "JabukodLexer.h"
 #include "JabukodParser.h"
+
+#include "SemanticErrors.h"
 
 using namespace std;
 
@@ -20,6 +20,7 @@ using namespace std;
 
 #define BOLD "\033[1m"
 #define DIM "\033[2m"
+#define EMPH "\033[3m"
 
 #define RED "\033[31m"
 #define YELLOW "\033[33m"
@@ -39,3 +40,9 @@ namespace ERR {
 void BadData();
 
 } // namespace ERR
+
+#define HELP_MESSAGE \
+    (BOLD CYAN "Usage: \n\t" DEFAULT "./jabukod [" BOLD "-h" DEFAULT "] " \
+        EMPH "path_to_program" DEFAULT " [" BOLD "-o " DEFAULT EMPH "path_to_binary" \
+        DEFAULT "]\n" \
+    )

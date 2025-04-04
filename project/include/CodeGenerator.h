@@ -5,17 +5,18 @@
 
 class Generator {
 public:
-    Generator(AST & ast) : ast(ast) {
-        code.open("output.s");
+    Generator(string outputPath, AST & ast) : ast(ast) {
+        if (outputPath.back() == '/') {
+            throw (outputPath + " is a path");
+        }
+
+        code.open(outputPath + ".s");
         if ( ! code.is_open()) {
-            throw "failed to open file output.s";
+            throw ("failed to open file " + outputPath + ".s");
         }
     }
 
     void Generate();
-
-    // void Print
-    // void Assemble
 
     ~Generator() {
         if (code.is_open()) {
