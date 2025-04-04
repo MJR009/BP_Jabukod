@@ -8,7 +8,7 @@ void Generator::Generate() {
 
 // PRIVATE:
 
-#define Generate_case(item) case NodeKind::##item: this->Generate##item(node); return
+#define Generate_case(item) case NodeKind::item: this->Generate##item(node); return
 
 void Generator::GenerateNode(ASTNode *node) {
     switch (node->GetKind()) {
