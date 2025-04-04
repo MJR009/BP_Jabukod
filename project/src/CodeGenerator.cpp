@@ -1,7 +1,5 @@
 #include "CodeGenerator.h"
 
-//#define Generate_case(kind, node) NodeKind::##kind: this->Generate##kind(node); return
-
 void Generator::Generate() {
     this->GenerateNode(this->ast.GetRoot());
 }
@@ -10,9 +8,11 @@ void Generator::Generate() {
 
 // PRIVATE:
 
+#define Generate_case(item) case NodeKind::##item: this->Generate##item(node); return
+
 void Generator::GenerateNode(ASTNode *node) {
     switch (node->GetKind()) {
-        case NodeKind::PROGRAM: this->GeneratePROGRAM(node); return;
+        Generate_case(PROGRAM);
 
         default:
             break;
