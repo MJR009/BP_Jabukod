@@ -5,7 +5,7 @@
 
 #include "SymbolTable.h"
 #include "ASTNode.h"
-#include "Conversion.h"
+#include "TypeChecking.h"
 
 class AST {
 public:

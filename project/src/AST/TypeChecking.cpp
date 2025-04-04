@@ -1,4 +1,4 @@
-#include "Conversion.h"
+#include "TypeChecking.h"
 
 Type Conversion::ExpressionBinaryArithmetic(Type op1, Type op2, ASTNode *expressionRoot) {
     try {

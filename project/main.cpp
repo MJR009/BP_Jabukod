@@ -53,6 +53,8 @@ int main(int argc, char **argv) {
     AST ast(&parser, symbolTable);
     ASTGenerationVisitor astGenerationVisitor(ast);
     astGenerationVisitor.visit(parseTree);
+    // Phase 3: generate assembly from AST
+    
 
 
     
