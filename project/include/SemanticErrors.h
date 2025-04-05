@@ -39,7 +39,7 @@
 #define LSIDE_NOT_ASSIGNABLE "left sign of assignment must be a variable"
 #define CONSTANT_ASSIGNMENT "cannot assign to a constant variable"
 #define UNDEFINED_FUNCTION "function is undefined"
-#define BAD_ARGUMENT_COUNT "function called has incorrect amount of arguments"
+#define BAD_ARGUMENT_COUNT "function call has incorrect amount of arguments"
 #define VOID_FUNCTION_IN_EXPRESSION "function used in an expression has return type void"
 #define BAD_STRING_ARGUMENT "value of type string cannot be passed as argument here"
 #define STRING_ARGUMENT_EXPECTED "argument of type string was expected here"

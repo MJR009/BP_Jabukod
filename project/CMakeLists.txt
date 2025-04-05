@@ -20,6 +20,7 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include/SymbolTable)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include/SymbolTable/Value)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include/AST)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include/AST/NodeData)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include/Generation)
 
 ### ANTLR related: ###
 

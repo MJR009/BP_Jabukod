@@ -3,7 +3,7 @@
 int Assembler::Assemble(const string & outputPath) {
     string command = "as -o " + outputPath + ".o " + outputPath + ".s";
 
-    int ret = system(command.c_str());
+    int ret = system( command.c_str() );
     if (ret != 0) {
         throw ("failed to assemble file " + outputPath + ".s");
     }
@@ -15,7 +15,7 @@ int Assembler::Assemble(const string & outputPath) {
 int Assembler::Link(const string & outputPath) {
     string command = "ld -o " + outputPath + " " + outputPath + ".o";
 
-    int ret = system(command.c_str());
+    int ret = system( command.c_str() );
     if (ret != 0) {
         throw ("failed to link file " + outputPath + ".o");
     }

@@ -2,8 +2,6 @@
 - Add a LICENCE file (if needed)
 - Remove comments from grammar
 
-- AssSubExpression není vhodný název pro metodu
-
 ! AKTUALIZOVAT GRAMATIKU V TEXTU !!!
 
 - Příklady programů:
@@ -15,11 +13,8 @@
 -- Nové konstrukce, operátory
 -- easter egg -> prázdný soubor něco udělá
 
-- Návratový kód překladače by měl být jiný při syntaktické (nebo sémantické) chybě programu a chybě překladače (zatím všude 1)
-
 - Redefinice proměnné by mohla ukázat kde byla poprvé definována
 
-- REDEKLARACE NEJSOU POVOLENY
 
 TEXT
 
@@ -31,7 +26,7 @@ TEXT
 -- odkazovat se na kapitolu obfuskace těsně před jejím začátkem je divný...
 -- zásadní nevýhodOu (u detrimentálnosti obfuskace)
 
-! Rozsahy - funkce se nesmí volat, pokud už byla definována stejnojmenná proměnná !
+Rozsahy - funkce se nesmí volat, pokud už byla definována stejnojmenná proměnná - U MĚ TO LZE, VOLÁNÍ LZE ROZLIŠIT
 
 Pro testování byly vytvořeny detailní výpisy s barvami a všemi infomracemi, včetně zvláštního zdůraznění chybových situací
 
@@ -139,3 +134,5 @@ Položka enumu
     // MŮŽE být stejné jako parametr funkce, před i za
     // MŮŽE být stejné jako název svého enumu a i jiného enumu
     // NEMŮŽE být stejné jako jiná položka stejného enumu ANI JINÉHO ENUMU
+
+Atat syntaxe asembleru zvolena, protože je stejná použitý disasembler (objdump)

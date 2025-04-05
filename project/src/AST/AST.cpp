@@ -141,6 +141,7 @@ Variable *AST::CheckIfVariableDefined(antlr4::Token *variableToken) {
     if (variable = this->IsDefinedLocally(name)) {
         return variable;
     }
+    // IT CAN BE A PARAMETER!!!
     if (variable = this->IsDefinedGlobally(name)) {
         return variable;
     }

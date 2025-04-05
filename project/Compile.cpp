@@ -53,7 +53,7 @@ int Compile(string & inputFile, string & outputFile) {
 
         cout << BOLD << "Compiled " << DEFAULT << outputFile << ".s from " << inputFile << endl;
         
-        // Phase 5: assemble and link generated code to create executable
+        // Phase 5: assemble and link generated assembly to create executable
         Assembler::Assemble(outputFile);
         Assembler::Link(outputFile);
 

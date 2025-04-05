@@ -39,9 +39,3 @@ public:
     string inputFile = "";
     string outputFile = "out";
 };
-
-
-static int OpenSourceFile(char *name, ifstream & stream);
-
-static void PrintTokensAndTree(antlr4::CommonTokenStream & tokens, antlr4::tree::ParseTree *parseTree, JabukodParser & parser);
-static void PrintCallGraph(antlr4::tree::ParseTree *parseTree);

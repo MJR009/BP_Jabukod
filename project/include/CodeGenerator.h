@@ -2,6 +2,7 @@
 #include "common.h"
 
 #include "AST.h"
+#include "Instruction.h"
 
 class Generator {
 public:
@@ -10,8 +11,8 @@ public:
             throw (outputPath + " is a path");
         }
 
-        code.open(outputPath + ".s");
-        if ( ! code.is_open()) {
+        jout.open(outputPath + ".s");
+        if ( ! jout.is_open()) {
             throw ("failed to open file " + outputPath + ".s");
         }
     }
@@ -19,20 +20,26 @@ public:
     void Generate();
 
     ~Generator() {
-        if (code.is_open()) {
-            code.close();
+        if (jout.is_open()) {
+            jout.close();
         }
     }
 
 private:
     AST & ast;
     
-    // ostringstream code = "";
-    ofstream code;
+    vector<Instruction> instructions;
+    ofstream jout; // inspired by cout
 
 private:
+    void Generatejout();
+    void OutputAssembly();
+
     // selects which node to generate by kind
     void GenerateNode(ASTNode *node);
 
+    void AppendInstruction(string opcode, string arg1 = "", string arg2 = "", string arg3 = "");
+
     void GeneratePROGRAM(ASTNode *node);
+    void GenerateFUNCTION(ASTNode *node);
 };
