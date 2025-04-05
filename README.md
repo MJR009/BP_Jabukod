@@ -1,8 +1,9 @@
 # Jabukód compiler
-### Martin Jabůrek
+#### Martin Jabůrek
 ### Bachelor Thesis Project
+### Compiler generating the target code secured against reverse analysis
 
-// TODO description
+// TODO description - copy english abstract?
 
 ### Project structure
 
@@ -11,20 +12,21 @@ Top level project directories are arranged as follows:
 ```
 BP_Jabukod
 ├── assembly
-│   └── experiments
 ├── grammar
 │   ├── Jabukod.g4
-│   └── notes
 ├── project
 │   ├── cmake
-│   ├── CMakeLists.txt
+│   ├── src
+│   ├── include
+│   │
+│   ├── common.h
+│   ├── main.h
 │   ├── main.cpp
-│   └── src
+│   ├── Compile.h
+│   ├── Compile.cpp
+│   └── CMakeLists.txt
 ├── README.md
 ├── samples
-│   ├── rules
-│   └── tokens
-├── TODO
 └── tool
     └── antlr-4.13.2-complete.jar
 ```
@@ -33,26 +35,28 @@ BP_Jabukod
 
 Project requirements are analogous to ANTLR4 version 4.13.2:
 
-- Minimum C++ standard C++17
-- Minimum CMake version 2.8
+- Minimum C++ standard <b>C++17</b>
+- Minimum <b>CMake 2.8</b>
 - `java` installed (needed for `make visualise`, tested with `openjdk 21.0.6 2025-01-21`)
 - `javac` installed (needed for `make visualise`)
 - `dot` installed ( -//- )
-- // TODO
+
+Some of the outputs use ANSI escape sequences which may not visualise text as
+intended on some machines.
 
 ### Usage
 
 Opening the project for the first time in an IDE will likely result in many errors appearing.
 These are dependency errors from files to be generated during build.
 
-The following is the recommended command for first time building the program:
+The following is the recommended command for first time <b>building</b> the program:
 
 `cmake -B build -S project && make -C build`<br>
 
 The resulting executable `jabukod` will be located in the `build` subdirectory.
 To run, do:
 
-// TODO
+`./jabukod [-h] path_to_program [-o path_to_binary]`
 
 There are also other build options. All of the available options are as follows, they all consider make being run from
 the `build` subdirectory or with `-C build` argument:
