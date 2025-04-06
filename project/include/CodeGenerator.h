@@ -47,4 +47,5 @@ private:
 
     void GeneratePROGRAM(ASTNode *node);
     void GenerateFUNCTION(ASTNode *node);
+    void GenerateWRITE(ASTNode *node);
 };

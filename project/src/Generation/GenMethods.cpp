@@ -70,8 +70,8 @@ vector<Instruction> GenMethods::GetEpilog(const string & inFunction) {
 
     epilog.push_back( {"pop", "%rbp"} );
     if (inFunction == "main") {
-        epilog.push_back( {"xor", "%rdi", "%rdi"} );
-        epilog.push_back( {"mov", "$60", "%rax"} );
+        epilog.push_back( {"xor", "%rdi", "%rdi"} ); // exit success
+        epilog.push_back( {"mov", "$60", "%rax"} ); // exit
         epilog.push_back( {"syscall"} );
     } else {
         epilog.push_back( {"ret"} );

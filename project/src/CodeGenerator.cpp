@@ -62,6 +62,7 @@ void Generator::GenerateNode(ASTNode *node) {
     switch (node->GetKind()) {
         Generate_case(PROGRAM);
         Generate_case(FUNCTION);
+        Generate_case(WRITE);
 
         default:
             break;
@@ -94,7 +95,25 @@ void Generator::GenerateFUNCTION(ASTNode *node) {
     this->AppendInstruction(label);
     this->AppendInstructions(GenMethods::GetProlog());
 
-    //
+    for (int i = 0; i < node->GetChildrenCount(); i++) {
+        this->GenerateNode( node->GetChild(i) );
+    }
 
     this->AppendInstructions(GenMethods::GetEpilog( function->GetName() ));
+}
+
+void Generator::GenerateWRITE(ASTNode *node) {
+    ASTNode *operand = node->GetChild(0);
+
+    /*switch (operand->GetKind()) {
+        case NodeKind::VARIABLE:
+            
+            break;
+    }*/
+        this->AppendInstruction("lea", "(hello)", "%rsi");
+        this->AppendInstruction("mov", "$13", "%rdx");
+
+    this->AppendInstruction("mov", "$1", "%rdi"); // stdout
+    this->AppendInstruction("mov", "$1", "%rax"); // write
+    this->AppendInstruction("syscall");
 }
