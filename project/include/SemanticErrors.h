@@ -36,7 +36,7 @@
 #define WRITE_NOT_STRING "write must be used with a variable of type string or a string literal"
 #define ASSIGN_STRING_TO_OTHER "cannot assign value of type string"
 #define ASSING_OTHER_TO_STRING "assigned value must be of type string"
-#define LSIDE_NOT_ASSIGNABLE "left sign of assignment must be a variable"
+#define LSIDE_NOT_ASSIGNABLE "left side of assignment must be a variable"
 #define CONSTANT_ASSIGNMENT "cannot assign to a constant variable"
 #define UNDEFINED_FUNCTION "function is undefined"
 #define BAD_ARGUMENT_COUNT "function call has incorrect amount of arguments"

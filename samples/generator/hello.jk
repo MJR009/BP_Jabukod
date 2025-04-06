@@ -1,7 +1,9 @@
-enum X {
-    e
-}
-
 int main() {
     write "Hello world!\n";
+
+    int i;
+
+    for (i = 5; i < 10; i = 2 + 1) {
+        break;
+    }
 }

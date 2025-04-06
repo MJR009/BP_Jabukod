@@ -520,7 +520,7 @@ any ASTGenerationVisitor::visitForHeader(JabukodParser::ForHeaderContext *ctx) {
     if (ctx->init) {
         this->ast.AddNode(NodeKind::FOR_HEADER1);
         this->visit(ctx->init);
-        this->ast.CheckIfPlainAssignment(ctx->init->getStart(), true);
+        this->ast.CheckIfValidForInit(ctx->init->getStart());
         this->ast.MoveToParent();
     }
 
@@ -536,7 +536,7 @@ any ASTGenerationVisitor::visitForHeader(JabukodParser::ForHeaderContext *ctx) {
     if (ctx->update) {
         this->ast.AddNode(NodeKind::FOR_HEADER3);
         this->visit(ctx->update);
-        this->ast.CheckIfPlainAssignment(ctx->update->getStart(), false);
+        this->ast.CheckIfValidForUpdate(ctx->update->getStart());
         this->ast.MoveToParent();
     }
 

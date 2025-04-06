@@ -265,14 +265,19 @@ void AST::CheckIfCorrectArgumentCount(int countInTable, antlr4::Token *functionT
     }
 }
 
-void AST::CheckIfPlainAssignment(antlr4::Token *expressionToken, bool initOrUpdate) {
-    NodeKind potentialAssignment = this->activeNode->GetChild(0)->GetKind();
-    if (potentialAssignment != NodeKind::ASSIGNMENT) {
-        this->parser->notifyErrorListeners(
-            expressionToken,
-            initOrUpdate ? FOR_HEADER_INIT_EXPRESSION : FOR_HEADER_UPDATE_EXPRESSION,
-            nullptr
-        );
+void AST::CheckIfValidForInit(antlr4::Token *initToken) {
+    NodeKind initContents = this->activeNode->GetChild(0)->GetKind();
+    if ((initContents != NodeKind::ASSIGNMENT) &&
+        (initContents != NodeKind::VARIABLE_DEFINITION)
+    ) {
+        this->parser->notifyErrorListeners(initToken, FOR_HEADER_INIT_EXPRESSION, nullptr);        
+    }
+}
+
+void AST::CheckIfValidForUpdate(antlr4::Token *updateToken) {
+    NodeKind updateContents = this->activeNode->GetChild(0)->GetKind();
+    if (updateContents != NodeKind::ASSIGNMENT) {
+        this->parser->notifyErrorListeners(updateToken, FOR_HEADER_UPDATE_EXPRESSION, nullptr);
     }
 }
 
