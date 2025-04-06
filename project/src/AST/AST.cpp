@@ -46,6 +46,15 @@ void AST::MoveToParent() {
     } else {} // current is root, do nothing
 }
 
+void AST::SetActiveFunction(const string & name) {
+    FunctionTableEntry *function = this->IsFunctionDefined(name); // this is done in definition, the function is defined in symbol table
+    this->activeFunction = function;
+}
+
+void AST::ResetActiveFunction() {
+    this->activeFunction = nullptr;
+}
+
 
 
 ASTNode* AST::GetRoot() {
@@ -83,6 +92,31 @@ void AST::PutVariableInScope(
 
 NodeKind AST::CurrentlyIn() {
     return this->activeNode->GetKind();
+}
+
+
+
+Type AST::GetValueType(BaseValue *value) {
+    Variable *variable;
+    Parameter *parameter;
+
+    if ( variable = dynamic_cast<Variable *>(value) ) {
+        return variable->GetType();
+    } else if ( parameter = dynamic_cast<Parameter *>(value) ) {
+        return parameter->GetType();
+    }
+
+    return Type::VOID;
+}
+
+StorageSpecifier AST::GetValueSpecifier(BaseValue *value) {
+    Variable *variable;
+
+    if ( variable = dynamic_cast<Variable *>(value) ) {
+        return variable->GetSpecifier();
+    }
+
+    return StorageSpecifier::NONE; // parameters don't have specifiers
 }
 
 
@@ -132,44 +166,30 @@ void AST::CheckIfNodeWithinLoop(antlr4::Token *token) {
     return;
 }
 
-Variable *AST::CheckIfVariableDefined(antlr4::Token *variableToken) {
-    // at this point, the varaible node itself is not yet created !
-
+BaseValue *AST::LookupVariable(antlr4::Token *variableToken, bool produceError) {
     string name = variableToken->getText();
     Variable *variable = nullptr;
-    
+    Parameter *parameter = nullptr;
+
     if (variable = this->IsDefinedLocally(name)) {
         return variable;
     }
-    // IT CAN BE A PARAMETER!!!
+    if (parameter = this->IsParameter(name)) {
+        return parameter;
+    }
     if (variable = this->IsDefinedGlobally(name)) {
         return variable;
     }
 
     // TODO enum
 
-    this->parser->notifyErrorListeners(variableToken, UNDEFINED_VARIABLE, nullptr);
+    if (produceError) {
+        this->parser->notifyErrorListeners(variableToken, UNDEFINED_VARIABLE, nullptr);
+    }
     return nullptr;
 }
 
-Variable *AST::GetVariable(antlr4::Token *variableToken) {
-    // here we get a variable we know exists !
-    // fallback is nullptr
-
-    string name = variableToken->getText();
-    Variable *variable = nullptr;
-    
-    if (variable = this->IsDefinedLocally(name)) {
-        return variable;
-    }
-    if (variable = this->IsDefinedGlobally(name)) {
-        return variable;
-    }
-
-    return nullptr;
-}
-
-FunctionTableEntry *AST::CheckIfFunctionDefined(antlr4::Token *functionToken) {
+FunctionTableEntry *AST::LookupFunction(antlr4::Token *functionToken, bool produceError) {
     string name = functionToken->getText();
     FunctionTableEntry *function = nullptr;
 
@@ -177,18 +197,9 @@ FunctionTableEntry *AST::CheckIfFunctionDefined(antlr4::Token *functionToken) {
         return function;
     }
 
-    this->parser->notifyErrorListeners(functionToken, UNDEFINED_FUNCTION, nullptr);
-    return nullptr;
-}
-
-FunctionTableEntry *AST::GetFunction(antlr4::Token *functionToken) {
-    string name = functionToken->getText();
-    FunctionTableEntry *function = nullptr;
-
-    if (function = this->IsFunctionDefined(name)) {
-        return function;
+    if (produceError) {
+        this->parser->notifyErrorListeners(functionToken, UNDEFINED_FUNCTION, nullptr);
     }
-
     return nullptr;
 }
 
@@ -210,16 +221,16 @@ void AST::CheckIfConstantDeclaration(StorageSpecifier specifier, antlr4::Token *
 }
 
 void AST::CheckIfEligableForRead(antlr4::Token *variableToken) {
-    Variable *targetVariable = this->CheckIfVariableDefined(variableToken);
+    BaseValue *targetVariable = this->LookupVariable(variableToken);
+    Type targetType = this->GetValueType(targetVariable);
+    StorageSpecifier targetSpecifier = this->GetValueSpecifier(targetVariable);
 
-    if (targetVariable) {
-        if (targetVariable->GetType() != Type::STRING) {
-            this->parser->notifyErrorListeners(variableToken, READ_NOT_STRING, nullptr);
-        }
+    if (targetType != Type::STRING) {
+        this->parser->notifyErrorListeners(variableToken, READ_NOT_STRING, nullptr);
+    }
 
-        if (targetVariable->GetSpecifier() == StorageSpecifier::CONST) {
-            this->parser->notifyErrorListeners(variableToken, READ_INTO_CONSTANT, nullptr);
-        }
+    if (targetSpecifier == StorageSpecifier::CONST) {
+        this->parser->notifyErrorListeners(variableToken, READ_INTO_CONSTANT, nullptr);
     }
 }
 
@@ -228,11 +239,11 @@ void AST::CheckIfEligableForWrite(antlr4::Token *toWrite) {
     NodeKind operandKind = operand->GetKind();
 
     if (operandKind == NodeKind::VARIABLE) {
-        Variable *variable = this->GetVariable(toWrite);
+        BaseValue *variable = this->LookupVariable(toWrite, false);
         if ( ! variable) {
             return;
         }
-        if (variable->GetType() != Type::STRING) {
+        if (this->GetValueType(variable) != Type::STRING) {
             this->parser->notifyErrorListeners(toWrite, WRITE_NOT_STRING, nullptr);
         }
 
@@ -395,11 +406,10 @@ Type AST::ConvertExpressionAssignment(antlr4::Token *expressionStart) {
         return Type::VOID;
     }
 
-    Variable *variable = this->GetVariable(expressionStart);
-    if (variable) {
-        if (variable->GetSpecifier() == StorageSpecifier::CONST) {
-            this->parser->notifyErrorListeners(expressionStart, CONSTANT_ASSIGNMENT, nullptr);
-        }
+    BaseValue *variable = this->LookupVariable(expressionStart, false);
+    StorageSpecifier variableSpecifier = this->GetValueSpecifier(variable);
+    if (variableSpecifier == StorageSpecifier::CONST) {
+        this->parser->notifyErrorListeners(expressionStart, CONSTANT_ASSIGNMENT, nullptr);
     }
 
     Type inferedType = Type::VOID;
@@ -448,7 +458,7 @@ void AST::ConvertCondition(antlr4::Token *expressionStart) {
 
 void AST::ConvertReturn(antlr4::Token *returnToken) {
     try {
-        Type functionReturn = this->CurrentlyInFunction()->GetReturnType();
+        Type functionReturn = this->activeFunction->GetReturnType();
         Type presentReturn = Type::VOID;
         if (this->activeNode->GetChildrenCount() != 0) {
             presentReturn = this->activeNode->GetOperandType(0);
@@ -672,15 +682,6 @@ Variable *AST::IsInThisScope(const string & name, ASTNode *node) {
 }
 
 
-
-FunctionTableEntry *AST::CurrentlyInFunction() {
-    ASTNode *aux = this->activeNode;
-
-    while(aux->GetKind() != NodeKind::FUNCTION) {
-        aux = aux->GetParent();
-    }
-
-    string name = aux->GetData<FunctionData>()->GetName();
-
-    return this->symbolTable.IsIdFunction(name); // we are inside this function, so it has to be defined
+Parameter *AST::IsParameter(const string & name) {
+    return this->activeFunction->GetParameter(name);
 }

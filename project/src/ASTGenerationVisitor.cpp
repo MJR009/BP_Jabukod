@@ -65,13 +65,16 @@ any ASTGenerationVisitor::visitVariableDefinition(JabukodParser::VariableDefinit
 }
 
 any ASTGenerationVisitor::visitFunctionDefinition(JabukodParser::FunctionDefinitionContext *ctx) {
-    FunctionData *data = new FunctionData(
-        ctx->IDENTIFIER()->getText()
-    );
+    string name = ctx->IDENTIFIER()->getText();
+    
+    this->ast.SetActiveFunction(name);
+    FunctionData *data = new FunctionData(name);
 
     this->ast.AddNode(NodeKind::FUNCTION, data);
     this->visitChildren(ctx);
     this->ast.MoveToParent();
+
+    this->ast.ResetActiveFunction();
 
     return OK;
 }
@@ -147,12 +150,9 @@ any ASTGenerationVisitor::visitAssignExpression(JabukodParser::AssignExpressionC
 
 any ASTGenerationVisitor::visitIdentifierExpression(JabukodParser::IdentifierExpressionContext *ctx) { // concerns only variables
     string variableName = ctx->IDENTIFIER()->getText();
-    Type realType = Type::VOID;
 
-    Variable *variableInScope = this->ast.CheckIfVariableDefined(ctx->IDENTIFIER()->getSymbol());
-    if (variableInScope) {
-        realType = variableInScope->GetType();
-    }
+    BaseValue *variableInScope = this->ast.LookupVariable( ctx->IDENTIFIER()->getSymbol() );
+    Type realType = this->ast.GetValueType(variableInScope);
 
     VariableData *data = new VariableData(realType, variableName);
 
@@ -289,7 +289,7 @@ any ASTGenerationVisitor::visitPrefixUnaryExpression(JabukodParser::PrefixUnaryE
 }
 
 any ASTGenerationVisitor::visitFunctionCall(JabukodParser::FunctionCallContext *ctx) { // covers functionCallExpression
-    FunctionTableEntry *function = this->ast.CheckIfFunctionDefined( ctx->IDENTIFIER()->getSymbol() );
+    FunctionTableEntry *function = this->ast.LookupFunction( ctx->IDENTIFIER()->getSymbol() );
     this->ast.AddNode(NodeKind::FUNCTION_CALL);
 
     if (ctx->functionArguments()) {
@@ -499,12 +499,9 @@ any ASTGenerationVisitor::visitAssignment(JabukodParser::AssignmentContext *ctx)
     this->ast.AddNode(NodeKind::ASSIGNMENT);
 
     this->ast.AddNode(NodeKind::VARIABLE);
-    Type variableType = Type::VOID;
     string variableName = ctx->IDENTIFIER()->getText();
-    Variable *variable = this->ast.CheckIfVariableDefined( ctx->IDENTIFIER()->getSymbol() );
-    if (variable) {
-        variableType = variable->GetType();
-    }
+    BaseValue *variable = this->ast.LookupVariable( ctx->IDENTIFIER()->getSymbol() );
+    Type variableType = this->ast.GetValueType(variable);
     VariableData *lSideData = new VariableData(variableType, variableName);
     this->ast.GiveActiveNodeData(lSideData);
     this->ast.MoveToParent();

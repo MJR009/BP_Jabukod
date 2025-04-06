@@ -8,16 +8,15 @@ int main() {
 }
 
 int fact(int n) {
-    int x;
-    /*if (n < 2) {
+    if (n < 2) {
         return 1;
     } else {
         return n * fact(n - 1);
-    }*/
+    }
 }
 
-void a() { int x = b(); c(); d(); }
+void a() { int x = b(); c(); d("Jabukod"); }
 int b() { c(); }
 void c() { b(); }
-void d() { write "d"; }
+void d(string x) { read x; }
 void e() { write "e"; }

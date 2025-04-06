@@ -32,7 +32,7 @@ private:
     ofstream jout; // inspired by cout
 
 private:
-    void Generatejout();
+    void GenerateCode();
     void OutputAssembly();
 
     // selects which node to generate by kind

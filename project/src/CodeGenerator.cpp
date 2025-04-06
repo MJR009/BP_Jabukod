@@ -1,7 +1,7 @@
 #include "CodeGenerator.h"
 
 void Generator::Generate() {
-    this->Generatejout();
+    this->GenerateCode();
 
     this->OutputAssembly();
 
@@ -41,7 +41,7 @@ void Generator::OutputAssembly() {
 
 // PRIVATE:
 
-void Generator::Generatejout() {
+void Generator::GenerateCode() {
     this->GenerateNode( this->ast.GetRoot() );
 }
 

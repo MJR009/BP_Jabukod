@@ -19,6 +19,8 @@ public:
     void AddNode(NodeKind kind, GenericNodeData *data); // Newly added node is always made active !
     void GiveActiveNodeData(GenericNodeData *data);
     void MoveToParent();
+    void SetActiveFunction(const string & name);
+    void ResetActiveFunction();
     // Code generation:
     ASTNode* GetRoot();
 
@@ -30,11 +32,13 @@ public:
 
     NodeKind CurrentlyIn();
 
+    // used for variables and parameters
+    Type GetValueType(BaseValue *value);
+    StorageSpecifier GetValueSpecifier(BaseValue *value);
+
     void CheckIfNodeWithinLoop(antlr4::Token *token);
-    Variable *CheckIfVariableDefined(antlr4::Token *variableToken);
-    Variable *GetVariable(antlr4::Token *variableToken);
-    FunctionTableEntry *CheckIfFunctionDefined(antlr4::Token *functionToken);
-    FunctionTableEntry *GetFunction(antlr4::Token *functionToken);
+    BaseValue *LookupVariable(antlr4::Token *variableToken, bool produceError = true);
+    FunctionTableEntry *LookupFunction(antlr4::Token *functionToken, bool produceError = true);
     void CheckIfModuloFloatOperands(JabukodParser::MulDivModExpressionContext *ctx);
     void CheckIfConstantDeclaration(StorageSpecifier specifier, antlr4::Token *variableToken);
     void CheckIfEligableForRead(antlr4::Token *variableToken);
@@ -74,6 +78,8 @@ private:
     ASTNode *root = nullptr;
     ASTNode *activeNode = nullptr;
 
+    FunctionTableEntry *activeFunction = nullptr; // shortcut, mainly for resolving parameters
+
 private:
     void PutVariableInFunctionScope(
         antlr4::Token *variable,
@@ -106,6 +112,5 @@ private:
 
     bool IsScopeHavingNode(ASTNode *node);
     Variable *IsInThisScope(const string & name, ASTNode *node);
-
-    FunctionTableEntry *CurrentlyInFunction();
+    Parameter *IsParameter(const string & name);
 };    

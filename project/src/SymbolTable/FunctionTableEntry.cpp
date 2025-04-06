@@ -19,6 +19,16 @@ vector<Parameter> FunctionTableEntry::GetParameters() const {
     return this->parameters;
 }
 
+Parameter *FunctionTableEntry::GetParameter(const string & name) {
+    for (auto & parameter : this->parameters) {
+        if (name == parameter.GetName()) {
+            return &parameter;
+        }
+    }
+
+    return nullptr;
+}
+
 
 
 void FunctionTableEntry::Print() const {

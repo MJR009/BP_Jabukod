@@ -1,7 +1,7 @@
 #include "FunctionTable.h"
 
 FunctionTableEntry *FunctionTable::GetFunctionByName(const string & name) {
-    for (auto &function : this->functions) {
+    for (auto & function : this->functions) {
         if (function.GetFunctionName() == name) {
             return &function;
         }

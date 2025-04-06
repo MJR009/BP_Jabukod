@@ -12,6 +12,7 @@ public:
     string GetFunctionName() const;
     Type GetReturnType() const;
     vector<Parameter> GetParameters() const;
+    Parameter *GetParameter(const string & name);
 
     void Print() const;
 
