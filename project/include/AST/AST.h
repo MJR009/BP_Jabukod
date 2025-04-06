@@ -19,12 +19,12 @@ public:
     void AddNode(NodeKind kind, GenericNodeData *data); // Newly added node is always made active !
     void GiveActiveNodeData(GenericNodeData *data);
     void MoveToParent();
-    void SetActiveFunction(const string & name);
+    FunctionTableEntry *SetActiveFunction(const string & name);
     void ResetActiveFunction();
     // Code generation:
     ASTNode* GetRoot();
 
-    void PutVariableInScope(
+    Variable *PutVariableInScope(
         antlr4::Token *variable,
         JabukodParser::StorageSpecifierContext *storageSpecifier,
         JabukodParser::NonVoidTypeContext *variableType
@@ -41,7 +41,7 @@ public:
     FunctionTableEntry *LookupFunction(antlr4::Token *functionToken, bool produceError = true);
     void CheckIfModuloFloatOperands(JabukodParser::MulDivModExpressionContext *ctx);
     void CheckIfConstantDeclaration(StorageSpecifier specifier, antlr4::Token *variableToken);
-    void CheckIfEligableForRead(antlr4::Token *variableToken);
+    BaseValue *CheckIfEligableForRead(antlr4::Token *variableToken);
     void CheckIfEligableForWrite(antlr4::Token *toWrite);
     void CheckIfCorrectArgumentCount(int countInTable, antlr4::Token *functionToken);
     void CheckIfValidForInit(antlr4::Token *initToken);
@@ -61,7 +61,7 @@ public:
     void ConvertReturn(antlr4::Token *returnToken);
     void ConvertExit(antlr4::Token *exitToken);
 
-    void AddFloatStringLiteral(const string & name, Type type, any value);
+    Variable *AddFloatStringLiteral(const string & name, Type type, any value);
     string GenerateUniqueLiteralId(Type type);
 
     void Print();
@@ -85,25 +85,25 @@ private:
     FunctionTableEntry *activeFunction = nullptr; // shortcut, mainly for resolving parameters
 
 private:
-    void PutVariableInFunctionScope(
+    Variable *PutVariableInFunctionScope(
         antlr4::Token *variable,
         const string & name,
         StorageSpecifier specifier,
         Type type
     );
-    void PutVariableInNestedScope(
+    Variable *PutVariableInNestedScope(
         antlr4::Token *variable,
         const string & name,
         StorageSpecifier specifier,
         Type type
     );
-    void PutVariableInForHeader(
+    Variable *PutVariableInForHeader(
         antlr4::Token *variable,
         const string & name,
         StorageSpecifier specifier,
         Type type
     );
-    void PutVariableInForeachHeader(
+    Variable *PutVariableInForeachHeader(
         antlr4::Token *variable,
         const string & name,
         StorageSpecifier specifier,

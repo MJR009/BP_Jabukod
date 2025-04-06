@@ -98,8 +98,8 @@ void SymbolTable::AddEnumItem(antlr4::Token *itemName, antlr4::Token *itemValue)
 
 
 
-void SymbolTable::AddFloatStringLiteral(const string & name, Type type, any value) {
-    this->globalScope.AddEntry(name, StorageSpecifier::CONST, type, value);
+Variable *SymbolTable::AddFloatStringLiteral(const string & name, Type type, any value) {
+    return this->globalScope.AddEntry(name, StorageSpecifier::CONST, type, value);
 }
 
 

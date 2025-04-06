@@ -11,21 +11,43 @@ any LiteralData::GetValue() {
 
 
 Type VariableData::GetType() {
-    return this->type;
+    Variable *variable = dynamic_cast<Variable *>(this->location);
+    if (variable) {
+        return variable->GetType();
+    }
+
+    Parameter *parameter = dynamic_cast<Parameter *>(this->location);
+    if (parameter) {
+        return parameter->GetType();
+    }
+
+    ERR::BadData();
+    return Type::VOID;
 }
 
 string VariableData::GetName() {
-    return this->name;
+    Variable *variable = dynamic_cast<Variable *>(this->location);
+    if (variable) {
+        return variable->GetName();
+    }
+
+    Parameter *parameter = dynamic_cast<Parameter *>(this->location);
+    if (parameter) {
+        return parameter->GetName();
+    }
+
+    ERR::BadData();
+    return "ERR";
 }
 
 
 
-void BodyData::AddVariable(
+Variable *BodyData::AddVariable(
     const string & name,
     StorageSpecifier specifier,
     Type type
 ) {
-    this->scope.AddEntry(name, specifier, type);
+    return this->scope.AddEntry(name, specifier, type);
 }
 
 bool BodyData::IsVariableNameAvailable(const string & name) const {
@@ -50,7 +72,7 @@ void BodyData::PrintScope() {
 
 
 string FunctionData::GetName() {
-    return this->name;
+    return this->location->GetFunctionName();
 }
 
 
@@ -61,16 +83,27 @@ Type ExpressionData::GetType() {
 
 
 
-string ReadData::GetTarget() {
-    return this->into;
+string ReadData::GetTargetName() {
+    Variable *variable = dynamic_cast<Variable *>(this->location);
+    if (variable) {
+        return variable->GetName();
+    }
+
+    Parameter *parameter = dynamic_cast<Parameter *>(this->location);
+    if (parameter) {
+        return parameter->GetName();
+    }
+
+    ERR::BadData();
+    return "ERR";
 }
 
 
 
 string FunctionCallData::GetName() {
-    return this->name;
+    return this->location->GetFunctionName();
 }
 
 Type FunctionCallData::GetReturnType() {
-    return this->returnType;
+    return this->location->GetReturnType();
 }

@@ -2,6 +2,7 @@
 
 void ERR::BadData() {
     cerr << RED << BOLD << "BAD NODE DATA TYPE" << DEFAULT;
+    exit(EXIT_FAILURE);
 }
 
 #include "main.h"

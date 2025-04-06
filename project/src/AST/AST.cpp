@@ -46,9 +46,11 @@ void AST::MoveToParent() {
     } else {} // current is root, do nothing
 }
 
-void AST::SetActiveFunction(const string & name) {
-    FunctionTableEntry *function = this->IsFunctionDefined(name); // this is done in definition, the function is defined in symbol table
+FunctionTableEntry *AST::SetActiveFunction(const string & name) {
+    FunctionTableEntry *function = this->IsFunctionDefined(name); //at this point, the function is defined in symbol table
     this->activeFunction = function;
+
+    return function;
 }
 
 void AST::ResetActiveFunction() {
@@ -63,7 +65,7 @@ ASTNode* AST::GetRoot() {
 
 
 
-void AST::PutVariableInScope(
+Variable *AST::PutVariableInScope(
     antlr4::Token *variable,
     JabukodParser::StorageSpecifierContext *storageSpecifier,
     JabukodParser::NonVoidTypeContext *variableType
@@ -78,14 +80,16 @@ void AST::PutVariableInScope(
     ASTNode *parent = this->activeNode->GetParent(); // definitions/declarations are always children of a node with scope (according to grammar)
 
     if (parent->GetKind() == NodeKind::FUNCTION) {
-        this->PutVariableInFunctionScope(variable, variableName, specifier, type);
+        return this->PutVariableInFunctionScope(variable, variableName, specifier, type);
     } else if (parent->GetKind() == NodeKind::BODY) {
-        this->PutVariableInNestedScope(variable, variableName, specifier, type);
+        return this->PutVariableInNestedScope(variable, variableName, specifier, type);
     } else if (parent->GetKind() == NodeKind::FOR_HEADER1) {
-        this->PutVariableInForHeader(variable, variableName, specifier, type);
+        return this->PutVariableInForHeader(variable, variableName, specifier, type);
     } else if (parent->GetKind() == NodeKind::FOREACH) {
-        this->PutVariableInForeachHeader(variable, variableName, specifier, type);
+        return this->PutVariableInForeachHeader(variable, variableName, specifier, type);
     } else ERR::BadData();
+
+    return nullptr;
 }
 
 
@@ -220,7 +224,7 @@ void AST::CheckIfConstantDeclaration(StorageSpecifier specifier, antlr4::Token *
     }
 }
 
-void AST::CheckIfEligableForRead(antlr4::Token *variableToken) {
+BaseValue *AST::CheckIfEligableForRead(antlr4::Token *variableToken) {
     BaseValue *targetVariable = this->LookupVariable(variableToken);
     Type targetType = this->GetValueType(targetVariable);
     StorageSpecifier targetSpecifier = this->GetValueSpecifier(targetVariable);
@@ -232,6 +236,8 @@ void AST::CheckIfEligableForRead(antlr4::Token *variableToken) {
     if (targetSpecifier == StorageSpecifier::CONST) {
         this->parser->notifyErrorListeners(variableToken, READ_INTO_CONSTANT, nullptr);
     }
+
+    return targetVariable;
 }
 
 void AST::CheckIfEligableForWrite(antlr4::Token *toWrite) {
@@ -489,8 +495,8 @@ void AST::ConvertExit(antlr4::Token *exitToken) {
 
 
 
-void AST::AddFloatStringLiteral(const string & name, Type type, any value) {
-    this->symbolTable.AddFloatStringLiteral(name, type, value);
+Variable *AST::AddFloatStringLiteral(const string & name, Type type, any value) {
+    return this->symbolTable.AddFloatStringLiteral(name, type, value);
 }
 
 string AST::GenerateUniqueLiteralId(Type type) {
@@ -561,7 +567,7 @@ void AST::Print() {
 
 // PRIVATE:
 
-void AST::PutVariableInFunctionScope(
+Variable *AST::PutVariableInFunctionScope(
     antlr4::Token *variable,
     const string & name,
     StorageSpecifier specifier,
@@ -571,7 +577,7 @@ void AST::PutVariableInFunctionScope(
 
     if ( ! parent->GetData<FunctionData>()) {
         ERR::BadData();
-        return;
+        return nullptr;
     }
     FunctionData *data = parent->GetData<FunctionData>();
     string functionName = data->GetName();
@@ -580,17 +586,19 @@ void AST::PutVariableInFunctionScope(
         this->parser->notifyErrorListeners(variable, VARIABLE_SAME_AS_PARAMETER, nullptr);
     }
 
-    if ( data->IsVariableNameAvailable(name) ) {
-        if ( ! this->symbolTable.IsIdentifierAllowed(name)) {
-            this->parser->notifyErrorListeners(variable, INTERNAL_ID_USE, nullptr);
-        }
-        data->AddVariable(name, specifier, type);
-    } else {
+    Variable *variableInScope = nullptr;
+
+    if ( ! data->IsVariableNameAvailable(name) ) {
         this->parser->notifyErrorListeners(variable, LOCAL_VARIABLE_REDEFINITION, nullptr);
     }
+    if ( ! this->symbolTable.IsIdentifierAllowed(name)) {
+        this->parser->notifyErrorListeners(variable, INTERNAL_ID_USE, nullptr);
+    }
+
+    return data->AddVariable(name, specifier, type);
 }
 
-void AST::PutVariableInNestedScope(
+Variable *AST::PutVariableInNestedScope(
     antlr4::Token *variable,
     const string & name,
     StorageSpecifier specifier,
@@ -600,21 +608,23 @@ void AST::PutVariableInNestedScope(
 
     if ( ! parent->GetData<BodyData>()) {
         ERR::BadData();
-        return;
+        return nullptr;
     }
     BodyData *data = parent->GetData<BodyData>();
 
-    if ( data->IsVariableNameAvailable(name) ) {
-        if ( ! this->symbolTable.IsIdentifierAllowed(name)) {
-            this->parser->notifyErrorListeners(variable, INTERNAL_ID_USE, nullptr);
-        }
-        data->AddVariable(name, specifier, type);
-    } else {
+    Variable *variableInScope = nullptr;
+
+    if ( ! data->IsVariableNameAvailable(name) ) {
         this->parser->notifyErrorListeners(variable, LOCAL_VARIABLE_REDEFINITION, nullptr);
     }
+    if ( ! this->symbolTable.IsIdentifierAllowed(name)) {
+        this->parser->notifyErrorListeners(variable, INTERNAL_ID_USE, nullptr);
+    }
+
+    return data->AddVariable(name, specifier, type);
 }
 
-void AST::PutVariableInForHeader(
+Variable *AST::PutVariableInForHeader(
     antlr4::Token *variable,
     const string & name,
     StorageSpecifier specifier,
@@ -625,7 +635,7 @@ void AST::PutVariableInForHeader(
 
     if ( ! grandparent->GetData<ForData>()) {
         ERR::BadData();
-        return;
+        return nullptr;
     }
     ForData *data = grandparent->GetData<ForData>();
 
@@ -636,10 +646,10 @@ void AST::PutVariableInForHeader(
         this->parser->notifyErrorListeners(variable, INTERNAL_ID_USE, nullptr);
     }
 
-    data->AddVariable(name, specifier, type); // in for header there can only occur one definition, no need to check
+    return data->AddVariable(name, specifier, type); // in for header there can only occur one definition, no need to check
 }
 
-void AST::PutVariableInForeachHeader(
+Variable *AST::PutVariableInForeachHeader(
     antlr4::Token *variable,
     const string & name,
     StorageSpecifier specifier,
@@ -649,7 +659,7 @@ void AST::PutVariableInForeachHeader(
 
     if ( ! parent->GetData<ForeachData>()) {
         ERR::BadData();
-        return;
+        return nullptr;
     }
     ForeachData *data = parent->GetData<ForeachData>();
 
@@ -658,7 +668,7 @@ void AST::PutVariableInForeachHeader(
         this->parser->notifyErrorListeners(variable, INTERNAL_ID_USE, nullptr);
     }
 
-    data->AddVariable(name, specifier, type);
+    return data->AddVariable(name, specifier, type);
 }
 
 

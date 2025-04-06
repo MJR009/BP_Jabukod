@@ -257,7 +257,7 @@ void ASTNode::Print() {
         case NodeKind::READ:
             readData = this->GetData<ReadData>();
             if (readData) {
-                cout << "READ " << DIM << "into " << DEFAULT << ORANGE << readData->GetTarget() << DEFAULT;
+                cout << "READ " << DIM << "into " << DEFAULT << ORANGE << readData->GetTargetName() << DEFAULT;
             } else ERR::BadData();
             break;
 

@@ -5,7 +5,7 @@
 
 class Scope {
 public:
-    void AddEntry(
+    Variable *AddEntry(
         const string & name,
         const StorageSpecifier specifier,
         const Type type,

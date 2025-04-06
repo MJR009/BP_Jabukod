@@ -6,6 +6,8 @@
 #include "GenericNodeData.h"
 
 #include "Scope.h"
+#include "Parameter.h"
+#include "FunctionTableEntry.h"
 
 class LiteralData : public GenericNodeData {
 public:
@@ -23,21 +25,20 @@ private:
 
 class VariableData : public GenericNodeData {
 public:
-    VariableData(Type type, const string & name) : type(type), name(name) {}
+    VariableData(BaseValue *variable) : location(variable) {}
 
     Type GetType();
     string GetName();
 
 private:
-    Type type;
-    string name;
+    BaseValue *location;
 };
 
 
 
 class BodyData : public GenericNodeData {
 public:
-    void AddVariable(
+    Variable *AddVariable(
         const string & name,
         StorageSpecifier specifier,
         Type type
@@ -55,12 +56,12 @@ protected:
 
 class FunctionData : public BodyData {
 public:
-    FunctionData(const string & name) : name(name) {}
+    FunctionData(FunctionTableEntry *function) : location(function) {}
 
     string GetName();
 
 private:
-    string name;
+    FunctionTableEntry *location;
 };
 
 
@@ -87,26 +88,25 @@ private:
 
 class ReadData : public GenericNodeData {
 public:
-    ReadData(const string & into) : into(into) {}
+    ReadData(BaseValue *variable) : location(variable) {}
 
-    string GetTarget();
+    string GetTargetName();
 
 private:
-    string into;
+    BaseValue *location;
 };
 
 
 
 class FunctionCallData : public GenericNodeData {
 public:
-    FunctionCallData(const string & name, Type type, bool exists) : name(name), returnType(type), exists(exists) {}
+    FunctionCallData(FunctionTableEntry *function, bool exists) : location(function), exists(exists) {}
 
     string GetName();
     Type GetReturnType();
 
-    bool exists;
+    bool exists; // differentiates void functions (true) and functions not define during semantic analysis (false)
 
 private:
-    string name;
-    Type returnType;
+    FunctionTableEntry *location;
 };
