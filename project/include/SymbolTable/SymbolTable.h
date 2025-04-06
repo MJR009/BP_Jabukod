@@ -48,6 +48,8 @@ public:
 
     Scope GetGlobalVariables();
 
+    bool IsIdentifierAllowed(const string & identifier) const;
+
     void Print() const;
 
 private:

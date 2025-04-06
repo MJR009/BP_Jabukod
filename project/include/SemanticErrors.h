@@ -44,7 +44,9 @@
 #define BAD_STRING_ARGUMENT "value of type string cannot be passed as argument here"
 #define STRING_ARGUMENT_EXPECTED "argument of type string was expected here"
 #define STRING_CONDITION "cannot evaluate value of type string as a condition"
-#define FOR_HEADER_INIT_EXPRESSION "for loop inicialization may only be a function definition or an only assignment"
+#define FOR_HEADER_INIT_EXPRESSION "for loop inicialization may only be a variable definition or an only assignment"
 #define FOR_HEADER_UPDATE_EXPRESSION "for loop update must be an only assignment"
 #define BAD_RETURN_TYPE "return value type does not match the expected function return type"
 #define BAD_EXIT_TYPE "exit value type cannot be converted to an int"
+
+#define INTERNAL_ID_USE "identifiers may not start with \"__\" prefix"

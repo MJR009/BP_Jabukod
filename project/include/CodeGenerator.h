@@ -37,9 +37,9 @@ private:
     void OutputAssembly();
     void OutputDataSection();
     void OutputRODataSection();
+    void OutputVariable(Variable *variable);
 
     void GenerateCode();
-
     // selects which node to generate by kind
     void GenerateNode(ASTNode *node);
 

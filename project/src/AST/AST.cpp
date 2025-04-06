@@ -576,6 +576,9 @@ void AST::PutVariableInFunctionScope(
     }
 
     if ( data->IsVariableNameAvailable(name) ) {
+        if ( ! this->symbolTable.IsIdentifierAllowed(name)) {
+            this->parser->notifyErrorListeners(variable, INTERNAL_ID_USE, nullptr);
+        }
         data->AddVariable(name, specifier, type);
     } else {
         this->parser->notifyErrorListeners(variable, LOCAL_VARIABLE_REDEFINITION, nullptr);
@@ -597,6 +600,9 @@ void AST::PutVariableInNestedScope(
     BodyData *data = parent->GetData<BodyData>();
 
     if ( data->IsVariableNameAvailable(name) ) {
+        if ( ! this->symbolTable.IsIdentifierAllowed(name)) {
+            this->parser->notifyErrorListeners(variable, INTERNAL_ID_USE, nullptr);
+        }
         data->AddVariable(name, specifier, type);
     } else {
         this->parser->notifyErrorListeners(variable, LOCAL_VARIABLE_REDEFINITION, nullptr);
@@ -621,6 +627,9 @@ void AST::PutVariableInForHeader(
     if (specifier != StorageSpecifier::NONE) {
         this->parser->notifyErrorListeners(variable, FOR_HEADER_DEFINITION_WITH_SPECIFIER, nullptr);
     }
+    if ( ! this->symbolTable.IsIdentifierAllowed(name)) {
+        this->parser->notifyErrorListeners(variable, INTERNAL_ID_USE, nullptr);
+    }
 
     data->AddVariable(name, specifier, type); // in for header there can only occur one definition, no need to check
 }
@@ -640,6 +649,9 @@ void AST::PutVariableInForeachHeader(
     ForeachData *data = parent->GetData<ForeachData>();
 
     // foreach can keep storage specifier, can be const and static (might be useful)
+    if ( ! this->symbolTable.IsIdentifierAllowed(name)) {
+        this->parser->notifyErrorListeners(variable, INTERNAL_ID_USE, nullptr);
+    }
 
     data->AddVariable(name, specifier, type);
 }

@@ -42,12 +42,7 @@ void Generator::OutputDataSection() {
             continue;
         }
 
-        jout << GenMethods::VariableNameToLabel( variable.GetName() );
-        jout << "\t";
-        jout << GenMethods::VariableTypeToString( variable.GetType() );
-        jout << "\t";
-        jout << GenMethods::ProduceDefaultValue( &variable );
-        jout << endl;
+        this->OutputVariable(&variable);
     }
 }
 
@@ -59,13 +54,17 @@ void Generator::OutputRODataSection() {
             continue;
         }
 
-        jout << GenMethods::VariableNameToLabel( variable.GetName() );
-        jout << "\t";
-        jout << GenMethods::VariableTypeToString( variable.GetType() );
-        jout << "\t";
-        jout << GenMethods::ProduceDefaultValue( &variable );
-        jout << endl;
+        this->OutputVariable(&variable);
     }
+}
+
+void Generator::OutputVariable(Variable *variable) {
+    jout << GenMethods::VariableNameToLabel( variable->GetName() );
+    jout << "\t";
+    jout << GenMethods::VariableTypeToString( variable->GetType() );
+    jout << "\t";
+    jout << GenMethods::ProduceDefaultValue( variable );
+    jout << endl;
 }
 
 
@@ -73,8 +72,6 @@ void Generator::OutputRODataSection() {
 void Generator::GenerateCode() {
     this->GenerateNode( this->ast.GetRoot() );
 }
-
-
 
 #define Generate_case(item) case NodeKind::item: this->Generate##item(node); return
 //VARIABLE_DECLARATION, VARIABLE_DEFINITION, MULTIPLICATION, DIVISION, MODULO, POWER, LEFT_SHIFT, RIGHT_SHIFT,

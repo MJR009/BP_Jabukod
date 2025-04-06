@@ -1,7 +1,6 @@
 #include "GlobalSymbolsVisitor.h"
 
 // TODO ZPRACOVÁNÍ POLÍ A ENUMŮ 
-// TODO IMPLICITNÍ KONVERZE
 
 any GlobalSymbolsVisitor::visitSourceFile(JabukodParser::SourceFileContext *ctx) {
     visitChildren(ctx);

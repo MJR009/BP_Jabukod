@@ -16,6 +16,9 @@ void SymbolTable::AddGlobalVariable(
     any value = this->ResolveDefaultValue(defaultValue, type); // returns default to process as many errors as possible
 
     if (this->IsGlobalVariableNameAvailable(name)) {
+        if ( ! this->IsIdentifierAllowed(name)) {
+            this->parser->notifyErrorListeners(variable, INTERNAL_ID_USE, nullptr);
+        }
         this->globalScope.AddEntry(name, storage, type, value);
     } else {
         this->parser->notifyErrorListeners(variable, VARIABLE_REDEFINITION, nullptr);
@@ -27,6 +30,9 @@ FunctionTableEntry *SymbolTable::AddFunction(antlr4::Token *function, JabukodPar
     Type type = Type::toType( returnType->getText() );
 
     if (this->IsFunctionNameAvailable(name)) {
+        if ( ! this->IsIdentifierAllowed(name)) {
+            this->parser->notifyErrorListeners(function, INTERNAL_ID_USE, nullptr);
+        }
         return this->functionTable.AddEntry(name, type);
     } else {
         this->parser->notifyErrorListeners(function, FUNCTION_REDEFINITION, nullptr);
@@ -51,6 +57,9 @@ EnumTableEntry *SymbolTable::AddEnum(antlr4::Token *theEnum) {
     string name = theEnum->getText();
 
     if (this->IsEnumNameAvailable(name)) {
+        if ( ! this->IsIdentifierAllowed(name)) {
+            this->parser->notifyErrorListeners(theEnum, INTERNAL_ID_USE, nullptr);
+        }
         return this->enumTable.AddEntry(name);
     } else {
         this->parser->notifyErrorListeners(theEnum, ENUM_REDEFINITION, nullptr);
@@ -78,6 +87,9 @@ void SymbolTable::AddEnumItem(antlr4::Token *itemName, antlr4::Token *itemValue)
     }
 
     if (this->currentEnum) { // if enum does not have original name, it is not stored
+        if ( ! this->IsIdentifierAllowed(name)) {
+            this->parser->notifyErrorListeners(itemName, INTERNAL_ID_USE, nullptr);
+        }
         this->currentEnum->AddItem(name, this->currentEnumItemValue);
     }
 
@@ -148,6 +160,20 @@ FunctionTableEntry *SymbolTable::IsIdFunction(const string & name) {
 
 Scope SymbolTable::GetGlobalVariables() {
     return this->globalScope;
+}
+
+
+
+bool SymbolTable::IsIdentifierAllowed(const string & identifier) const {
+    if (identifier.size() < 2) {
+        return true;
+    }
+
+    if ((identifier.at(0) == '_') && (identifier.at(1) == '_')) {
+        return false;
+    }
+
+    return true;
 }
 
 
@@ -376,3 +402,4 @@ any SymbolTable::ConvertLiteralByType(JabukodParser::LiteralContext *defaultValu
 
     return value;
 }
+

@@ -1,1 +1,7 @@
-int main() write "Hello world!\n";
+enum X {
+    e
+}
+
+int main() {
+    write "Hello world!\n";
+}
