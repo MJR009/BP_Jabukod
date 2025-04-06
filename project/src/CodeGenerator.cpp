@@ -19,7 +19,6 @@ void Generator::Generate() {
 void Generator::OutputAssembly() {
     jout << "\t.data" << endl;
     this->OutputDataSection();
-
     jout << endl;
 
     jout << "\t.text" << endl;
@@ -36,7 +35,7 @@ void Generator::OutputDataSection() {
     
     for (auto & variable : globals.GetVariables()) {
         jout << GenMethods::VariableNameToLabel( variable.GetName() );
-        jout << endl << "\t";
+        jout << "\t";
         jout << GenMethods::VariableTypeToString( variable.GetType() );
         jout << "\t";
         jout << GenMethods::ProduceDefaultValue( &variable );
@@ -110,7 +109,7 @@ void Generator::GenerateWRITE(ASTNode *node) {
             
             break;
     }*/
-        this->AppendInstruction("lea", "(hello)", "%rsi");
+        this->AppendInstruction("lea", "(__strlit_0000)", "%rsi");
         this->AppendInstruction("mov", "$13", "%rdx");
 
     this->AppendInstruction("mov", "$1", "%rdi"); // stdout

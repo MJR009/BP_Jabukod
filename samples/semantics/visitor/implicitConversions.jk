@@ -17,7 +17,6 @@ int main() {
 
 const int x = 10;
 
-/*
 int a;
 int b = 12;
 int c = 1.2e3;
@@ -41,4 +40,4 @@ string p;
 //string r = 1.32;
 //string s = true;
 string t = "string";
-*/
+

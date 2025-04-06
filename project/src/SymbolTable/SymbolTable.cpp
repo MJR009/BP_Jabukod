@@ -86,6 +86,12 @@ void SymbolTable::AddEnumItem(antlr4::Token *itemName, antlr4::Token *itemValue)
 
 
 
+void SymbolTable::AddFloatStringLiteral(const string & name, Type type, any value) {
+    this->globalScope.AddEntry(name, StorageSpecifier::CONST, type, value);
+}
+
+
+
 void SymbolTable::SetCurrentEnum(EnumTableEntry *theEnum) {
     this->currentEnum = theEnum;
 }
@@ -318,7 +324,7 @@ any SymbolTable::GetImplicitDefaultValue(Type type) const {
         case Type::BOOL:
             return any( false );
         case Type::STRING:
-            return any( string("") );
+            return any( string("\"\"") );
     }
 
     return any( 0 ); // suppress warning

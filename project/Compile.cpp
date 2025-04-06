@@ -46,6 +46,11 @@ int Compile(string & inputFile, string & outputFile) {
     symbolTable.Print();
     ast.Print();
 
+    //return 0;
+
+
+
+
     try {
         // Phase 4: generate target code and output to a file
         Generator generator(outputFile, ast, symbolTable);

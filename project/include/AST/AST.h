@@ -60,6 +60,9 @@ public:
     void ConvertReturn(antlr4::Token *returnToken);
     void ConvertExit(antlr4::Token *exitToken);
 
+    void AddFloatStringLiteral(const string & name, Type type, any value);
+    string GenerateUniqueLiteralId(Type type);
+
     void Print();
 
     ~AST() {

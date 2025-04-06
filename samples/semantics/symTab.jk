@@ -2,23 +2,20 @@ string x = "hello\n";
 const int y = 1;
 bool z = true;
 float n = 3.14e-3;
-//string x = "";
+
 void a() {
     int x;
     x = 1;
-    y = "abc";
     int y = x;
 }
 
-//int a;
-
-enum X {one, two, three = -3, four, five}//, six}
+/* enum X {one, two, three = -3, four, five}//, six} */
 
 int f(int xx, int yy, bool zz) {
     g();
-    i = -1-x();
-    g = g;
-    return x + y;
+    int i = -1;
+    float g = g;
+    return i + g;
 }
 
 void g() {
@@ -27,19 +24,18 @@ void g() {
     y = 9;
     
     if (x == y) {
-        f();
+        f(1, 2, 3);
     } else {
-        z();
+        f(3, 2, 1);
     }
-
-    y();
-    x = f;
 }
 
 int main (int argc, string argv) {
-    f(1, 1);
+    f(1, 1, 1);
 }
 
+/*
 enum Y {
     ONE, TWO = 7, THREE = 1, FOUR
 }
+*/

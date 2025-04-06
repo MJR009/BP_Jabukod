@@ -484,6 +484,34 @@ void AST::ConvertExit(antlr4::Token *exitToken) {
 
 
 
+void AST::AddFloatStringLiteral(const string & name, Type type, any value) {
+    this->symbolTable.AddFloatStringLiteral(name, type, value);
+}
+
+string AST::GenerateUniqueLiteralId(Type type) {
+    static int unique = 0;
+
+    // unique ID
+    ostringstream stream;
+    stream << setw(4) << setfill('0') << unique;
+
+    // type, for clartiy
+    string typePart;
+    if (type == Type::STRING) {
+        typePart = "str";
+    } else {
+        typePart = "float";
+    }
+
+    string uniqueName = "__" + typePart + "lit_" + stream.str();
+
+    unique++;
+
+    return uniqueName;
+}
+
+
+
 void AST::Print() {
     void (*printNode)(ASTNode *) = [](ASTNode *node) {
         if (node) {

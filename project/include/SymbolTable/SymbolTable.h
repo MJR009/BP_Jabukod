@@ -33,6 +33,8 @@ public:
         antlr4::Token *itemValue
     );
 
+    void AddFloatStringLiteral(const string & name, Type type, any value);
+
     void SetCurrentEnum(EnumTableEntry *theEnum);
     void ResetCurrentEnum();
     void SetCurrentFunction(FunctionTableEntry *function);

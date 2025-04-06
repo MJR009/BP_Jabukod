@@ -1,3 +1,1 @@
-string hello = "Hello world!\n";
-
-int main() write hello;
+int main() write "Hello world!\n";

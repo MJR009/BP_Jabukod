@@ -567,9 +567,18 @@ any ASTGenerationVisitor::visitLiteral(JabukodParser::LiteralContext *ctx) {
         
     }
 
-    LiteralData *data = new LiteralData(type, value);
+    if ((type == Type::FLOAT) || (type == Type::STRING)) {
+        string uniqueLiteralName = this->ast.GenerateUniqueLiteralId(type);
 
-    this->ast.AddNode(NodeKind::LITERAL, data);
+        VariableData *data = new VariableData(type, uniqueLiteralName);
+        this->ast.AddFloatStringLiteral(uniqueLiteralName, type, value);
+
+        this->ast.AddNode(NodeKind::VARIABLE, data);
+    } else {
+        LiteralData *data = new LiteralData(type, value);
+        this->ast.AddNode(NodeKind::LITERAL, data);
+    }
+
     this->ast.MoveToParent();
 
     return OK;
