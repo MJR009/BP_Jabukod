@@ -43,6 +43,7 @@ private:
     void GenerateNode(ASTNode *node);
 
     void AppendInstruction(string opcode, string arg1 = "", string arg2 = "", string arg3 = "");
+    void AppendInstructions(vector<Instruction> instructions);
 
     void GeneratePROGRAM(ASTNode *node);
     void GenerateFUNCTION(ASTNode *node);

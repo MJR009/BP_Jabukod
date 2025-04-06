@@ -14,4 +14,7 @@ public:
     static string VariableNameToLabel(const string & name);
     static string VariableTypeToString(Type type);
     static string ProduceDefaultValue(Variable *variable);
+
+    static vector<Instruction> GetProlog();
+    static vector<Instruction> GetEpilog(const string & inFunction);
 };

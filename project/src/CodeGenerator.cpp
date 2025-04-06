@@ -75,6 +75,10 @@ void Generator::AppendInstruction(string opcode, string arg1, string arg2, strin
     this->instructions.push_back(newInstruction);
 }
 
+void Generator::AppendInstructions(vector<Instruction> toAppend) {
+    this->instructions.insert(this->instructions.end(), toAppend.begin(), toAppend.end());
+}
+
 
 
 void Generator::GeneratePROGRAM(ASTNode *node) {
@@ -88,13 +92,9 @@ void Generator::GenerateFUNCTION(ASTNode *node) {
     string label = GenMethods::FunctionNameToLabel( function->GetName() );
 
     this->AppendInstruction(label);
-    // prolog
-    this->AppendInstruction("push", "%rbp");
-    this->AppendInstruction("mov", "%rsp", "%rbp");
+    this->AppendInstructions(GenMethods::GetProlog());
 
     //
 
-    // epilog
-    this->AppendInstruction("pop", "%rbp");
-    this->AppendInstruction("ret");
+    this->AppendInstructions(GenMethods::GetEpilog( function->GetName() ));
 }

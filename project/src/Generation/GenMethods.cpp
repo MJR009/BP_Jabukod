@@ -53,3 +53,29 @@ string GenMethods::ProduceDefaultValue(Variable *variable) {
 
     return "";
 }
+
+
+
+vector<Instruction> GenMethods::GetProlog() {
+    vector<Instruction> prolog;
+
+    prolog.push_back( {"push", "%rbp"} );
+    prolog.push_back( {"mov", "%rsp", "%rbp"} );
+
+    return prolog;
+}
+
+vector<Instruction> GenMethods::GetEpilog(const string & inFunction) {
+    vector<Instruction> epilog;
+
+    epilog.push_back( {"pop", "%rbp"} );
+    if (inFunction == "main") {
+        epilog.push_back( {"xor", "%rdi", "%rdi"} );
+        epilog.push_back( {"mov", "$60", "%rax"} );
+        epilog.push_back( {"syscall"} );
+    } else {
+        epilog.push_back( {"ret"} );
+    }
+
+    return epilog;
+}
