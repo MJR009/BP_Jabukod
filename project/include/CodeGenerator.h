@@ -36,6 +36,7 @@ private:
 private:
     void OutputAssembly();
     void OutputDataSection();
+    void OutputRODataSection();
 
     void GenerateCode();
 

@@ -21,6 +21,10 @@ void Generator::OutputAssembly() {
     this->OutputDataSection();
     jout << endl;
 
+    jout << "\t.section .rodata" << endl;
+    this->OutputRODataSection();
+    jout << endl;
+
     jout << "\t.text" << endl;
     jout << "\t.globl _start" << endl;
     for (auto & instruction : this->instructions) {
@@ -32,8 +36,29 @@ void Generator::OutputAssembly() {
 
 void Generator::OutputDataSection() {
     Scope globals = this->symbolTable.GetGlobalVariables();
-    
+
     for (auto & variable : globals.GetVariables()) {
+        if (variable.GetSpecifier() == StorageSpecifier::CONST) {
+            continue;
+        }
+
+        jout << GenMethods::VariableNameToLabel( variable.GetName() );
+        jout << "\t";
+        jout << GenMethods::VariableTypeToString( variable.GetType() );
+        jout << "\t";
+        jout << GenMethods::ProduceDefaultValue( &variable );
+        jout << endl;
+    }
+}
+
+void Generator::OutputRODataSection() {
+    Scope globals = this->symbolTable.GetGlobalVariables();
+
+    for (auto & variable : globals.GetVariables()) {
+        if (variable.GetSpecifier() != StorageSpecifier::CONST) {
+            continue;
+        }
+
         jout << GenMethods::VariableNameToLabel( variable.GetName() );
         jout << "\t";
         jout << GenMethods::VariableTypeToString( variable.GetType() );
