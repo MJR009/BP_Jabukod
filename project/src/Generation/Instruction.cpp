@@ -23,3 +23,9 @@ void Instruction::Output(ofstream & file) {
 
     file << endl;
 }
+
+
+
+string Instruction::GetOpcode() {
+    return this->opcode;
+}

@@ -9,6 +9,8 @@ public:
 
     void Output(ofstream & file);
 
+    string GetOpcode();
+
 private:
     string opcode;
     string first; // operands

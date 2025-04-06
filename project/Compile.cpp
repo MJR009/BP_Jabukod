@@ -48,7 +48,7 @@ int Compile(string & inputFile, string & outputFile) {
 
     try {
         // Phase 4: generate target code and output to a file
-        Generator generator(outputFile, ast);
+        Generator generator(outputFile, ast, symbolTable);
         generator.Generate();
 
         cout << BOLD << "Compiled " << DEFAULT << outputFile << ".s from " << inputFile << endl;

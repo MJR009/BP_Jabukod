@@ -21,6 +21,10 @@ public:
 
     Type GetType();
     StorageSpecifier GetSpecifier();
+    template <typename T>
+    T GetDefaultValue() {
+        return any_cast<T>( this->defaultValue );
+    }
 
     void Print() const override;
     void PrintDeclaration() const;

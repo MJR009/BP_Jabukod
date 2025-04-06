@@ -3,7 +3,6 @@
 
 #include "JabukodParser.h"
 
-#include "Escapes.h"
 #include "Scope.h"
 #include "FunctionTable.h"
 #include "EnumTable.h"
@@ -44,6 +43,8 @@ public:
     bool IsIdFunctionParameter(const string & functionName, const string & identifier);
     Variable *IsIdGlobalVariable(const string & name);
     FunctionTableEntry *IsIdFunction(const string & name);
+
+    Scope GetGlobalVariables();
 
     void Print() const;
 

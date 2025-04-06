@@ -494,7 +494,6 @@ any ASTGenerationVisitor::visitWriteStatement(JabukodParser::WriteStatementConte
     return OK;
 }
 
-
 any ASTGenerationVisitor::visitAssignment(JabukodParser::AssignmentContext *ctx) { // forced assignment expression
     this->ast.AddNode(NodeKind::ASSIGNMENT);
 
@@ -564,9 +563,7 @@ any ASTGenerationVisitor::visitLiteral(JabukodParser::LiteralContext *ctx) {
 
     } else if (ctx->STRING_LITERAL()) {
         type = Type::STRING;
-        value = any (
-            Escapes::ReplaceEscapeSequences( ctx->STRING_LITERAL()->getText() )
-        );
+        value = any ( ctx->STRING_LITERAL()->getText() );
         
     }
 

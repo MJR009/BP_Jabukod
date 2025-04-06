@@ -12,34 +12,39 @@ void Generator::Generate() {
     // dump code
 }
 
-void Generator::OutputAssembly() {
-    for (auto & instruction : this->instructions) {
-        instruction.Output(this->jout);
-        jout << endl;
-    }
-
-    /*
-    jout << ".data" << endl;
-    jout << "  hello: .asciz \"Hello world!\\n\"" << endl;
-    jout << "  hello_len: .long .-hello" << endl;
-    jout << ".text" << endl;
-    jout << endl;
-    jout << ".globl _start" << endl;
-    jout << "_start:" << endl;
-    jout << "  movq $1, %rdi" << endl;
-    jout << "  lea (hello), %rsi" << endl;
-    jout << "  movq hello_len, %rdx" << endl;
-    jout << "  movq $1, %rax" << endl;
-    jout << "  syscall" << endl;
-    jout << "  xor %rdi, %rdi" << endl;
-    jout << "  movq $60, %rax" << endl;
-    jout << "  syscall" << endl;
-    */
-}
-
 
 
 // PRIVATE:
+
+void Generator::OutputAssembly() {
+    jout << "\t.data" << endl;
+    this->OutputDataSection();
+
+    jout << endl;
+
+    jout << "\t.text" << endl;
+    jout << "\t.globl _start" << endl;
+    for (auto & instruction : this->instructions) {
+        if ( ! GenMethods::IsLabel(&instruction)) jout << "\t";
+        instruction.Output( this->jout );
+        jout << endl;
+    }
+}
+
+void Generator::OutputDataSection() {
+    Scope globals = this->symbolTable.GetGlobalVariables();
+    
+    for (auto & variable : globals.GetVariables()) {
+        jout << GenMethods::VariableNameToLabel( variable.GetName() );
+        jout << endl << "\t";
+        jout << GenMethods::VariableTypeToString( variable.GetType() );
+        jout << "\t";
+        jout << GenMethods::ProduceDefaultValue( &variable );
+        jout << endl;
+    }
+}
+
+
 
 void Generator::GenerateCode() {
     this->GenerateNode( this->ast.GetRoot() );
@@ -80,7 +85,16 @@ void Generator::GeneratePROGRAM(ASTNode *node) {
 
 void Generator::GenerateFUNCTION(ASTNode *node) {
     FunctionData *function = node->GetData<FunctionData>();
+    string label = GenMethods::FunctionNameToLabel( function->GetName() );
 
-    string label = function->GetName() + ":";
     this->AppendInstruction(label);
+    // prolog
+    this->AppendInstruction("push", "%rbp");
+    this->AppendInstruction("mov", "%rsp", "%rbp");
+
+    //
+
+    // epilog
+    this->AppendInstruction("pop", "%rbp");
+    this->AppendInstruction("ret");
 }

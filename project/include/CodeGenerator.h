@@ -2,11 +2,12 @@
 #include "common.h"
 
 #include "AST.h"
+#include "GenMethods.h"
 #include "Instruction.h"
 
 class Generator {
 public:
-    Generator(string outputPath, AST & ast) : ast(ast) {
+    Generator(string outputPath, AST & ast, SymbolTable & symbolTable) : ast(ast), symbolTable(symbolTable) {
         if (outputPath.back() == '/') {
             throw (outputPath + " is a path");
         }
@@ -27,13 +28,16 @@ public:
 
 private:
     AST & ast;
+    SymbolTable & symbolTable;
     
     vector<Instruction> instructions;
     ofstream jout; // inspired by cout
 
 private:
-    void GenerateCode();
     void OutputAssembly();
+    void OutputDataSection();
+
+    void GenerateCode();
 
     // selects which node to generate by kind
     void GenerateNode(ASTNode *node);

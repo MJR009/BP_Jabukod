@@ -140,6 +140,12 @@ FunctionTableEntry *SymbolTable::IsIdFunction(const string & name) {
 
 
 
+Scope SymbolTable::GetGlobalVariables() {
+    return this->globalScope;
+}
+
+
+
 void SymbolTable::Print() const {
     cout << CYAN << "Functions:\n=====" << DEFAULT << endl;
     this->functionTable.Print();
@@ -294,7 +300,7 @@ any SymbolTable::ResolveExplicitDefaultValue(JabukodParser::LiteralContext *defa
             if (variableType != Type::STRING) {
                 this->parser->notifyErrorListeners(defaultValue->STRING_LITERAL()->getSymbol(), MISPLACED_STRING_LITERAL, nullptr);
             }
-            return any( Escapes::ReplaceEscapeSequences( defaultValue->STRING_LITERAL()->getText() ) );
+            return any( defaultValue->STRING_LITERAL()->getText() );
 
         default:
             break;

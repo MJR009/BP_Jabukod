@@ -45,7 +45,7 @@ void Type::PrintAnyValueByType(any value, Type type) {
             break;
             
         case Type::STRING:
-            cout << "\"" << any_cast<string>( value ) << "\"";
+            cout << any_cast<string>( value );
             break;        
     }
 

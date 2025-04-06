@@ -1,5 +1,12 @@
 int y;
+float n;
 bool logic;
+string str = "\"";
+
+int a = 24.7;
+float b = 31;
+bool c = 1000;
+string d = "Jabukod\n";
 
 int main(int z) {
     static float y;
