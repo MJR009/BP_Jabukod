@@ -2,14 +2,7 @@
 
 void Generator::Generate() {
     this->GenerateCode();
-
     this->OutputAssembly();
-
-    // data section
-        // globals, constants
-    // code section
-
-    // dump code
 }
 
 

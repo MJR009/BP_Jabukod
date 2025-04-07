@@ -9,7 +9,7 @@ void a() {
     int y = x;
 }
 
-/* enum X {one, two, three = -3, four, five}//, six} */
+enum X {one, two, three = -3, four, five}//, six}
 
 int f(int xx, int yy, bool zz) {
     g();
@@ -34,8 +34,6 @@ int main (int argc, string argv) {
     f(1, 1, 1);
 }
 
-/*
 enum Y {
     ONE, TWO = 7, THREE = 1, FOUR
 }
-*/

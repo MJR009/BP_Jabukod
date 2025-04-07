@@ -32,16 +32,13 @@ public:
 
     NodeKind CurrentlyIn();
 
-    // used for variables and parameters
-    Type GetValueType(BaseValue *value);
-    StorageSpecifier GetValueSpecifier(BaseValue *value);
-
     void CheckIfNodeWithinLoop(antlr4::Token *token);
-    BaseValue *LookupVariable(antlr4::Token *variableToken, bool produceError = true);
+    Variable *LookupVariable(antlr4::Token *variableToken, bool produceError = true);
     FunctionTableEntry *LookupFunction(antlr4::Token *functionToken, bool produceError = true);
+
     void CheckIfModuloFloatOperands(JabukodParser::MulDivModExpressionContext *ctx);
     void CheckIfConstantDeclaration(StorageSpecifier specifier, antlr4::Token *variableToken);
-    BaseValue *CheckIfEligableForRead(antlr4::Token *variableToken);
+    Variable *CheckIfEligableForRead(antlr4::Token *variableToken);
     void CheckIfEligableForWrite(antlr4::Token *toWrite);
     void CheckIfCorrectArgumentCount(int countInTable, antlr4::Token *functionToken);
     void CheckIfValidForInit(antlr4::Token *initToken);
@@ -116,5 +113,5 @@ private:
 
     bool IsScopeHavingNode(ASTNode *node);
     Variable *IsInThisScope(const string & name, ASTNode *node);
-    Parameter *IsParameter(const string & name);
+    Variable *IsParameter(const string & name);
 };    

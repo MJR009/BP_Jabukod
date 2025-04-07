@@ -50,6 +50,7 @@ any ASTGenerationVisitor::visitVariableDefinition(JabukodParser::VariableDefinit
 
         this->visit(ctx->expression());
         this->ast.ConvertExpressionDefinition(ctx->getStart());
+        
         this->ast.MoveToParent();
     }
 
@@ -141,7 +142,7 @@ any ASTGenerationVisitor::visitAssignExpression(JabukodParser::AssignExpressionC
 }
 
 any ASTGenerationVisitor::visitIdentifierExpression(JabukodParser::IdentifierExpressionContext *ctx) { // concerns only variables
-    BaseValue *variableInScope = this->ast.LookupVariable( ctx->IDENTIFIER()->getSymbol() );
+    Variable *variableInScope = this->ast.LookupVariable( ctx->IDENTIFIER()->getSymbol() );
     VariableData *data = new VariableData(variableInScope);
 
     this->ast.AddNode(NodeKind::VARIABLE, data);
@@ -456,12 +457,19 @@ any ASTGenerationVisitor::visitRestartStatement(JabukodParser::RestartStatementC
 }
 
 any ASTGenerationVisitor::visitReadStatement(JabukodParser::ReadStatementContext *ctx) {
-    antlr4::Token *readTarget = ctx->IDENTIFIER()->getSymbol();
+    this->ast.AddNode(NodeKind::READ);
 
-    BaseValue *value = this->ast.CheckIfEligableForRead(readTarget);
-    ReadData *data = new ReadData(value);
+    {
+        this->ast.AddNode(NodeKind::VARIABLE);
 
-    this->ast.AddNode(NodeKind::READ, data);
+        antlr4::Token *readTarget = ctx->IDENTIFIER()->getSymbol();
+        Variable *variable = this->ast.CheckIfEligableForRead(readTarget);
+        VariableData *data = new VariableData(variable);
+        this->ast.GiveActiveNodeData(data);
+
+        this->ast.MoveToParent();
+    }
+
     this->ast.MoveToParent();
 
     return OK;
@@ -484,7 +492,7 @@ any ASTGenerationVisitor::visitAssignment(JabukodParser::AssignmentContext *ctx)
     {
         this->ast.AddNode(NodeKind::VARIABLE);
 
-        BaseValue *variable = this->ast.LookupVariable( ctx->IDENTIFIER()->getSymbol() );
+        Variable *variable = this->ast.LookupVariable( ctx->IDENTIFIER()->getSymbol() );
         VariableData *lSideData = new VariableData(variable);
         this->ast.GiveActiveNodeData(lSideData);
 

@@ -1,8 +1,7 @@
 #include "EnumTableEntry.h"
 
 void EnumTableEntry::AddItem(string itemName, int itemValue) {
-    EnumItem newItem(itemName, itemValue);
-    this->items.push_back(newItem);
+    this->items.emplace_back(itemName, itemValue);
 }
 
 
@@ -11,24 +10,24 @@ string EnumTableEntry::GetEntryName() const {
     return this->name;
 }
 
-vector<EnumItem> EnumTableEntry::GetEntryItems() const {
+list<EnumItem> & EnumTableEntry::GetEntryItems() {
     return this->items;
 }
 
 
 
 void EnumTableEntry::Print() const {
-    cout << YELLOW << this->name << DEFAULT << " {" << endl;
+    cout << YELLOW << this->name << DEFAULT << " {" << endl << "  ";
 
-    for (int i = 0; i < this->items.size(); i++) {
-        cout << "  ";
-        this->items.at(i).Print();
-        cout << DIM;
-        if (i != this->items.size() - 1) {
-            cout << ",";
+    bool first = true;
+    for_each(this->items.begin(), this->items.end(),
+        [ & first ](const EnumItem & current) {
+            cout << DIM << (first ? "" : ", ") << DEFAULT;
+            current.Print();
+            first = false;
         }
-        cout << DEFAULT << endl;
-    }
+    );
 
+    cout << endl;
     cout << "}" << endl;
 }

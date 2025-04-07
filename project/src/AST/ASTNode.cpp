@@ -122,7 +122,6 @@ void ASTNode::Print() {
     ForData *forData;
     ForeachData *foreachData;
     ExpressionData *expressionData;
-    ReadData *readData;
     FunctionCallData *functionCallData;
 
     switch (this->kind) {
@@ -135,6 +134,7 @@ void ASTNode::Print() {
         case NodeKind::REDO: case NodeKind::RESTART:
         case NodeKind::RETURN: case NodeKind::EXIT:
         case NodeKind::SUSPEND: case NodeKind::RESUME:
+        case NodeKind::READ: case NodeKind::WRITE:
             cout << this->kind.toString();
             break;
     
@@ -230,7 +230,8 @@ void ASTNode::Print() {
             cout << "(" << MAGENTA << "float" << DEFAULT << ")";
             break;
 
-        case NodeKind::BOOL2INT: case NodeKind::FLOAT2INT:
+        case NodeKind::BOOL2INT:
+        case NodeKind::FLOAT2INT:
             cout << "(" << MAGENTA << "int" << DEFAULT << ")";
             break;
 
@@ -253,18 +254,7 @@ void ASTNode::Print() {
                 cout << MAGENTA << expressionData->GetType().toString() << DEFAULT;
             } else ERR::BadData();
             break;
-
-        case NodeKind::READ:
-            readData = this->GetData<ReadData>();
-            if (readData) {
-                cout << "READ " << DIM << "into " << DEFAULT << ORANGE << readData->GetTargetName() << DEFAULT;
-            } else ERR::BadData();
-            break;
-
-        case NodeKind::WRITE:
-            cout << "WRITE";
-            break;
-
+            
         case NodeKind::FUNCTION_CALL:
             functionCallData = this->GetData<FunctionCallData>();
             if (functionCallData) {

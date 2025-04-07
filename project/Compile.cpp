@@ -46,7 +46,7 @@ int Compile(string & inputFile, string & outputFile) {
     symbolTable.Print();
     ast.Print();
 
-    //return 0;
+    return 0;
 
 
 

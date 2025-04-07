@@ -6,7 +6,6 @@
 #include "GenericNodeData.h"
 
 #include "Scope.h"
-#include "Parameter.h"
 #include "FunctionTableEntry.h"
 
 class LiteralData : public GenericNodeData {
@@ -25,13 +24,13 @@ private:
 
 class VariableData : public GenericNodeData {
 public:
-    VariableData(BaseValue *variable) : location(variable) {}
+    VariableData(Variable *variable) : location(variable) {}
 
     Type GetType();
     string GetName();
 
 private:
-    BaseValue *location;
+    Variable *location;
 };
 
 
@@ -82,18 +81,6 @@ public:
 
 private:
     Type type;
-};
-
-
-
-class ReadData : public GenericNodeData {
-public:
-    ReadData(BaseValue *variable) : location(variable) {}
-
-    string GetTargetName();
-
-private:
-    BaseValue *location;
 };
 
 

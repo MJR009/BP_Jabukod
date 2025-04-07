@@ -11,16 +11,13 @@ StorageSpecifier Variable::GetSpecifier() {
 
 
 void Variable::Print() const {
-    cout << YELLOW << this->name << DEFAULT;
+    cout <<
+        this->storage.toString() << " " <<
+        this->type.toString() << " " <<
+        YELLOW << this->name << DEFAULT;
 
-    cout << DIM << " < " << DEFAULT;
-
-    cout << this->storage.toString() << " " << this->type.toString() << " , ";
-
-    cout << DIM << "default: " << DEFAULT;
+    cout << " = ";
     this->PrintDefaultValue();
-
-    cout << DIM << " >" << DEFAULT;
 }
 
 void Variable::PrintDeclaration() const {

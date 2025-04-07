@@ -1,7 +1,7 @@
 #pragma once
 #include "common.h"
 
-#include "Parameter.h"
+#include "Variable.h"
 
 class FunctionTableEntry {
 public:
@@ -11,13 +11,13 @@ public:
 
     string GetFunctionName() const;
     Type GetReturnType() const;
-    vector<Parameter> GetParameters() const;
-    Parameter *GetParameter(const string & name);
+    list<Variable> & GetParameters();
+    Variable *GetParameter(const string & name);
 
     void Print() const;
 
 private:
     string name;
     Type returnType;
-    vector<Parameter> parameters;
+    list<Variable> parameters;
 };

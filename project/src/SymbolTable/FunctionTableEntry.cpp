@@ -1,8 +1,7 @@
 #include "FunctionTableEntry.h"
 
 void FunctionTableEntry::AddParameter(const Type parameterType, const string & parameterName) {
-    Parameter newParameter(parameterName, parameterType);
-    this->parameters.push_back(newParameter);
+    this->parameters.emplace_back(parameterName, StorageSpecifier::NONE, parameterType, any{});
 }
 
 
@@ -15,18 +14,23 @@ Type FunctionTableEntry::GetReturnType() const {
     return this->returnType;
 }
 
-vector<Parameter> FunctionTableEntry::GetParameters() const {
+list<Variable> & FunctionTableEntry::GetParameters() {
     return this->parameters;
 }
 
-Parameter *FunctionTableEntry::GetParameter(const string & name) {
-    for (auto & parameter : this->parameters) {
-        if (name == parameter.GetName()) {
-            return &parameter;
-        }
+Variable *FunctionTableEntry::GetParameter(const string & name) {
+    auto lookup =
+        find_if(this->parameters.begin(), this->parameters.end(),
+            [ & name ](const Variable & current) {
+                return current.GetName() == name;
+            }
+        );
+
+    if (lookup == this->parameters.end()) {
+        return nullptr;
     }
 
-    return nullptr;
+    return &(*lookup);
 }
 
 
@@ -39,11 +43,13 @@ void FunctionTableEntry::Print() const {
 
     cout << DIM << "  < parameters: " << DEFAULT;
     bool first = true;
-    for (auto & parameter : this->parameters) {
-        first ? cout << "" : cout << " , ";
-        first = false;
-        parameter.Print();
-    }
+    for_each(this->parameters.begin(), this->parameters.end(),
+        [ & first ](const Variable & current) {
+            cout << (first ? "" : " , ");
+            first = false;
+            current.PrintDeclaration();
+        }
+    );
     cout << DIM << " >" << DEFAULT;
 
     cout << endl;

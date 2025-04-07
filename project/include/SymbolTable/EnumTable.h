@@ -8,7 +8,7 @@ public:
     EnumTableEntry *AddEntry(const string & name);
 
     EnumTableEntry *GetEntryByName(const string & name);
-    vector<EnumTableEntry> GetEnums() const;
+    list<EnumTableEntry> & GetEnums();
 
     bool IsNameAvailable(const string & name) const;
     bool IsItemNameAvailableAcrossAll(const string & name) const;
@@ -18,5 +18,5 @@ public:
     void Print() const;
 
 private:
-    vector<EnumTableEntry> enums;
+    list<EnumTableEntry> enums;
 };

@@ -185,7 +185,7 @@ void SymbolTable::Print() const {
     cout << endl;
 
     cout << CYAN << "Global variables:\n=====" << DEFAULT << endl;
-    this->globalScope.Print();
+    this->globalScope.PrintComplete();
 
     cout << endl;
 

@@ -1,6 +1,5 @@
 int main() {
     int num = fact(5);
-    //write num;
 
     a();
 

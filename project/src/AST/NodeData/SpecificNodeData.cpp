@@ -11,33 +11,11 @@ any LiteralData::GetValue() {
 
 
 Type VariableData::GetType() {
-    Variable *variable = dynamic_cast<Variable *>(this->location);
-    if (variable) {
-        return variable->GetType();
-    }
-
-    Parameter *parameter = dynamic_cast<Parameter *>(this->location);
-    if (parameter) {
-        return parameter->GetType();
-    }
-
-    ERR::BadData();
-    return Type::VOID;
+    return this->location->GetType();
 }
 
 string VariableData::GetName() {
-    Variable *variable = dynamic_cast<Variable *>(this->location);
-    if (variable) {
-        return variable->GetName();
-    }
-
-    Parameter *parameter = dynamic_cast<Parameter *>(this->location);
-    if (parameter) {
-        return parameter->GetName();
-    }
-
-    ERR::BadData();
-    return "ERR";
+    return this->location->GetName();
 }
 
 
@@ -59,14 +37,7 @@ Variable *BodyData::GetVariable(const string & name) {
 }
 
 void BodyData::PrintScope() {
-    vector<Variable> variables = this->scope.GetVariables();
-
-    for (int i = 0; i < variables.size(); i++) {
-        variables.at(i).PrintDeclaration();
-        if (i != variables.size() - 1) {
-            cout << DIM << " , " << DEFAULT;
-        }
-    }
+    this->scope.PrintDeclarations();
 }
 
 
@@ -79,23 +50,6 @@ string FunctionData::GetName() {
 
 Type ExpressionData::GetType() {
     return this->type;
-}
-
-
-
-string ReadData::GetTargetName() {
-    Variable *variable = dynamic_cast<Variable *>(this->location);
-    if (variable) {
-        return variable->GetName();
-    }
-
-    Parameter *parameter = dynamic_cast<Parameter *>(this->location);
-    if (parameter) {
-        return parameter->GetName();
-    }
-
-    ERR::BadData();
-    return "ERR";
 }
 
 

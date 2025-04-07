@@ -6,6 +6,7 @@
 #include <memory>
 #include <functional>
 #include <cmath> // trunc
+#include <list>
 
 #include "antlr4-runtime.h"
 #include "JabukodLexer.h"

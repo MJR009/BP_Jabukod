@@ -15,5 +15,5 @@ public:
     void Print() const;
 
 private:
-    vector<FunctionTableEntry> functions;
+    list<FunctionTableEntry> functions;
 };

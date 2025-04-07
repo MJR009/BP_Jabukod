@@ -25,6 +25,11 @@ Type Type::toType(const string & str) {
 
 
 void Type::PrintAnyValueByType(any value, Type type) {
+    if ( ! value.has_value()) {
+        ERR::BadData();
+        return;
+    }
+
     cout << ORANGE;
 
     switch (type) {

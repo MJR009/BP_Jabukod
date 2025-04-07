@@ -15,10 +15,11 @@ public:
     bool IsVariableNameAvailable(const string & name) const;
 
     Variable *GetVariable(const string & name);
-    vector<Variable> GetVariables(); // used for printing
+    list<Variable> & GetVariables(); // used for printing
 
-    void Print() const;
+    void PrintComplete() const;
+    void PrintDeclarations() const;
 
 private:
-    vector<Variable> variables;
+    list<Variable> variables;
 };

@@ -47,7 +47,7 @@ void AST::MoveToParent() {
 }
 
 FunctionTableEntry *AST::SetActiveFunction(const string & name) {
-    FunctionTableEntry *function = this->IsFunctionDefined(name); //at this point, the function is defined in symbol table
+    FunctionTableEntry *function = this->IsFunctionDefined(name); // at this point the function is defined in symbol table
     this->activeFunction = function;
 
     return function;
@@ -100,31 +100,6 @@ NodeKind AST::CurrentlyIn() {
 
 
 
-Type AST::GetValueType(BaseValue *value) {
-    Variable *variable;
-    Parameter *parameter;
-
-    if ( variable = dynamic_cast<Variable *>(value) ) {
-        return variable->GetType();
-    } else if ( parameter = dynamic_cast<Parameter *>(value) ) {
-        return parameter->GetType();
-    }
-
-    return Type::VOID;
-}
-
-StorageSpecifier AST::GetValueSpecifier(BaseValue *value) {
-    Variable *variable;
-
-    if ( variable = dynamic_cast<Variable *>(value) ) {
-        return variable->GetSpecifier();
-    }
-
-    return StorageSpecifier::NONE; // parameters don't have specifiers
-}
-
-
-
 void AST::CheckIfNodeWithinLoop(antlr4::Token *token) {
     if ( ! this->activeNode) { // do nothing on empty tree
         return;
@@ -170,16 +145,15 @@ void AST::CheckIfNodeWithinLoop(antlr4::Token *token) {
     return;
 }
 
-BaseValue *AST::LookupVariable(antlr4::Token *variableToken, bool produceError) {
+Variable *AST::LookupVariable(antlr4::Token *variableToken, bool produceError) {
     string name = variableToken->getText();
     Variable *variable = nullptr;
-    Parameter *parameter = nullptr;
 
     if (variable = this->IsDefinedLocally(name)) {
         return variable;
     }
-    if (parameter = this->IsParameter(name)) {
-        return parameter;
+    if (variable = this->IsParameter(name)) {
+        return variable;
     }
     if (variable = this->IsDefinedGlobally(name)) {
         return variable;
@@ -207,6 +181,8 @@ FunctionTableEntry *AST::LookupFunction(antlr4::Token *functionToken, bool produ
     return nullptr;
 }
 
+
+
 void AST::CheckIfModuloFloatOperands(JabukodParser::MulDivModExpressionContext *ctx) {
     if (ctx->sign->getText() == "%") {
         Type op1 = this->activeNode->GetOperandType(0);
@@ -224,16 +200,17 @@ void AST::CheckIfConstantDeclaration(StorageSpecifier specifier, antlr4::Token *
     }
 }
 
-BaseValue *AST::CheckIfEligableForRead(antlr4::Token *variableToken) {
-    BaseValue *targetVariable = this->LookupVariable(variableToken);
-    Type targetType = this->GetValueType(targetVariable);
-    StorageSpecifier targetSpecifier = this->GetValueSpecifier(targetVariable);
+Variable *AST::CheckIfEligableForRead(antlr4::Token *variableToken) {
+    Variable *targetVariable = this->LookupVariable(variableToken);
+    if ( ! targetVariable) {
+        return nullptr;
+    }
 
-    if (targetType != Type::STRING) {
+    if (targetVariable->GetType() != Type::STRING) {
         this->parser->notifyErrorListeners(variableToken, READ_NOT_STRING, nullptr);
     }
 
-    if (targetSpecifier == StorageSpecifier::CONST) {
+    if (targetVariable->GetSpecifier() == StorageSpecifier::CONST) {
         this->parser->notifyErrorListeners(variableToken, READ_INTO_CONSTANT, nullptr);
     }
 
@@ -245,11 +222,8 @@ void AST::CheckIfEligableForWrite(antlr4::Token *toWrite) {
     NodeKind operandKind = operand->GetKind();
 
     if (operandKind == NodeKind::VARIABLE) {
-        BaseValue *variable = this->LookupVariable(toWrite, false);
-        if ( ! variable) {
-            return;
-        }
-        if (this->GetValueType(variable) != Type::STRING) {
+        VariableData *data = operand->GetData<VariableData>();
+        if (data->GetType() != Type::STRING) {
             this->parser->notifyErrorListeners(toWrite, WRITE_NOT_STRING, nullptr);
         }
 
@@ -417,9 +391,8 @@ Type AST::ConvertExpressionAssignment(antlr4::Token *expressionStart) {
         return Type::VOID;
     }
 
-    BaseValue *variable = this->LookupVariable(expressionStart, false);
-    StorageSpecifier variableSpecifier = this->GetValueSpecifier(variable);
-    if (variableSpecifier == StorageSpecifier::CONST) {
+    Variable *variable = this->LookupVariable(expressionStart, false);
+    if (variable->GetSpecifier() == StorageSpecifier::CONST) {
         this->parser->notifyErrorListeners(expressionStart, CONSTANT_ASSIGNMENT, nullptr);
     }
 
@@ -440,11 +413,12 @@ Type AST::ConvertExpressionAssignment(antlr4::Token *expressionStart) {
 
 void AST::ConvertFunctionArguments(JabukodParser::FunctionArgumentsContext *arguments, FunctionTableEntry *function) {
     int argumentCount = this->activeNode->GetChildrenCount();
+    auto currentParameter = function->GetParameters().begin();
 
     for (int i = 0; i < argumentCount; i++) {
         try {
             Type presentType = this->activeNode->GetOperandType(0);
-            Type actualType = function->GetParameters().at(i).GetType();
+            Type actualType = currentParameter->GetType();
 
             Conversion::Arguments(actualType, presentType, this->activeNode);
 
@@ -453,6 +427,7 @@ void AST::ConvertFunctionArguments(JabukodParser::FunctionArgumentsContext *argu
         }
 
         this->activeNode->AdjustArguments();
+        ++currentParameter;
     }
 }
 
@@ -502,11 +477,11 @@ Variable *AST::AddFloatStringLiteral(const string & name, Type type, any value) 
 string AST::GenerateUniqueLiteralId(Type type) {
     static int unique = 0;
 
-    // unique ID
+    // unique number
     ostringstream stream;
     stream << setw(4) << setfill('0') << unique;
 
-    // type, for clartiy
+    // type, for clarity
     string typePart;
     if (type == Type::STRING) {
         typePart = "str";
@@ -737,6 +712,6 @@ Variable *AST::IsInThisScope(const string & name, ASTNode *node) {
 }
 
 
-Parameter *AST::IsParameter(const string & name) {
+Variable *AST::IsParameter(const string & name) {
     return this->activeFunction->GetParameter(name);
 }

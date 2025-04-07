@@ -1,50 +1,55 @@
 #include "FunctionTable.h"
 
-FunctionTableEntry *FunctionTable::GetFunctionByName(const string & name) {
-    for (auto & function : this->functions) {
-        if (function.GetFunctionName() == name) {
-            return &function;
-        }
-    }
-
-    return nullptr;
-}
-
-
-
 FunctionTableEntry *FunctionTable::AddEntry(const string & name, const Type returnType) {
-    FunctionTableEntry function(name, returnType);
-    this->functions.push_back(function);
-
+    this->functions.emplace_back(name, returnType);
     return &this->functions.back();
 }
 
 
 
-bool FunctionTable::IsNameAvailable(const string & name) const {
-    for (auto & function : this->functions) {
-        if (function.GetFunctionName() == name) {
-            return false;
-        }
+FunctionTableEntry *FunctionTable::GetFunctionByName(const string & name) {
+    auto lookup =
+        find_if(this->functions.begin(), this->functions.end(),
+            [ & name ](const FunctionTableEntry & current) {
+                return current.GetFunctionName() == name;
+            }
+        );
+
+    if (lookup == this->functions.end()) {
+        return nullptr;
     }
 
-    return true;
+    return &(*lookup);
+}
+
+
+
+bool FunctionTable::IsNameAvailable(const string & name) const {
+    return
+        none_of(this->functions.begin(), this->functions.end(),
+            [ & name ](const FunctionTableEntry & current) {
+                return current.GetFunctionName() == name;
+            }
+        );
 }
 
 bool FunctionTable::IsParameterNameAvailable(const string & name, FunctionTableEntry *function) const {
-    for (auto & parameter : function->GetParameters()) {
-        if (parameter.GetName() == name) {
-            return false;
-        }
-    }
+    list<Variable> parameters = function->GetParameters();
 
-    return true;
+    return
+        none_of(parameters.begin(), parameters.end(),
+            [ & name ](const Variable & current) {
+                return current.GetName() == name;
+            }
+        );
 }
 
 
 
 void FunctionTable::Print() const {
-    for (auto & function : this->functions) {
-        function.Print();
-    }
+    for_each(this->functions.begin(), this->functions.end(),
+        [ ](const FunctionTableEntry & current) {
+            current.Print();
+        }
+    );
 }
