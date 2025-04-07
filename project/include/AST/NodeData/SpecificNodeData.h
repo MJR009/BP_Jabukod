@@ -30,6 +30,15 @@ public:
     string GetName();
     StorageSpecifier GetSpecifier();
 
+    template <typename T>
+    T GetDefaultValue() {
+        if (this->location) {
+            return this->location->GetDefaultValue<T>();
+        }
+        ERR::BadData();
+        return T{};
+    }
+
 private:
     Variable *location;
 };

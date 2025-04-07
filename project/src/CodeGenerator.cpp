@@ -119,13 +119,19 @@ void Generator::GenerateFUNCTION(ASTNode *node) {
 void Generator::GenerateWRITE(ASTNode *node) {
     ASTNode *operand = node->GetChild(0);
 
-    /*switch (operand->GetKind()) {
-        case NodeKind::VARIABLE:
-            
-            break;
-    }*/
-        this->AppendInstruction("lea", "(__strlit_0000)", "%rsi");
-        this->AppendInstruction("mov", "$13", "%rdx");
+    string operandName = operand->GetData<VariableData>()->GetName(); // literal strings are converted to globals
+    string operandAddress = "(" + operandName + ")";
+
+    string operandLength = "$" + to_string(
+        operand->GetData<VariableData>()->GetDefaultValue<string>().size() - 2 // -2 for quotes
+    );
+
+    // TODO method to calculate length !!!
+    // TODO method to backup registers that are used !!!
+    // TODO TODO put registers in macros !
+
+    this->AppendInstruction("lea", operandAddress, "%rsi");
+    this->AppendInstruction("mov", operandLength, "%rdx");
 
     this->AppendInstruction("mov", "$1", "%rdi"); // stdout
     this->AppendInstruction("mov", "$1", "%rax"); // write
