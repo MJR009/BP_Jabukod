@@ -1,8 +1,8 @@
 int main() {
-    string x = "";//1 + 2 + 3;
+    string x = "";
 
     read x;
-    //write "Jabukod";
+    write "Jabukod";
 }
 
 string str = "nelze nic";

@@ -15,6 +15,9 @@ any ASTGenerationVisitor::visitVariableDeclaration(JabukodParser::VariableDeclar
     if (this->ast.CurrentlyIn() != NodeKind::PROGRAM) { // global declarations are already processed
         this->ast.AddNode(NodeKind::VARIABLE_DECLARATION);
 
+        if ( ! ctx->IDENTIFIER()) {
+            return NOK;
+        }
         antlr4::Token *variable = ctx->IDENTIFIER()->getSymbol();
         JabukodParser::StorageSpecifierContext *storage = nullptr;
         if (ctx->storageSpecifier()) {
@@ -37,6 +40,9 @@ any ASTGenerationVisitor::visitVariableDefinition(JabukodParser::VariableDefinit
     if (this->ast.CurrentlyIn() != NodeKind::PROGRAM) {
         this->ast.AddNode(NodeKind::VARIABLE_DEFINITION);
         
+        if ( ! ctx->IDENTIFIER()) {
+            return NOK;
+        }
         antlr4::Token *variable = ctx->IDENTIFIER()->getSymbol();
         JabukodParser::StorageSpecifierContext *storage = nullptr;
         if (ctx->storageSpecifier()) {
@@ -286,10 +292,13 @@ any ASTGenerationVisitor::visitFunctionCall(JabukodParser::FunctionCallContext *
     }
 
     bool exists = false;
+    bool correctArgumentCount = false;
 
     if (function) {
         exists = true;
-        this->ast.CheckIfCorrectArgumentCount(function->GetParameters().size(), ctx->getStart());
+        correctArgumentCount = this->ast.CheckIfCorrectArgumentCount(function->GetParameters().size(), ctx->getStart());
+    }
+    if (correctArgumentCount) {
         this->ast.ConvertFunctionArguments(ctx->functionArguments(), function);
     }
 
@@ -350,13 +359,17 @@ any ASTGenerationVisitor::visitForStatement(JabukodParser::ForStatementContext *
     ForData *data = new ForData();
     this->ast.AddNode(NodeKind::FOR, data);
 
-    this->visit(ctx->forHeader());
+    if (ctx->forHeader()) {
+        this->visit(ctx->forHeader());
+    }
 
     {
         BodyData *data = new BodyData();
 
         this->ast.AddNode(NodeKind::BODY, data);
-        this->visit(ctx->statementBlock());
+        if (ctx->statementBlock()) {
+            this->visit(ctx->statementBlock());
+        }
         this->ast.MoveToParent();
     }
 
@@ -369,13 +382,17 @@ any ASTGenerationVisitor::visitForeachStatement(JabukodParser::ForeachStatementC
     ForeachData *data = new ForeachData();
     this->ast.AddNode(NodeKind::FOREACH, data);
 
-    this->visit(ctx->foreachHeader());
+    if (ctx->foreachHeader()) {
+        this->visit(ctx->foreachHeader());
+    }
 
     {
         BodyData *data = new BodyData();
 
         this->ast.AddNode(NodeKind::BODY, data);
-        this->visit(ctx->statementBlock());
+        if (ctx->statementBlock()) {
+            this->visit(ctx->statementBlock());
+        }
         this->ast.MoveToParent();
     }
 
@@ -459,10 +476,11 @@ any ASTGenerationVisitor::visitRestartStatement(JabukodParser::RestartStatementC
 any ASTGenerationVisitor::visitReadStatement(JabukodParser::ReadStatementContext *ctx) {
     this->ast.AddNode(NodeKind::READ);
 
-    {
+    if (ctx->IDENTIFIER()) {
         this->ast.AddNode(NodeKind::VARIABLE);
 
         antlr4::Token *readTarget = ctx->IDENTIFIER()->getSymbol();
+
         Variable *variable = this->ast.CheckIfEligableForRead(readTarget);
         VariableData *data = new VariableData(variable);
         this->ast.GiveActiveNodeData(data);
@@ -489,7 +507,7 @@ any ASTGenerationVisitor::visitWriteStatement(JabukodParser::WriteStatementConte
 any ASTGenerationVisitor::visitAssignment(JabukodParser::AssignmentContext *ctx) { // forced assignment expression
     this->ast.AddNode(NodeKind::ASSIGNMENT);
 
-    {
+    if (ctx->IDENTIFIER()) {
         this->ast.AddNode(NodeKind::VARIABLE);
 
         Variable *variable = this->ast.LookupVariable( ctx->IDENTIFIER()->getSymbol() );

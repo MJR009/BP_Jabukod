@@ -1,6 +1,6 @@
-#include "CustomErrorListener.h"
+#include "ParserErrorListener.h"
 
-void CustomErrorListener::syntaxError(
+void ParserErrorListener::syntaxError(
     antlr4::Recognizer *recognizer,
     antlr4::Token *offendingSymbol,
     size_t line,
@@ -26,6 +26,6 @@ void CustomErrorListener::syntaxError(
 
 
 
-void CustomErrorListener::SetSemanticPhase() {
+void ParserErrorListener::SetSemanticPhase() {
     this->phase = Phase::SEMANTIC;
 }

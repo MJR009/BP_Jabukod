@@ -1,6 +1,7 @@
 #include "Compile.h"
 
-#include "CustomErrorListener.h"
+#include "LexerErrorListener.h"
+#include "ParserErrorListener.h"
 #include "SymbolTable.h"
 #include "GlobalSymbolsVisitor.h"
 #include "ASTGenerationVisitor.h"
@@ -18,13 +19,21 @@ int Compile(string & inputFile, string & outputFile) {
     antlr4::CommonTokenStream tokens(&lexer);
     JabukodParser parser(&tokens);
 
+    lexer.removeErrorListeners();
+    LexerErrorListener lexerErrorListener;
+    lexer.addErrorListener(&lexerErrorListener);
+
     parser.removeErrorListeners();
-    CustomErrorListener customErrorListener;
-    parser.addErrorListener(&customErrorListener);
+    ParserErrorListener parserErrorListener;
+    parser.addErrorListener(&parserErrorListener);
 
     antlr4::tree::ParseTree *parseTree = parser.sourceFile(); // sourceFile: starting nonterminal
 
-    customErrorListener.SetSemanticPhase();
+    // Phase 0: check for lexical errors, switch to semantic phase
+    if (lexer.getNumberOfSyntaxErrors() != 0) {
+        return NOK;
+    }
+    parserErrorListener.SetSemanticPhase();
 
     // Phase 1: get and check all globally available symbols;
     //        -> function and enum identifiers, also global variables (generaly stuff that should not be in AST)
@@ -46,6 +55,9 @@ int Compile(string & inputFile, string & outputFile) {
     symbolTable.Print();
     ast.Print();
 
+
+
+    
     return 0;
 
 

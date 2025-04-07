@@ -28,6 +28,7 @@ public:
 
     Type GetType();
     string GetName();
+    StorageSpecifier GetSpecifier();
 
 private:
     Variable *location;

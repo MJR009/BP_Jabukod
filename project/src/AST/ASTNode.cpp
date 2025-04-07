@@ -47,14 +47,17 @@ Type ASTNode::GetOperandType(int i) const {
     switch (operand->GetKind()) {
         case NodeKind::VARIABLE:
             return operand->GetData<VariableData>()->GetType();
+
         case NodeKind::LITERAL:
             return operand->GetData<LiteralData>()->GetType();
+
         case NodeKind::FUNCTION_CALL:
             aux = operand->GetData<FunctionCallData>()->GetReturnType();
             if ((aux == Type::VOID) && (operand->GetData<FunctionCallData>()->exists)) {
                 throw VOID_FUNCTION_IN_EXPRESSION;
             }
             return aux;
+            
         default: // expression nodes
             return operand->GetData<ExpressionData>()->GetType();
     }

@@ -8,7 +8,7 @@ enum PHASE {
 };
 typedef enum PHASE Phase;
 
-class CustomErrorListener : public antlr4::BaseErrorListener {
+class ParserErrorListener : public antlr4::BaseErrorListener {
 public:
     void syntaxError(
         antlr4::Recognizer *recognizer,

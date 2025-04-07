@@ -23,7 +23,7 @@ int main() {
 
     string str;
 
-    foreach (const string char: str) {
+    foreach (static string char: str) {
         float x = 0;
     }
  

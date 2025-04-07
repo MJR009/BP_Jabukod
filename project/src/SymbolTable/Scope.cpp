@@ -54,8 +54,11 @@ void Scope::PrintComplete() const {
 }
 
 void Scope::PrintDeclarations() const {
+    bool first = true;
     for_each(this->variables.begin(), this->variables.end(),
-        [ ](const Variable & current){
+        [ & first ](const Variable & current){
+            cout << (first ? "" : ( DIM ", " DEFAULT ));
+            first = false;
             current.PrintDeclaration();
         }
     );

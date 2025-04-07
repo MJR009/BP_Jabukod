@@ -11,11 +11,24 @@ any LiteralData::GetValue() {
 
 
 Type VariableData::GetType() {
-    return this->location->GetType();
+    if (this->location) {
+        return this->location->GetType();
+    }
+    return Type::VOID;
 }
 
 string VariableData::GetName() {
-    return this->location->GetName();
+    if (this->location) {
+        return this->location->GetName();
+    }
+    return "ERR";
+}
+
+StorageSpecifier VariableData::GetSpecifier() {
+    if (this->location) {
+        return this->location->GetSpecifier();
+    }
+    return StorageSpecifier::NONE;
 }
 
 
@@ -43,7 +56,10 @@ void BodyData::PrintScope() {
 
 
 string FunctionData::GetName() {
-    return this->location->GetFunctionName();
+    if (this->location) {
+        return this->location->GetFunctionName();
+    }
+    return "ERR";
 }
 
 
@@ -55,9 +71,15 @@ Type ExpressionData::GetType() {
 
 
 string FunctionCallData::GetName() {
-    return this->location->GetFunctionName();
+    if (this->location) {
+        return this->location->GetFunctionName();
+    }
+    return "ERR";
 }
 
 Type FunctionCallData::GetReturnType() {
-    return this->location->GetReturnType();
+    if (this->location) {
+        return this->location->GetReturnType();
+    }
+    return Type::VOID;
 }

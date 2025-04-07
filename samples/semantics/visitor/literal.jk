@@ -3,6 +3,6 @@ bool x = true;
 int main() {
     int x = 2;
     x = x + 3.14159;
-    x = "Hello";
+    //x = "Hello";
     x = true;
 }

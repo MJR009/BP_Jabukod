@@ -239,10 +239,13 @@ void AST::CheckIfEligableForWrite(antlr4::Token *toWrite) {
     }
 }
 
-void AST::CheckIfCorrectArgumentCount(int countInTable, antlr4::Token *functionToken) {
+bool AST::CheckIfCorrectArgumentCount(int countInTable, antlr4::Token *functionToken) {
     if (countInTable != this->activeNode->GetChildrenCount()) {
         this->parser->notifyErrorListeners(functionToken, BAD_ARGUMENT_COUNT, nullptr);
+        return false;
     }
+
+    return true;
 }
 
 void AST::CheckIfValidForInit(antlr4::Token *initToken) {
@@ -386,20 +389,26 @@ void AST::ConvertExpressionDefinition(antlr4::Token *expressionStart) {
 
 Type AST::ConvertExpressionAssignment(antlr4::Token *expressionStart) {
     ASTNode* assignmentTarget = this->activeNode->GetChild(0);
+    if( ! assignmentTarget) {
+        return Type::VOID;
+    }
     if (assignmentTarget->GetKind() != NodeKind::VARIABLE) {
         this->parser->notifyErrorListeners(expressionStart, LSIDE_NOT_ASSIGNABLE, nullptr);
         return Type::VOID;
     }
 
-    Variable *variable = this->LookupVariable(expressionStart, false);
-    if (variable->GetSpecifier() == StorageSpecifier::CONST) {
+    VariableData *targetData = assignmentTarget->GetData<VariableData>();
+    if ( ! targetData) {
+        return Type::VOID;
+    }
+    if (targetData->GetSpecifier() == StorageSpecifier::CONST) {
         this->parser->notifyErrorListeners(expressionStart, CONSTANT_ASSIGNMENT, nullptr);
     }
 
     Type inferedType = Type::VOID;
 
     try {
-        Type lside = assignmentTarget->GetData<VariableData>()->GetType();
+        Type lside = targetData->GetType();
         Type rside = this->activeNode->GetOperandType(1);
 
         inferedType = Conversion::ExpressionAssignment(lside, rside, this->activeNode);
