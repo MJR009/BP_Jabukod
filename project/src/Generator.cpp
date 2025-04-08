@@ -144,7 +144,7 @@ void Generator::OutputTextSection() {
     
     for_each(this->instructions.begin(), this->instructions.end(),
         [ this ](Instruction & current) {
-            if ( ! GenMethods::IsLabel(current)) jout << "\t";
+            if ( ! Transform::IsLabel(current)) jout << "\t";
             current.Output( this->jout );
             jout << endl;
         }
@@ -154,10 +154,10 @@ void Generator::OutputTextSection() {
 
 
 void Generator::OutputVariable(Variable & variable) {
-    jout << GenMethods::VariableNameToLabel( variable.GetName() );
+    jout << Transform::VariableNameToLabel( variable.GetName() );
     jout << "\t";
-    jout << GenMethods::VariableTypeToString( variable.GetType() );
+    jout << Transform::TypeToDirective( variable.GetType() );
     jout << "\t";
-    jout << GenMethods::DefaultValueToString( variable );
+    jout << Transform::DefaultValueToInitializer( variable );
     jout << endl;
 }

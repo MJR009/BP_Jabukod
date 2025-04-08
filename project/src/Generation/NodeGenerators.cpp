@@ -11,16 +11,20 @@ void NodeGenerators::GeneratePROGRAM(ASTNode *node) {
 
 void NodeGenerators::GenerateFUNCTION(ASTNode *node) {
     FunctionData *function = node->GetData<FunctionData>();
-    string label = GenMethods::FunctionNameToLabel( function->GetName() );
+    string label = Transform::FunctionNameToLabel( function->GetName() );
 
     gen->instructions.emplace_back(label);
-    GenMethods::Append( gen->instructions, GenMethods::GetProlog() );
+    Instruction::ConnectSequences( gen->instructions, Snippets::Prolog() );
 
     for (int i = 0; i < node->GetChildrenCount(); i++) {
         gen->GenerateNode( node->GetChild(i) );
     }
 
-    GenMethods::Append( gen->instructions, GenMethods::GetEpilog( function->GetName() ) );
+    if (function->GetName() == "main") {
+        Instruction::ConnectSequences( gen->instructions, Snippets::MainEpilog() );
+    } else {
+        Instruction::ConnectSequences( gen->instructions, Snippets::Epilog() );
+    }
 }
 
 void NodeGenerators::GenerateWRITE(ASTNode *node) {

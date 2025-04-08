@@ -14,6 +14,8 @@ public:
 
     string GetOpcode();
 
+    static void ConnectSequences(vector<Instruction> & vector1, const vector<Instruction> & vector2);
+
 private:
     string opcode;
     string arg1;

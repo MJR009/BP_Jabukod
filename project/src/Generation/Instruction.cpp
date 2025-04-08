@@ -18,3 +18,9 @@ void Instruction::Output(ofstream & file) {
 string Instruction::GetOpcode() {
     return this->opcode;
 }
+
+
+
+void Instruction::ConnectSequences(vector<Instruction> & vector1, const vector<Instruction> & vector2) {
+    vector1.insert(vector1.end(), vector2.begin(), vector2.end());
+}

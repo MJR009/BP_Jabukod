@@ -2,7 +2,8 @@
 #include "common.h"
 
 #include "AST.h"
-#include "GenMethods.h"
+#include "Snippets.h"
+#include "Transform.h"
 #include "Instruction.h"
 
 class NodeGenerators;

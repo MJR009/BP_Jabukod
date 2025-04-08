@@ -8,7 +8,3 @@
 #define LEA "lea"
 
 #define SYSCALL "syscall"
-
-
-
-#define XOR "xor"

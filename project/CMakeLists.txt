@@ -23,6 +23,7 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include/AST)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include/AST/NodeData)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include/Generation)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include/Generation/Assembly)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include/Generation/GenerationMethods)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include/ErrorListeners)
 
 ### ANTLR related: ###
