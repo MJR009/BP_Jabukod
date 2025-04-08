@@ -3,14 +3,14 @@
 void Instruction::Output(ofstream & file) {
     file << this->opcode;
 
-    if (this->first == "") return;
-    file << " " << this->first;
+    if (this->arg1 == "") return;
+    file << " " << this->arg1;
 
-    if (this->second == "") return;
-    file << ", " << this->second;
+    if (this->arg2 == "") return;
+    file << ", " << this->arg2;
     
-    if (this->third == "") return;
-    file << ", " << this->third;
+    if (this->arg3 == "") return;
+    file << ", " << this->arg3;
 }
 
 

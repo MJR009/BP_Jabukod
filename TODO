@@ -140,3 +140,9 @@ Atat syntaxe asembleru zvolena, protože je stejná použitý disasembler (objdu
 Podobně jako C, není dovoleno kvůli vnitřním hodnotám začínat proměnné dvojicí __, jen zde to vyústí v chybu
 
 const ve foreach headeru nelze - konstanta je v Jabukódu neměnná hodnota - řídicí proměnná foreach cyklu se mění každou iteraci
+
+registry dle system v abi - https://wiki.osdev.org/System_V_ABI
+Optionally, functions push rbp such that the caller-return-rip is 8 bytes above it,
+and set rbp to the address of the saved rbp. This allows iterating through the existing stack frames.
+This can be eliminated by specifying the -fomit-frame-pointer GCC option.
+- POTENCIÁLNÍ OBFUSKACE ?!

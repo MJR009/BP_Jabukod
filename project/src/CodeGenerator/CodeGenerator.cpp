@@ -20,6 +20,7 @@ void Generator::GenerateNode(ASTNode *node) {
         Generate_case(PROGRAM);
         Generate_case(FUNCTION);
         Generate_case(WRITE);
+        Generate_case(EXIT);
         /*
         Generate_case(VARIABLE_DECLARATION);
         Generate_case(VARIABLE_DEFINITION);
@@ -58,7 +59,6 @@ void Generator::GenerateNode(ASTNode *node) {
         Generate_case(FOR_HEADER3);
         Generate_case(BODY);
         Generate_case(RETURN);
-        Generate_case(EXIT);
         Generate_case(SUSPEND);
         Generate_case(RESUME);
         Generate_case(CONTINUE);
@@ -94,7 +94,7 @@ void Generator::OutputDataSection() {
             continue;
         }
 
-        this->OutputVariable(&variable);
+        this->OutputVariable(variable);
     }
 
     jout << endl;
@@ -110,7 +110,7 @@ void Generator::OutputRODataSection() {
             continue;
         }
 
-        this->OutputVariable(&variable);
+        this->OutputVariable(variable);
     }
 
     jout << endl;
@@ -120,34 +120,22 @@ void Generator::OutputTextSection() {
     jout << "\t.text" << endl;
     jout << "\t.globl _start" << endl;
     
-    for (auto & instruction : this->instructions) {
-        if ( ! GenMethods::IsLabel(&instruction)) jout << "\t";
-        instruction.Output( this->jout );
-        jout << endl;
-    }
+    for_each(this->instructions.begin(), this->instructions.end(),
+        [ this ](Instruction & current) {
+            if ( ! GenMethods::IsLabel(current)) jout << "\t";
+            current.Output( this->jout );
+            jout << endl;
+        }
+    );
 }
 
 
 
-void Generator::OutputVariable(Variable *variable) {
-    jout << GenMethods::VariableNameToLabel( variable->GetName() );
+void Generator::OutputVariable(Variable & variable) {
+    jout << GenMethods::VariableNameToLabel( variable.GetName() );
     jout << "\t";
-    jout << GenMethods::VariableTypeToString( variable->GetType() );
+    jout << GenMethods::VariableTypeToString( variable.GetType() );
     jout << "\t";
     jout << GenMethods::DefaultValueToString( variable );
     jout << endl;
-}
-
-
-
-void Generator::AppendInstruction(string opcode, string arg1, string arg2, string arg3) {
-    this->instructions.emplace_back(opcode, arg1, arg2, arg3);
-}
-
-void Generator::AppendInstructions(const vector<Instruction> & toAppend) {
-    this->instructions.insert(
-        this->instructions.end(),
-        toAppend.begin(),
-        toAppend.end()
-    );
 }

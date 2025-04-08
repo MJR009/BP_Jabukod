@@ -2,11 +2,12 @@
 #include "common.h"
 
 #include "Opcodes.h"
+#include "Registers.h"
 
 class Instruction {
 public:
     Instruction(string opcode, string arg1 = "", string arg2 = "", string arg3 = "") :
-        opcode(opcode), first(arg1), second(arg2), third(arg3)
+        opcode(opcode), arg1(arg1), arg2(arg2), arg3(arg3)
     {}
 
     void Output(ofstream & file);
@@ -15,8 +16,7 @@ public:
 
 private:
     string opcode;
-    // operands
-    string first;
-    string second;
-    string third;
+    string arg1;
+    string arg2;
+    string arg3;
 };

@@ -1,7 +1,7 @@
 #include "GenMethods.h"
 
-bool GenMethods::IsLabel(Instruction *instruction) {
-    string opcode = instruction->GetOpcode();
+bool GenMethods::IsLabel(Instruction & instruction) {
+    string opcode = instruction.GetOpcode();
 
     if (opcode.back() == ':') {
         return true;
@@ -37,16 +37,16 @@ string GenMethods::VariableTypeToString(Type type) {
     return "ERR";
 }
 
-string GenMethods::DefaultValueToString(Variable *variable) {
-    switch (variable->GetType()) {
+string GenMethods::DefaultValueToString(Variable & variable) {
+    switch (variable.GetType()) {
         case Type::INT:
-            return to_string( variable->GetDefaultValue<int>() );
+            return to_string( variable.GetDefaultValue<int>() );
         case Type::FLOAT:
-            return to_string( variable->GetDefaultValue<float>() );
+            return to_string( variable.GetDefaultValue<float>() );
         case Type::BOOL:
-            return ( variable->GetDefaultValue<bool>() ) ? "1" : "0";
+            return ( variable.GetDefaultValue<bool>() ) ? "1" : "0";
         case Type::STRING:
-            return variable->GetDefaultValue<string>();
+            return variable.GetDefaultValue<string>();
     }
 
     return "";
@@ -54,29 +54,51 @@ string GenMethods::DefaultValueToString(Variable *variable) {
 
 
 
-vector<Instruction> GenMethods::GetProlog() {
+void GenMethods::Append(vector<Instruction> & vector1, const vector<Instruction> & vector2) {
+    vector1.insert(vector1.end(), vector2.begin(), vector2.end());
+}
+
+
+
+const vector<Instruction> GenMethods::GetProlog() {
     vector<Instruction> prolog;
 
-    prolog.emplace_back(PUSH, "%rbp");
-    prolog.emplace_back(MOV, "%rsp", "%rbp");
+    prolog.emplace_back(PUSH, RBP);
+    prolog.emplace_back(MOV, RSP, RBP);
+    // TODO reserve stack space
 
     return prolog;
 }
 
-vector<Instruction> GenMethods::GetEpilog(const string & inFunction) {
+const vector<Instruction> GenMethods::GetEpilog(const string & inFunction) {
     vector<Instruction> epilog;
 
-    epilog.emplace_back(POP, "%rbp");
+    epilog.emplace_back(POP, RBP);
 
     if (inFunction == "main") {
-        epilog.emplace_back(XOR, "%rdi", "%rdi"); // exit success
-        epilog.emplace_back(MOV, "$60", "%rax"); // exit syscall number
-        epilog.emplace_back(SYSCALL);
+        vector<Instruction> exitSequence = GenMethods::GetExit(0);
+        GenMethods::Append(epilog, exitSequence);
 
     } else {
+        // TODO free stack space
         epilog.emplace_back(RET);
 
     }
 
     return epilog;
+}
+
+
+
+const vector<Instruction> GenMethods::GetExit(int exitCode) {
+    vector<Instruction> exitSequence;
+
+    // TODO exit value
+    // TODO syscall 60 as 60 transformed to a literal
+
+    exitSequence.emplace_back(MOV, "$0", RDI);
+    exitSequence.emplace_back(MOV, "$60", RAX);
+    exitSequence.emplace_back(SYSCALL);
+
+    return exitSequence;
 }

@@ -35,22 +35,18 @@ private:
 
 private:
     void GenerateCode();
-    // selects which node to generate by kind
-    void GenerateNode(ASTNode *node);
+    void GenerateNode(ASTNode *node); // selects which node to generate by kind
 
     void OutputAssembly();
     void OutputDataSection();
     void OutputRODataSection();
     void OutputTextSection();
 
-    void OutputVariable(Variable *variable);
+    void OutputVariable(Variable & variable);
 
-    void AppendInstruction(string opcode, string arg1 = "", string arg2 = "", string arg3 = "");
-    void AppendInstructions(const vector<Instruction> & instructions);
-
-private:
-    // CodeGeneratorNode.cpp
+private: // CodeGeneratorNodes.cpp
     void GeneratePROGRAM(ASTNode *node);
     void GenerateFUNCTION(ASTNode *node);
     void GenerateWRITE(ASTNode *node);
+    void GenerateEXIT(ASTNode *node);
 };

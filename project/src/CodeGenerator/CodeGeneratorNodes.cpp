@@ -12,14 +12,14 @@ void Generator::GenerateFUNCTION(ASTNode *node) {
     FunctionData *function = node->GetData<FunctionData>();
     string label = GenMethods::FunctionNameToLabel( function->GetName() );
 
-    this->AppendInstruction(label);
-    this->AppendInstructions(GenMethods::GetProlog());
+    this->instructions.emplace_back(label);
+    GenMethods::Append( this->instructions, GenMethods::GetProlog() );
 
     for (int i = 0; i < node->GetChildrenCount(); i++) {
         this->GenerateNode( node->GetChild(i) );
     }
 
-    this->AppendInstructions(GenMethods::GetEpilog( function->GetName() ));
+    GenMethods::Append( this->instructions, GenMethods::GetEpilog( function->GetName() ) );
 }
 
 void Generator::GenerateWRITE(ASTNode *node) {
@@ -35,10 +35,14 @@ void Generator::GenerateWRITE(ASTNode *node) {
     // TODO method to backup registers that are used !!!
     // TODO TODO put registers in macros !
 
-    this->AppendInstruction(LEA, operandAddress, "%rsi");
-    this->AppendInstruction(MOV, operandLength, "%rdx");
+    this->instructions.emplace_back(LEA, operandAddress, "%rsi");
+    this->instructions.emplace_back(MOV, operandLength, "%rdx");
 
-    this->AppendInstruction(MOV, "$1", "%rdi"); // stdout
-    this->AppendInstruction(MOV, "$1", "%rax"); // write
-    this->AppendInstruction(SYSCALL);
+    this->instructions.emplace_back(MOV, "$1", "%rdi"); // stdout
+    this->instructions.emplace_back(MOV, "$1", "%rax"); // write
+    this->instructions.emplace_back(SYSCALL);
+}
+
+void Generator::GenerateEXIT(ASTNode *node) {
+    return;
 }
