@@ -1,8 +1,30 @@
-#include "CodeGenerator.h"
+#include "Generator.h"
+#include "NodeGenerators.h"
+
+Generator::Generator(string outputPath, AST & ast, SymbolTable & symbolTable) : ast(ast), symbolTable(symbolTable) {
+    if (outputPath.back() == '/') {
+        throw (outputPath + " is a path");
+    }
+
+    jout.open(outputPath + ".s");
+    if ( ! jout.is_open()) {
+        throw ("failed to open file " + outputPath + ".s");
+    }
+
+    this->nodeGenerators = new NodeGenerators(this);
+}
 
 void Generator::Generate() {
     this->GenerateCode();
     this->OutputAssembly();
+}
+
+Generator::~Generator() {
+    delete nodeGenerators;
+
+    if (jout.is_open()) {
+        jout.close();
+    }
 }
 
 
@@ -13,7 +35,7 @@ void Generator::GenerateCode() {
     this->GenerateNode( this->ast.GetRoot() );
 }
 
-#define Generate_case(item) case NodeKind::item: this->Generate##item(node); return
+#define Generate_case(item) case NodeKind::item: nodeGenerators->Generate##item(node); return
 
 void Generator::GenerateNode(ASTNode *node) {
     switch (node->GetKind()) {

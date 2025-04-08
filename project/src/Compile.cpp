@@ -5,7 +5,7 @@
 #include "SymbolTable.h"
 #include "GlobalSymbolsVisitor.h"
 #include "ASTGenerationVisitor.h"
-#include "CodeGenerator.h"
+#include "Generator.h"
 #include "Assembler.h"
 
 int Compile(PrepareArguments *args) {
