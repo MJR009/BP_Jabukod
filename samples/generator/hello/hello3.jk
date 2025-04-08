@@ -1,0 +1,5 @@
+const string hello = "Hello world!\n";
+
+int main() {
+    write hello;
+}

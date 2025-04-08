@@ -13,7 +13,8 @@ public:
 
 private:
     string opcode;
-    string first; // operands
+    // operands
+    string first;
     string second;
     string third;
 };

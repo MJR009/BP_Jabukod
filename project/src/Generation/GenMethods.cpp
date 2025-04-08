@@ -10,8 +10,6 @@ bool GenMethods::IsLabel(Instruction *instruction) {
     return false;
 }
 
-
-
 string GenMethods::FunctionNameToLabel(const string & name) {
     if (name == "main") {
         return "_start:";
@@ -20,11 +18,11 @@ string GenMethods::FunctionNameToLabel(const string & name) {
     return name + ":";
 }
 
-
-
 string GenMethods::VariableNameToLabel(const string & name) {
     return name + ":";
 }
+
+
 
 string GenMethods::VariableTypeToString(Type type) {
     switch (type) {
@@ -39,7 +37,7 @@ string GenMethods::VariableTypeToString(Type type) {
     return "ERR";
 }
 
-string GenMethods::ProduceDefaultValue(Variable *variable) {
+string GenMethods::DefaultValueToString(Variable *variable) {
     switch (variable->GetType()) {
         case Type::INT:
             return to_string( variable->GetDefaultValue<int>() );
@@ -59,8 +57,8 @@ string GenMethods::ProduceDefaultValue(Variable *variable) {
 vector<Instruction> GenMethods::GetProlog() {
     vector<Instruction> prolog;
 
-    prolog.push_back( {"push", "%rbp"} );
-    prolog.push_back( {"mov", "%rsp", "%rbp"} );
+    prolog.emplace_back("push", "%rbp");
+    prolog.emplace_back("mov", "%rsp", "%rbp");
 
     return prolog;
 }
@@ -68,13 +66,16 @@ vector<Instruction> GenMethods::GetProlog() {
 vector<Instruction> GenMethods::GetEpilog(const string & inFunction) {
     vector<Instruction> epilog;
 
-    epilog.push_back( {"pop", "%rbp"} );
+    epilog.emplace_back("pop", "%rbp");
+
     if (inFunction == "main") {
-        epilog.push_back( {"xor", "%rdi", "%rdi"} ); // exit success
-        epilog.push_back( {"mov", "$60", "%rax"} ); // exit
-        epilog.push_back( {"syscall"} );
+        epilog.emplace_back("xor", "%rdi", "%rdi"); // exit success
+        epilog.emplace_back("mov", "$60", "%rax"); // exit syscall number
+        epilog.emplace_back("syscall");
+
     } else {
-        epilog.push_back( {"ret"} );
+        epilog.emplace_back("ret");
+
     }
 
     return epilog;

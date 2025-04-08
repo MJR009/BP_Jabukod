@@ -8,12 +8,11 @@
 class GenMethods {
 public:
     static bool IsLabel(Instruction *instruction);
-
     static string FunctionNameToLabel(const string & name);
-
     static string VariableNameToLabel(const string & name);
+
     static string VariableTypeToString(Type type);
-    static string ProduceDefaultValue(Variable *variable);
+    static string DefaultValueToString(Variable *variable);
 
     static vector<Instruction> GetProlog();
     static vector<Instruction> GetEpilog(const string & inFunction);

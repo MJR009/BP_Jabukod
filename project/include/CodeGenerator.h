@@ -34,18 +34,22 @@ private:
     ofstream jout; // inspired by cout
 
 private:
-    void OutputAssembly();
-    void OutputDataSection();
-    void OutputRODataSection();
-    void OutputVariable(Variable *variable);
-
     void GenerateCode();
     // selects which node to generate by kind
     void GenerateNode(ASTNode *node);
 
-    void AppendInstruction(string opcode, string arg1 = "", string arg2 = "", string arg3 = "");
-    void AppendInstructions(vector<Instruction> instructions);
+    void OutputAssembly();
+    void OutputDataSection();
+    void OutputRODataSection();
+    void OutputTextSection();
 
+    void OutputVariable(Variable *variable);
+
+    void AppendInstruction(string opcode, string arg1 = "", string arg2 = "", string arg3 = "");
+    void AppendInstructions(const vector<Instruction> & instructions);
+
+private:
+    // CodeGeneratorNode.cpp
     void GeneratePROGRAM(ASTNode *node);
     void GenerateFUNCTION(ASTNode *node);
     void GenerateWRITE(ASTNode *node);
