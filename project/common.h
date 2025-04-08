@@ -45,9 +45,3 @@ namespace ERR {
 void BadData();
 
 } // namespace ERR
-
-#define HELP_MESSAGE \
-    (BOLD CYAN "Usage: \n\t" DEFAULT "./jabukod [" BOLD "-h" DEFAULT "] " \
-        EMPH "path_to_program" DEFAULT " [" BOLD "-o " DEFAULT EMPH "path_to_binary" \
-        DEFAULT "]\n" \
-    )

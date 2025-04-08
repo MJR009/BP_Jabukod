@@ -1,6 +1,8 @@
 #pragma once
 #include "common.h"
 
-int Compile(string & inputFile, string & outputFile);
+#include "main.h"
 
-static int OpenSourceFile(char *name, ifstream & stream);
+int Compile(PrepareArguments *args);
+
+static int OpenSourceFile(const char *name, ifstream & stream);

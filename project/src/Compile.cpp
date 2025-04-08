@@ -8,14 +8,21 @@
 #include "CodeGenerator.h"
 #include "Assembler.h"
 
-int Compile(string & inputFile, string & outputFile) {
+int Compile(PrepareArguments *args) {
     ifstream stream;
-    if (OpenSourceFile(inputFile.data(), stream) == NOK) {
+    if (OpenSourceFile(args->inputFile.c_str(), stream) == NOK) {
         return NOK;
     }
 
-    antlr4::ANTLRInputStream input(stream);
-    JabukodLexer lexer(&input);
+    antlr4::ANTLRInputStream *input;
+    try {
+        input = new antlr4::ANTLRInputStream(stream);
+    } catch (...) {
+        cerr << RED << BOLD << "Input error" << "\t" << DEFAULT;
+        cerr << DIM << INVALID_INPUT_FILE << DEFAULT << endl;
+        return NOK;
+    }
+    JabukodLexer lexer(input);
     antlr4::CommonTokenStream tokens(&lexer);
     JabukodParser parser(&tokens);
 
@@ -31,6 +38,7 @@ int Compile(string & inputFile, string & outputFile) {
 
     // Phase 0: check for lexical errors, switch to semantic phase
     if (lexer.getNumberOfSyntaxErrors() != 0) {
+        delete input;
         return NOK;
     }
     parserErrorListener.SetSemanticPhase();
@@ -49,35 +57,40 @@ int Compile(string & inputFile, string & outputFile) {
 
     // Phase 3: if there were errors, do not generate code
     if (parser.getNumberOfSyntaxErrors() != 0) {
+        delete input;
         return NOK;
     }
 
-    symbolTable.Print();
-    ast.Print();
+    if (args->printGraphicalRepresentation) {
+        symbolTable.Print();
+        ast.Print();
+    }
 
     try {
         // Phase 4: generate target code and output to a file
-        Generator generator(outputFile, ast, symbolTable);
+        Generator generator(args->outputFile, ast, symbolTable);
         generator.Generate();
 
-        cout << BOLD << "Compiled " << DEFAULT << outputFile << ".s from " << inputFile << endl;
+        cout << BOLD << "Compiled " << DEFAULT << args->outputFile << ".s from " << args->inputFile << endl;
         
         // Phase 5: assemble and link generated assembly to create executable
-        Assembler::Assemble(outputFile);
-        Assembler::Link(outputFile);
+        Assembler::Assemble(args->outputFile, args->generateWithDebugSymbols);
+        Assembler::Link(args->outputFile, args->generateWithDebugSymbols);
 
-        cout << BOLD << CYAN << "Executable " << outputFile << " created successfully!" << DEFAULT << endl;
+        cout << BOLD << CYAN << "Executable " << args->outputFile << " created successfully!" << DEFAULT << endl;
 
     } catch (const string & msg) {
         cerr << RED << BOLD << "Compilation error" << "\t" << DEFAULT;
         cerr << DIM << msg << endl << DEFAULT;
+        delete input;
         return NOK;
     }
 
+    delete input;
     return OK;
 }
 
-int OpenSourceFile(char *name, ifstream & stream) {
+int OpenSourceFile(const char *name, ifstream & stream) {
     const filesystem::path fileName(name);
     error_code ec;
     if ( ! filesystem::is_regular_file(fileName, ec)) {

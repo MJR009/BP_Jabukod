@@ -1,7 +1,8 @@
 #include "Assembler.h"
 
-int Assembler::Assemble(const string & outputPath) {
-    string command = "as -o " + outputPath + ".o " + outputPath + ".s";
+int Assembler::Assemble(const string & outputPath, bool withDebugSymbols) {
+    string debug = withDebugSymbols ? "-g " : "";
+    string command = "as " + debug + "-o " + outputPath + ".o " + outputPath + ".s";
 
     int ret = system( command.c_str() );
     if (ret != 0) {
@@ -12,8 +13,9 @@ int Assembler::Assemble(const string & outputPath) {
     return ret;
 }
 
-int Assembler::Link(const string & outputPath) {
-    string command = "ld -o " + outputPath + " " + outputPath + ".o";
+int Assembler::Link(const string & outputPath, bool withDebugSymbols) {
+    string debug = withDebugSymbols ? "-g " : "";
+    string command = "ld " + debug + "-o " + outputPath + " " + outputPath + ".o";
 
     int ret = system( command.c_str() );
     if (ret != 0) {

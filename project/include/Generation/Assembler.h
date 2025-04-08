@@ -3,6 +3,6 @@
 
 class Assembler {
 public:
-    static int Assemble(const string & outputPath);
-    static int Link(const string & outputPath);
+    static int Assemble(const string & outputPath, bool withDebugSymbols);
+    static int Link(const string & outputPath, bool withDebugSymbols);
 };

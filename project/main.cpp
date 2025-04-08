@@ -14,6 +14,7 @@ int main(int argc, char **argv) {
         args = new PrepareArguments(argc, argv);
 
     } catch (const PrintHelp & help) {
+        cout << HELP_MESSAGE;
         return OK;
     } catch (const char *msg) {
         cerr << RED << BOLD << "Input error" << "\t" << DEFAULT;
@@ -21,7 +22,7 @@ int main(int argc, char **argv) {
         return NOK;
     }
 
-    int ret = Compile(args->inputFile, args->outputFile);
+    int ret = Compile(args);
     delete args;
     return ret;
 }

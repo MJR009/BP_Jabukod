@@ -53,10 +53,25 @@ The following is the recommended command for first time <b>building</b> the prog
 
 `cmake -B build -S project && make -C build`<br>
 
-The resulting executable `jabukod` will be located in the `build` subdirectory.
+---
+
+The resulting <b>executable</b> `jabukod` will be located in the `build` subdirectory.
 To run, do:
 
-`./jabukod [-h] path_to_program [-o path_to_binary]`
+`./jabukod [-d] [-g] [-h] [-o path_to_binary] path_to_program`
+
+<b>Command line arguments</b> can be used generally with `path_to_program` always last.
+`[]` mark voluntary arguments. Semantics of each of the argument above are:
+
+- `-d` - generate executable with debug info
+- `-g` - print graphical representation of compilation
+- `-h` - print help message
+- `-o` - explicitly specified output file and directory (default is `out.s`)
+- `path_to_program` - mandatory input file
+
+For clarity, Jabukód source files should be followed by `.jk` filename extension.
+
+---
 
 There are also other build options. All of the available options are as follows, they all consider make being run from
 the `build` subdirectory or with `-C build` argument:
@@ -65,5 +80,7 @@ the `build` subdirectory or with `-C build` argument:
 with a syntax tree visualisation (note this target requires `java`, `javac` and `dot` installed).
 - `make pack` <br> Creates a `Jabukod.zip` file with all project files needed to build the project.
 
+<b>
 As the build process needs to download and build the ANTLR4 runtime, initial
 build may take a long time.
+</b>
