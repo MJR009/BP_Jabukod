@@ -13,4 +13,6 @@ public:
 
     static string TypeToDirective(Type type);
     static string DefaultValueToInitializer(Variable & variable);
+    static string GlobalToAddress(const string & variableName);
+    static string IntToImmediate(const int & number);
 };

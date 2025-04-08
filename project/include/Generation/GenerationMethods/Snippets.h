@@ -2,6 +2,7 @@
 #include "common.h"
 
 #include "Instruction.h"
+#include "Transform.h"
 
 class Snippets {
 public:
@@ -9,5 +10,5 @@ public:
     static const vector<Instruction> Epilog();
     static const vector<Instruction> MainEpilog();
 
-    static const vector<Instruction> ExitSyscall(int exitCode);
+    static const vector<Instruction> Exit(int exitCode);
 };

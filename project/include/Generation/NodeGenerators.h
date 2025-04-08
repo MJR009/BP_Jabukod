@@ -12,8 +12,8 @@ public:
     void GeneratePROGRAM(ASTNode *node);
     void GenerateFUNCTION(ASTNode *node);
     void GenerateWRITE(ASTNode *node);
-    void GenerateEXIT(ASTNode *node);
     /*
+    void GenerateEXIT(ASTNode *node);
     void GenerateVARIABLE_DECLARATION(ASTNode *node);
     void GenerateVARIABLE_DEFINITION(ASTNode *node);
     void GenerateMULTIPLICATION(ASTNode *node);

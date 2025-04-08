@@ -51,3 +51,11 @@ string Transform::DefaultValueToInitializer(Variable & variable) {
 
     return "";
 }
+
+string Transform::GlobalToAddress(const string & variableName) {
+    return "(" + variableName + ")";
+}
+
+string Transform::IntToImmediate(const int & number) {
+    return "$" + to_string(number);
+}

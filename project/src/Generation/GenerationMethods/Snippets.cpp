@@ -24,21 +24,18 @@ const vector<Instruction> Snippets::MainEpilog() {
     vector<Instruction> mainEpilog;
     
     mainEpilog.emplace_back(POP, RBP);
-    Instruction::ConnectSequences(mainEpilog, Snippets::ExitSyscall(0));
+    Instruction::ConnectSequences(mainEpilog, Snippets::Exit(0));
     
     return mainEpilog;    
 }
 
 
 
-const vector<Instruction> Snippets::ExitSyscall(int exitCode) {
+const vector<Instruction> Snippets::Exit(int exitCode) {
     vector<Instruction> exitSequence;
 
-    // TODO exitCode
-    // TODO put $60 as a literal transformed into the string
-
-    exitSequence.emplace_back(MOV, "$0", RDI);
-    exitSequence.emplace_back(MOV, "$60", RAX);
+    exitSequence.emplace_back(MOV, Transform::IntToImmediate(exitCode), RDI);
+    exitSequence.emplace_back(MOV, Transform::IntToImmediate(SYSCALL_EXIT), RAX);
     exitSequence.emplace_back(SYSCALL);
 
     return exitSequence;

@@ -1,0 +1,9 @@
+const string str = "Jabukod\n";
+
+int main() {
+    write str;
+}
+
+void rose() {
+    write str;
+}

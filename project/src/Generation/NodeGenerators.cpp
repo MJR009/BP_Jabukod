@@ -6,7 +6,8 @@ void NodeGenerators::GeneratePROGRAM(ASTNode *node) {
         gen->GenerateNode( node->GetChild(i) );
     }
 
-    // TODO fallback exit
+    gen->jout << endl;
+    Instruction::ConnectSequences( gen->instructions, Snippets::Exit(0) ); // fallback exit
 }
 
 void NodeGenerators::GenerateFUNCTION(ASTNode *node) {
@@ -20,6 +21,7 @@ void NodeGenerators::GenerateFUNCTION(ASTNode *node) {
         gen->GenerateNode( node->GetChild(i) );
     }
 
+    // fallback epilogues at the end of functions // TODO should this be here?
     if (function->GetName() == "main") {
         Instruction::ConnectSequences( gen->instructions, Snippets::MainEpilog() );
     } else {
@@ -33,21 +35,15 @@ void NodeGenerators::GenerateWRITE(ASTNode *node) {
     string operandName = operand->GetData<VariableData>()->GetName(); // literal strings are converted to globals
     string operandValue = operand->GetData<VariableData>()->GetDefaultValue<string>();
 
-    string operandAddress = "(" + operandName + ")";
     string operandLength = "$" + to_string( operandValue.size() - 2 ); // -2 for quotes
 
     // TODO method to calculate length !!!
     // TODO method to backup registers that are used !!!
-    // TODO TODO put registers in macros !
 
-    gen->instructions.emplace_back(LEA, operandAddress, "%rsi");
+    gen->instructions.emplace_back(LEA, Transform::GlobalToAddress(operandName), "%rsi");
     gen->instructions.emplace_back(MOV, operandLength, "%rdx");
 
-    gen->instructions.emplace_back(MOV, "$1", "%rdi"); // stdout
-    gen->instructions.emplace_back(MOV, "$1", "%rax"); // write
+    gen->instructions.emplace_back(MOV, Transform::IntToImmediate(STDOUT), "%rdi");
+    gen->instructions.emplace_back(MOV, Transform::IntToImmediate(SYSCALL_WRITE), "%rax");
     gen->instructions.emplace_back(SYSCALL);
-}
-
-void NodeGenerators::GenerateEXIT(ASTNode *node) {
-    return;
 }

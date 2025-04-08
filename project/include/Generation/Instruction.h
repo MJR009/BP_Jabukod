@@ -3,6 +3,7 @@
 
 #include "Opcodes.h"
 #include "Registers.h"
+#include "GeneralMacros.h"
 
 class Instruction {
 public:
