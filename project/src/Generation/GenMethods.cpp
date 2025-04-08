@@ -57,8 +57,8 @@ string GenMethods::DefaultValueToString(Variable *variable) {
 vector<Instruction> GenMethods::GetProlog() {
     vector<Instruction> prolog;
 
-    prolog.emplace_back("push", "%rbp");
-    prolog.emplace_back("mov", "%rsp", "%rbp");
+    prolog.emplace_back(PUSH, "%rbp");
+    prolog.emplace_back(MOV, "%rsp", "%rbp");
 
     return prolog;
 }
@@ -66,15 +66,15 @@ vector<Instruction> GenMethods::GetProlog() {
 vector<Instruction> GenMethods::GetEpilog(const string & inFunction) {
     vector<Instruction> epilog;
 
-    epilog.emplace_back("pop", "%rbp");
+    epilog.emplace_back(POP, "%rbp");
 
     if (inFunction == "main") {
-        epilog.emplace_back("xor", "%rdi", "%rdi"); // exit success
-        epilog.emplace_back("mov", "$60", "%rax"); // exit syscall number
-        epilog.emplace_back("syscall");
+        epilog.emplace_back(XOR, "%rdi", "%rdi"); // exit success
+        epilog.emplace_back(MOV, "$60", "%rax"); // exit syscall number
+        epilog.emplace_back(SYSCALL);
 
     } else {
-        epilog.emplace_back("ret");
+        epilog.emplace_back(RET);
 
     }
 

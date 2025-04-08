@@ -1,6 +1,8 @@
 #pragma once
 #include "common.h"
 
+#include "Opcodes.h"
+
 class Instruction {
 public:
     Instruction(string opcode, string arg1 = "", string arg2 = "", string arg3 = "") :

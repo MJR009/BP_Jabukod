@@ -35,10 +35,10 @@ void Generator::GenerateWRITE(ASTNode *node) {
     // TODO method to backup registers that are used !!!
     // TODO TODO put registers in macros !
 
-    this->AppendInstruction("lea", operandAddress, "%rsi");
-    this->AppendInstruction("mov", operandLength, "%rdx");
+    this->AppendInstruction(LEA, operandAddress, "%rsi");
+    this->AppendInstruction(MOV, operandLength, "%rdx");
 
-    this->AppendInstruction("mov", "$1", "%rdi"); // stdout
-    this->AppendInstruction("mov", "$1", "%rax"); // write
-    this->AppendInstruction("syscall");
+    this->AppendInstruction(MOV, "$1", "%rdi"); // stdout
+    this->AppendInstruction(MOV, "$1", "%rax"); // write
+    this->AppendInstruction(SYSCALL);
 }
