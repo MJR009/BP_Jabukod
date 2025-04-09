@@ -19,7 +19,7 @@ void SymbolTable::AddGlobalVariable(
         if ( ! this->IsIdentifierAllowed(name)) {
             this->parser->notifyErrorListeners(variable, INTERNAL_ID_USE, nullptr);
         }
-        this->globalScope.AddEntry(name, storage, type, value);
+        this->globalScope.AddEntry(name, storage, type, value, 0);
     } else {
         this->parser->notifyErrorListeners(variable, VARIABLE_REDEFINITION, nullptr);
     }
@@ -99,7 +99,7 @@ void SymbolTable::AddEnumItem(antlr4::Token *itemName, antlr4::Token *itemValue)
 
 
 Variable *SymbolTable::AddFloatStringLiteral(const string & name, Type type, any value) {
-    return this->globalScope.AddEntry(name, StorageSpecifier::CONST, type, value);
+    return this->globalScope.AddEntry(name, StorageSpecifier::CONST, type, value, 0);
 }
 
 

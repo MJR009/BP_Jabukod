@@ -1,0 +1,21 @@
+int main() {
+    //int x;
+    return 0;
+}
+
+void rose(int x) {
+    bool y = true;
+    return;
+}
+
+void mary(int a, int b, int c) {
+    float z = 3.14;
+    float zz = z;
+    float zzz = z;
+    return;
+}
+
+void rock() {
+    float a;
+    string b;
+}

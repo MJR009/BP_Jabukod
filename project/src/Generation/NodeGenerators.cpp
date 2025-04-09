@@ -14,8 +14,10 @@ void NodeGenerators::GenerateFUNCTION(ASTNode *node) {
     FunctionData *function = node->GetData<FunctionData>();
     string label = Transform::FunctionNameToLabel( function->GetName() );
 
+    int neededStackSpace = 8 * function->GetVariableCount();
+
     gen->instructions.emplace_back(label);
-    Instruction::ConnectSequences( gen->instructions, Snippets::Prolog() );
+    Instruction::ConnectSequences( gen->instructions, Snippets::Prolog(neededStackSpace) );
 
     for (int i = 0; i < node->GetChildrenCount(); i++) {
         gen->GenerateNode( node->GetChild(i) );

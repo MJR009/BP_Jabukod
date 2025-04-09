@@ -9,7 +9,8 @@ public:
         const string & name,
         const StorageSpecifier specifier,
         const Type type,
-        const any & defaultValue = any{}
+        const any & defaultValue,
+        int stackOffset
     );
 
     bool IsVariableNameAvailable(const string & name) const;

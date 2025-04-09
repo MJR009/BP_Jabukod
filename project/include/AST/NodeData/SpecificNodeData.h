@@ -50,7 +50,8 @@ public:
     Variable *AddVariable(
         const string & name,
         StorageSpecifier specifier,
-        Type type
+        Type type,
+        int stackOffset
     );
     bool IsVariableNameAvailable(const string & name) const;
     Variable *GetVariable(const string & name);
@@ -68,6 +69,7 @@ public:
     FunctionData(FunctionTableEntry *function) : location(function) {}
 
     string GetName();
+    int GetVariableCount();
 
 private:
     FunctionTableEntry *location;

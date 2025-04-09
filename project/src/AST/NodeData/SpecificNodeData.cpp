@@ -36,9 +36,10 @@ StorageSpecifier VariableData::GetSpecifier() {
 Variable *BodyData::AddVariable(
     const string & name,
     StorageSpecifier specifier,
-    Type type
+    Type type,
+    int stackOffset
 ) {
-    return this->scope.AddEntry(name, specifier, type);
+    return this->scope.AddEntry(name, specifier, type, any{}, stackOffset);
 }
 
 bool BodyData::IsVariableNameAvailable(const string & name) const {
@@ -60,6 +61,10 @@ string FunctionData::GetName() {
         return this->location->GetFunctionName();
     }
     return "ERR";
+}
+
+int FunctionData::GetVariableCount() {
+    return this->location->GetTotalVariables();
 }
 
 

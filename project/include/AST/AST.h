@@ -61,6 +61,8 @@ public:
     Variable *AddFloatStringLiteral(const string & name, Type type, any value);
     string GenerateUniqueLiteralId(Type type);
 
+    int GetVariableCount();
+
     void Print();
 
     ~AST() {
@@ -80,6 +82,7 @@ private:
     ASTNode *activeNode = nullptr;
 
     FunctionTableEntry *activeFunction = nullptr; // shortcut, mainly for resolving parameters
+    int variableCount = 0;
 
 private:
     Variable *PutVariableInFunctionScope(
@@ -114,4 +117,6 @@ private:
     bool IsScopeHavingNode(ASTNode *node);
     Variable *IsInThisScope(const string & name, ASTNode *node);
     Variable *IsParameter(const string & name);
+
+    int GetStackOffset();
 };    

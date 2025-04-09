@@ -1,7 +1,8 @@
 #include "FunctionTableEntry.h"
 
 void FunctionTableEntry::AddParameter(const Type parameterType, const string & parameterName) {
-    this->parameters.emplace_back(parameterName, StorageSpecifier::NONE, parameterType, any{});
+    this->parameters.emplace_back(parameterName, StorageSpecifier::NONE, parameterType, any{}, this->parameterCount);
+    this->parameterCount++;
 }
 
 
@@ -35,8 +36,19 @@ Variable *FunctionTableEntry::GetParameter(const string & name) {
 
 
 
+void FunctionTableEntry::SetTotalVariables(int variableCount) {
+    this->totalVariables = variableCount;
+}
+
+int FunctionTableEntry::GetTotalVariables() {
+    return this->totalVariables;
+}
+
+
+
 void FunctionTableEntry::Print() const {
-    cout << YELLOW << this->name << DEFAULT << endl;
+    cout << YELLOW << this->name << DEFAULT;
+    cout << DIM << " (" << this->totalVariables << " variables)" << DEFAULT << endl;
 
     cout << DIM << "  < returns: " << DEFAULT;
     cout << this->returnType.toString() << DIM << " >" << DEFAULT << endl;
@@ -47,7 +59,7 @@ void FunctionTableEntry::Print() const {
         [ & first ](const Variable & current) {
             cout << (first ? "" : " , ");
             first = false;
-            current.PrintDeclaration();
+            current.PrintAsParameter();
         }
     );
     cout << DIM << " >" << DEFAULT;

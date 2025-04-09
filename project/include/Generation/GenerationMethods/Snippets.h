@@ -6,7 +6,7 @@
 
 class Snippets {
 public:
-    static const vector<Instruction> Prolog();
+    static const vector<Instruction> Prolog(int variablesToReserve);
     static const vector<Instruction> Epilog();
     static const vector<Instruction> MainEpilog();
 

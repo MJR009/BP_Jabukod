@@ -8,3 +8,5 @@
 #define LEA "lea"
 
 #define SYSCALL "syscall"
+
+#define SUB "sub"

@@ -14,10 +14,17 @@ public:
     list<Variable> & GetParameters();
     Variable *GetParameter(const string & name);
 
+    void SetTotalVariables(int variableCount);
+    int GetTotalVariables();
+
     void Print() const;
 
 private:
     string name;
     Type returnType;
     list<Variable> parameters;
+
+    int parameterCount = 0;
+
+    int totalVariables = 0;
 };

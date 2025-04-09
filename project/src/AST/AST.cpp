@@ -50,10 +50,13 @@ FunctionTableEntry *AST::SetActiveFunction(const string & name) {
     FunctionTableEntry *function = this->IsFunctionDefined(name); // at this point the function is defined in symbol table
     this->activeFunction = function;
 
+    this->variableCount = 0;
+
     return function;
 }
 
 void AST::ResetActiveFunction() {
+    this->activeFunction->SetTotalVariables(this->variableCount);
     this->activeFunction = nullptr;
 }
 
@@ -507,6 +510,12 @@ string AST::GenerateUniqueLiteralId(Type type) {
 
 
 
+int AST::GetVariableCount() {
+    return this->variableCount;
+}
+
+
+
 void AST::Print() {
     void (*printNode)(ASTNode *) = [](ASTNode *node) {
         if (node) {
@@ -579,7 +588,7 @@ Variable *AST::PutVariableInFunctionScope(
         this->parser->notifyErrorListeners(variable, INTERNAL_ID_USE, nullptr);
     }
 
-    return data->AddVariable(name, specifier, type);
+    return data->AddVariable(name, specifier, type, this->GetStackOffset());
 }
 
 Variable *AST::PutVariableInNestedScope(
@@ -605,7 +614,7 @@ Variable *AST::PutVariableInNestedScope(
         this->parser->notifyErrorListeners(variable, INTERNAL_ID_USE, nullptr);
     }
 
-    return data->AddVariable(name, specifier, type);
+    return data->AddVariable(name, specifier, type, this->GetStackOffset());
 }
 
 Variable *AST::PutVariableInForHeader(
@@ -630,7 +639,7 @@ Variable *AST::PutVariableInForHeader(
         this->parser->notifyErrorListeners(variable, INTERNAL_ID_USE, nullptr);
     }
 
-    return data->AddVariable(name, specifier, type); // in for header there can only occur one definition, no need to check
+    return data->AddVariable(name, specifier, type, this->GetStackOffset()); // in for header there can only occur one definition, no need to check
 }
 
 Variable *AST::PutVariableInForeachHeader(
@@ -652,7 +661,7 @@ Variable *AST::PutVariableInForeachHeader(
         this->parser->notifyErrorListeners(variable, INTERNAL_ID_USE, nullptr);
     }
 
-    return data->AddVariable(name, specifier, type);
+    return data->AddVariable(name, specifier, type, this->GetStackOffset());
 }
 
 
@@ -720,7 +729,15 @@ Variable *AST::IsInThisScope(const string & name, ASTNode *node) {
     return variable;
 }
 
-
 Variable *AST::IsParameter(const string & name) {
     return this->activeFunction->GetParameter(name);
+}
+
+
+
+int AST::GetStackOffset() {
+    this->variableCount++;
+    const int offsetBase = -8;
+
+    return (offsetBase * this->variableCount);
 }

@@ -559,23 +559,37 @@ any ASTGenerationVisitor::visitLiteral(JabukodParser::LiteralContext *ctx) {
     Type type = Type::VOID;
     any value;
 
+    string literal;
+
     if (ctx->INT_LITERAL()) {
         type = Type::INT;
-        value = any( stoi( ctx->INT_LITERAL()->getText() ) );
+        literal = ctx->INT_LITERAL()->getText();
+
+        int base = 10;
+        if ((literal.find("0x", 0) != string::npos) ||
+            (literal.find("0X", 0) != string::npos)
+        ) {
+            base = 16;
+        }
+        value = any(stoi(literal, nullptr, base));
 
     } else if (ctx->FLOAT_LITERAL()) {
         type = Type::FLOAT;
-        value = any( stof( ctx->FLOAT_LITERAL()->getText() ) );
+        literal = ctx->FLOAT_LITERAL()->getText();
+
+        value = any(stof(literal));
 
     } else if (ctx->BOOL_LITERAL()) {
         type = Type::BOOL;
-        value = any(
-            ctx->BOOL_LITERAL()->getText() == "true" ? true : false
-        );
+        literal = ctx->BOOL_LITERAL()->getText();
+
+        value = any((literal == "true") ? true : false);
 
     } else if (ctx->STRING_LITERAL()) {
         type = Type::STRING;
-        value = any ( ctx->STRING_LITERAL()->getText() );
+        literal = ctx->STRING_LITERAL()->getText();
+
+        value = any(literal);
         
     }
 

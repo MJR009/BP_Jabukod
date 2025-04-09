@@ -4,9 +4,10 @@ Variable *Scope::AddEntry(
     const string & name,
     const StorageSpecifier specifier,
     const Type type,
-    const any & defaultValue
+    const any & defaultValue,
+    int stackOffset
 ) {
-    this->variables.emplace_back(name, specifier, type, defaultValue);
+    this->variables.emplace_back(name, specifier, type, defaultValue, stackOffset);
     return &this->variables.back();
 }
 

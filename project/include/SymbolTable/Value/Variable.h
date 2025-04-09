@@ -11,12 +11,14 @@ public:
         const string & name,
         const StorageSpecifier storage,
         const Type type,
-        const any & defaultValue
+        const any & defaultValue,
+        int stackOffset
     ) :
         BaseValue(name),
         storage(storage),
         type(type),
-        defaultValue(defaultValue)
+        defaultValue(defaultValue),
+        stackOffset(stackOffset)
     {}
 
     Type GetType();
@@ -26,13 +28,18 @@ public:
         return any_cast<T>( this->defaultValue );
     }
 
+    int GetStackOffset();
+
     void Print() const override;
     void PrintDeclaration() const;
+    void PrintAsParameter() const;
 
 private:
     StorageSpecifier storage;
     Type type;
     any defaultValue;
+
+    int stackOffset;
 
     void PrintDefaultValue() const;
 };

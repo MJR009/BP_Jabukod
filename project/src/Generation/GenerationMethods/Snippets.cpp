@@ -1,11 +1,13 @@
 #include "Snippets.h"
 
-const vector<Instruction> Snippets::Prolog() {
+const vector<Instruction> Snippets::Prolog(int variablesToReserve) {
     vector<Instruction> prolog;
 
     prolog.emplace_back(PUSH, RBP);
     prolog.emplace_back(MOV, RSP, RBP);
-    // TODO reserve stack space
+    if (variablesToReserve != 0) {
+        prolog.emplace_back(SUB, Transform::IntToImmediate(variablesToReserve), RSP);
+    }
 
     return prolog;
 }
@@ -13,7 +15,7 @@ const vector<Instruction> Snippets::Prolog() {
 const vector<Instruction> Snippets::Epilog() {
     vector<Instruction> epilog;
 
-    // TODO free stack space
+    epilog.emplace_back(MOV, RSP, RBP);
     epilog.emplace_back(POP, RBP);
     epilog.emplace_back(RET);
 

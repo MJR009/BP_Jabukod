@@ -10,6 +10,12 @@ StorageSpecifier Variable::GetSpecifier() {
 
 
 
+int Variable::GetStackOffset() {
+    return this->stackOffset;
+}
+
+
+
 void Variable::Print() const {
     cout <<
         this->storage.toString() << " " <<
@@ -25,7 +31,20 @@ void Variable::PrintDeclaration() const {
         this->storage.toString() << " " <<
         this->type.toString() << " " <<
         YELLOW << this->name << DEFAULT;
+
+    cout << DIM << CYAN << " (at " << this->stackOffset << " on stack)" << DEFAULT;
 }
+
+void Variable::PrintAsParameter() const {
+    cout <<
+        this->storage.toString() << " " <<
+        this->type.toString() << " " <<
+        YELLOW << this->name << DEFAULT;
+
+    cout << DIM << CYAN << " (" << this->stackOffset + 1 << ")" << DEFAULT;
+}
+
+
 
 // PRIVATE:
 
