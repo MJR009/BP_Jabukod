@@ -65,6 +65,10 @@ int Compile(PrepareArguments *args) {
         symbolTable.Print();
         ast.Print();
     }
+    if (args->onlyDoAnalysis) {
+        delete input;
+        return OK;
+    }
 
     try {
         // Phase 4: generate target code and output to a file
@@ -89,6 +93,8 @@ int Compile(PrepareArguments *args) {
     delete input;
     return OK;
 }
+
+
 
 int OpenSourceFile(const char *name, ifstream & stream) {
     const filesystem::path fileName(name);

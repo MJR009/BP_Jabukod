@@ -49,5 +49,7 @@ string Transform::GlobalToAddress(const string & variableName) {
 }
 
 string Transform::IntToImmediate(const int & number) {
-    return "$" + to_string(number);
+    stringstream hexNumber;
+    hexNumber << hex << number;
+    return "$0x" + hexNumber.str();
 }

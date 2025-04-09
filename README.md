@@ -58,15 +58,16 @@ The following is the recommended command for first time <b>building</b> the prog
 The resulting <b>executable</b> `jabukod` will be located in the `build` subdirectory.
 To run, do:
 
-`./jabukod [-d] [-g] [-h] [-o path_to_binary] path_to_program`
+`./jabukod [-a] [-d] [-g] [-h] [-o path_to_binary] path_to_program`
 
 <b>Command line arguments</b> can be used generally with `path_to_program` always last.
 `[]` mark voluntary arguments. Semantics of each of the argument above are:
 
-- `-d` - generate executable with debug info
-- `-g` - print graphical representation of compilation
-- `-h` - print help message
-- `-o` - explicitly specified output file and directory (default is `out.s`)
+- `-a` - only execute source program <b>a</b>nalysis, do not compile
+- `-d` - generate executable with <b>d</b>ebug info
+- `-g` - print <b>g</b>raphical representation of compilation
+- `-h` - print <b>h</b>elp message
+- `-o` - explicitly specified <b>o</b>utput file and directory (default is `out.s`)
 - `path_to_program` - mandatory input file
 
 For clarity, Jabukód source files should be followed by `.jk` filename extension.

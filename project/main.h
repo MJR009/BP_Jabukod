@@ -2,7 +2,7 @@
 #include "common.h"
 
 #include "getopt.h"
-#define ARGUMENTS "dgho:"
+#define ARGUMENTS "adgho:"
 
 #define INVALID_CLA ("invalid command line arguments, try " BOLD "-h" DEFAULT)
 #define INVALID_INPUT_FILE ("given input file could not be read")
@@ -10,13 +10,14 @@
 #define HELP_MESSAGE \
     ( \
         CYAN BOLD "Usage:\n" DEFAULT \
-        "\t./jabukod [" BOLD "-d" DEFAULT "] [" BOLD "-g" DEFAULT "] [" BOLD "-h" DEFAULT "] [" \
-            BOLD "-o" DEFAULT EMPH "path_to_binary" DEFAULT BOLD "] " DEFAULT EMPH "path_to_program\n\n" DEFAULT \
-        CYAN "-d " DEFAULT "- generate executable with debug info\n" \
-        CYAN "-g " DEFAULT "- print graphical representation of compilation\n" \
-        CYAN "-h " DEFAULT "- print this help message\n" \
-        CYAN "-o " DEFAULT "- explicitly specified output file and directory (default is out.s)\n" \
-        EMPH "path_to_program " DEFAULT "- " BOLD "mandatory " DEFAULT "path to input program (any text file, typically .jk)\n" \
+        "\t./jabukod [" BOLD "-a" DEFAULT "] [" BOLD "-d" DEFAULT "] [" BOLD "-g" DEFAULT "] [" BOLD "-h" DEFAULT "] [" \
+            BOLD "-o " DEFAULT EMPH "path_to_binary" DEFAULT BOLD "] " DEFAULT EMPH "path_to_program\n\n" DEFAULT \
+        CYAN "-a " DEFAULT "- only execute source program " CYAN "a" DEFAULT "nalysis, do not compile\n" \
+        CYAN "-d " DEFAULT "- generate executable with " CYAN "d" DEFAULT "ebug info\n" \
+        CYAN "-g " DEFAULT "- print " CYAN "g" DEFAULT "raphical representation of compilation\n" \
+        CYAN "-h " DEFAULT "- print this " CYAN "h" DEFAULT "elp message\n" \
+        CYAN "-o " DEFAULT "- explicitly specified " CYAN "o" DEFAULT "utput file and directory (default is out.s)\n" \
+        EMPH "path_to_program " DEFAULT "- " BOLD "mandatory " DEFAULT "path to input program (any text file, use .jk filename extension)\n" \
     )
 
 struct PrintHelp {};
@@ -29,6 +30,10 @@ public:
 
         while( (arg = getopt(argc, argv, ARGUMENTS)) != -1 ) {
             switch (arg) {
+                case 'a':
+                    this->onlyDoAnalysis = true;
+                    break;
+
                 case 'd':
                     this->generateWithDebugSymbols = true;
                     break;
@@ -63,6 +68,7 @@ public:
     string inputFile = "";
     string outputFile = "out";
 
+    bool onlyDoAnalysis = false;
     bool generateWithDebugSymbols = false;
     bool printGraphicalRepresentation = false;
 };
