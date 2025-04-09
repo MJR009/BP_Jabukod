@@ -1,5 +1,8 @@
 int main() {
     int x;
+    x = 16;
+    x = 1337;
 
-    x = 10;
+    bool y;
+    y = true;
 }

@@ -2,8 +2,7 @@
 #include "common.h"
 
 #include "Instruction.h"
-#include "Type.h"
-#include "Variable.h"
+#include "SpecificNodeData.h"
 
 class Transform {
 public:
@@ -14,4 +13,8 @@ public:
     static string DefaultValueToInitializer(Variable & variable);
     static string GlobalToAddress(const string & variableName);
     static string IntToImmediate(const int & number);
+
+    static string LiteralToImmediate(LiteralData *data);
+
+    static string VariableToStackAddress(VariableData *data);
 };

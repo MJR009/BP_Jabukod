@@ -79,7 +79,7 @@ the `build` subdirectory or with `-C build` argument:
 - `make` <br> Build the compiler binary.
 - `make visualise INPUT_FILE=[file from subdir. 'samples']` <br> Opens a window
 with a syntax tree visualisation (note this target requires `java`, `javac` and `dot` installed).
-- `make pack` <br> Creates a `Jabukod.zip` file with all project files needed to build the project.
+- `make pack` <br> Creates a `Jabukod.zip` file with everything needed for build.
 
 <b>
 As the build process needs to download and build the ANTLR4 runtime, initial

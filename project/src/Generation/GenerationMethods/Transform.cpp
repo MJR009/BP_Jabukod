@@ -53,3 +53,29 @@ string Transform::IntToImmediate(const int & number) {
     hexNumber << hex << number;
     return "$0x" + hexNumber.str();
 }
+
+
+
+string Transform::LiteralToImmediate(LiteralData *data) {
+    Type type = data->GetType();
+    int value;
+
+    if (type == Type::INT) {
+        value = any_cast<int>(data->GetValue());
+    } else if (type == Type::BOOL) {
+        value = any_cast<bool>(data->GetValue());
+    } else {
+        ERR::BadData();
+        return "ERR";
+    }
+
+    return Transform::IntToImmediate(value);
+}
+
+
+
+string Transform::VariableToStackAddress(VariableData *data) {
+    string stackOffset = to_string ( data->GetStackOffset() );
+
+    return stackOffset + "(" + RBP + ")";
+}

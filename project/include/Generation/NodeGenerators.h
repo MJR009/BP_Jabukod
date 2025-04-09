@@ -12,6 +12,7 @@ public:
     void GeneratePROGRAM(ASTNode *node);
     void GenerateFUNCTION(ASTNode *node);
     void GenerateWRITE(ASTNode *node);
+    void GenerateASSIGNMENT(ASTNode *node);
     /*
     void GenerateEXIT(ASTNode *node);
     void GenerateVARIABLE_DECLARATION(ASTNode *node);
@@ -40,7 +41,6 @@ public:
     void GenerateNOT(ASTNode *node);
     void GenerateVARIABLE(ASTNode *node);
     void GenerateLITERAL(ASTNode *node);
-    void GenerateASSIGNMENT(ASTNode *node);
     void GenerateFUNCTION_CALL(ASTNode *node);
     void GenerateIF(ASTNode *node);
     void GenerateWHILE(ASTNode *node);

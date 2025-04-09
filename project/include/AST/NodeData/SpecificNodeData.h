@@ -39,6 +39,8 @@ public:
         return T{};
     }
 
+    int GetStackOffset();
+
 private:
     Variable *location;
 };

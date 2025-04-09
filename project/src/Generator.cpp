@@ -42,6 +42,7 @@ void Generator::GenerateNode(ASTNode *node) {
         Generate_case(PROGRAM);
         Generate_case(FUNCTION);
         Generate_case(WRITE);
+        Generate_case(ASSIGNMENT);
         /*
         Generate_case(EXIT);
         Generate_case(VARIABLE_DECLARATION);
@@ -70,7 +71,6 @@ void Generator::GenerateNode(ASTNode *node) {
         Generate_case(NOT);
         Generate_case(VARIABLE);
         Generate_case(LITERAL);
-        Generate_case(ASSIGNMENT);
         Generate_case(FUNCTION_CALL);
         Generate_case(IF);
         Generate_case(WHILE);

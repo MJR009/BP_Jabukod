@@ -5,6 +5,7 @@
 #define RET "ret"
 
 #define MOV "mov"
+#define MOVQ "movq"
 #define LEA "lea"
 
 #define SYSCALL "syscall"

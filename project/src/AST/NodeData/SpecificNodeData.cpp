@@ -31,6 +31,10 @@ StorageSpecifier VariableData::GetSpecifier() {
     return StorageSpecifier::NONE;
 }
 
+int VariableData::GetStackOffset() {
+    return this->location->GetStackOffset();
+}
+
 
 
 Variable *BodyData::AddVariable(

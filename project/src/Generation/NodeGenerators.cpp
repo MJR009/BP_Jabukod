@@ -49,3 +49,43 @@ void NodeGenerators::GenerateWRITE(ASTNode *node) {
     gen->instructions.emplace_back(MOV, Transform::IntToImmediate(SYSCALL_WRITE), "%rax");
     gen->instructions.emplace_back(SYSCALL);
 }
+
+void NodeGenerators::GenerateASSIGNMENT(ASTNode *node) {
+    Type assigmentType = node->GetData<ExpressionData>()->GetType();
+
+    VariableData *data = node->GetChild(0)->GetData<VariableData>();
+    string targetAddress = Transform::VariableToStackAddress(data);
+
+    ASTNode *rside = node->GetChild(1);
+    string source;
+
+    switch (rside->GetKind()) {
+        case NodeKind::VARIABLE:
+            //rside->GetData<VariableData>();
+            // lokální
+            // globální
+            break;
+
+        case NodeKind::LITERAL:
+            source = Transform::LiteralToImmediate(rside->GetData<LiteralData>());
+            break;
+
+        default: // any expression
+            // TODO
+            break;
+    }
+
+    gen->instructions.emplace_back(MOVQ, source, targetAddress);
+
+    /*
+    switch (assigmentType) {
+        case Type::INT:
+            break;
+        case Type::FLOAT:
+        case Type::BOOL:
+        case Type::STRING:
+
+        default:
+            break;
+    }*/
+}
