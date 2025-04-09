@@ -5,7 +5,7 @@
 // https://wiki.osdev.org/System_V_ABI
 
 // PRESERVED
-#define RBX "%rbx"
+#define RBX "%rbx" // aux value
 #define RSP "%rsp"
 #define RBP "%rbp"
 #define R12 "%r12"
@@ -14,13 +14,15 @@
 #define R15 "%r15"
 
 // SCRATCH
-#define RAX "%rax" // return value
+#define RAX "%rax" // return value, aux value
+/* arguments */
 #define RDI "%rdi"
 #define RSI "%rsi"
 #define RDX "%rdx"
 #define RCX "%rcx"
 #define R8 "%r8"
 #define R9 "%r9"
+/* */
 #define R10 "%r10"
 #define R11 "%r11"
 

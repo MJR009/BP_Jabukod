@@ -1,0 +1,21 @@
+int main() {
+    float x;
+    x = 1.5 + 1.5;
+}
+
+void a() {
+    float x;
+    float y;
+
+    x = 3.14 + y;
+    y = x + 3.14;
+
+    y = x + y;
+}
+
+float x;
+float y;
+
+void b(float a) {
+    a = x + y;
+}

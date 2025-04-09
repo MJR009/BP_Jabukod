@@ -146,3 +146,5 @@ Optionally, functions push rbp such that the caller-return-rip is 8 bytes above 
 and set rbp to the address of the saved rbp. This allows iterating through the existing stack frames.
 This can be eliminated by specifying the -fomit-frame-pointer GCC option.
 - POTENCIÁLNÍ OBFUSKACE ?!
+
+poznánky Leopold -> str 8 -> princip vyhodnocování výrazů - přidat do práce !!!

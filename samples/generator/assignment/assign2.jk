@@ -20,8 +20,10 @@ void g(int p1, bool p2, float p3, string p4, int p5, bool p6, float p7, string p
     p4 = "4";
     p5 = 5;
     p6 = true;
+
     p7 = gf;
     p8 = gs;
+    
     p9 = p1;
 }
 

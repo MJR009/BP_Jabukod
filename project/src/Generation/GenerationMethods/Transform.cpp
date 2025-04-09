@@ -44,8 +44,14 @@ string Transform::DefaultValueToInitializer(Variable & variable) {
     return "";
 }
 
+
+
 string Transform::GlobalToAddress(const string & variableName) {
     return variableName + "(" + RIP + ")";
+}
+
+string Transform::RegisterToAddress(const string & reg) {
+    return "(" + reg + ")";
 }
 
 string Transform::IntToImmediate(const int & number) {

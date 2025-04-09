@@ -13,6 +13,7 @@ public:
     void GenerateFUNCTION(ASTNode *node);
     void GenerateWRITE(ASTNode *node);
     void GenerateASSIGNMENT(ASTNode *node);
+    void GenerateADDITION(ASTNode *node);
     /*
     void GenerateEXIT(ASTNode *node);
     void GenerateVARIABLE_DECLARATION(ASTNode *node);
@@ -24,7 +25,6 @@ public:
     void GenerateLEFT_SHIFT(ASTNode *node);
     void GenerateRIGHT_SHIFT(ASTNode *node);
     void GenerateBIT_OR(ASTNode *node);
-    void GenerateADDITION(ASTNode *node);
     void GenerateSUBTRACTION(ASTNode *node);
     void GenerateBIT_XOR(ASTNode *node);
     void GenerateOR(ASTNode *node);

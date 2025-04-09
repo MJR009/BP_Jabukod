@@ -8,6 +8,7 @@ const vector<Instruction> Snippets::Prolog(int variablesToReserve) {
     if (variablesToReserve != 0) {
         prolog.emplace_back(SUB, Transform::IntToImmediate(variablesToReserve), RSP);
     }
+    prolog.emplace_back(PUSH, RBX);
 
     return prolog;
 }
@@ -15,6 +16,7 @@ const vector<Instruction> Snippets::Prolog(int variablesToReserve) {
 const vector<Instruction> Snippets::Epilog() {
     vector<Instruction> epilog;
 
+    epilog.emplace_back(POP, RBX);
     epilog.emplace_back(MOV, RSP, RBP);
     epilog.emplace_back(POP, RBP);
     epilog.emplace_back(RET);
@@ -25,6 +27,7 @@ const vector<Instruction> Snippets::Epilog() {
 const vector<Instruction> Snippets::MainEpilog() {
     vector<Instruction> mainEpilog;
     
+    mainEpilog.emplace_back(POP, RBX);
     mainEpilog.emplace_back(POP, RBP);
     Instruction::ConnectSequences(mainEpilog, Snippets::Exit(0));
     

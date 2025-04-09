@@ -1,0 +1,30 @@
+int main() {
+    int x;
+    x = 1 + 1;
+}
+
+void a() {
+    int x;
+    int y;
+
+    y = 1 + x;
+    y = y + 1;
+}
+
+int x;
+
+void b() {
+    int y;
+
+    y = 1 + x;
+    x = y + 1;
+
+    y = x + x;
+}
+
+void c(int a, int b, int c, int d, int e, int f, int g) {
+    int x;
+
+    x = a + b;
+    x = a + g;
+}

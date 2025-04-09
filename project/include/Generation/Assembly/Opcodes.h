@@ -11,4 +11,8 @@
 
 #define SYSCALL "syscall"
 
+#define ADDQ "addq"
+#define ADDSS "addss"
+
 #define SUB "sub"
+#define SUBQ "subq"

@@ -12,11 +12,13 @@ public:
 
     static string TypeToDirective(Type type);
     static string DefaultValueToInitializer(Variable & variable);
+
     static string GlobalToAddress(const string & variableName);
+    static string RegisterToAddress(const string & reg);
     static string IntToImmediate(const int & number);
 
     static string LiteralToImmediate(LiteralData *data);
 
-    static string VariableToLocation(VariableData *data);
+    static string VariableToLocation(VariableData *data); // either register or memory
     static string ParameterInfoToLocation(int order, Type type);
 };
