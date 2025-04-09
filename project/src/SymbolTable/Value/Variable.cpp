@@ -14,6 +14,14 @@ int Variable::GetStackOffset() {
     return this->stackOffset;
 }
 
+bool Variable::IsGlobal() {
+    return this->isGlobal;
+}
+
+bool Variable::IsParameter() {
+    return this->isParameter;
+}
+
 
 
 void Variable::Print() const {

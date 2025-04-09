@@ -151,6 +151,12 @@ void Generator::OutputTextSection() {
             jout << endl;
         }
     );
+
+    // fallback exit
+    jout << endl;
+    jout << "\tmov $0x0, %rdi" << endl;
+    jout << "\tmov $0x3c, %rax" << endl;
+    jout << "\tsyscall" << endl;
 }
 
 

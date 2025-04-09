@@ -41,6 +41,9 @@ public:
 
     int GetStackOffset();
 
+    bool IsGlobal();
+    bool IsParameter();
+
 private:
     Variable *location;
 };

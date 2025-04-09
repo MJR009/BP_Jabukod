@@ -1,0 +1,12 @@
+int z = 20;
+
+int main() {
+    int x;
+    x = 10;
+
+    int y;
+    y = x;
+    x = y;
+
+    y = z;
+}

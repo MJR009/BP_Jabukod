@@ -5,10 +5,9 @@ void NodeGenerators::GeneratePROGRAM(ASTNode *node) {
     for (int i = 0; i < node->GetChildrenCount(); i++) {
         gen->GenerateNode( node->GetChild(i) );
     }
-
-    gen->jout << endl;
-    Instruction::ConnectSequences( gen->instructions, Snippets::Exit(0) ); // fallback exit
 }
+
+
 
 void NodeGenerators::GenerateFUNCTION(ASTNode *node) {
     FunctionData *function = node->GetData<FunctionData>();
@@ -31,6 +30,8 @@ void NodeGenerators::GenerateFUNCTION(ASTNode *node) {
     }
 }
 
+
+
 void NodeGenerators::GenerateWRITE(ASTNode *node) {
     ASTNode *operand = node->GetChild(0);
 
@@ -50,20 +51,26 @@ void NodeGenerators::GenerateWRITE(ASTNode *node) {
     gen->instructions.emplace_back(SYSCALL);
 }
 
+
+
 void NodeGenerators::GenerateASSIGNMENT(ASTNode *node) {
     Type assigmentType = node->GetData<ExpressionData>()->GetType();
 
     VariableData *data = node->GetChild(0)->GetData<VariableData>();
-    string targetAddress = Transform::VariableToStackAddress(data);
+    VariableData *rData;
+    string target = Transform::VariableToLocation(data);
 
     ASTNode *rside = node->GetChild(1);
     string source;
 
     switch (rside->GetKind()) {
         case NodeKind::VARIABLE:
-            //rside->GetData<VariableData>();
-            // lokální
-            // globální
+            rData = rside->GetData<VariableData>();
+            source = Transform::VariableToLocation(rData);
+            if (rData->GetType() != Type::FLOAT) {
+                gen->instructions.emplace_back(MOVQ, source, RAX);
+                source = RAX;
+            }
             break;
 
         case NodeKind::LITERAL:
@@ -75,17 +82,9 @@ void NodeGenerators::GenerateASSIGNMENT(ASTNode *node) {
             break;
     }
 
-    gen->instructions.emplace_back(MOVQ, source, targetAddress);
-
-    /*
-    switch (assigmentType) {
-        case Type::INT:
-            break;
-        case Type::FLOAT:
-        case Type::BOOL:
-        case Type::STRING:
-
-        default:
-            break;
-    }*/
+    if (data->GetType() == Type::FLOAT) {
+        gen->instructions.emplace_back(MOVSS, source, target);
+    } else {
+        gen->instructions.emplace_back(MOVQ, source, target);
+    }
 }

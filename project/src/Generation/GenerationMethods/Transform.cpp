@@ -45,7 +45,7 @@ string Transform::DefaultValueToInitializer(Variable & variable) {
 }
 
 string Transform::GlobalToAddress(const string & variableName) {
-    return "(" + variableName + ")";
+    return variableName + "(" + RIP + ")";
 }
 
 string Transform::IntToImmediate(const int & number) {
@@ -74,8 +74,27 @@ string Transform::LiteralToImmediate(LiteralData *data) {
 
 
 
-string Transform::VariableToStackAddress(VariableData *data) {
-    string stackOffset = to_string ( data->GetStackOffset() );
+string Transform::VariableToLocation(VariableData *data) {
+    if (data->IsGlobal()) {
+        return Transform::GlobalToAddress(data->GetName());
 
-    return stackOffset + "(" + RBP + ")";
+    } else if (data->IsParameter()) {
+        return Transform::ParameterInfoToLocation(data->GetStackOffset(), data->GetType());
+
+    } else { // local
+        string stackOffset = to_string ( data->GetStackOffset() );
+        return stackOffset + "(" + RBP + ")";
+    }
+
+    return "ERR";
+}
+
+
+
+string Transform::ParameterInfoToLocation(int order, Type type) {
+    if (type == Type::FLOAT) {
+        return Registers::FloatParameterToLocation(order);
+    } else {
+        return Registers::ParameterOrderToLocation(order);
+    }
 }

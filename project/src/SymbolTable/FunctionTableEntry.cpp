@@ -1,7 +1,14 @@
 #include "FunctionTableEntry.h"
 
 void FunctionTableEntry::AddParameter(const Type parameterType, const string & parameterName) {
-    this->parameters.emplace_back(parameterName, StorageSpecifier::NONE, parameterType, any{}, this->parameterCount);
+    this->parameters.emplace_back(
+        parameterName,
+        StorageSpecifier::NONE,
+        parameterType,
+        any{},
+        this->parameterCount,
+        false,
+        true);
     this->parameterCount++;
 }
 

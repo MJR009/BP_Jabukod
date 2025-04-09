@@ -1,4 +1,5 @@
 #pragma once
+#include "common.h"
 
 // uses System V ABI
 // https://wiki.osdev.org/System_V_ABI
@@ -32,3 +33,11 @@
 #define XMM5 "%xmm5"
 #define XMM6 "%xmm6"
 #define XMM7 "%xmm7"
+
+#define RIP "%rip"
+
+class Registers {
+public:
+    static string ParameterOrderToLocation(int order);
+    static string FloatParameterToLocation(int order);
+};

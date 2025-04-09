@@ -5,9 +5,19 @@ Variable *Scope::AddEntry(
     const StorageSpecifier specifier,
     const Type type,
     const any & defaultValue,
-    int stackOffset
+    int stackOffset,
+    bool isGlobal,
+    bool isParameter
 ) {
-    this->variables.emplace_back(name, specifier, type, defaultValue, stackOffset);
+    this->variables.emplace_back(
+        name,
+        specifier,
+        type,
+        defaultValue,
+        stackOffset,
+        isGlobal,
+        isParameter
+    );
     return &this->variables.back();
 }
 

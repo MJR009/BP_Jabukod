@@ -35,6 +35,14 @@ int VariableData::GetStackOffset() {
     return this->location->GetStackOffset();
 }
 
+bool VariableData::IsGlobal() {
+    return this->location->IsGlobal();
+}
+
+bool VariableData::IsParameter() {
+    return this->location->IsParameter();
+}
+
 
 
 Variable *BodyData::AddVariable(
@@ -43,7 +51,7 @@ Variable *BodyData::AddVariable(
     Type type,
     int stackOffset
 ) {
-    return this->scope.AddEntry(name, specifier, type, any{}, stackOffset);
+    return this->scope.AddEntry(name, specifier, type, any{}, stackOffset, false, false);
 }
 
 bool BodyData::IsVariableNameAvailable(const string & name) const {

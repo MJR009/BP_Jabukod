@@ -3,6 +3,7 @@
 
 #include "Instruction.h"
 #include "SpecificNodeData.h"
+#include "Registers.h"
 
 class Transform {
 public:
@@ -16,5 +17,6 @@ public:
 
     static string LiteralToImmediate(LiteralData *data);
 
-    static string VariableToStackAddress(VariableData *data);
+    static string VariableToLocation(VariableData *data);
+    static string ParameterInfoToLocation(int order, Type type);
 };

@@ -12,13 +12,17 @@ public:
         const StorageSpecifier storage,
         const Type type,
         const any & defaultValue,
-        int stackOffset
+        int stackOffset,
+        bool isGlobal,
+        bool isParameter
     ) :
         BaseValue(name),
         storage(storage),
         type(type),
         defaultValue(defaultValue),
-        stackOffset(stackOffset)
+        stackOffset(stackOffset),
+        isGlobal(isGlobal),
+        isParameter(isParameter)
     {}
 
     Type GetType();
@@ -29,6 +33,8 @@ public:
     }
 
     int GetStackOffset();
+    bool IsGlobal();
+    bool IsParameter();
 
     void Print() const override;
     void PrintDeclaration() const;
@@ -40,6 +46,8 @@ private:
     any defaultValue;
 
     int stackOffset;
+    bool isGlobal;
+    bool isParameter;
 
     void PrintDefaultValue() const;
 };

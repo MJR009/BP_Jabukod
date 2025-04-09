@@ -10,7 +10,9 @@ public:
         const StorageSpecifier specifier,
         const Type type,
         const any & defaultValue,
-        int stackOffset
+        int stackOffset,
+        bool isGlobal,
+        bool isParameter
     );
 
     bool IsVariableNameAvailable(const string & name) const;
