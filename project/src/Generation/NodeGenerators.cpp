@@ -94,94 +94,37 @@ void NodeGenerators::GenerateASSIGNMENT(ASTNode *node) {
 
 
 void NodeGenerators::GenerateADDITION(ASTNode *node) {
-    string operation, source, target;
     Type typeHere = node->GetData<ExpressionData>()->GetType();
 
-    // 1) výsledek lSide -> bude v %rax nebo %xmm0
+    // 1) put left operand result in %rax or %xmm0
     ASTNode *lSide = node->GetChild(0);
-    VariableData *lData;
-    switch (lSide->GetKind()) {
-        case NodeKind::VARIABLE:
-            lData = lSide->GetData<VariableData>();
-            if (lData->GetType() == Type::FLOAT) { // cannot be string
-                operation = MOVSS;
-                source = Transform::VariableToLocation(lData);
-                target = XMM0;
-            } else { // int, bool
-                operation = MOVQ;
-                source = Transform::VariableToLocation(lData);
-                target = RAX;
-            }
-            break;
-
-        case NodeKind::LITERAL:
-            operation = MOVQ;
-            source = Transform::LiteralToImmediate(lSide->GetData<LiteralData>());
-            target = RAX;
-            break;
-
-        default: // nested expression
-            gen->GenerateNode(lSide);
-            break;
+    vector<Instruction> lSideLoad = Snippets::PrepareOperand(lSide);
+    if (lSideLoad.size() == 0) {
+        gen->GenerateNode(lSide);
+    } else {
+        Instruction::ConnectSequences( gen->instructions, lSideLoad );
     }
-    // TODO záloha xmm0
-    gen->instructions.emplace_back(operation, source, target);
 
     // 2) push the register where the value is stored
-    Type firstOperand = (target == RAX) ? Type::INT : Type::FLOAT;
-    if (firstOperand == Type::INT) {
-        gen->instructions.emplace_back(PUSH, RAX);
-    } else if (firstOperand == Type::FLOAT) {
-        gen->instructions.emplace_back(SUBQ, Transform::IntToImmediate(8), RSP);
-        gen->instructions.emplace_back(MOVSS, XMM0, Transform::RegisterToAddress(RSP));
-    }
-    // TODO obnovit xmm0
+    Type lSideType = node->GetOperandType(0);
+    Instruction::ConnectSequences( gen->instructions, Snippets::PushPreparedOperand(lSideType) );
 
-    // 3) výsledek rSide -> bude v %rax
+    // 3) put right operand result in %rax or %xmm0
     ASTNode *rSide = node->GetChild(1);
-    VariableData *rData;
-    switch(rSide->GetKind()) {
-        case NodeKind::VARIABLE:
-            rData = rSide->GetData<VariableData>();
-            if (rData->GetType() == Type::FLOAT) {
-                operation = MOVSS;
-                source = Transform::VariableToLocation(rData);
-                target = XMM0;
-            } else {
-                operation = MOVQ;
-                source = Transform::VariableToLocation(rData);
-                target = RAX;
-            }
-            break;
-
-        case NodeKind::LITERAL:
-            operation = MOVQ;
-            source = Transform::LiteralToImmediate(rSide->GetData<LiteralData>());
-            target = RAX;
-            break;
-
-        default:
-            gen->GenerateNode(rSide);
-            break;
+    vector<Instruction> rSideLoad = Snippets::PrepareOperand(rSide);
+    if (rSideLoad.size() == 0) {
+        gen->GenerateNode(rSide);
+    } else {
+        Instruction::ConnectSequences( gen->instructions, rSideLoad );
     }
-    // TODO ZÁLOHA XMM0
-    gen->instructions.emplace_back(operation, source, target);
 
     // 4) pop the register into where I can process it
-    if (firstOperand == Type::INT) {
-        gen->instructions.emplace_back(POP, RBX);
-    } else if (firstOperand == Type::FLOAT) {
-        // TODO ZAZÁLOHOVAT XMM1
-        gen->instructions.emplace_back(MOVSS, Transform::RegisterToAddress(RSP), XMM1);
-        gen->instructions.emplace_back(ADDQ, Transform::IntToImmediate(8), RSP);
-    }
-    // TODO OBNOVENÍ XMM0
+    Instruction::ConnectSequences( gen->instructions, Snippets::PopPreparedOperand(lSideType) );
 
     // 5) operace -> uložit do %rax nebo %xmm0
-    if (firstOperand == Type::INT) {
-        gen->instructions.emplace_back(ADDQ, RBX, RAX);
-    } else if (firstOperand == Type::FLOAT) {
+    if (typeHere == Type::FLOAT) {
         gen->instructions.emplace_back(ADDSS, XMM1, XMM0);
+    } else {
+        gen->instructions.emplace_back(ADDQ, RBX, RAX);
     }
-    // TODO OBNOVIT XMM1
 }
