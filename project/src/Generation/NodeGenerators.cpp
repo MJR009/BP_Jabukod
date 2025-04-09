@@ -68,7 +68,11 @@ void NodeGenerators::GenerateASSIGNMENT(ASTNode *node) {
             rData = rside->GetData<VariableData>();
             source = Transform::VariableToLocation(rData);
             if (rData->GetType() != Type::FLOAT) {
-                gen->instructions.emplace_back(MOVQ, source, RAX);
+                if (rData->GetType() == Type::STRING) {
+                    gen->instructions.emplace_back(LEA, source, RAX);
+                } else {
+                    gen->instructions.emplace_back(MOVQ, source, RAX);
+                }
                 source = RAX;
             }
             break;
