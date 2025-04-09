@@ -61,8 +61,8 @@ const vector<Instruction> Snippets::PrepareOperand(ASTNode *operand) {
 
             if (data->GetType() == Type::FLOAT) { // cannot be string by semantics
                 operation = MOVSS;
-                target = XMM0;
-            } else { // int, bool
+                target = XMM6;
+            } else { // int, cannot be bool
                 operation = MOVQ;
                 target = RAX;
             }
@@ -85,15 +85,15 @@ const vector<Instruction> Snippets::PrepareOperand(ASTNode *operand) {
 const vector<Instruction> Snippets::PushPreparedOperand(Type operandType) {
     vector<Instruction> pushSequence;
 
-    // string will, again, never appear, by semantics
+    // string will again by semantics never appear, as well as bool
     switch (operandType) {
-        case Type::INT: case Type::BOOL:
+        case Type::INT:
             pushSequence.emplace_back(PUSH, RAX);
             break;
 
         case Type::FLOAT:
             pushSequence.emplace_back(SUBQ, Transform::IntToImmediate( 8 ), RSP);
-            pushSequence.emplace_back(MOVSS, XMM0, Transform::RegisterToAddress( RSP ));
+            pushSequence.emplace_back(MOVSS, XMM6, Transform::RegisterToAddress( RSP ));
             break;
     }
 
@@ -104,12 +104,14 @@ const vector<Instruction> Snippets::PopPreparedOperand(Type operandType) {
     vector<Instruction> popSequence;
 
     switch (operandType) {
-        case Type::INT: case Type::BOOL:
-            popSequence.emplace_back(POP, RBX);
+        case Type::INT:
+            popSequence.emplace_back(MOVQ, RAX, RBX); // needed for correct order of operations
+            popSequence.emplace_back(POP, RAX); // RBX (when operations were reversed)
             break;
 
         case Type::FLOAT:
-            popSequence.emplace_back(MOVSS, Transform::RegisterToAddress( RSP ), XMM1);
+            popSequence.emplace_back(MOVSS, XMM6, XMM7); // needed for correct order of operations
+            popSequence.emplace_back(MOVSS, Transform::RegisterToAddress( RSP ), XMM6); // XMM7
             popSequence.emplace_back(ADDQ, Transform::IntToImmediate( 8 ), RSP);
             break;
     }

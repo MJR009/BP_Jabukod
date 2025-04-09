@@ -66,4 +66,7 @@ public:
 
 private:
     Generator *gen;
+
+    void EvaluateSubexpressions(ASTNode *node);
+    void EvaluateCurrentExpression(ASTNode *node, string OPCODE);
 };

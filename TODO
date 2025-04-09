@@ -148,3 +148,7 @@ This can be eliminated by specifying the -fomit-frame-pointer GCC option.
 - POTENCIÁLNÍ OBFUSKACE ?!
 
 poznánky Leopold -> str 8 -> princip vyhodnocování výrazů - přidat do práce !!!
+
+ÚPRAVA SYSTEM V ABI ABY - XMM6 A XMM7 NEOBSAHUJÍ ARGUMENTY !!!!!!
++ zjednodušení
+- ne-úplně system v compliant

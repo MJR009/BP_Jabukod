@@ -1,4 +1,5 @@
 #pragma once
+#include "common.h"
 
 #define PUSH "push"
 #define POP "pop"
@@ -11,8 +12,15 @@
 
 #define SYSCALL "syscall"
 
+#define ADD "add"
 #define ADDQ "addq"
 #define ADDSS "addss"
 
 #define SUB "sub"
 #define SUBQ "subq"
+
+class Opcode {
+public:
+    static const map<string, string> GPR;
+    static const map<string, string> SSE;
+};

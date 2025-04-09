@@ -85,7 +85,7 @@ void NodeGenerators::GenerateASSIGNMENT(ASTNode *node) {
     }
 
     if (node->GetData<ExpressionData>()->GetType() == Type::FLOAT) {
-        gen->instructions.emplace_back(MOVSS, XMM0, target);
+        gen->instructions.emplace_back(MOVSS, XMM6, target);
     } else {
         gen->instructions.emplace_back(MOVQ, RAX, target);
     }
@@ -94,9 +94,16 @@ void NodeGenerators::GenerateASSIGNMENT(ASTNode *node) {
 
 
 void NodeGenerators::GenerateADDITION(ASTNode *node) {
-    Type typeHere = node->GetData<ExpressionData>()->GetType();
+    this->EvaluateSubexpressions(node);
+    this->EvaluateCurrentExpression(node, ADD);
+}
 
-    // 1) put left operand result in %rax or %xmm0
+
+
+// PRIVATE:
+
+void NodeGenerators::EvaluateSubexpressions(ASTNode *node) {
+// 1) put left operand result in %rax or %xmm6
     ASTNode *lSide = node->GetChild(0);
     vector<Instruction> lSideLoad = Snippets::PrepareOperand(lSide);
     if (lSideLoad.size() == 0) {
@@ -105,11 +112,11 @@ void NodeGenerators::GenerateADDITION(ASTNode *node) {
         Instruction::ConnectSequences( gen->instructions, lSideLoad );
     }
 
-    // 2) push the register where the value is stored
+// 2) push the register where the value is stored
     Type lSideType = node->GetOperandType(0);
     Instruction::ConnectSequences( gen->instructions, Snippets::PushPreparedOperand(lSideType) );
 
-    // 3) put right operand result in %rax or %xmm0
+// 3) put right operand result in %rax or %xmm6
     ASTNode *rSide = node->GetChild(1);
     vector<Instruction> rSideLoad = Snippets::PrepareOperand(rSide);
     if (rSideLoad.size() == 0) {
@@ -118,13 +125,16 @@ void NodeGenerators::GenerateADDITION(ASTNode *node) {
         Instruction::ConnectSequences( gen->instructions, rSideLoad );
     }
 
-    // 4) pop the register into where I can process it
+// 4) pop the register into where it can be processed
     Instruction::ConnectSequences( gen->instructions, Snippets::PopPreparedOperand(lSideType) );
+}
 
-    // 5) operace -> uložit do %rax nebo %xmm0
+void NodeGenerators::EvaluateCurrentExpression(ASTNode *node, string OPCODE) {
+// 5) operation with result stored in %rax or $xmm6
+    Type typeHere = node->GetData<ExpressionData>()->GetType();
     if (typeHere == Type::FLOAT) {
-        gen->instructions.emplace_back(ADDSS, XMM1, XMM0);
+        gen->instructions.emplace_back(Opcode::SSE.at(OPCODE), XMM7, XMM6);
     } else {
-        gen->instructions.emplace_back(ADDQ, RBX, RAX);
+        gen->instructions.emplace_back(Opcode::GPR.at(OPCODE), RBX, RAX);
     }
 }

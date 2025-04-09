@@ -28,11 +28,9 @@ string Registers::FloatParameterToLocation(int order) {
         case 3: return XMM3;
         case 4: return XMM4;
         case 5: return XMM5;
-        case 6: return XMM6;
-        case 7: return XMM7;
 
         default:
-            order -= 7;
+            order -= 5;
             offset = to_string(8*order + 8);
             return ( offset + "(" + RBP + ")" );
             break;

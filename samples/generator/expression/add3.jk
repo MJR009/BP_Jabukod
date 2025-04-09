@@ -5,5 +5,10 @@ int main() {
 
 void a() {
     int x;
+    x = (1 + 2) + 3;
+}
+
+void b() {
+    int x;
     x = 1 + (2 + 3);
 }
