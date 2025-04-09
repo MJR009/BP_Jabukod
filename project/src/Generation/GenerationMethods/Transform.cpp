@@ -10,15 +10,7 @@ bool Transform::IsLabel(Instruction & instruction) {
     return false;
 }
 
-string Transform::FunctionNameToLabel(const string & name) {
-    if (name == "main") {
-        return "_start:";
-    }
-
-    return name + ":";
-}
-
-string Transform::VariableNameToLabel(const string & name) {
+string Transform::IdentifierToLabel(const string & name) {
     return name + ":";
 }
 

@@ -141,6 +141,8 @@ void Generator::OutputRODataSection() {
 void Generator::OutputTextSection() {
     jout << "\t.text" << endl;
     jout << "\t.globl _start" << endl;
+    jout << "_start:" << endl;
+    jout << "\tjmp main" << endl;
     
     for_each(this->instructions.begin(), this->instructions.end(),
         [ this ](Instruction & current) {
@@ -154,7 +156,7 @@ void Generator::OutputTextSection() {
 
 
 void Generator::OutputVariable(Variable & variable) {
-    jout << Transform::VariableNameToLabel( variable.GetName() );
+    jout << Transform::IdentifierToLabel( variable.GetName() );
     jout << "\t";
     jout << Transform::TypeToDirective( variable.GetType() );
     jout << "\t";

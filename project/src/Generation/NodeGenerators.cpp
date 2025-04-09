@@ -12,7 +12,7 @@ void NodeGenerators::GeneratePROGRAM(ASTNode *node) {
 
 void NodeGenerators::GenerateFUNCTION(ASTNode *node) {
     FunctionData *function = node->GetData<FunctionData>();
-    string label = Transform::FunctionNameToLabel( function->GetName() );
+    string label = Transform::IdentifierToLabel( function->GetName() );
 
     int neededStackSpace = 8 * function->GetVariableCount();
 
