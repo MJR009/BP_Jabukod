@@ -178,6 +178,13 @@ void NodeGenerators::GenerateVARIABLE_DECLARATION(ASTNode *node) {
 
 
 
+void NodeGenerators::GenerateSUBTRACTION(ASTNode *node) {
+    this->EvaluateSubexpressions(node);
+    this->EvaluateCurrentExpression(node, SUB);
+}
+
+
+
 // PRIVATE:
 
 void NodeGenerators::EvaluateSubexpressions(ASTNode *node) {

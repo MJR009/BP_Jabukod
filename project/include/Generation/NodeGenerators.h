@@ -16,6 +16,7 @@ public:
     void GenerateADDITION(ASTNode *node);
     void GenerateVARIABLE_DEFINITION(ASTNode *node);
     void GenerateVARIABLE_DECLARATION(ASTNode *node);
+    void GenerateSUBTRACTION(ASTNode *node);
     /*
     void GenerateEXIT(ASTNode *node);
     void GenerateMULTIPLICATION(ASTNode *node);
@@ -25,7 +26,6 @@ public:
     void GenerateLEFT_SHIFT(ASTNode *node);
     void GenerateRIGHT_SHIFT(ASTNode *node);
     void GenerateBIT_OR(ASTNode *node);
-    void GenerateSUBTRACTION(ASTNode *node);
     void GenerateBIT_XOR(ASTNode *node);
     void GenerateOR(ASTNode *node);
     void GenerateAND(ASTNode *node);

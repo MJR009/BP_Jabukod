@@ -18,6 +18,7 @@
 
 #define SUB "sub"
 #define SUBQ "subq"
+#define SUBSS "subss"
 
 class Opcode {
 public:

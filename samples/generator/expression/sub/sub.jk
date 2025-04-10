@@ -1,0 +1,7 @@
+int main() {
+    int x = 10;
+    int y = 7;
+
+    int _1 = x - y;
+    int _2 = y - x;
+}
