@@ -1,12 +1,17 @@
-int z = 20;
+string global = "Jabukod_4\n";
 
 int main() {
-    int x;
-    x = 10;
+    write "Jabukod_1\n";
 
-    int y;
-    y = x;
-    x = y;
+    string x;
+    x = "Jabukod_2\n";
+    write x;
 
-    y = z;
+    string y;
+    y = "Jabukod_3\n";
+    string z;
+    z = y;
+    write z;
+
+    write global;
 }

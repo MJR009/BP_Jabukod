@@ -1,13 +1,7 @@
-int z;
-
 int main() {
     int x;
     x = 16;
-    x = 1337;
 
     bool y;
     y = true;
-    y = false;
-
-    z = 255;
 }

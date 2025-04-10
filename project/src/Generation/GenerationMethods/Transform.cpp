@@ -95,8 +95,6 @@ string Transform::VariableToLocation(VariableData *data) {
     return "ERR";
 }
 
-
-
 string Transform::ParameterInfoToLocation(int order, Type type) {
     if (type == Type::FLOAT) {
         return Registers::FloatParameterToLocation(order);

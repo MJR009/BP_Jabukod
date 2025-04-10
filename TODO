@@ -152,3 +152,5 @@ poznánky Leopold -> str 8 -> princip vyhodnocování výrazů - přidat do prá
 ÚPRAVA SYSTEM V ABI ABY - XMM6 A XMM7 NEOBSAHUJÍ ARGUMENTY !!!!!!
 + zjednodušení
 - ne-úplně system v compliant
+
+literal strings and float are converted to globals

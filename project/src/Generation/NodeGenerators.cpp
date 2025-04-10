@@ -34,16 +34,16 @@ void NodeGenerators::GenerateFUNCTION(ASTNode *node) {
 
 void NodeGenerators::GenerateWRITE(ASTNode *node) {
     ASTNode *operand = node->GetChild(0);
+    VariableData *data = operand->GetData<VariableData>();
 
-    string operandName = operand->GetData<VariableData>()->GetName(); // literal strings are converted to globals
-    string operandValue = operand->GetData<VariableData>()->GetDefaultValue<string>();
-
-    string operandLength = "$" + to_string( operandValue.size() - 2 ); // -2 for quotes
+    string operandLength = "$" + to_string( 10 ); // -2 for quotes
 
     // TODO method to calculate length !!!
     // TODO method to backup registers that are used !!!
 
-    gen->instructions.emplace_back(LEA, Transform::GlobalToAddress(operandName), "%rsi");
+    string opcode = data->IsGlobal() ? LEA : MOV; // load %rip relative address or take address straight from stack
+
+    gen->instructions.emplace_back(opcode, Transform::VariableToLocation(data), "%rsi");
     gen->instructions.emplace_back(MOV, operandLength, "%rdx");
 
     gen->instructions.emplace_back(MOV, Transform::IntToImmediate(STDOUT), "%rdi");
@@ -54,41 +54,49 @@ void NodeGenerators::GenerateWRITE(ASTNode *node) {
 
 
 void NodeGenerators::GenerateASSIGNMENT(ASTNode *node) {
-    VariableData *lData = node->GetChild(0)->GetData<VariableData>();
-    VariableData *rData;
-    string target = Transform::VariableToLocation(lData);
+    ASTNode *rSide = node->GetChild(1);
+    Type rSideType = node->GetOperandType(1);
+    string opcode, source, target;
 
-    ASTNode *rside = node->GetChild(1);
-    string source;
-
-    switch (rside->GetKind()) {
+    switch (rSide->GetKind()) {
         case NodeKind::VARIABLE:
-            rData = rside->GetData<VariableData>();
-            source = Transform::VariableToLocation(rData);
-            if (rData->GetType() != Type::FLOAT) {
-                if (rData->GetType() == Type::STRING) {
-                    gen->instructions.emplace_back(LEA, source, RAX);
-                } else {
-                    gen->instructions.emplace_back(MOVQ, source, RAX);
-                }
+            source = Transform::VariableToLocation( rSide->GetData<VariableData>() );
+
+            if (rSideType == Type::STRING) {
+                opcode = rSide->GetData<VariableData>()->IsGlobal() ? LEA : MOV;
+                gen->instructions.emplace_back(opcode, source, RAX);
+                source = RAX;
+                opcode = MOV;
+
+            } else if (rSideType == Type::FLOAT) {
+                opcode = MOVSS;
+                gen->instructions.emplace_back(opcode, source, XMM6);
+                source = XMM6;
+
+            } else { // int, bool
+                opcode = MOVQ;
+                gen->instructions.emplace_back(opcode, source, RAX);
                 source = RAX;
             }
             break;
 
         case NodeKind::LITERAL:
-            source = Transform::LiteralToImmediate(rside->GetData<LiteralData>());
+            opcode = MOVQ;
+            source = Transform::LiteralToImmediate( rSide->GetData<LiteralData>() );
             break;
 
         default: // any expression
-            gen->GenerateNode( node->GetChild(1) );
+            gen->GenerateNode(rSide);
+            
+            opcode = (rSideType == Type::FLOAT) ? MOVSS : MOVQ;
+            source = (rSideType == Type::FLOAT) ? XMM6 : RAX;
             break;
     }
 
-    if (node->GetData<ExpressionData>()->GetType() == Type::FLOAT) {
-        gen->instructions.emplace_back(MOVSS, XMM6, target);
-    } else {
-        gen->instructions.emplace_back(MOVQ, RAX, target);
-    }
+    VariableData *lData = node->GetChild(0)->GetData<VariableData>();
+    target = Transform::VariableToLocation(lData);
+
+    gen->instructions.emplace_back(opcode, source, target);
 }
 
 
@@ -103,7 +111,7 @@ void NodeGenerators::GenerateADDITION(ASTNode *node) {
 // PRIVATE:
 
 void NodeGenerators::EvaluateSubexpressions(ASTNode *node) {
-// 1) put left operand result in %rax or %xmm6
+// (1) put left operand result in %rax or %xmm6
     ASTNode *lSide = node->GetChild(0);
     vector<Instruction> lSideLoad = Snippets::PrepareOperand(lSide);
     if (lSideLoad.size() == 0) {
@@ -112,11 +120,11 @@ void NodeGenerators::EvaluateSubexpressions(ASTNode *node) {
         Instruction::ConnectSequences( gen->instructions, lSideLoad );
     }
 
-// 2) push the register where the value is stored
+// (2) push the register where the value is stored
     Type lSideType = node->GetOperandType(0);
     Instruction::ConnectSequences( gen->instructions, Snippets::PushPreparedOperand(lSideType) );
 
-// 3) put right operand result in %rax or %xmm6
+// (3) put right operand result in %rax or %xmm6
     ASTNode *rSide = node->GetChild(1);
     vector<Instruction> rSideLoad = Snippets::PrepareOperand(rSide);
     if (rSideLoad.size() == 0) {
@@ -125,12 +133,12 @@ void NodeGenerators::EvaluateSubexpressions(ASTNode *node) {
         Instruction::ConnectSequences( gen->instructions, rSideLoad );
     }
 
-// 4) pop the register into where it can be processed
+// (4) pop the register into where it can be processed
     Instruction::ConnectSequences( gen->instructions, Snippets::PopPreparedOperand(lSideType) );
 }
 
 void NodeGenerators::EvaluateCurrentExpression(ASTNode *node, string OPCODE) {
-// 5) operation with result stored in %rax or $xmm6
+// (5) operation with result stored in %rax or $xmm6
     Type typeHere = node->GetData<ExpressionData>()->GetType();
     if (typeHere == Type::FLOAT) {
         gen->instructions.emplace_back(Opcode::SSE.at(OPCODE), XMM7, XMM6);
