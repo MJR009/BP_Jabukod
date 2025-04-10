@@ -17,9 +17,9 @@ public:
     void GenerateVARIABLE_DEFINITION(ASTNode *node);
     void GenerateVARIABLE_DECLARATION(ASTNode *node);
     void GenerateSUBTRACTION(ASTNode *node);
+    void GenerateMULTIPLICATION(ASTNode *node);
     /*
     void GenerateEXIT(ASTNode *node);
-    void GenerateMULTIPLICATION(ASTNode *node);
     void GenerateDIVISION(ASTNode *node);
     void GenerateMODULO(ASTNode *node);
     void GeneratePOWER(ASTNode *node);

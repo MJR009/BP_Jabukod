@@ -185,6 +185,13 @@ void NodeGenerators::GenerateSUBTRACTION(ASTNode *node) {
 
 
 
+void NodeGenerators::GenerateMULTIPLICATION(ASTNode *node) {
+    this->EvaluateSubexpressions(node);
+    this->EvaluateCurrentExpression(node, IMUL);
+}
+
+
+
 // PRIVATE:
 
 void NodeGenerators::EvaluateSubexpressions(ASTNode *node) {

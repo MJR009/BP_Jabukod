@@ -2,10 +2,12 @@
 
 const map<string, string> Opcode::GPR = {
     {ADD, ADDQ},
-    {SUB, SUBQ}
+    {SUB, SUBQ},
+    {IMUL, IMULQ}
 };
 
 const map<string, string> Opcode::SSE = {
     {ADD, ADDSS},
-    {SUB, SUBSS}
+    {SUB, SUBSS},
+    {IMUL, MULSS}
 };

@@ -20,6 +20,10 @@
 #define SUBQ "subq"
 #define SUBSS "subss"
 
+#define IMUL "imul"
+#define IMULQ "imulq"
+#define MULSS "mulss"
+
 class Opcode {
 public:
     static const map<string, string> GPR;

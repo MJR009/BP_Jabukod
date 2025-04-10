@@ -1,0 +1,4 @@
+int main() {
+    float x = 2.5;
+    float y = x * 4.0;
+}
