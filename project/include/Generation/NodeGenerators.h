@@ -14,10 +14,10 @@ public:
     void GenerateWRITE(ASTNode *node);
     void GenerateASSIGNMENT(ASTNode *node);
     void GenerateADDITION(ASTNode *node);
+    void GenerateVARIABLE_DEFINITION(ASTNode *node);
+    void GenerateVARIABLE_DECLARATION(ASTNode *node);
     /*
     void GenerateEXIT(ASTNode *node);
-    void GenerateVARIABLE_DECLARATION(ASTNode *node);
-    void GenerateVARIABLE_DEFINITION(ASTNode *node);
     void GenerateMULTIPLICATION(ASTNode *node);
     void GenerateDIVISION(ASTNode *node);
     void GenerateMODULO(ASTNode *node);

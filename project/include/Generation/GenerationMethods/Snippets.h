@@ -7,9 +7,14 @@
 
 class Snippets {
 public:
+    static const string floatDeclaration;
+    static const string stringDeclaration;
+
+public:
     static const vector<Instruction> Prolog(int variablesToReserve);
     static const vector<Instruction> Epilog();
     static const vector<Instruction> MainEpilog();
+    static const vector<Instruction> DeclareDefault(Type type, string target);
 
     static const vector<Instruction> Exit(int exitCode);
 

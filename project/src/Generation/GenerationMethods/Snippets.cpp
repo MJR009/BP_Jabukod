@@ -1,5 +1,10 @@
 #include "Snippets.h"
 
+const string Snippets::floatDeclaration = "__declfloat";
+const string Snippets::stringDeclaration = "__declstring";
+
+
+
 const vector<Instruction> Snippets::Prolog(int variablesToReserve) {
     vector<Instruction> prolog;
 
@@ -34,6 +39,36 @@ const vector<Instruction> Snippets::MainEpilog() {
     return mainEpilog;    
 }
 
+const vector<Instruction> Snippets::DeclareDefault(Type type, string target) {
+    vector<Instruction> declaration;
+
+    switch (type) {
+        case Type::INT: case Type::BOOL:
+            declaration.emplace_back(MOVQ, Transform::IntToImmediate( 0 ), target);
+            break;
+
+        case Type::FLOAT:
+            declaration.emplace_back(
+                MOVSS,
+                Transform::GlobalToAddress(Snippets::floatDeclaration),
+                XMM0
+            );
+            declaration.emplace_back(MOVSS, XMM0, target);
+            break;
+
+        case Type::STRING:
+            declaration.emplace_back(
+                LEA,
+                Transform::GlobalToAddress(Snippets::stringDeclaration),
+                RAX
+            );
+            declaration.emplace_back(MOV, RAX, target);
+            break;
+    }
+
+    return declaration;
+}
+
 
 
 const vector<Instruction> Snippets::Exit(int exitCode) {
@@ -62,6 +97,7 @@ const vector<Instruction> Snippets::PrepareOperand(ASTNode *operand) {
             if (data->GetType() == Type::FLOAT) { // cannot be string by semantics
                 operation = MOVSS;
                 target = XMM6;
+                
             } else { // int, cannot be bool
                 operation = MOVQ;
                 target = RAX;

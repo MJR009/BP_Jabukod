@@ -52,6 +52,12 @@ public:
 
     void Print() const;
 
+public:
+    static const int defaultINT;
+    static const float defaultFLOAT;
+    static const bool defaultBOOL;
+    static const string defaultSTRING;
+
 private:
     JabukodParser *parser; // for semantic error reporting via notifyErrorListeners()
 

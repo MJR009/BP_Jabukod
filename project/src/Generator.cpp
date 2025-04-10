@@ -44,10 +44,10 @@ void Generator::GenerateNode(ASTNode *node) {
         Generate_case(WRITE);
         Generate_case(ASSIGNMENT);
         Generate_case(ADDITION);
+        Generate_case(VARIABLE_DEFINITION);
+        Generate_case(VARIABLE_DECLARATION);
         /*
         Generate_case(EXIT);
-        Generate_case(VARIABLE_DECLARATION);
-        Generate_case(VARIABLE_DEFINITION);
         Generate_case(MULTIPLICATION);
         Generate_case(DIVISION);
         Generate_case(MODULO);

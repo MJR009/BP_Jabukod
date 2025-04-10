@@ -1,0 +1,20 @@
+int g = 1;
+bool gg = false;
+string ggg = "global";
+
+int main() {
+    int x = 16;
+    int xx = x;
+    int xxx = g;
+
+    float y = 3.14;
+    float yy = y;
+
+    bool z = true;
+    bool zz = z;
+    bool zzz = gg;
+
+    string w = "Hello";
+    string ww = w;
+    string www = ggg;
+}

@@ -1,0 +1,11 @@
+int gi;
+float gf;
+bool gb;
+string gs;
+
+int main() {
+    int x;
+    float y;
+    bool z;
+    string w;
+}

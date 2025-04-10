@@ -1,9 +1,0 @@
-const string hello = "Hello world!\n";
-
-int main() {
-    const string str = "\"\"\"string\"\"\"";
-
-    int x = 1;
-    int y = 1.2;
-    string z = "hello";
-}

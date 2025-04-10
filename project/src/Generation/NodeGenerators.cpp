@@ -108,6 +108,76 @@ void NodeGenerators::GenerateADDITION(ASTNode *node) {
 
 
 
+void NodeGenerators::GenerateVARIABLE_DEFINITION(ASTNode *node) {
+    ASTNode *rSide = node->GetChild(0);
+    Type rSideType = node->GetOperandType(0);
+    string opcode, source, target;
+
+    switch (rSide->GetKind()) {
+        case NodeKind::VARIABLE:
+            source = Transform::VariableToLocation( rSide->GetData<VariableData>() );
+
+            if (rSideType == Type::STRING) {
+                opcode = rSide->GetData<VariableData>()->IsGlobal() ? LEA : MOV;
+                gen->instructions.emplace_back(opcode, source, RAX);
+                source = RAX;
+                opcode = MOV;
+
+            } else if (rSideType == Type::FLOAT) {
+                opcode = MOVSS;
+                gen->instructions.emplace_back(opcode, source, XMM6);
+                source = XMM6;
+
+            } else { // int, bool
+                opcode = MOVQ;
+                gen->instructions.emplace_back(opcode, source, RAX);
+                source = RAX;
+            }
+            break;
+
+        case NodeKind::LITERAL:
+            opcode = MOVQ;
+            source = Transform::LiteralToImmediate( rSide->GetData<LiteralData>() );
+            break;
+
+        default: // any expression
+            gen->GenerateNode(rSide);
+            
+            opcode = (rSideType == Type::FLOAT) ? MOVSS : MOVQ;
+            source = (rSideType == Type::FLOAT) ? XMM6 : RAX;
+            break;
+    }
+
+    VariableData *lData = node->GetData<VariableData>();
+    target = Transform::VariableToLocation(lData);
+
+    gen->instructions.emplace_back(opcode, source, target);
+}
+
+
+
+void NodeGenerators::GenerateVARIABLE_DECLARATION(ASTNode *node) {
+    VariableData *data = node->GetData<VariableData>();
+    static bool floatDeclared = false; // avoid redeclaring default values
+    static bool stringDeclared = false;
+
+    Type variableType = data->GetType();
+    if ( (variableType == Type::FLOAT) && ( ! floatDeclared) ) {
+        gen->symbolTable.AddFloatStringLiteral( Snippets::floatDeclaration, Type::FLOAT, SymbolTable::defaultFLOAT );
+        floatDeclared = true;
+    }
+    if ( (variableType == Type::STRING) && ( ! stringDeclared) ) {
+        gen->symbolTable.AddFloatStringLiteral( Snippets::stringDeclaration, Type::STRING, SymbolTable::defaultSTRING );
+        stringDeclared = true;
+    }
+
+    string location = Transform::VariableToLocation(data);
+
+    gen->ConnectSequence( Snippets::DeclareDefault(variableType, location) );
+}
+
+
+
 // PRIVATE:
 
 void NodeGenerators::EvaluateSubexpressions(ASTNode *node) {

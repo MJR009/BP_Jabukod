@@ -197,6 +197,13 @@ void SymbolTable::Print() const {
 
 
 
+const int SymbolTable::defaultINT = 0;
+const float SymbolTable::defaultFLOAT = 0.0f;
+const bool SymbolTable::defaultBOOL = false;
+const string SymbolTable::defaultSTRING = string("\"\"");
+
+
+
 // PRIVATE: 
 
 bool SymbolTable::IsGlobalVariableNameAvailable(const string & name) const {
@@ -344,13 +351,13 @@ any SymbolTable::ResolveExplicitDefaultValue(JabukodParser::LiteralContext *defa
 any SymbolTable::GetImplicitDefaultValue(Type type) const {
     switch (type) {
         case Type::INT:
-            return any( 0 );
+            return any( SymbolTable::defaultINT );
         case Type::FLOAT:
-            return any( 0.0f );
+            return any( SymbolTable::defaultFLOAT );
         case Type::BOOL:
-            return any( false );
+            return any( SymbolTable::defaultBOOL );
         case Type::STRING:
-            return any( string("\"\"") );
+            return any( SymbolTable::defaultSTRING );
     }
 
     return any( 0 ); // suppress warning
