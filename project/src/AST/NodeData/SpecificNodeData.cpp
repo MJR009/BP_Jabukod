@@ -43,6 +43,10 @@ bool VariableData::IsParameter() {
     return this->location->IsParameter();
 }
 
+string VariableData::GetParamaterLocation() {
+    return this->location->GetParameterLocation();
+}
+
 
 
 Variable *BodyData::AddVariable(

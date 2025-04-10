@@ -43,6 +43,7 @@ public:
 
     bool IsGlobal();
     bool IsParameter();
+    string GetParamaterLocation();
 
 private:
     Variable *location;

@@ -1,4 +1,6 @@
-int main(float x) {
+int main(float x, int z) {
     float y;
     y = x + 1.0;
+
+    z = 1;
 }

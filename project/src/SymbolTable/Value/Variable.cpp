@@ -22,6 +22,10 @@ bool Variable::IsParameter() {
     return this->isParameter;
 }
 
+string Variable::GetParameterLocation() {
+    return this->parameterStorage;
+}
+
 
 
 void Variable::Print() const {
@@ -49,7 +53,7 @@ void Variable::PrintAsParameter() const {
         this->type.toString() << " " <<
         YELLOW << this->name << DEFAULT;
 
-    cout << DIM << CYAN << " (" << this->stackOffset + 1 << ")" << DEFAULT;
+    cout << DIM << CYAN << " (" << this->stackOffset << ". - " << this->parameterStorage << ")" << DEFAULT;
 }
 
 

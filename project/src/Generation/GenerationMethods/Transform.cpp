@@ -85,20 +85,12 @@ string Transform::VariableToLocation(VariableData *data) {
         return Transform::GlobalToAddress(data->GetName());
 
     } else if (data->IsParameter()) {
-        return Transform::ParameterInfoToLocation(data->GetStackOffset(), data->GetType());
+        return data->GetParamaterLocation();
 
     } else { // local
-        string stackOffset = to_string ( data->GetStackOffset() );
+        string stackOffset = to_string( data->GetStackOffset() );
         return stackOffset + "(" + RBP + ")";
     }
 
     return "ERR";
-}
-
-string Transform::ParameterInfoToLocation(int order, Type type) {
-    if (type == Type::FLOAT) {
-        return Registers::FloatParameterToLocation(order);
-    } else {
-        return Registers::ParameterOrderToLocation(order);
-    }
 }

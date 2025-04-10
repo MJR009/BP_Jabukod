@@ -154,3 +154,5 @@ poznánky Leopold -> str 8 -> princip vyhodnocování výrazů - přidat do prá
 - ne-úplně system v compliant
 
 literal strings and float are converted to globals
+
+do práce by se hodil obrázek call stacku!!!

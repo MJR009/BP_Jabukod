@@ -4,6 +4,7 @@
 #include "BaseValue.h"
 #include "Type.h"
 #include "Specifier.h"
+#include "Registers.h" // for paramaters
 
 class Variable : public BaseValue {
 public:
@@ -14,7 +15,8 @@ public:
         const any & defaultValue,
         int stackOffset,
         bool isGlobal,
-        bool isParameter
+        bool isParameter,
+        string parameterStorage = ""
     ) :
         BaseValue(name),
         storage(storage),
@@ -22,7 +24,8 @@ public:
         defaultValue(defaultValue),
         stackOffset(stackOffset),
         isGlobal(isGlobal),
-        isParameter(isParameter)
+        isParameter(isParameter),
+        parameterStorage(parameterStorage)
     {}
 
     Type GetType();
@@ -35,6 +38,7 @@ public:
     int GetStackOffset();
     bool IsGlobal();
     bool IsParameter();
+    string GetParameterLocation();
 
     void Print() const override;
     void PrintDeclaration() const;
@@ -48,6 +52,7 @@ private:
     int stackOffset;
     bool isGlobal;
     bool isParameter;
+    string parameterStorage;
 
     void PrintDefaultValue() const;
 };

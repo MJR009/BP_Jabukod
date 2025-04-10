@@ -40,6 +40,6 @@
 
 class Registers {
 public:
-    static string ParameterOrderToLocation(int order);
-    static string FloatParameterToLocation(int order);
+    static string NormalParameter(int order);
+    static string FloatParameter(int order);
 };

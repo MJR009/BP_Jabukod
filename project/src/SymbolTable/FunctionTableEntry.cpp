@@ -8,7 +8,10 @@ void FunctionTableEntry::AddParameter(const Type parameterType, const string & p
         any{},
         this->parameterCount,
         false,
-        true);
+        true,
+        this->AllocateNewParameter(parameterType)
+    );
+
     this->parameterCount++;
 }
 
@@ -72,4 +75,33 @@ void FunctionTableEntry::Print() const {
     cout << DIM << " >" << DEFAULT;
 
     cout << endl;
+}
+
+
+
+// PRIVATE:
+
+string FunctionTableEntry::AllocateNewParameter(Type type) {
+    string location;
+
+    if (type == Type::FLOAT) {
+        if (this->floatCount < 6) {
+            location = Registers::FloatParameter( this->floatCount );
+        } else {
+            location = to_string( this->nextStackOffset ) + "(" + RBP + ")";
+            this->nextStackOffset += 8;
+        }
+        this->floatCount++;
+
+    } else {
+        if (this->nonFloatCount < 6) {
+            location = Registers::NormalParameter( this->nonFloatCount );
+        } else {
+            location = to_string( this->nextStackOffset ) + "(" + RBP + ")";
+            this->nextStackOffset += 8;
+        }
+        this->nonFloatCount++;
+    }
+
+    return location;
 }

@@ -1,6 +1,6 @@
 #include "Registers.h"
 
-string Registers::ParameterOrderToLocation(int order) {
+string Registers::NormalParameter(int order) {
     string offset;
 
     switch (order) {
@@ -10,16 +10,12 @@ string Registers::ParameterOrderToLocation(int order) {
         case 3: return RCX;
         case 4: return R8;
         case 5: return R9;
-
         default:
-            order -= 5;
-            offset = to_string(8*order + 8); // +8 - skip return address
-            return ( offset + "(" + RBP + ")" );
-            break;
+            return "ERR";
     }
 }
 
-string Registers::FloatParameterToLocation(int order) {
+string Registers::FloatParameter(int order) {
     string offset;
     switch (order) {
         case 0: return XMM0;
@@ -28,11 +24,7 @@ string Registers::FloatParameterToLocation(int order) {
         case 3: return XMM3;
         case 4: return XMM4;
         case 5: return XMM5;
-
         default:
-            order -= 5;
-            offset = to_string(8*order + 8);
-            return ( offset + "(" + RBP + ")" );
-            break;
+            return "ERR";
     }
 }

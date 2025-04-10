@@ -20,5 +20,4 @@ public:
     static string LiteralToImmediate(LiteralData *data);
 
     static string VariableToLocation(VariableData *data); // either register or memory
-    static string ParameterInfoToLocation(int order, Type type);
 };

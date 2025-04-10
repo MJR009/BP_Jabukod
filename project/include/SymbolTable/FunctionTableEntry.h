@@ -25,6 +25,11 @@ private:
     list<Variable> parameters;
 
     int parameterCount = 0;
-
     int totalVariables = 0;
+
+private:
+    string AllocateNewParameter(Type type);
+    int nextStackOffset = 16;
+    int floatCount = 0;
+    int nonFloatCount = 0;
 };
