@@ -35,4 +35,6 @@ private:
     void OutputTextSection();
 
     void OutputVariable(Variable & variable);
+
+    void ConnectSequence(const vector<Instruction> & sequence);
 };

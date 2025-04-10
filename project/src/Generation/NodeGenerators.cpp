@@ -16,7 +16,7 @@ void NodeGenerators::GenerateFUNCTION(ASTNode *node) {
     int neededStackSpace = 8 * function->GetVariableCount();
 
     gen->instructions.emplace_back(label);
-    Instruction::ConnectSequences( gen->instructions, Snippets::Prolog(neededStackSpace) );
+    gen->ConnectSequence( Snippets::Prolog(neededStackSpace) );
 
     for (int i = 0; i < node->GetChildrenCount(); i++) {
         gen->GenerateNode( node->GetChild(i) );
@@ -24,9 +24,9 @@ void NodeGenerators::GenerateFUNCTION(ASTNode *node) {
 
     // fallback epilogues at the end of functions // TODO should this be here?
     if (function->GetName() == "main") {
-        Instruction::ConnectSequences( gen->instructions, Snippets::MainEpilog() );
+        gen->ConnectSequence( Snippets::MainEpilog() );
     } else {
-        Instruction::ConnectSequences( gen->instructions, Snippets::Epilog() );
+        gen->ConnectSequence( Snippets::Epilog() );
     }
 }
 
@@ -117,12 +117,12 @@ void NodeGenerators::EvaluateSubexpressions(ASTNode *node) {
     if (lSideLoad.size() == 0) {
         gen->GenerateNode(lSide);
     } else {
-        Instruction::ConnectSequences( gen->instructions, lSideLoad );
+        gen->ConnectSequence( lSideLoad );
     }
 
 // (2) push the register where the value is stored
     Type lSideType = node->GetOperandType(0);
-    Instruction::ConnectSequences( gen->instructions, Snippets::PushPreparedOperand(lSideType) );
+    gen->ConnectSequence( Snippets::PushPreparedOperand(lSideType) );
 
 // (3) put right operand result in %rax or %xmm6
     ASTNode *rSide = node->GetChild(1);
@@ -130,11 +130,11 @@ void NodeGenerators::EvaluateSubexpressions(ASTNode *node) {
     if (rSideLoad.size() == 0) {
         gen->GenerateNode(rSide);
     } else {
-        Instruction::ConnectSequences( gen->instructions, rSideLoad );
+        gen->ConnectSequence( rSideLoad );
     }
 
 // (4) pop the register into where it can be processed
-    Instruction::ConnectSequences( gen->instructions, Snippets::PopPreparedOperand(lSideType) );
+    gen->ConnectSequence( Snippets::PopPreparedOperand(lSideType) );
 }
 
 void NodeGenerators::EvaluateCurrentExpression(ASTNode *node, string OPCODE) {

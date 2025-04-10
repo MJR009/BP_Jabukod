@@ -29,7 +29,7 @@ const vector<Instruction> Snippets::MainEpilog() {
     
     mainEpilog.emplace_back(POP, RBX);
     mainEpilog.emplace_back(POP, RBP);
-    Instruction::ConnectSequences(mainEpilog, Snippets::Exit(0));
+    Instruction::ConnectSequences( mainEpilog, Snippets::Exit( 0 ) );
     
     return mainEpilog;    
 }

@@ -22,5 +22,9 @@ string Instruction::GetOpcode() {
 
 
 void Instruction::ConnectSequences(vector<Instruction> & vector1, const vector<Instruction> & vector2) {
-    vector1.insert(vector1.end(), vector2.begin(), vector2.end());
+    vector1.insert(
+        vector1.end(),
+        vector2.begin(),
+        vector2.end()
+    );
 }

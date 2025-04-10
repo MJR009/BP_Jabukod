@@ -169,3 +169,9 @@ void Generator::OutputVariable(Variable & variable) {
     jout << Transform::DefaultValueToInitializer( variable );
     jout << endl;
 }
+
+
+
+void Generator::ConnectSequence(const vector<Instruction> & sequence) {
+    Instruction::ConnectSequences( this->instructions, sequence );
+}

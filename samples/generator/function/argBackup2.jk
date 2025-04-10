@@ -26,7 +26,8 @@ void fg(float p1, float p2, float p3, float p4, float p5, float p6, float p7, fl
     p10 = 10.0;
 }
 
-void g(int p1, bool p2, float p3, string p4, int p5, bool p6, float p7, string p8, int p9, int p10) {
+void g(int p1, bool p2, float p3, string p4, int p5, bool p6, float p7, string p8, int p9, int p10,
+    float p11, float p12, float p13, float p14, float p15, int p16, string p17) {
     p1 = 1;
     p2 = true;
     p3 = 3.1;
@@ -39,6 +40,15 @@ void g(int p1, bool p2, float p3, string p4, int p5, bool p6, float p7, string p
     
     p9 = p1;
     p10 = p9;
+
+    p11 = 1.0;
+    p12 = 1.0;
+    p13 = 1.0;
+    p14 = 1.0;
+
+    p15 = 1.0;
+    p16 = 0;
+    p17 = "0";
 }
 
 int main() {
