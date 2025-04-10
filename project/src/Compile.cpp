@@ -83,6 +83,10 @@ int Compile(PrepareArguments *args) {
 
         cout << BOLD << CYAN << "Executable " << args->outputFile << " created successfully!" << DEFAULT << endl;
 
+        if (args->runDebug) {
+            Assembler::Debug(args->outputFile);
+        }
+
     } catch (const string & msg) {
         cerr << RED << BOLD << "Compilation error" << "\t" << DEFAULT;
         cerr << DIM << msg << endl << DEFAULT;

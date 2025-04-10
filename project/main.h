@@ -2,7 +2,7 @@
 #include "common.h"
 
 #include "getopt.h"
-#define ARGUMENTS "adgho:"
+#define ARGUMENTS "adDgho:"
 
 #define INVALID_CLA ("invalid command line arguments, try " BOLD "-h" DEFAULT)
 #define INVALID_INPUT_FILE ("given input file could not be read")
@@ -10,10 +10,11 @@
 #define HELP_MESSAGE \
     ( \
         CYAN BOLD "Usage:\n" DEFAULT \
-        "\t./jabukod [" BOLD "-a" DEFAULT "] [" BOLD "-d" DEFAULT "] [" BOLD "-g" DEFAULT "] [" BOLD "-h" DEFAULT "] [" \
+        "\t./jabukod [" BOLD "-a" DEFAULT "] [" BOLD "-d" DEFAULT "] [" BOLD "-D" DEFAULT "] [" BOLD "-g" DEFAULT "] [" BOLD "-h" DEFAULT "] [" \
             BOLD "-o " DEFAULT EMPH "path_to_binary" DEFAULT BOLD "] " DEFAULT EMPH "path_to_program\n\n" DEFAULT \
         CYAN "-a " DEFAULT "- only execute source program " CYAN "a" DEFAULT "nalysis, do not compile\n" \
         CYAN "-d " DEFAULT "- generate executable with " CYAN "d" DEFAULT "ebug info\n" \
+        CYAN "-D " DEFAULT "- compile and " CYAN "D" DEFAULT "ebug the generated binary\n" \
         CYAN "-g " DEFAULT "- print " CYAN "g" DEFAULT "raphical representation of compilation\n" \
         CYAN "-h " DEFAULT "- print this " CYAN "h" DEFAULT "elp message\n" \
         CYAN "-o " DEFAULT "- explicitly specified " CYAN "o" DEFAULT "utput file and directory (default is out.s)\n" \
@@ -34,6 +35,8 @@ public:
                     this->onlyDoAnalysis = true;
                     break;
 
+                case 'D':
+                    this->runDebug = true;
                 case 'd':
                     this->generateWithDebugSymbols = true;
                     break;
@@ -70,5 +73,6 @@ public:
 
     bool onlyDoAnalysis = false;
     bool generateWithDebugSymbols = false;
+    bool runDebug = false;
     bool printGraphicalRepresentation = false;
 };

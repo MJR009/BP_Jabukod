@@ -25,3 +25,16 @@ int Assembler::Link(const string & outputPath, bool withDebugSymbols) {
     cout << BOLD << "Linked " << DEFAULT << outputPath << " from " << outputPath << ".o" << endl;
     return ret;
 }
+
+
+
+int Assembler::Debug(const string & outputPath) {
+    string gdb = "gdb -ex \"tui enable\" -ex \"layout regs\" -ex \"b main\" ./" + outputPath;
+
+    int ret = system( gdb.c_str() );
+    if (ret != 0) {
+        throw ("failed to debug " + outputPath);
+    }
+
+    return ret;
+}
