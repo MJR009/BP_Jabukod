@@ -19,9 +19,9 @@ public:
     void GenerateSUBTRACTION(ASTNode *node);
     void GenerateMULTIPLICATION(ASTNode *node);
     void GenerateDIVISION(ASTNode *node);
+    void GenerateMODULO(ASTNode *node);
     /*
     void GenerateEXIT(ASTNode *node);
-    void GenerateMODULO(ASTNode *node);
     void GeneratePOWER(ASTNode *node);
     void GenerateLEFT_SHIFT(ASTNode *node);
     void GenerateRIGHT_SHIFT(ASTNode *node);

@@ -110,7 +110,21 @@ void NodeGenerators::GenerateMULTIPLICATION(ASTNode *node) {
 
 void NodeGenerators::GenerateDIVISION(ASTNode *node) {
     this->EvaluateSubexpressions(node);
+    gen->instructions.emplace_back(PUSH, RDX);
+    gen->instructions.emplace_back(CQO);
     this->EvaluateCurrentExpression(node, IDIV);
+    gen->instructions.emplace_back(POP, RDX);
+}
+
+
+
+void NodeGenerators::GenerateMODULO(ASTNode *node) { // float division will never appear here by semantics
+    this->EvaluateSubexpressions(node);
+    gen->instructions.emplace_back(PUSH, RDX);
+    gen->instructions.emplace_back(CQO);
+    this->EvaluateCurrentExpression(node, IDIV);
+    gen->instructions.emplace_back(MOVQ, RDX, RAX);
+    gen->instructions.emplace_back(POP, RDX);
 }
 
 

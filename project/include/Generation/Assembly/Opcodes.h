@@ -27,6 +27,7 @@
 #define IDIV "idiv"
 #define IDIVQ "idivq"
 #define DIVSS "divss"
+#define CQO "cqo"
 
 class Opcode {
 public:
