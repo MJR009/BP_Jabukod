@@ -18,9 +18,9 @@ public:
     void GenerateVARIABLE_DECLARATION(ASTNode *node);
     void GenerateSUBTRACTION(ASTNode *node);
     void GenerateMULTIPLICATION(ASTNode *node);
+    void GenerateDIVISION(ASTNode *node);
     /*
     void GenerateEXIT(ASTNode *node);
-    void GenerateDIVISION(ASTNode *node);
     void GenerateMODULO(ASTNode *node);
     void GeneratePOWER(ASTNode *node);
     void GenerateLEFT_SHIFT(ASTNode *node);
@@ -69,4 +69,6 @@ private:
 
     void EvaluateSubexpressions(ASTNode *node);
     void EvaluateCurrentExpression(ASTNode *node, string OPCODE);
+
+    void EvaluateAssignment(ASTNode *lSide, ASTNode *rSide, Type rSideType);
 };

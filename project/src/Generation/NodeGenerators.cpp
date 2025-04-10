@@ -54,49 +54,7 @@ void NodeGenerators::GenerateWRITE(ASTNode *node) {
 
 
 void NodeGenerators::GenerateASSIGNMENT(ASTNode *node) {
-    ASTNode *rSide = node->GetChild(1);
-    Type rSideType = node->GetOperandType(1);
-    string opcode, source, target;
-
-    switch (rSide->GetKind()) {
-        case NodeKind::VARIABLE:
-            source = Transform::VariableToLocation( rSide->GetData<VariableData>() );
-
-            if (rSideType == Type::STRING) {
-                opcode = rSide->GetData<VariableData>()->IsGlobal() ? LEA : MOV;
-                gen->instructions.emplace_back(opcode, source, RAX);
-                source = RAX;
-                opcode = MOV;
-
-            } else if (rSideType == Type::FLOAT) {
-                opcode = MOVSS;
-                gen->instructions.emplace_back(opcode, source, XMM6);
-                source = XMM6;
-
-            } else { // int, bool
-                opcode = MOVQ;
-                gen->instructions.emplace_back(opcode, source, RAX);
-                source = RAX;
-            }
-            break;
-
-        case NodeKind::LITERAL:
-            opcode = MOVQ;
-            source = Transform::LiteralToImmediate( rSide->GetData<LiteralData>() );
-            break;
-
-        default: // any expression
-            gen->GenerateNode(rSide);
-            
-            opcode = (rSideType == Type::FLOAT) ? MOVSS : MOVQ;
-            source = (rSideType == Type::FLOAT) ? XMM6 : RAX;
-            break;
-    }
-
-    VariableData *lData = node->GetChild(0)->GetData<VariableData>();
-    target = Transform::VariableToLocation(lData);
-
-    gen->instructions.emplace_back(opcode, source, target);
+    this->EvaluateAssignment(node->GetChild(0), node->GetChild(1), node->GetOperandType(1));
 }
 
 
@@ -109,49 +67,7 @@ void NodeGenerators::GenerateADDITION(ASTNode *node) {
 
 
 void NodeGenerators::GenerateVARIABLE_DEFINITION(ASTNode *node) {
-    ASTNode *rSide = node->GetChild(0);
-    Type rSideType = node->GetOperandType(0);
-    string opcode, source, target;
-
-    switch (rSide->GetKind()) {
-        case NodeKind::VARIABLE:
-            source = Transform::VariableToLocation( rSide->GetData<VariableData>() );
-
-            if (rSideType == Type::STRING) {
-                opcode = rSide->GetData<VariableData>()->IsGlobal() ? LEA : MOV;
-                gen->instructions.emplace_back(opcode, source, RAX);
-                source = RAX;
-                opcode = MOV;
-
-            } else if (rSideType == Type::FLOAT) {
-                opcode = MOVSS;
-                gen->instructions.emplace_back(opcode, source, XMM6);
-                source = XMM6;
-
-            } else { // int, bool
-                opcode = MOVQ;
-                gen->instructions.emplace_back(opcode, source, RAX);
-                source = RAX;
-            }
-            break;
-
-        case NodeKind::LITERAL:
-            opcode = MOVQ;
-            source = Transform::LiteralToImmediate( rSide->GetData<LiteralData>() );
-            break;
-
-        default: // any expression
-            gen->GenerateNode(rSide);
-            
-            opcode = (rSideType == Type::FLOAT) ? MOVSS : MOVQ;
-            source = (rSideType == Type::FLOAT) ? XMM6 : RAX;
-            break;
-    }
-
-    VariableData *lData = node->GetData<VariableData>();
-    target = Transform::VariableToLocation(lData);
-
-    gen->instructions.emplace_back(opcode, source, target);
+    this->EvaluateAssignment(node, node->GetChild(0), node->GetOperandType(0));
 }
 
 
@@ -188,6 +104,13 @@ void NodeGenerators::GenerateSUBTRACTION(ASTNode *node) {
 void NodeGenerators::GenerateMULTIPLICATION(ASTNode *node) {
     this->EvaluateSubexpressions(node);
     this->EvaluateCurrentExpression(node, IMUL);
+}
+
+
+
+void NodeGenerators::GenerateDIVISION(ASTNode *node) {
+    this->EvaluateSubexpressions(node);
+    this->EvaluateCurrentExpression(node, IDIV);
 }
 
 
@@ -229,4 +152,50 @@ void NodeGenerators::EvaluateCurrentExpression(ASTNode *node, string OPCODE) {
     } else {
         gen->instructions.emplace_back(Opcode::GPR.at(OPCODE), RBX, RAX);
     }
+}
+
+
+
+void NodeGenerators::EvaluateAssignment(ASTNode *lSide, ASTNode *rSide, Type rSideType) {
+    string opcode, source, target;
+
+    switch (rSide->GetKind()) {
+        case NodeKind::VARIABLE:
+            source = Transform::VariableToLocation( rSide->GetData<VariableData>() );
+
+            if (rSideType == Type::STRING) {
+                opcode = rSide->GetData<VariableData>()->IsGlobal() ? LEA : MOV;
+                gen->instructions.emplace_back(opcode, source, RAX);
+                source = RAX;
+                opcode = MOV;
+
+            } else if (rSideType == Type::FLOAT) {
+                opcode = MOVSS;
+                gen->instructions.emplace_back(opcode, source, XMM6);
+                source = XMM6;
+
+            } else { // int, bool
+                opcode = MOVQ;
+                gen->instructions.emplace_back(opcode, source, RAX);
+                source = RAX;
+            }
+            break;
+
+        case NodeKind::LITERAL:
+            opcode = MOVQ;
+            source = Transform::LiteralToImmediate( rSide->GetData<LiteralData>() );
+            break;
+
+        default: // any expression
+            gen->GenerateNode(rSide);
+            
+            opcode = (rSideType == Type::FLOAT) ? MOVSS : MOVQ;
+            source = (rSideType == Type::FLOAT) ? XMM6 : RAX;
+            break;
+    }
+
+    VariableData *lData = lSide->GetData<VariableData>();
+    target = Transform::VariableToLocation(lData);
+
+    gen->instructions.emplace_back(opcode, source, target);
 }

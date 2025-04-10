@@ -24,6 +24,10 @@
 #define IMULQ "imulq"
 #define MULSS "mulss"
 
+#define IDIV "idiv"
+#define IDIVQ "idivq"
+#define DIVSS "divss"
+
 class Opcode {
 public:
     static const map<string, string> GPR;
