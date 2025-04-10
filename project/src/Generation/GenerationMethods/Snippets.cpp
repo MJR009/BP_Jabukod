@@ -39,6 +39,8 @@ const vector<Instruction> Snippets::MainEpilog() {
     return mainEpilog;    
 }
 
+
+
 const vector<Instruction> Snippets::DeclareDefault(Type type, string target) {
     vector<Instruction> declaration;
 
@@ -51,9 +53,9 @@ const vector<Instruction> Snippets::DeclareDefault(Type type, string target) {
             declaration.emplace_back(
                 MOVSS,
                 Transform::GlobalToAddress(Snippets::floatDeclaration),
-                XMM0
+                XMM6
             );
-            declaration.emplace_back(MOVSS, XMM0, target);
+            declaration.emplace_back(MOVSS, XMM6, target);
             break;
 
         case Type::STRING:

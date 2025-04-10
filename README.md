@@ -85,3 +85,9 @@ with a syntax tree visualisation (note this target requires `java`, `javac` and 
 As the build process needs to download and build the ANTLR4 runtime, initial
 build may take a long time.
 </b>
+
+### Syntax highlighting
+
+At // TODO PUBLIC EXTENNSION REPO LINK you can get a custom extension for syntax highlighting of Jabukód files
+with `.jk` filename extension. For correct functionality, move cloned repository containing the extension
+to `~/.vscode/extensions/`.

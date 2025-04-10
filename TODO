@@ -156,3 +156,6 @@ poznánky Leopold -> str 8 -> princip vyhodnocování výrazů - přidat do prá
 literal strings and float are converted to globals
 
 do práce by se hodil obrázek call stacku!!!
+
+extension inspiration
+https://macromates.com/manual/en/language_grammars#naming_conventions

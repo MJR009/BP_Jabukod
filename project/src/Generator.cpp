@@ -20,7 +20,7 @@ void Generator::Generate() {
 }
 
 Generator::~Generator() {
-    delete nodeGenerators;
+    delete this->nodeGenerators;
 
     if (jout.is_open()) {
         jout.close();
