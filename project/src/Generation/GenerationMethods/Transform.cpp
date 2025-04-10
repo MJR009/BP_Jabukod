@@ -55,9 +55,10 @@ string Transform::RegisterToAddress(const string & reg) {
 }
 
 string Transform::IntToImmediate(const int & number) {
-    stringstream hexNumber;
-    hexNumber << hex << number;
-    return "$0x" + hexNumber.str();
+    // old implementation with hex numbers was problematic
+    //stringstream hexNumber;
+    //hexNumber << hex << number;
+    return "$" + to_string(number);//hexNumber.str();
 }
 
 
