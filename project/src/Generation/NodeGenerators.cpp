@@ -301,13 +301,19 @@ void NodeGenerators::GenerateFOR_HEADER1(ASTNode *node) {
 
 
 void NodeGenerators::GenerateFOR_HEADER2(ASTNode *node) {
-    this->EvaluateCondition(node->GetChild(0), this->GetCurrentEnd()); // TODO TEMPORARY
+    this->EvaluateCondition(node->GetChild(0), this->GetCurrentEnd());
 }
 
 
 
 void NodeGenerators::GenerateFOR_HEADER3(ASTNode *node) {
     gen->GenerateNode(node->GetChild(0));
+}
+
+
+
+void NodeGenerators::GenerateBREAK(ASTNode *node) {
+    gen->instructions.emplace_back(JMP, this->GetBreakTarget());
 }
 
 
@@ -442,6 +448,10 @@ void NodeGenerators::PopLoopLabels() {
 }
 
 string NodeGenerators::GetCurrentEnd() {
+    return this->GetBreakTarget();
+}
+
+string NodeGenerators::GetBreakTarget() {
     switch (this->loopStack.top().second) {
         case LoopKind::WHILE:
             return this->loopStack.top().first.at(ControlFlow::WHILE_END);
@@ -450,13 +460,6 @@ string NodeGenerators::GetCurrentEnd() {
     }
 
     return "ERR";
-}
-
-string NodeGenerators::GetBreakTarget() {
-
-
-
-    return "TODO";
 }
 
 string NodeGenerators::GetContinueTarget() {
