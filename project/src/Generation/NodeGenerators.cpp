@@ -212,6 +212,8 @@ void NodeGenerators::GenerateBODY(ASTNode *node) { // only generate contents, st
 
 void NodeGenerators::GenerateWHILE(ASTNode *node) {
     vector<string> labelSet = ControlFlow::MakeNewWHILELabelSet();
+    this->PushLoopLabels(labelSet, LoopKind::WHILE);
+
     string start = labelSet.at(ControlFlow::WHILE_START);
     string body = labelSet.at(ControlFlow::WHILE_BODY);
     string end = labelSet.at(ControlFlow::WHILE_END);
@@ -224,12 +226,16 @@ void NodeGenerators::GenerateWHILE(ASTNode *node) {
 
     gen->instructions.emplace_back(JMP, start);
     gen->instructions.emplace_back( Transform::IdentifierToLabel(end) );
+
+    this->PopLoopLabels();
 }
 
 
 
 void NodeGenerators::GenerateFOR(ASTNode *node) {
     vector<string> labelSet = ControlFlow::MakeNewFORLabelSet();
+    this->PushLoopLabels(labelSet, LoopKind::FOR);
+
     string init = labelSet.at(ControlFlow::FOR_INIT);
     string start = labelSet.at(ControlFlow::FOR_START);
     string body = labelSet.at(ControlFlow::FOR_BODY);
@@ -282,6 +288,8 @@ void NodeGenerators::GenerateFOR(ASTNode *node) {
 
     gen->instructions.emplace_back(JMP, start);
     gen->instructions.emplace_back( Transform::IdentifierToLabel(end) );
+
+    this->PopLoopLabels();
 }
 
 
@@ -293,7 +301,7 @@ void NodeGenerators::GenerateFOR_HEADER1(ASTNode *node) {
 
 
 void NodeGenerators::GenerateFOR_HEADER2(ASTNode *node) {
-    this->EvaluateCondition(node->GetChild(0), "__for_end_0000"); // TODO TEMPORARY
+    this->EvaluateCondition(node->GetChild(0), this->GetCurrentEnd()); // TODO TEMPORARY
 }
 
 
@@ -419,4 +427,55 @@ void NodeGenerators::EvaluateCondition(ASTNode *condition, string falseLabel) {
     }
 
     gen->instructions.emplace_back(jumpKind, falseLabel);
+}
+
+
+
+// Loop stack:
+
+void NodeGenerators::PushLoopLabels(const vector<string> & labels, LoopKind kind) {
+    this->loopStack.push( {labels, kind} );
+}
+
+void NodeGenerators::PopLoopLabels() {
+    this->loopStack.pop();
+}
+
+string NodeGenerators::GetCurrentEnd() {
+    switch (this->loopStack.top().second) {
+        case LoopKind::WHILE:
+            return this->loopStack.top().first.at(ControlFlow::WHILE_END);
+        case LoopKind::FOR:
+            return this->loopStack.top().first.at(ControlFlow::FOR_END);
+    }
+
+    return "ERR";
+}
+
+string NodeGenerators::GetBreakTarget() {
+
+
+
+    return "TODO";
+}
+
+string NodeGenerators::GetContinueTarget() {
+
+
+
+    return "TODO";
+}
+
+string NodeGenerators::GetRedoTarget() {
+
+
+
+    return "TODO";
+}
+
+string NodeGenerators::GetRestartTarget() {
+
+
+
+    return "TODO";
 }

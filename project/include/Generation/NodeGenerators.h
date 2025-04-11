@@ -73,4 +73,16 @@ private:
     void EvaluateAssignment(ASTNode *lSide, ASTNode *rSide, Type rSideType);
 
     void EvaluateCondition(ASTNode *condition, string falseLabel);
+
+private:
+    enum LoopKind { WHILE, FOR }; // TODO FOREACH
+    stack<pair<vector<string>, LoopKind>> loopStack; // used to resolve jump targets
+
+    void PushLoopLabels(const vector<string> & labels, LoopKind kind);
+    void PopLoopLabels();
+    string GetCurrentEnd();
+    string GetBreakTarget();
+    string GetContinueTarget();
+    string GetRedoTarget();
+    string GetRestartTarget();
 };
