@@ -318,6 +318,24 @@ void NodeGenerators::GenerateBREAK(ASTNode *node) {
 
 
 
+void NodeGenerators::GenerateCONTINUE(ASTNode *node) {
+    gen->instructions.emplace_back(JMP, this->GetContinueTarget());
+}
+
+
+
+void NodeGenerators::GenerateREDO(ASTNode *node) {
+    gen->instructions.emplace_back(JMP, this->GetRedoTarget());
+}
+
+
+
+void NodeGenerators::GenerateRESTART(ASTNode *node) {
+    gen->instructions.emplace_back(JMP, this->GetRestartTarget());
+}
+
+
+
 // PRIVATE:
 
 void NodeGenerators::EvaluateSubexpressions(ASTNode *node) {
@@ -463,22 +481,34 @@ string NodeGenerators::GetBreakTarget() {
 }
 
 string NodeGenerators::GetContinueTarget() {
+    switch (this->loopStack.top().second) {
+        case LoopKind::WHILE:
+            return this->loopStack.top().first.at(ControlFlow::WHILE_START);
+        case LoopKind::FOR:
+            return this->loopStack.top().first.at(ControlFlow::FOR_UPDATE);
+    }
 
-
-
-    return "TODO";
+    return "ERR";
 }
 
 string NodeGenerators::GetRedoTarget() {
+    switch (this->loopStack.top().second) {
+        case LoopKind::WHILE:
+            return this->loopStack.top().first.at(ControlFlow::WHILE_BODY);
+        case LoopKind::FOR:
+            return this->loopStack.top().first.at(ControlFlow::FOR_BODY);
+    }
 
-
-
-    return "TODO";
+    return "ERR";
 }
 
 string NodeGenerators::GetRestartTarget() {
+    switch (this->loopStack.top().second) {
+        case LoopKind::WHILE:
+            return this->loopStack.top().first.at(ControlFlow::WHILE_START);
+        case LoopKind::FOR:
+            return this->loopStack.top().first.at(ControlFlow::FOR_INIT);
+    }
 
-
-
-    return "TODO";
+    return "ERR";
 }

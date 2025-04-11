@@ -1,0 +1,25 @@
+int main() {
+    int i = 0;
+    while (i < 10) {
+        if (i % 2 == 0) {
+            write "EVEN\n";
+            i = i + 1;
+            continue;
+        }
+
+        write "ODD\n";
+
+        i = i + 1;
+    }
+
+    write "\n";
+
+    for (int i = 0; i < 10; i = i + 1) {
+        if (i % 2 == 0) {
+            write "EVEN\n";
+            continue;
+        }
+
+        write "ODD\n";
+    }
+}

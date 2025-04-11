@@ -1,0 +1,12 @@
+int main() {
+    int cnt = 1;
+    for (int i = 0; i < 3; i = i + 1) {
+        if (i == cnt) {
+            cnt = cnt + 1;
+            write "RESTART\n";
+            restart;
+        }
+
+        write "iteration\n";
+    }
+}

@@ -1,0 +1,16 @@
+int main() {
+    int i = 0;
+    bool redone = false;
+    while (i < 10) {
+        if (redone == 0) {
+            write "FIRST TIME\n";
+            redone = true;
+            redo;
+        } else {
+            write "AGAIN\n";
+            redone = false;
+        }
+
+        i = i + 1;
+    }
+}

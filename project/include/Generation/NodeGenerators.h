@@ -34,6 +34,9 @@ public:
     void GenerateFOR_HEADER2(ASTNode *node);
     void GenerateFOR_HEADER3(ASTNode *node);
     void GenerateBREAK(ASTNode *node);
+    void GenerateCONTINUE(ASTNode *node);
+    void GenerateREDO(ASTNode *node);
+    void GenerateRESTART(ASTNode *node);
     /*
     void GeneratePOWER(ASTNode *node);
     void GenerateLEFT_SHIFT(ASTNode *node);
@@ -58,7 +61,6 @@ public:
     void GenerateEXIT(ASTNode *node);
     void GenerateSUSPEND(ASTNode *node);
     void GenerateRESUME(ASTNode *node);
-    void GenerateCONTINUE(ASTNode *node);
     void GenerateREDO(ASTNode *node);
     void GenerateRESTART(ASTNode *node);
     void GenerateREAD(ASTNode *node);
