@@ -17,6 +17,7 @@
 
 #define TEST "test"
 #define CMOVNZ "cmovnz"
+#define JMP "jmp"
 
 #define ADD "add"
 #define ADDQ "addq"

@@ -178,6 +178,32 @@ void NodeGenerators::GenerateLITERAL(ASTNode *node) {
 
 
 
+void NodeGenerators::GenerateIF(ASTNode *node) {
+    vector<string> labelSet = ControlFlow::MakeNewIFLabelSet();
+    string elseLabel = labelSet.at(ControlFlow::ELSE);
+    string endLabel = labelSet.at(ControlFlow::END);
+    bool isIfThenElseForm = ( node->GetChild(2) != nullptr );
+
+    this->EvaluateCondition();
+    gen->GenerateNode(node->GetChild(1));
+
+    if (isIfThenElseForm) {
+        gen->instructions.emplace_back(JMP, endLabel);
+        gen->instructions.emplace_back( Transform::IdentifierToLabel(elseLabel) );
+        gen->GenerateNode(node->GetChild(2));
+    }
+
+    gen->instructions.emplace_back( Transform::IdentifierToLabel(endLabel) );
+}
+
+
+
+void NodeGenerators::GenerateBODY(ASTNode *node) { // generate contents, stack frame applies only to functions
+    gen->GenerateNode(node->GetChild(0));
+}
+
+
+
 // PRIVATE:
 
 void NodeGenerators::EvaluateSubexpressions(ASTNode *node) {
@@ -261,4 +287,13 @@ void NodeGenerators::EvaluateAssignment(ASTNode *lSide, ASTNode *rSide, Type rSi
     target = Transform::VariableToLocation(lData);
 
     gen->instructions.emplace_back(opcode, source, target);
+}
+
+
+
+void NodeGenerators::EvaluateCondition() {
+    // vyhodnotit podmínku - child 0
+    gen->instructions.emplace_back("EVALUATE CONDITION");
+    // skok na else NEBO END nebo beze skoku
+    gen->instructions.emplace_back("JUMP ACCORDING TO CONDITION");
 }

@@ -1,0 +1,11 @@
+int main() {
+    if (true) {
+        write "HERE\n";
+    }
+
+    if (true) {
+        write "THEN\n";
+    } else {
+        write "ELSE\n";
+    }
+}

@@ -2,9 +2,10 @@
 #include "common.h"
 
 #include "AST.h"
+#include "Instruction.h"
 #include "Snippets.h"
 #include "Transform.h"
-#include "Instruction.h"
+#include "ControlFlow.h"
 
 class NodeGenerators;
 

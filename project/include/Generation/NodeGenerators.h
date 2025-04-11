@@ -26,6 +26,8 @@ public:
     void GenerateINT2BOOL(ASTNode *node);
     void GenerateVARIABLE(ASTNode *node);
     void GenerateLITERAL(ASTNode *node);
+    void GenerateIF(ASTNode *node);
+    void GenerateBODY(ASTNode *node);
     /*
     void GeneratePOWER(ASTNode *node);
     void GenerateLEFT_SHIFT(ASTNode *node);
@@ -45,14 +47,12 @@ public:
     void GenerateBIT_NOT(ASTNode *node);
     void GenerateNOT(ASTNode *node);
     void GenerateFUNCTION_CALL(ASTNode *node);
-    void GenerateIF(ASTNode *node);
     void GenerateWHILE(ASTNode *node);
     void GenerateFOR(ASTNode *node);
     void GenerateFOREACH(ASTNode *node);
     void GenerateFOR_HEADER1(ASTNode *node);
     void GenerateFOR_HEADER2(ASTNode *node);
     void GenerateFOR_HEADER3(ASTNode *node);
-    void GenerateBODY(ASTNode *node);
     void GenerateRETURN(ASTNode *node);
     void GenerateEXIT(ASTNode *node);
     void GenerateSUSPEND(ASTNode *node);
@@ -71,4 +71,6 @@ private:
     void EvaluateCurrentExpression(ASTNode *node, string OPCODE);
 
     void EvaluateAssignment(ASTNode *lSide, ASTNode *rSide, Type rSideType);
+
+    void EvaluateCondition();
 };
