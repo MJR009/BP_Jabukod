@@ -13,3 +13,13 @@ Type FunctionCallData::GetReturnType() {
     }
     return Type::VOID;
 }
+
+
+
+Type FunctionCallData::GetArgumentType(int order) {
+    return this->location->GetParameterType(order);
+}
+
+const string FunctionCallData::GetArgumentSlot(int order) {
+    return this->location->GetParameterSlot(order);
+}

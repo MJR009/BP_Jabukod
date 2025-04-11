@@ -14,6 +14,9 @@ public:
     list<Variable> & GetParameters();
     Variable *GetParameter(const string & name);
 
+    const string GetParameterSlot(int order);
+    Type GetParameterType(int order);
+
     void SetTotalVariables(int variableCount);
     int GetTotalVariables();
 

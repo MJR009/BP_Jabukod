@@ -46,6 +46,28 @@ Variable *FunctionTableEntry::GetParameter(const string & name) {
 
 
 
+const string FunctionTableEntry::GetParameterSlot(int order) {
+    list<Variable>::iterator parameter = this->parameters.begin();
+
+    for (int i = 0; i < order; i++) {
+        parameter++;
+    }
+
+    return parameter->GetParameterLocation();
+}
+
+Type FunctionTableEntry::GetParameterType(int order) {
+    list<Variable>::iterator parameter = this->parameters.begin();
+
+    for (int i = 0; i < order; i++) {
+        parameter++;
+    }
+
+    return parameter->GetType();
+}
+
+
+
 void FunctionTableEntry::SetTotalVariables(int variableCount) {
     this->totalVariables = variableCount;
 }

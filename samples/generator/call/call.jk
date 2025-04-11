@@ -1,0 +1,7 @@
+int main() {
+    rose();
+}
+
+void rose() {
+    write "CALL\n";
+}

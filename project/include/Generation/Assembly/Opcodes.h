@@ -10,6 +10,8 @@
 #define MOVSS "movss"
 #define LEA "lea"
 
+#define CALL "call"
+
 #define SYSCALL "syscall"
 
 #define CVTSI2SS "cvtsi2ss"

@@ -336,6 +336,42 @@ void NodeGenerators::GenerateRESTART(ASTNode *node) {
 
 
 
+void NodeGenerators::GenerateFUNCTION_CALL(ASTNode *node) {
+    FunctionCallData *data = node->GetData<FunctionCallData>();
+    vector<string> backedUpRegisters;
+
+
+    // TODO can the arguments be somehow overwritten or accessed wrong???!!!!!
+    // TODO rose(x + 1, x), where x is a register parameter
+
+    // TODO MEMORY LOCATIONS
+    // TODO FLOATS
+    // TODO CORRECT STORAGE IN CASE OF STACK ARGUMENTS
+
+
+    for (int i = 0; i < node->GetChildrenCount(); i++) {
+        gen->GenerateNode(node->GetChild(i));
+
+        Type argumentType = data->GetArgumentType(i);
+        string opcode = (argumentType == Type::FLOAT) ? MOVSS : MOVQ;
+        string source = (argumentType == Type::FLOAT) ? XMM6 : RAX;
+        string target = data->GetArgumentSlot(i);
+
+        gen->instructions.emplace_back(PUSH, target);
+        backedUpRegisters.push_back(target);
+        gen->instructions.emplace_back(opcode, source, target);
+    }
+
+    gen->instructions.emplace_back(CALL, data->GetName());
+
+    vector<string>::reverse_iterator toPop = backedUpRegisters.rbegin();
+    for (; toPop != backedUpRegisters.rend(); toPop++) {
+        gen->instructions.emplace_back(POP, *toPop);
+    }
+}
+
+
+
 // PRIVATE:
 
 void NodeGenerators::EvaluateSubexpressions(ASTNode *node) {
@@ -435,6 +471,7 @@ void NodeGenerators::EvaluateCondition(ASTNode *condition, string falseLabel) {
 
             comparisonType = condition->GetOperandType(0);
 
+            // TODO REVERSE CONDITION TO WORK WITH BOOL !!!
             comparison = (comparisonType == Type::INT) ? CMP : COMISS;
             left = (comparisonType == Type::INT) ? RAX : XMM6;
             right = (comparisonType == Type::INT) ? RBX : XMM7;

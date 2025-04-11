@@ -11,6 +11,9 @@ public:
     string GetName();
     Type GetReturnType();
 
+    Type GetArgumentType(int order);
+    const string GetArgumentSlot(int order);
+
     bool exists; // differentiates void functions (true) and functions not defined during semantic analysis (false)
 
 private:

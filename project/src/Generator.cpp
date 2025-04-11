@@ -67,6 +67,7 @@ void Generator::GenerateNode(ASTNode *node) {
         Generate_case(CONTINUE);
         Generate_case(REDO);
         Generate_case(RESTART);
+        Generate_case(FUNCTION_CALL);
         /*
         Generate_case(POWER);
         Generate_case(LEFT_SHIFT);
@@ -85,7 +86,6 @@ void Generator::GenerateNode(ASTNode *node) {
         Generate_case(UNARY_MINUS);
         Generate_case(BIT_NOT);
         Generate_case(NOT);
-        Generate_case(FUNCTION_CALL);
         Generate_case(FOREACH);
         Generate_case(RETURN);
         Generate_case(EXIT);
