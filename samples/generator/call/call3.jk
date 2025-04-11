@@ -1,0 +1,7 @@
+int main() {
+    int x = rose() + 5;
+}
+
+int rose() {
+    return 5;
+}

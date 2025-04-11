@@ -38,6 +38,7 @@ public:
     void GenerateREDO(ASTNode *node);
     void GenerateRESTART(ASTNode *node);
     void GenerateFUNCTION_CALL(ASTNode *node);
+    void GenerateRETURN(ASTNode *node);
     /*
     void GeneratePOWER(ASTNode *node);
     void GenerateLEFT_SHIFT(ASTNode *node);
@@ -57,7 +58,6 @@ public:
     void GenerateBIT_NOT(ASTNode *node);
     void GenerateNOT(ASTNode *node);
     void GenerateFOREACH(ASTNode *node);
-    void GenerateRETURN(ASTNode *node);
     void GenerateEXIT(ASTNode *node);
     void GenerateSUSPEND(ASTNode *node);
     void GenerateRESUME(ASTNode *node);

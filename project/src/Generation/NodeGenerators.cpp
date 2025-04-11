@@ -39,7 +39,10 @@ void NodeGenerators::GenerateWRITE(ASTNode *node) {
     // TODO method to calculate length instead of hard coded !!!
     string operandLength = "$" + to_string( data->GetDefaultValue<string>().size() - 2 ); // -2 for quotes
 
-    // TODO method to backup registers that are used !!!
+    // TODO method to backup registers that are used !!! CORRECTLY
+    gen->instructions.emplace_back(PUSH, RSI);
+    gen->instructions.emplace_back(PUSH, RDX);
+    gen->instructions.emplace_back(PUSH, RDI);
 
     string opcode = data->IsGlobal() ? LEA : MOV; // load %rip relative address or take address straight from stack
 
@@ -49,6 +52,10 @@ void NodeGenerators::GenerateWRITE(ASTNode *node) {
     gen->instructions.emplace_back(MOV, Transform::IntToImmediate(STDOUT), "%rdi");
     gen->instructions.emplace_back(MOV, Transform::IntToImmediate(SYSCALL_WRITE), "%rax");
     gen->instructions.emplace_back(SYSCALL);
+
+    gen->instructions.emplace_back(POP, RDI);
+    gen->instructions.emplace_back(POP, RDX);
+    gen->instructions.emplace_back(POP, RSI);
 }
 
 
@@ -368,6 +375,15 @@ void NodeGenerators::GenerateFUNCTION_CALL(ASTNode *node) {
     for (; toPop != backedUpRegisters.rend(); toPop++) {
         gen->instructions.emplace_back(POP, *toPop);
     }
+}
+
+
+
+void NodeGenerators::GenerateRETURN(ASTNode *node) {
+    gen->GenerateNode( node->GetChild(0) );
+    gen->ConnectSequence( Snippets::Epilog() );
+
+    // TODO in main has to exit instead !!!
 }
 
 

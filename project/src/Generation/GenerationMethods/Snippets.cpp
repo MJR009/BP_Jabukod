@@ -22,7 +22,7 @@ const vector<Instruction> Snippets::Epilog() {
     vector<Instruction> epilog;
 
     epilog.emplace_back(POP, RBX);
-    epilog.emplace_back(MOV, RSP, RBP);
+    epilog.emplace_back(MOV, RBP, RSP);
     epilog.emplace_back(POP, RBP);
     epilog.emplace_back(RET);
 
