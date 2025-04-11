@@ -30,6 +30,9 @@ public:
     void GenerateBODY(ASTNode *node);
     void GenerateWHILE(ASTNode *node);
     void GenerateFOR(ASTNode *node);
+    void GenerateFOR_HEADER1(ASTNode *node);
+    void GenerateFOR_HEADER2(ASTNode *node);
+    void GenerateFOR_HEADER3(ASTNode *node);
     /*
     void GeneratePOWER(ASTNode *node);
     void GenerateLEFT_SHIFT(ASTNode *node);
@@ -50,9 +53,6 @@ public:
     void GenerateNOT(ASTNode *node);
     void GenerateFUNCTION_CALL(ASTNode *node);
     void GenerateFOREACH(ASTNode *node);
-    void GenerateFOR_HEADER1(ASTNode *node);
-    void GenerateFOR_HEADER2(ASTNode *node);
-    void GenerateFOR_HEADER3(ASTNode *node);
     void GenerateRETURN(ASTNode *node);
     void GenerateEXIT(ASTNode *node);
     void GenerateSUSPEND(ASTNode *node);

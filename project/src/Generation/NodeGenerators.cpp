@@ -229,7 +229,77 @@ void NodeGenerators::GenerateWHILE(ASTNode *node) {
 
 
 void NodeGenerators::GenerateFOR(ASTNode *node) {
+    vector<string> labelSet = ControlFlow::MakeNewFORLabelSet();
+    string init = labelSet.at(ControlFlow::FOR_INIT);
+    string start = labelSet.at(ControlFlow::FOR_START);
+    string body = labelSet.at(ControlFlow::FOR_BODY);
+    string update = labelSet.at(ControlFlow::FOR_UPDATE);
+    string end = labelSet.at(ControlFlow::FOR_END);
+
+    ASTNode *initSection = nullptr;
+    ASTNode *conditionSection = nullptr;
+    ASTNode *updateSection = nullptr;
+    ASTNode *forBody;
     
+    for (int i = 0; i < node->GetChildrenCount(); i++) {
+        ASTNode *current = node->GetChild(i);
+        NodeKind sectionKind = current->GetKind();
+
+        switch (sectionKind) {
+            case NodeKind::FOR_HEADER1:
+                initSection = current;
+                break;
+            case NodeKind::FOR_HEADER2:
+                conditionSection = current;
+                break;
+            case NodeKind::FOR_HEADER3:
+                updateSection = current;
+                break;
+            
+            default:
+                forBody = current;
+                break;
+        }
+    }
+
+    gen->instructions.emplace_back( Transform::IdentifierToLabel(init) );
+    if (initSection) {
+        gen->GenerateNode(initSection);
+    }
+
+    gen->instructions.emplace_back( Transform::IdentifierToLabel(start) );
+    if (conditionSection) {
+        gen->GenerateNode(conditionSection);
+    }
+
+    gen->instructions.emplace_back( Transform::IdentifierToLabel(body) );
+    gen->GenerateNode(forBody);
+
+    gen->instructions.emplace_back( Transform::IdentifierToLabel(update) );
+    if (updateSection) {
+        gen->GenerateNode(updateSection);
+    }
+
+    gen->instructions.emplace_back(JMP, start);
+    gen->instructions.emplace_back( Transform::IdentifierToLabel(end) );
+}
+
+
+
+void NodeGenerators::GenerateFOR_HEADER1(ASTNode *node) {
+    gen->GenerateNode(node->GetChild(0));
+}
+
+
+
+void NodeGenerators::GenerateFOR_HEADER2(ASTNode *node) {
+    this->EvaluateCondition(node->GetChild(0), "__for_end_0000"); // TODO TEMPORARY
+}
+
+
+
+void NodeGenerators::GenerateFOR_HEADER3(ASTNode *node) {
+    gen->GenerateNode(node->GetChild(0));
 }
 
 

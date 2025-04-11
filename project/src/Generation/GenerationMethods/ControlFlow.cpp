@@ -39,3 +39,29 @@ const vector<string> ControlFlow::MakeNewWHILELabelSet() {
 int ControlFlow::WHILE_START = 0;
 int ControlFlow::WHILE_BODY = 1;
 int ControlFlow::WHILE_END = 2;
+
+
+
+const vector<string> ControlFlow::MakeNewFORLabelSet() {
+    static int id = 0;
+
+    vector<string> labels;
+    stringstream labelNumber;
+    labelNumber << setw(4) << setfill('0') << id;
+
+    labels.push_back("__for_init_" + labelNumber.str());
+    labels.push_back("__for_start_" + labelNumber.str());
+    labels.push_back("__for_body_" + labelNumber.str());
+    labels.push_back("__for_update_" + labelNumber.str());
+    labels.push_back("__for_end_" + labelNumber.str());
+
+    id++;
+
+    return labels;
+}
+
+int ControlFlow::FOR_INIT = 0;
+int ControlFlow::FOR_START = 1;
+int ControlFlow::FOR_BODY = 2;
+int ControlFlow::FOR_UPDATE = 3;
+int ControlFlow::FOR_END = 4;
