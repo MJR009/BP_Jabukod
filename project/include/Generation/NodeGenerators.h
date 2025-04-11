@@ -22,6 +22,10 @@ public:
     void GenerateMODULO(ASTNode *node);
     void GenerateINT2FLOAT(ASTNode *node);
     void GenerateFLOAT2INT(ASTNode *node);
+    void GenerateBOOL2INT(ASTNode *node);
+    void GenerateINT2BOOL(ASTNode *node);
+    void GenerateVARIABLE(ASTNode *node);
+    void GenerateLITERAL(ASTNode *node);
     /*
     void GeneratePOWER(ASTNode *node);
     void GenerateLEFT_SHIFT(ASTNode *node);
@@ -40,8 +44,6 @@ public:
     void GenerateUNARY_MINUS(ASTNode *node);
     void GenerateBIT_NOT(ASTNode *node);
     void GenerateNOT(ASTNode *node);
-    // void GenerateVARIABLE(ASTNode *node);
-    // void GenerateLITERAL(ASTNode *node);
     void GenerateFUNCTION_CALL(ASTNode *node);
     void GenerateIF(ASTNode *node);
     void GenerateWHILE(ASTNode *node);
@@ -60,8 +62,6 @@ public:
     void GenerateREDO(ASTNode *node);
     void GenerateRESTART(ASTNode *node);
     void GenerateREAD(ASTNode *node);
-    void GenerateBOOL2INT(ASTNode *node);
-    void GenerateINT2BOOL(ASTNode *node);
     */
 
 private:

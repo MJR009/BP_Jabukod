@@ -141,7 +141,41 @@ void NodeGenerators::GenerateFLOAT2INT(ASTNode *node) {
     gen->instructions.emplace_back(CVTTSS2SI, XMM6, RAX);
 }
 
-// bool -> test + cmovnz
+
+
+void NodeGenerators::GenerateBOOL2INT(ASTNode *node) { // internally, 0 and 1 are both bool and int
+    gen->GenerateNode(node->GetChild(0));
+}
+
+
+
+void NodeGenerators::GenerateINT2BOOL(ASTNode *node) {
+    gen->GenerateNode(node->GetChild(0));
+    gen->instructions.emplace_back(TEST, RAX, RAX);
+    gen->instructions.emplace_back(MOVQ, Transform::IntToImmediate( 1 ), R10);
+    gen->instructions.emplace_back(CMOVNZ, R10, RAX);
+}
+
+
+
+void NodeGenerators::GenerateVARIABLE(ASTNode *node) {
+    VariableData *data = node->GetData<VariableData>();
+    Type variableType = data->GetType();
+
+    if (variableType == Type::FLOAT) {
+        gen->instructions.emplace_back(MOVSS, Transform::VariableToLocation(data), XMM6);
+    } else {
+        gen->instructions.emplace_back(MOVQ, Transform::VariableToLocation(data), RAX);
+    }
+}
+
+
+
+void NodeGenerators::GenerateLITERAL(ASTNode *node) {
+    LiteralData *data = node->GetData<LiteralData>();
+    gen->instructions.emplace_back(MOVQ, Transform::LiteralToImmediate(data), RAX);
+}
+
 
 
 // PRIVATE:
