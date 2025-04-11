@@ -28,6 +28,7 @@ public:
     void GenerateLITERAL(ASTNode *node);
     void GenerateIF(ASTNode *node);
     void GenerateBODY(ASTNode *node);
+    void GenerateWHILE(ASTNode *node);
     /*
     void GeneratePOWER(ASTNode *node);
     void GenerateLEFT_SHIFT(ASTNode *node);
@@ -47,7 +48,6 @@ public:
     void GenerateBIT_NOT(ASTNode *node);
     void GenerateNOT(ASTNode *node);
     void GenerateFUNCTION_CALL(ASTNode *node);
-    void GenerateWHILE(ASTNode *node);
     void GenerateFOR(ASTNode *node);
     void GenerateFOREACH(ASTNode *node);
     void GenerateFOR_HEADER1(ASTNode *node);
@@ -72,5 +72,5 @@ private:
 
     void EvaluateAssignment(ASTNode *lSide, ASTNode *rSide, Type rSideType);
 
-    void EvaluateCondition(ASTNode *condition, string trueLabel);
+    void EvaluateCondition(ASTNode *condition, string falseLabel);
 };

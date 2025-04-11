@@ -98,12 +98,23 @@ string Transform::VariableToLocation(VariableData *data) {
 
 
 
-string Transform::ConditionToJump(NodeKind condition) {
+string Transform::ConditionToJump(NodeKind condition, Type comparisonType) {
+    if (comparisonType == Type::FLOAT) {
+        switch (condition) {
+            case NodeKind::GREATER: return JBE;
+            case NodeKind::LESS: return JAE;
+            case NodeKind::LESS_EQUAL: return JA;
+            case NodeKind::GREATER_EQUAL: return JB;
+            case NodeKind::EQUAL: return JNE;
+            case NodeKind::NOT_EQUAL: return JE;
+        }
+    }
+
     switch (condition) {
         case NodeKind::GREATER: return JLE;
         case NodeKind::LESS: return JGE;
         case NodeKind::LESS_EQUAL: return JG;
-        case NodeKind::GREATER_EQUAL: return JE;
+        case NodeKind::GREATER_EQUAL: return JL;
         case NodeKind::EQUAL: return JNE;
         case NodeKind::NOT_EQUAL: return JE;
     }

@@ -9,7 +9,7 @@ int main() {
         write "0\n";
     }
 
-    if (1.01 == 1.00) {
-        write "X\n";
+    if (1.01 != 1.00) {
+        write "HERE\n";
     }
 }

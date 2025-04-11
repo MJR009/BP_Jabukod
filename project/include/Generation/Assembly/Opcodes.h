@@ -26,6 +26,10 @@
 #define JL "jl"
 #define JNE "jne"
 #define JE "je"
+#define JBE "jbe"
+#define JAE "jae"
+#define JA "ja"
+#define JB "jb"
 
 #define ADD "add"
 #define ADDQ "addq"

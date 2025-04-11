@@ -1,0 +1,13 @@
+int main() {
+    int i = 0;
+    while (i < 5) {
+        write "LOOP\n";
+        i = i + 1;
+    }
+
+    float j = 0;
+    while (j < 5) {
+        write "ANOTHER LOOP\n";
+        j = j + 0.5;
+    }
+}

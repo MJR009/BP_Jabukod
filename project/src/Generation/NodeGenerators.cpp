@@ -36,9 +36,9 @@ void NodeGenerators::GenerateWRITE(ASTNode *node) {
     ASTNode *operand = node->GetChild(0);
     VariableData *data = operand->GetData<VariableData>();
 
-    string operandLength = "$" + to_string( 2 ); // -2 for quotes
+    // TODO method to calculate length instead of hard coded !!!
+    string operandLength = "$" + to_string( data->GetDefaultValue<string>().size() - 2 ); // -2 for quotes
 
-    // TODO method to calculate length !!!
     // TODO method to backup registers that are used !!!
 
     string opcode = data->IsGlobal() ? LEA : MOV; // load %rip relative address or take address straight from stack
@@ -152,7 +152,6 @@ void NodeGenerators::GenerateBOOL2INT(ASTNode *node) { // internally, 0 and 1 ar
 void NodeGenerators::GenerateINT2BOOL(ASTNode *node) {
     gen->GenerateNode(node->GetChild(0));
     gen->instructions.emplace_back(TEST, RAX, RAX);
-    gen->instructions.emplace_back(MOVQ, Transform::IntToImmediate( 1 ), R10);
     gen->instructions.emplace_back(CMOVNZ, R10, RAX);
 }
 
@@ -203,8 +202,27 @@ void NodeGenerators::GenerateIF(ASTNode *node) {
 
 
 
-void NodeGenerators::GenerateBODY(ASTNode *node) { // generate contents, stack frame applies only to functions
-    gen->GenerateNode(node->GetChild(0));
+void NodeGenerators::GenerateBODY(ASTNode *node) { // only generate contents, stack frame applies only to functions
+    for (int i = 0; i < node->GetChildrenCount(); i++) {
+        gen->GenerateNode(node->GetChild(i));
+    }
+}
+
+
+
+void NodeGenerators::GenerateWHILE(ASTNode *node) {
+    vector<string> labelSet = ControlFlow::MakeNewWHILELabelSet();
+    string start = labelSet.at(ControlFlow::WHILE_START);
+    string end = labelSet.at(ControlFlow::WHILE_END);
+
+    gen->instructions.emplace_back( Transform::IdentifierToLabel(start) );
+
+    this->EvaluateCondition(node->GetChild(0), end);
+
+    gen->GenerateNode(node->GetChild(1));
+
+    gen->instructions.emplace_back(JMP, start);
+    gen->instructions.emplace_back( Transform::IdentifierToLabel(end) );
 }
 
 
@@ -296,7 +314,7 @@ void NodeGenerators::EvaluateAssignment(ASTNode *lSide, ASTNode *rSide, Type rSi
 
 
 
-void NodeGenerators::EvaluateCondition(ASTNode *condition, string trueLabel) {
+void NodeGenerators::EvaluateCondition(ASTNode *condition, string falseLabel) {
     Type comparisonType = Type::VOID;
     string comparison, left, right;
     string jumpKind;
@@ -312,15 +330,16 @@ void NodeGenerators::EvaluateCondition(ASTNode *condition, string trueLabel) {
             left = (comparisonType == Type::INT) ? RAX : XMM6;
             right = (comparisonType == Type::INT) ? RBX : XMM7;
 
-            jumpKind = Transform::ConditionToJump( condition->GetKind() );
+            jumpKind = Transform::ConditionToJump( condition->GetKind(), comparisonType );
 
             gen->instructions.emplace_back(comparison, right, left);
             break;
 
+        // TODO !!!
         // case NodeKind::AND: case NodeKind::OR: case NodeKind::NOT:
         default: // bool evaluated into RAX
             break;
     }
 
-    gen->instructions.emplace_back(jumpKind, trueLabel);
+    gen->instructions.emplace_back(jumpKind, falseLabel);
 }

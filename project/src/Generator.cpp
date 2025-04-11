@@ -58,6 +58,7 @@ void Generator::GenerateNode(ASTNode *node) {
         Generate_case(LITERAL);
         Generate_case(IF);
         Generate_case(BODY);
+        Generate_case(WHILE);
         /*
         Generate_case(POWER);
         Generate_case(LEFT_SHIFT);
@@ -77,7 +78,6 @@ void Generator::GenerateNode(ASTNode *node) {
         Generate_case(BIT_NOT);
         Generate_case(NOT);
         Generate_case(FUNCTION_CALL);
-        Generate_case(WHILE);
         Generate_case(FOR);
         Generate_case(FOREACH);
         Generate_case(FOR_HEADER1);
@@ -142,6 +142,7 @@ void Generator::OutputTextSection() {
     jout << "\t.text" << endl;
     jout << "\t.globl _start" << endl;
     jout << "_start:" << endl;
+    jout << "\tmovq $1, %r10" << endl; // stable one for bool conversions
     jout << "\tjmp main" << endl;
     
     for_each(this->instructions.begin(), this->instructions.end(),
