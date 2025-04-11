@@ -192,7 +192,7 @@ INT_LITERAL
     ;
 
 FLOAT_LITERAL
-    : '-'? NUMBER ( EXPONENT | '.' NUMBER EXPONENT? )
+    : '-'? NUMBER ( EXPONENT | '.' DIGIT+ EXPONENT? )
     ;
 
 // potential extensions:

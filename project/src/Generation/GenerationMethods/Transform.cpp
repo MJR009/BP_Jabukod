@@ -95,3 +95,18 @@ string Transform::VariableToLocation(VariableData *data) {
 
     return "ERR";
 }
+
+
+
+string Transform::ConditionToJump(NodeKind condition) {
+    switch (condition) {
+        case NodeKind::GREATER: return JLE;
+        case NodeKind::LESS: return JGE;
+        case NodeKind::LESS_EQUAL: return JG;
+        case NodeKind::GREATER_EQUAL: return JE;
+        case NodeKind::EQUAL: return JNE;
+        case NodeKind::NOT_EQUAL: return JE;
+    }
+
+    return "ERR";
+}

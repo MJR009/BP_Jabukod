@@ -17,7 +17,15 @@
 
 #define TEST "test"
 #define CMOVNZ "cmovnz"
+#define CMP "cmp"
+#define COMISS "comiss"
 #define JMP "jmp"
+#define JLE "jle"
+#define JGE "jge"
+#define JG "jg"
+#define JL "jl"
+#define JNE "jne"
+#define JE "je"
 
 #define ADD "add"
 #define ADDQ "addq"

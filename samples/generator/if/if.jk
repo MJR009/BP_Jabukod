@@ -1,9 +1,9 @@
 int main() {
-    if (true) {
+    if (5 && 3) {
         write "HERE\n";
     }
 
-    if (true) {
+    if (5.2 < 3.6) {
         write "THEN\n";
     } else {
         write "ELSE\n";

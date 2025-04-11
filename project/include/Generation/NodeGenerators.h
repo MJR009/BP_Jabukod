@@ -72,5 +72,5 @@ private:
 
     void EvaluateAssignment(ASTNode *lSide, ASTNode *rSide, Type rSideType);
 
-    void EvaluateCondition();
+    void EvaluateCondition(ASTNode *condition, string trueLabel);
 };

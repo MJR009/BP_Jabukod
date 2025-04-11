@@ -36,7 +36,7 @@ void NodeGenerators::GenerateWRITE(ASTNode *node) {
     ASTNode *operand = node->GetChild(0);
     VariableData *data = operand->GetData<VariableData>();
 
-    string operandLength = "$" + to_string( 10 ); // -2 for quotes
+    string operandLength = "$" + to_string( 2 ); // -2 for quotes
 
     // TODO method to calculate length !!!
     // TODO method to backup registers that are used !!!
@@ -184,7 +184,12 @@ void NodeGenerators::GenerateIF(ASTNode *node) {
     string endLabel = labelSet.at(ControlFlow::END);
     bool isIfThenElseForm = ( node->GetChild(2) != nullptr );
 
-    this->EvaluateCondition();
+    if (isIfThenElseForm) {
+        this->EvaluateCondition(node->GetChild(0), elseLabel);
+    } else {
+        this->EvaluateCondition(node->GetChild(0), endLabel);
+    }
+
     gen->GenerateNode(node->GetChild(1));
 
     if (isIfThenElseForm) {
@@ -291,9 +296,31 @@ void NodeGenerators::EvaluateAssignment(ASTNode *lSide, ASTNode *rSide, Type rSi
 
 
 
-void NodeGenerators::EvaluateCondition() {
-    // vyhodnotit podmínku - child 0
-    gen->instructions.emplace_back("EVALUATE CONDITION");
-    // skok na else NEBO END nebo beze skoku
-    gen->instructions.emplace_back("JUMP ACCORDING TO CONDITION");
+void NodeGenerators::EvaluateCondition(ASTNode *condition, string trueLabel) {
+    Type comparisonType = Type::VOID;
+    string comparison, left, right;
+    string jumpKind;
+
+    switch (condition->GetKind()) {
+        case NodeKind::GREATER: case NodeKind::LESS: case NodeKind::LESS_EQUAL:
+        case NodeKind::GREATER_EQUAL: case NodeKind::EQUAL: case NodeKind::NOT_EQUAL:
+            this->EvaluateSubexpressions(condition);
+
+            comparisonType = condition->GetOperandType(0);
+
+            comparison = (comparisonType == Type::INT) ? CMP : COMISS;
+            left = (comparisonType == Type::INT) ? RAX : XMM6;
+            right = (comparisonType == Type::INT) ? RBX : XMM7;
+
+            jumpKind = Transform::ConditionToJump( condition->GetKind() );
+
+            gen->instructions.emplace_back(comparison, right, left);
+            break;
+
+        // case NodeKind::AND: case NodeKind::OR: case NodeKind::NOT:
+        default: // bool evaluated into RAX
+            break;
+    }
+
+    gen->instructions.emplace_back(jumpKind, trueLabel);
 }
