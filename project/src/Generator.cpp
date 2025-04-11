@@ -50,9 +50,9 @@ void Generator::GenerateNode(ASTNode *node) {
         Generate_case(MULTIPLICATION);
         Generate_case(DIVISION);
         Generate_case(MODULO);
+        Generate_case(INT2FLOAT);
+        Generate_case(FLOAT2INT);
         /*
-        Generate_case(EXIT);
-        Generate_case(MODULO);
         Generate_case(POWER);
         Generate_case(LEFT_SHIFT);
         Generate_case(RIGHT_SHIFT);
@@ -70,8 +70,8 @@ void Generator::GenerateNode(ASTNode *node) {
         Generate_case(UNARY_MINUS);
         Generate_case(BIT_NOT);
         Generate_case(NOT);
-        Generate_case(VARIABLE);
-        Generate_case(LITERAL);
+        // Generate_case(VARIABLE);
+        // Generate_case(LITERAL);
         Generate_case(FUNCTION_CALL);
         Generate_case(IF);
         Generate_case(WHILE);
@@ -82,6 +82,7 @@ void Generator::GenerateNode(ASTNode *node) {
         Generate_case(FOR_HEADER3);
         Generate_case(BODY);
         Generate_case(RETURN);
+        Generate_case(EXIT);
         Generate_case(SUSPEND);
         Generate_case(RESUME);
         Generate_case(CONTINUE);
@@ -89,10 +90,8 @@ void Generator::GenerateNode(ASTNode *node) {
         Generate_case(REDO);
         Generate_case(RESTART);
         Generate_case(READ);
-        Generate_case(INT2FLOAT);
         Generate_case(BOOL2INT);
         Generate_case(INT2BOOL);
-        Generate_case(FLOAT2INT);
         */
         default:
             break;

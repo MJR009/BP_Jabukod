@@ -410,43 +410,53 @@ Type Conversion::e_BET(ASTNode *expressionRoot) {
 
 
 void Conversion::IntToFloat(ASTNode *expressionRoot, int operandIdx) {
-    ASTNode *conversionNode = new ASTNode(NodeKind::INT2FLOAT, nullptr);
+    ExpressionData *data = new ExpressionData(Type::FLOAT);
+    ASTNode *conversionNode = new ASTNode(NodeKind::INT2FLOAT, data);
     expressionRoot->InsertAfter(conversionNode, operandIdx);
 }
 
 void Conversion::BoolToInt(ASTNode *expressionRoot, int operandIdx) {
-    ASTNode *conversionNode = new ASTNode(NodeKind::BOOL2INT, nullptr);
+    ExpressionData *data = new ExpressionData(Type::INT);
+    ASTNode *conversionNode = new ASTNode(NodeKind::BOOL2INT, data);
     expressionRoot->InsertAfter(conversionNode, operandIdx);
 }
 
 void Conversion::BoolToFloat(ASTNode *expressionRoot, int operandIdx) {
+    ExpressionData *data;;
     ASTNode *conversionNode;
 
-    conversionNode = new ASTNode(NodeKind::BOOL2INT, nullptr);
+    data = new ExpressionData(Type::INT);
+    conversionNode = new ASTNode(NodeKind::BOOL2INT, data);
     expressionRoot->InsertAfter(conversionNode, operandIdx);
 
-    conversionNode = new ASTNode(NodeKind::INT2FLOAT, nullptr);
+    data = new ExpressionData(Type::FLOAT);
+    conversionNode = new ASTNode(NodeKind::INT2FLOAT, data);
     expressionRoot->InsertAfter(conversionNode, operandIdx);
 }
 
 
 
 void Conversion::FloatToInt(ASTNode *expressionRoot, int operandIdx) {
-    ASTNode *conversionNode = new ASTNode(NodeKind::FLOAT2INT, nullptr);
+    ExpressionData *data = new ExpressionData(Type::INT);
+    ASTNode *conversionNode = new ASTNode(NodeKind::FLOAT2INT, data);
     expressionRoot->InsertAfter(conversionNode, operandIdx);
 }
 
 void Conversion::IntToBool(ASTNode *expressionRoot, int operandIdx) {
-    ASTNode *conversionNode = new ASTNode(NodeKind::INT2BOOL, nullptr);
+    ExpressionData *data = new ExpressionData(Type::BOOL);
+    ASTNode *conversionNode = new ASTNode(NodeKind::INT2BOOL, data);
     expressionRoot->InsertAfter(conversionNode, operandIdx);
 }
 
 void Conversion::FloatToBool(ASTNode *expressionRoot, int operandIdx) {
+    ExpressionData *data;
     ASTNode *conversionNode;
 
-    conversionNode = new ASTNode(NodeKind::FLOAT2INT, nullptr);
+    data = new ExpressionData(Type::INT);
+    conversionNode = new ASTNode(NodeKind::FLOAT2INT, data);
     expressionRoot->InsertAfter(conversionNode, operandIdx);
 
-    conversionNode = new ASTNode(NodeKind::INT2BOOL, nullptr);
+    data = new ExpressionData(Type::BOOL);
+    conversionNode = new ASTNode(NodeKind::INT2BOOL, data);
     expressionRoot->InsertAfter(conversionNode, operandIdx);
 }

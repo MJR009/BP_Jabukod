@@ -129,6 +129,21 @@ void NodeGenerators::GenerateMODULO(ASTNode *node) { // float division will neve
 
 
 
+void NodeGenerators::GenerateINT2FLOAT(ASTNode *node) {
+    gen->GenerateNode(node->GetChild(0));
+    gen->instructions.emplace_back(CVTSI2SS, RAX, XMM6);
+}
+
+
+
+void NodeGenerators::GenerateFLOAT2INT(ASTNode *node) {
+    gen->GenerateNode(node->GetChild(0));
+    gen->instructions.emplace_back(CVTTSS2SI, XMM6, RAX);
+}
+
+// bool -> test + cmovnz
+
+
 // PRIVATE:
 
 void NodeGenerators::EvaluateSubexpressions(ASTNode *node) {

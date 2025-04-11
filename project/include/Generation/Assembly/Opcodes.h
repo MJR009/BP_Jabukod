@@ -12,6 +12,9 @@
 
 #define SYSCALL "syscall"
 
+#define CVTSI2SS "cvtsi2ss"
+#define CVTTSS2SI "cvttss2si"
+
 #define ADD "add"
 #define ADDQ "addq"
 #define ADDSS "addss"
