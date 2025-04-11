@@ -61,8 +61,6 @@ public:
     void GenerateEXIT(ASTNode *node);
     void GenerateSUSPEND(ASTNode *node);
     void GenerateRESUME(ASTNode *node);
-    void GenerateREDO(ASTNode *node);
-    void GenerateRESTART(ASTNode *node);
     void GenerateREAD(ASTNode *node);
     */
 
