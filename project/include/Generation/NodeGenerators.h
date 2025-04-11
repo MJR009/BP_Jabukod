@@ -29,6 +29,7 @@ public:
     void GenerateIF(ASTNode *node);
     void GenerateBODY(ASTNode *node);
     void GenerateWHILE(ASTNode *node);
+    void GenerateFOR(ASTNode *node);
     /*
     void GeneratePOWER(ASTNode *node);
     void GenerateLEFT_SHIFT(ASTNode *node);
@@ -48,7 +49,6 @@ public:
     void GenerateBIT_NOT(ASTNode *node);
     void GenerateNOT(ASTNode *node);
     void GenerateFUNCTION_CALL(ASTNode *node);
-    void GenerateFOR(ASTNode *node);
     void GenerateFOREACH(ASTNode *node);
     void GenerateFOR_HEADER1(ASTNode *node);
     void GenerateFOR_HEADER2(ASTNode *node);

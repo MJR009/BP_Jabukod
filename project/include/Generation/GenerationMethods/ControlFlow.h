@@ -9,5 +9,6 @@ public:
 
     static const vector<string> MakeNewWHILELabelSet();
     static int WHILE_START;
+    static int WHILE_BODY;
     static int WHILE_END;
 };

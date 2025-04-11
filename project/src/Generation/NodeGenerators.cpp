@@ -213,16 +213,23 @@ void NodeGenerators::GenerateBODY(ASTNode *node) { // only generate contents, st
 void NodeGenerators::GenerateWHILE(ASTNode *node) {
     vector<string> labelSet = ControlFlow::MakeNewWHILELabelSet();
     string start = labelSet.at(ControlFlow::WHILE_START);
+    string body = labelSet.at(ControlFlow::WHILE_BODY);
     string end = labelSet.at(ControlFlow::WHILE_END);
 
     gen->instructions.emplace_back( Transform::IdentifierToLabel(start) );
-
     this->EvaluateCondition(node->GetChild(0), end);
 
+    gen->instructions.emplace_back( Transform::IdentifierToLabel(body) );
     gen->GenerateNode(node->GetChild(1));
 
     gen->instructions.emplace_back(JMP, start);
     gen->instructions.emplace_back( Transform::IdentifierToLabel(end) );
+}
+
+
+
+void NodeGenerators::GenerateFOR(ASTNode *node) {
+    
 }
 
 
