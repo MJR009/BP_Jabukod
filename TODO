@@ -169,3 +169,17 @@ NELZE MÍT POLE JAKO PARAMTERY
 => NESMÍ TAM BÝT ANI STRING
 
 unicode asi nestihnu, je potřeba si to obhájit !!!
+
+
+
+	V TETTU SE MUSÍ UPRAVIT PRINCIP POLÍ !!!!!!
+
+ZMÍNIT ŽE TESTOVÁNÍ BYLO PROVÁDĚNO NA SYSTÉMU UBUNTU 24
+
+
+ZMÍNIT ŽE NĚKTERÉ OBFUSKACE SE LÉPE PROVÁDĚJÍ NA MEZIKÓDU A NĚKTERÉ NA AST
+
+
+
+jednorozměnrná pole stačí na zavedení implementace obfuskačních metod nad poli
+

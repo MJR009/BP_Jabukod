@@ -5,6 +5,9 @@
 
 // TODO description - copy english abstract?
 
+All testing and development was done on an x86 machine using <b>Ubuntu 24.04.2 LTS</b> operating
+system.
+
 ### Project structure
 
 Top level project directories are arranged as follows:
@@ -53,10 +56,11 @@ The following is the recommended command for first time <b>building</b> the prog
 
 `cmake -B build -S project && make -C build`<br>
 
+The resulting <b>executable</b> `jabukod` will be located in the `build` subdirectory.
+
 ---
 
-The resulting <b>executable</b> `jabukod` will be located in the `build` subdirectory.
-To run, do:
+To run the generated compiler, do:
 
 `./jabukod [-a] [-d] [-D] [-g] [-h] [-o path_to_binary] path_to_program`
 

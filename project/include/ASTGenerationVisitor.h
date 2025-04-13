@@ -79,6 +79,8 @@ public:
     // any visitNonVoidType(JabukodParser::NonVoidTypeContext *ctx) override; // accesed through parent rules
     //TODO//any visitListSpecifier(JabukodParser::ListSpecifierContext *ctx) override;
 
+    // TODO PŘIDATA METODY Z UPRAVENÉ GRAMATIKY!!!
+
 private:
     AST & ast;
 };
