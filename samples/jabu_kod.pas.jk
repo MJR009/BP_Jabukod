@@ -32,8 +32,7 @@ void writeInt(int n) {
 
     int digit = n % 10;
 
-    n = n - digit;
-    n = n / 10;
+    n = (n - digit) / 10;
     if (n > 0) writeInt(n);
 
     if (digit == 0) write "0";

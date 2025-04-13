@@ -1,0 +1,5 @@
+int main() {
+    write "こんにちは\n";
+    write "Привет\n";
+    //write "\u2514";
+}

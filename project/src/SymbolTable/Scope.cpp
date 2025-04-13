@@ -18,6 +18,7 @@ Variable *Scope::AddEntry(
         isGlobal,
         isParameter
     );
+
     return &this->variables.back();
 }
 

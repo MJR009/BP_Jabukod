@@ -20,6 +20,7 @@ void SymbolTable::AddGlobalVariable(
             this->parser->notifyErrorListeners(variable, INTERNAL_ID_USE, nullptr);
         }
         this->globalScope.AddEntry(name, storage, type, value, 0, true, false);
+
     } else {
         this->parser->notifyErrorListeners(variable, VARIABLE_REDEFINITION, nullptr);
     }
@@ -34,6 +35,7 @@ FunctionTableEntry *SymbolTable::AddFunction(antlr4::Token *function, JabukodPar
             this->parser->notifyErrorListeners(function, INTERNAL_ID_USE, nullptr);
         }
         return this->functionTable.AddEntry(name, type);
+        
     } else {
         this->parser->notifyErrorListeners(function, FUNCTION_REDEFINITION, nullptr);
         return nullptr;

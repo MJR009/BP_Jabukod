@@ -23,7 +23,6 @@ variableDeclaration
 
 variableDefinition
     : storageSpecifier? nonVoidType IDENTIFIER listSpecifier? '=' expression
-    //: variableDeclaration '=' expression
     ;
 
 storageSpecifier
@@ -33,7 +32,6 @@ storageSpecifier
 
 functionDefinition
     : type IDENTIFIER '(' functionParameters? ')' statementBlock
-    //: type IDENTIFIER listSpecifier? '(' functionParameters? ')' statementBlock
     ;
 
 functionParameters
@@ -41,7 +39,7 @@ functionParameters
     ;
 
 functionParameter
-    : nonVoidType IDENTIFIER listSpecifier?
+    : nonVoidType IDENTIFIER
     ;
 
 enumDefinition
@@ -58,10 +56,8 @@ enumItem
 
 expression
     : functionCall                                              # functionCallExpression
-    | listAccess                                                # listAccessExpression
+    | IDENTIFIER listAccess                                     # listAccessExpression
     | list                                                      # listExpression
-    //: ( functionCall | listAccess | list)
-    //: ( functionCall | listAccess | list listAccess? )
     | <assoc=right> expression '**' expression                  # exponentExpression
     | <assoc=right> sign=( '-' | '~' | '!' ) expression         # prefixUnaryExpression
     | expression sign=( '*' | '/' | '%' ) expression            # mulDivModExpression
@@ -80,14 +76,6 @@ expression
     | '(' expression ')'                                        # parenthesisExpression
     ;
 
-// potential extensions:
-//      pre/postfix unary ++, --
-//      prefix unary +
-//      bit rotations ?
-//      ternary ?:
-//      opeartion assignments (+=, -=, ...)
-
-
 functionCall
     : IDENTIFIER '(' functionArguments? ')'
     ;
@@ -98,10 +86,6 @@ functionArguments
 
 functionArgument
     : expression
-    ;
-
-listAccess
-    : IDENTIFIER ( '[' expression ']' )+
     ;
 
 statementBlock
@@ -122,7 +106,6 @@ simpleStatement
     | variableDefinition                                            # variableDefinitionStatement
     | assignment                                                    # assignmentStatement
     | functionCall                                                  # functionCallStatement
-    //| expression // covers functionCall and assignment
     | 'return' expression?                                          # returnStatement
     | 'exit' expression                                             # exitStatement
     | 'suspend'                                                     # suspendStatement
@@ -134,9 +117,6 @@ simpleStatement
     | 'read' IDENTIFIER                                             # readStatement
     | 'write' expression                                            # writeStatement
     ;
-
-// potential extensions:
-//      yield
 
 assignment
     : IDENTIFIER listAccess? '=' expression
@@ -156,7 +136,7 @@ foreachHeader
     ;
 
 list
-    : '{' ( expression ( ',' expression )* )? '}' // ARISES NEED FOR DYNAMIC MEMORY ALLOCATION
+    : '{' ( expression ( ',' expression )* )? '}'
     ;
 
 literal
@@ -180,7 +160,11 @@ nonVoidType
     ;
 
 listSpecifier
-    : ( '[' ']' )+
+    : '[' INT_LITERAL ']'
+    ;
+
+listAccess
+    : '[' expression ']'
     ;
 
 
@@ -195,12 +179,6 @@ FLOAT_LITERAL
     : '-'? NUMBER ( EXPONENT | '.' DIGIT+ EXPONENT? )
     ;
 
-// potential extensions:
-//      hex. floats
-//      whole or decimal part ommission (.1, 2., ...)
-//      binary literals 0b../0B...
-
-
 BOOL_LITERAL
     : 'true'
     | 'false'
@@ -213,11 +191,6 @@ STRING_LITERAL
 IDENTIFIER
     : ( ALPHA | UNDERSCORE ) ( ALPHA | UNDERSCORE | DIGIT )*
     ;
-
-// potential extensions:
-//      unicode
-//      more escape sequences (ascii < 32, ones defined for std. C)
-
 
 fragment NUMBER
     : NON_ZERO_DIGIT DIGIT*

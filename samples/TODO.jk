@@ -1,0 +1,5 @@
+int main() {
+    string toPrint;
+    toPrint = "Hello!\n";
+    write toPrint;
+}

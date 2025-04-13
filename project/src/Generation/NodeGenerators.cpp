@@ -37,6 +37,7 @@ void NodeGenerators::GenerateWRITE(ASTNode *node) {
     VariableData *data = operand->GetData<VariableData>();
 
     // TODO method to calculate length instead of hard coded !!!
+    // THIS WORKD ONLY FOR PRINTING IMMEDIATE STRINGS
     string operandLength = "$" + to_string( data->GetDefaultValue<string>().size() - 2 ); // -2 for quotes
 
     // TODO method to backup registers that are used !!! CORRECTLY

@@ -163,3 +163,9 @@ https://macromates.com/manual/en/language_grammars#naming_conventions
 EXTENSION STUFF
 https://code.visualstudio.com/api/working-with-extensions/publishing-extension
 https://github.com/cubicap/Jaculus-vscode
+
+FUNKCE NEBUDOU MOCI VRACET POLE, JENOM SKALÁRNÍ VĚCI !!!
+NELZE MÍT POLE JAKO PARAMTERY
+=> NESMÍ TAM BÝT ANI STRING
+
+unicode asi nestihnu, je potřeba si to obhájit !!!
