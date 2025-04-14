@@ -5,7 +5,7 @@
 
 // TODO description - copy english abstract?
 
-All testing and development was done on an x86_64 machine using <b>Ubuntu 24.04.2 LTS</b> operating
+All testing and development was done on a x86_64 machine using <b>Ubuntu 24.04.2 LTS</b> operating
 system.
 
 ### Project structure
@@ -75,7 +75,8 @@ To run the generated compiler, do:
 - `-o` - explicitly specified <b>o</b>utput file and directory (default is `out.s`)
 - `path_to_program` - mandatory input file
 
-For clarity, Jabukód source files should be followed by `.jk` filename extension.
+For clarity and correct syntax highligting in Visual Studio Code,
+Jabukód source file names should be followed by `.jk` filename extension.
 
 ---
 
