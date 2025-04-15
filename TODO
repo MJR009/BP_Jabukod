@@ -5,67 +5,18 @@
 -- Quine
 -- Syntax postcard
 -- Nové konstrukce, operátory
+    - suspend, resume
+    - redo
+    - restart
+    - pole, řetězce
+    - ...
 -- easter egg -> prázdný soubor něco udělá
+
+
 
 - Redefinice proměnné by mohla ukázat kde byla poprvé definována
 
 
-TEXT
-
-- ZREDUKOVAT PRO (četnost slova "pro")
-
--- operací nad jazykem nebo řetězce vznikne nový jazykem
--- Věc u vzorce vysvětlujícího pozitivní iteraci je ta věta úplně blbě, pozitivní iterace neobsahuje epsilon ten jazyk neobsahuje epsilon
--- upravit : existují nástroje a techniky __určené pro__ softwarové pirátství
--- odkazovat se na kapitolu obfuskace těsně před jejím začátkem je divný...
--- zásadní nevýhodOu (u detrimentálnosti obfuskace)
-
-Rozsahy - funkce se nesmí volat, pokud už byla definována stejnojmenná proměnná - U MĚ TO LZE, VOLÁNÍ LZE ROZLIŠIT
-
-Pro testování byly vytvořeny detailní výpisy s barvami a všemi infomracemi, včetně zvláštního zdůraznění chybových situací
-
-- OPRAVIT v příloze ne/terminální symboly na ne/terminály !!!
-
-Pomocí ke generování je přednáška 9 z IFJ
-Doplnit - Jabukód umožňuje dopředné (forward) deklarace
-Další výhoda ANTLR4 - výborný error reporting (podle poznámek na papíře a knihy, str. 150)
-kniha antlr str. 167 - není vhodné používat sémantické predikáty (vnořené akce) na sémantiku (bruh)
-kniha antlr str. 178 - obecně není vhodné dávat kód aplikace do gramatiky, já to taky dělat nebudu
-protože se při chybách parseru překlad zastaví, je obrovskou výhodou, že pokud projde, můžeme očekávat validní vstup pro generátor
-- REDEKLARACE NEJSOU POVOLENY
-
-popsat výchozí hodnoty pro deklarace
-INT - 0
-FLOAT - 0.0
-BOOL - false
-STRING - ""
-JAKÉKOLI POLE - prázdné
-
-ROZSAHY
-POPSÁNO PODROBNĚ V KÓDU SymbolTable.cpp
-
-- Položka enumu se chová stejně jako konstantní globální proměnná
-
-- Hlavička for cyklu je vlastní scope - stejně pojmenovaná proměnná z incializační části definovaná v těle ji překryje
-
-suspend, resume:
-- CONTINUATION - struktura se všemi údaji právě běžícího procesu -> běhové prostředí
-    - vhodné pro výjimky, koprogramy, generátory
-    - stav provádění je ve kterémkoli bodě uložen a lze se k němu vrátit (i opakovaně? spíš stack)
-- continuations, nikoli koprogramy (angl. coroutines)
-- pozastavení funkce, dokud zase není potřeba
-- vhodné pro generátory hodnot (Python)
-- v mém jazyce zjednodušeno skutečně na funkci, která ukládá svůj stav bokem
-- vždy je potřeba dvojice suspend a resume, je to zásobník, suspend -> suspend -> resume -> resume
-- ve funkci, kde je suspend, pak v té nad ní musí být resume
-! co když se zavolá resume s prázdným zásobníkem?
-    - nic to neudělá
-    - chyba za běhu
-- suspend v mainu by mohl být problém - nedovolit
-
-- V TEXTU PROVÉST PŘÍKLAD S VÝJIMKAMI, VYTVOŘIT PŘÍKLAD KÓDU
-
-- V C může mít definice v hlavičce const specifier, v Jabukódu nesmí mít žádný
 
 ! KONVERZE !
 
@@ -76,10 +27,9 @@ string
 IMPLICITNÍ DEGRADACE
 u přiřazení
 
-Precedence ** je převzata z Pythonu - nejvyšší mezi operátory
 
 
-Dostupnost symbolů (než zjistím kam to dat...)
+Dostupnost symbolů
 
 Globální proměnné
     // NEMOHOU být dvě stejně se jmenující globální proměnné
@@ -128,52 +78,3 @@ Položka enumu
     // MŮŽE být stejné jako parametr funkce, před i za
     // MŮŽE být stejné jako název svého enumu a i jiného enumu
     // NEMŮŽE být stejné jako jiná položka stejného enumu ANI JINÉHO ENUMU
-
-Atat syntaxe asembleru zvolena, protože je stejná použitý disasembler (objdump)
-
-Podobně jako C, není dovoleno kvůli vnitřním hodnotám začínat proměnné dvojicí __, jen zde to vyústí v chybu
-
-const ve foreach headeru nelze - konstanta je v Jabukódu neměnná hodnota - řídicí proměnná foreach cyklu se mění každou iteraci
-
-registry dle system v abi - https://wiki.osdev.org/System_V_ABI
-Optionally, functions push rbp such that the caller-return-rip is 8 bytes above it,
-and set rbp to the address of the saved rbp. This allows iterating through the existing stack frames.
-This can be eliminated by specifying the -fomit-frame-pointer GCC option.
-- POTENCIÁLNÍ OBFUSKACE ?!
-
-poznánky Leopold -> str 8 -> princip vyhodnocování výrazů - přidat do práce !!!
-
-ÚPRAVA SYSTEM V ABI ABY - XMM6 A XMM7 NEOBSAHUJÍ ARGUMENTY !!!!!!
-+ zjednodušení
-- ne-úplně system v compliant
-
-literal strings and float are converted to globals
-
-do práce by se hodil obrázek call stacku!!!
-
-extension inspiration
-https://macromates.com/manual/en/language_grammars#naming_conventions
-
-EXTENSION STUFF
-https://code.visualstudio.com/api/working-with-extensions/publishing-extension
-https://github.com/cubicap/Jaculus-vscode
-
-FUNKCE NEBUDOU MOCI VRACET POLE, JENOM SKALÁRNÍ VĚCI !!!
-NELZE MÍT POLE JAKO PARAMTERY
-=> NESMÍ TAM BÝT ANI STRING
-
-unicode asi nestihnu, je potřeba si to obhájit !!!
-
-
-
-	V TETTU SE MUSÍ UPRAVIT PRINCIP POLÍ !!!!!!
-
-ZMÍNIT ŽE TESTOVÁNÍ BYLO PROVÁDĚNO NA SYSTÉMU UBUNTU 24
-
-
-ZMÍNIT ŽE NĚKTERÉ OBFUSKACE SE LÉPE PROVÁDĚJÍ NA MEZIKÓDU A NĚKTERÉ NA AST
-
-
-
-jednorozměnrná pole stačí na zavedení implementace obfuskačních metod nad poli
-
