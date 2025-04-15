@@ -28,10 +28,11 @@ BP_Jabukod
 │   ├── Compile.h
 │   ├── Compile.cpp
 │   └── CMakeLists.txt
-├── README.md
 ├── samples
-└── tool
-    └── antlr-4.13.2-complete.jar
+├── tool
+│   └── antlr-4.13.2-complete.jar
+├── README.md
+└── assignment.pdf
 ```
 
 ### Requirements
@@ -91,6 +92,11 @@ with a syntax tree visualisation (note this target requires `java`, `javac` and 
 As the build process needs to download and build the ANTLR4 runtime, initial
 build may take a long time.
 </b>
+</br>
+</br>
+Also, due to several deprecation warnings shown during the build of the ANTLR4 runtime,
+build is not processed without warnings. For this compiler, they pose no
+limitation to intended functionality.
 
 ### Syntax highlighting
 
