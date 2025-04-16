@@ -1,0 +1,5 @@
+void rose() return 10;
+
+int main() {
+    int x = y * rose();
+}
