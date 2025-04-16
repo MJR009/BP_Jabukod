@@ -12,22 +12,7 @@
     - ...
 -- easter egg -> prázdný soubor něco udělá
 
-
-
 - Redefinice proměnné by mohla ukázat kde byla poprvé definována
-
-
-
-! KONVERZE !
-
-IMPLICITNÍ POVÝŠENÍ
-bool -> int -> float
-string
-
-IMPLICITNÍ DEGRADACE
-u přiřazení
-
-
 
 Dostupnost symbolů
 
