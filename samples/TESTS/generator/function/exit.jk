@@ -1,0 +1,17 @@
+int main() {
+    rose();
+    write "MAIN\n";
+    return 0;
+}
+
+void rose() {
+    mary();
+    write "ROSE\n";
+    return;
+}
+
+void mary() {
+    write "MARY\n";
+    exit 0;
+    return;
+}

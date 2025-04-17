@@ -26,6 +26,8 @@ private:
 
     ofstream jout; // inspired by cout
 
+    FunctionData *currentFunction = nullptr;
+
 private:
     void GenerateCode();
     void GenerateNode(ASTNode *node); // selects which node to generate by kind
@@ -37,5 +39,10 @@ private:
 
     void OutputVariable(Variable & variable);
 
+private:
     void ConnectSequence(const vector<Instruction> & sequence);
+
+    void SetCurrentFunction(FunctionData *data);
+    void ResetCurrentFunction();
+    bool IsInMain();
 };

@@ -69,6 +69,7 @@ void Generator::GenerateNode(ASTNode *node) {
         Generate_case(RESTART);
         Generate_case(FUNCTION_CALL);
         Generate_case(RETURN);
+        Generate_case(EXIT);
         /*
         Generate_case(POWER);
         Generate_case(LEFT_SHIFT);
@@ -88,7 +89,6 @@ void Generator::GenerateNode(ASTNode *node) {
         Generate_case(BIT_NOT);
         Generate_case(NOT);
         Generate_case(FOREACH);
-        Generate_case(EXIT);
         Generate_case(SUSPEND);
         Generate_case(RESUME);
         Generate_case(READ);
@@ -175,4 +175,16 @@ void Generator::OutputVariable(Variable & variable) {
 
 void Generator::ConnectSequence(const vector<Instruction> & sequence) {
     Instruction::ConnectSequences( this->instructions, sequence );
+}
+
+void Generator::SetCurrentFunction(FunctionData *data) {
+    this->currentFunction = data;
+}
+
+void Generator::ResetCurrentFunction() {
+    this->currentFunction = nullptr;
+}
+
+bool Generator::IsInMain() {
+    return this->currentFunction->GetName() == "main";
 }

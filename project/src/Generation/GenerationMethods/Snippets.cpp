@@ -29,14 +29,14 @@ const vector<Instruction> Snippets::Epilog() {
     return epilog;
 }
 
-const vector<Instruction> Snippets::MainEpilog() {
-    vector<Instruction> mainEpilog;
-    
-    mainEpilog.emplace_back(POP, RBX);
-    mainEpilog.emplace_back(POP, RBP);
-    Instruction::ConnectSequences( mainEpilog, Snippets::Exit( 0 ) );
-    
-    return mainEpilog;    
+const vector<Instruction> Snippets::Exit(string reg) {
+    vector<Instruction> exitSequence;
+
+    exitSequence.emplace_back(MOV, reg, RDI);
+    exitSequence.emplace_back(MOV, Transform::IntToImmediate(SYSCALL_EXIT), RAX);
+    exitSequence.emplace_back(SYSCALL);
+
+    return exitSequence;
 }
 
 
@@ -61,18 +61,6 @@ const vector<Instruction> Snippets::DeclareDefault(Type type, string target) {
     }
 
     return declaration;
-}
-
-
-
-const vector<Instruction> Snippets::Exit(int exitCode) {
-    vector<Instruction> exitSequence;
-
-    exitSequence.emplace_back(MOV, Transform::IntToImmediate(exitCode), RDI);
-    exitSequence.emplace_back(MOV, Transform::IntToImmediate(SYSCALL_EXIT), RAX);
-    exitSequence.emplace_back(SYSCALL);
-
-    return exitSequence;
 }
 
 

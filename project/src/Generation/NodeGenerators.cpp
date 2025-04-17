@@ -3,28 +3,33 @@
 
 void NodeGenerators::GeneratePROGRAM(ASTNode *node) {
     for (int i = 0; i < node->GetChildrenCount(); i++) {
-        gen->GenerateNode( node->GetChild(i) );
+        gen->GenerateNode(node->GetChild(i));
     }
 }
 
 void NodeGenerators::GenerateFUNCTION(ASTNode *node) {
     FunctionData *function = node->GetData<FunctionData>();
-    string label = Transform::IdentifierToLabel( function->GetName() );
+    gen->SetCurrentFunction(function);
+
+    string label = Transform::IdentifierToLabel(function->GetName());
     gen->instructions.emplace_back(label);
 
     int neededStackSpace = 8 * function->GetVariableCount();
     gen->ConnectSequence( Snippets::Prolog(neededStackSpace) );
 
     for (int i = 0; i < node->GetChildrenCount(); i++) {
-        gen->GenerateNode( node->GetChild(i) );
+        gen->GenerateNode(node->GetChild(i));
     }
 
     // fallback epilogues at the end of functions // TODO should this be here?
-    if (function->GetName() == "main") {
-        gen->ConnectSequence( Snippets::MainEpilog() );
+    if (gen->IsInMain()) {
+        gen->instructions.emplace_back(MOVQ, Transform::IntToImmediate(0), RAX);
+        gen->ConnectSequence( Snippets::Exit(RAX) );
     } else {
         gen->ConnectSequence( Snippets::Epilog() );
     }
+
+    gen->ResetCurrentFunction();
 }
 
 void NodeGenerators::GenerateWRITE(ASTNode *node) {
@@ -350,13 +355,21 @@ void NodeGenerators::GenerateFUNCTION_CALL(ASTNode *node) {
 
 void NodeGenerators::GenerateRETURN(ASTNode *node) {
     ASTNode *value = node->GetChild(0);
-    
     if (value) {
         gen->GenerateNode(value);
     }
-    gen->ConnectSequence(Snippets::Epilog());
 
-    // TODO in main has to exit instead !!!
+    if (gen->IsInMain()) {
+        gen->ConnectSequence( Snippets::Exit(RAX) );
+    } else {
+        gen->ConnectSequence( Snippets::Epilog() );
+    }
+}
+
+void NodeGenerators::GenerateEXIT(ASTNode *node) {
+    gen->GenerateNode(node->GetChild(0));
+
+    gen->ConnectSequence( Snippets::Exit(RAX) );
 }
 
 
