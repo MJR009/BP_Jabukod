@@ -3,6 +3,10 @@
 
 class NodeKind {
 public:
+    /*
+        USED IN TABLE CONVERSIONS (Transform.cpp, ...)
+        DO NOT REARRANGE !!!
+    */
     enum Options {
         PROGRAM, 
         VARIABLE_DECLARATION, VARIABLE_DEFINITION,

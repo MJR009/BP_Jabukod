@@ -61,8 +61,6 @@ string Transform::IntToImmediate(const int & number) {
     return "$" + to_string(number);//hexNumber.str();
 }
 
-
-
 string Transform::LiteralToImmediate(LiteralData *data) {
     Type type = data->GetType();
     int value;
@@ -81,8 +79,6 @@ string Transform::LiteralToImmediate(LiteralData *data) {
     return Transform::IntToImmediate(value);
 }
 
-
-
 string Transform::VariableToLocation(VariableData *data) {
     if (data->IsGlobal()) {
         return Transform::GlobalToAddress(data->GetName());
@@ -98,29 +94,16 @@ string Transform::VariableToLocation(VariableData *data) {
     return "ERR";
 }
 
-
-
 string Transform::ConditionToJump(NodeKind condition, Type comparisonType) {
-    if (comparisonType == Type::FLOAT) {
-        switch (condition) {
-            case NodeKind::GREATER: return JBE;
-            case NodeKind::LESS: return JAE;
-            case NodeKind::LESS_EQUAL: return JA;
-            case NodeKind::GREATER_EQUAL: return JB;
-            case NodeKind::EQUAL: return JNE;
-            case NodeKind::NOT_EQUAL: return JE;
-        }
-        
-    } else {
-        switch (condition) {
-            case NodeKind::GREATER: return JLE;
-            case NodeKind::LESS: return JGE;
-            case NodeKind::LESS_EQUAL: return JG;
-            case NodeKind::GREATER_EQUAL: return JL;
-            case NodeKind::EQUAL: return JNE;
-            case NodeKind::NOT_EQUAL: return JE;
-        }
-    }
+    const string jump[2][6] = {
+    //    <   <=   >   >=   ==  !=    ///////
+        {JAE, JA, JBE, JB, JNE, JE},  // unsigned - used by SSE
+        {JGE, JG, JLE, JL, JNE, JE}   // signed
+    };
+    const int nodeKindCorrection = -17;
 
-    return "ERR";
+    int jumpSelector = condition + nodeKindCorrection;
+    int signednessSelector = (comparisonType == Type::FLOAT) ? 0 : 1;
+
+    return jump[ signednessSelector ][ jumpSelector ];
 }
