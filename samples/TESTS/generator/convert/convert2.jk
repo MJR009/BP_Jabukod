@@ -1,7 +1,8 @@
 int main() {
+    bool z;
     int x = true;
     bool y = 15;
-    bool z = 0;
+    z = 0;
 
     int w = 5 + true;
 }

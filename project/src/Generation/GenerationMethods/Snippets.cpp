@@ -46,24 +46,16 @@ const vector<Instruction> Snippets::DeclareDefault(Type type, string target) {
 
     switch (type) {
         case Type::INT: case Type::BOOL:
-            declaration.emplace_back(MOVQ, Transform::IntToImmediate( 0 ), target);
+            declaration.emplace_back(MOVQ, Transform::IntToImmediate(SymbolTable::defaultINT), target);
             break;
 
         case Type::FLOAT:
-            declaration.emplace_back(
-                MOVSS,
-                Transform::GlobalToAddress(Snippets::floatDeclaration),
-                XMM6
-            );
+            declaration.emplace_back(MOVSS, Transform::GlobalToAddress(Snippets::floatDeclaration), XMM6);
             declaration.emplace_back(MOVSS, XMM6, target);
             break;
 
         case Type::STRING:
-            declaration.emplace_back(
-                LEA,
-                Transform::GlobalToAddress(Snippets::stringDeclaration),
-                RAX
-            );
+            declaration.emplace_back(LEA, Transform::GlobalToAddress(Snippets::stringDeclaration), RAX);
             declaration.emplace_back(MOV, RAX, target);
             break;
     }
@@ -81,43 +73,6 @@ const vector<Instruction> Snippets::Exit(int exitCode) {
     exitSequence.emplace_back(SYSCALL);
 
     return exitSequence;
-}
-
-
-
-const vector<Instruction> Snippets::PrepareOperand(ASTNode *operand) {
-    vector<Instruction> move;
-
-    VariableData *data;
-    string operation, source, target;
-
-    switch (operand->GetKind()) {
-        case NodeKind::VARIABLE:
-            data = operand->GetData<VariableData>();
-            source = Transform::VariableToLocation(data);
-
-            if (data->GetType() == Type::FLOAT) { // cannot be string by semantics
-                operation = MOVSS;
-                target = XMM6;
-                
-            } else { // int, cannot be bool
-                operation = MOVQ;
-                target = RAX;
-            }
-
-            move.emplace_back(operation, source, target);
-            break;
-
-        case NodeKind::LITERAL:
-            source = Transform::LiteralToImmediate(operand->GetData<LiteralData>());
-            move.emplace_back(MOVQ, source, RAX);
-            break;
-
-        default: // nested expression
-            break;
-    }
-
-    return move;
 }
 
 const vector<Instruction> Snippets::PushPreparedOperand(Type operandType) {

@@ -1,0 +1,5 @@
+// used in thesis text as lexical and syntax error example
+
+int main() {
+    write Hello world!\n";
+}

@@ -42,10 +42,12 @@ void Generator::GenerateNode(ASTNode *node) {
         Generate_case(PROGRAM);
         Generate_case(FUNCTION);
         Generate_case(WRITE);
+        Generate_case(VARIABLE);
+        Generate_case(LITERAL);
         Generate_case(ASSIGNMENT);
-        Generate_case(ADDITION);
         Generate_case(VARIABLE_DEFINITION);
         Generate_case(VARIABLE_DECLARATION);
+        Generate_case(ADDITION);
         Generate_case(SUBTRACTION);
         Generate_case(MULTIPLICATION);
         Generate_case(DIVISION);
@@ -54,8 +56,6 @@ void Generator::GenerateNode(ASTNode *node) {
         Generate_case(FLOAT2INT);
         Generate_case(BOOL2INT);
         Generate_case(INT2BOOL);
-        Generate_case(VARIABLE);
-        Generate_case(LITERAL);
         Generate_case(IF);
         Generate_case(BODY);
         Generate_case(WHILE);
@@ -155,8 +155,8 @@ void Generator::OutputTextSection() {
 
     // fallback exit
     jout << endl;
-    jout << "\tmov $0x0, %rdi" << endl;
-    jout << "\tmov $0x3c, %rax" << endl;
+    jout << "\tmov $0, %rdi" << endl;
+    jout << "\tmov $60, %rax" << endl;
     jout << "\tsyscall" << endl;
 }
 

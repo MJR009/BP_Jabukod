@@ -69,8 +69,10 @@ string Transform::LiteralToImmediate(LiteralData *data) {
 
     if (type == Type::INT) {
         value = any_cast<int>(data->GetValue());
+
     } else if (type == Type::BOOL) {
         value = any_cast<bool>(data->GetValue());
+        
     } else {
         ERR::BadData();
         return "ERR";
@@ -90,7 +92,7 @@ string Transform::VariableToLocation(VariableData *data) {
 
     } else { // local
         string stackOffset = to_string( data->GetStackOffset() );
-        return stackOffset + "(" + RBP + ")";
+        return ( stackOffset + "(" + RBP + ")" );
     }
 
     return "ERR";
@@ -108,15 +110,16 @@ string Transform::ConditionToJump(NodeKind condition, Type comparisonType) {
             case NodeKind::EQUAL: return JNE;
             case NodeKind::NOT_EQUAL: return JE;
         }
-    }
-
-    switch (condition) {
-        case NodeKind::GREATER: return JLE;
-        case NodeKind::LESS: return JGE;
-        case NodeKind::LESS_EQUAL: return JG;
-        case NodeKind::GREATER_EQUAL: return JL;
-        case NodeKind::EQUAL: return JNE;
-        case NodeKind::NOT_EQUAL: return JE;
+        
+    } else {
+        switch (condition) {
+            case NodeKind::GREATER: return JLE;
+            case NodeKind::LESS: return JGE;
+            case NodeKind::LESS_EQUAL: return JG;
+            case NodeKind::GREATER_EQUAL: return JL;
+            case NodeKind::EQUAL: return JNE;
+            case NodeKind::NOT_EQUAL: return JE;
+        }
     }
 
     return "ERR";

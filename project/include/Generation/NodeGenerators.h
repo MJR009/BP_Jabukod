@@ -12,10 +12,12 @@ public:
     void GeneratePROGRAM(ASTNode *node);
     void GenerateFUNCTION(ASTNode *node);
     void GenerateWRITE(ASTNode *node);
+    void GenerateVARIABLE(ASTNode *node);
+    void GenerateLITERAL(ASTNode *node);
     void GenerateASSIGNMENT(ASTNode *node);
-    void GenerateADDITION(ASTNode *node);
     void GenerateVARIABLE_DEFINITION(ASTNode *node);
     void GenerateVARIABLE_DECLARATION(ASTNode *node);
+    void GenerateADDITION(ASTNode *node);
     void GenerateSUBTRACTION(ASTNode *node);
     void GenerateMULTIPLICATION(ASTNode *node);
     void GenerateDIVISION(ASTNode *node);
@@ -24,8 +26,6 @@ public:
     void GenerateFLOAT2INT(ASTNode *node);
     void GenerateBOOL2INT(ASTNode *node);
     void GenerateINT2BOOL(ASTNode *node);
-    void GenerateVARIABLE(ASTNode *node);
-    void GenerateLITERAL(ASTNode *node);
     void GenerateIF(ASTNode *node);
     void GenerateBODY(ASTNode *node);
     void GenerateWHILE(ASTNode *node);

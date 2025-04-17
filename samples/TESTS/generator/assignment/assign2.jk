@@ -1,4 +1,4 @@
-int main() {
+int rock() {
     int x;
     x = 10;
     int y;
@@ -19,7 +19,7 @@ void mary() {
     d = c;
 }
 
-void rock() {
+int main() {
     string e;
     e = "Jabukod";
     string f;

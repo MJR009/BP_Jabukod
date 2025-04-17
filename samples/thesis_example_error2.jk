@@ -1,3 +1,5 @@
+// used in thesis text as semantic error example
+
 void rose() return 10;
 
 int main() {
