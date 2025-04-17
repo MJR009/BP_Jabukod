@@ -12,7 +12,7 @@ public:
     static const string stringDeclaration;
 
 public:
-    static const vector<Instruction> Prolog(int variablesToReserve);
+    static const vector<Instruction> Prolog(int bytesToReserve);
     static const vector<Instruction> Epilog();
     static const vector<Instruction> MainEpilog();
 
@@ -20,8 +20,6 @@ public:
 
     static const vector<Instruction> Exit(int exitCode);
 
-    // from %rax or %xmm0 to top of the stack
-    static const vector<Instruction> PushPreparedOperand(Type operandType);
-    // from top of the stack to either %rax or %xmm0 AND puts the other operand into %rbx or %xmm1
-    static const vector<Instruction> PopPreparedOperand(Type operandType);
+    static const vector<Instruction> PushRegister(Type type, string reg);
+    static const vector<Instruction> PopRegister(Type type, string reg);
 };

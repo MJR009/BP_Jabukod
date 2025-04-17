@@ -7,8 +7,6 @@ void NodeGenerators::GeneratePROGRAM(ASTNode *node) {
     }
 }
 
-
-
 void NodeGenerators::GenerateFUNCTION(ASTNode *node) {
     FunctionData *function = node->GetData<FunctionData>();
     string label = Transform::IdentifierToLabel( function->GetName() );
@@ -28,8 +26,6 @@ void NodeGenerators::GenerateFUNCTION(ASTNode *node) {
         gen->ConnectSequence( Snippets::Epilog() );
     }
 }
-
-
 
 void NodeGenerators::GenerateWRITE(ASTNode *node) {
     ASTNode *operand = node->GetChild(0);
@@ -58,8 +54,6 @@ void NodeGenerators::GenerateWRITE(ASTNode *node) {
     gen->instructions.emplace_back(POP, RSI);
 }
 
-
-
 void NodeGenerators::GenerateVARIABLE(ASTNode *node) {
     VariableData *data = node->GetData<VariableData>();
     Type variableType = data->GetType();
@@ -86,33 +80,24 @@ void NodeGenerators::GenerateVARIABLE(ASTNode *node) {
     }
 }
 
-
-
 void NodeGenerators::GenerateLITERAL(ASTNode *node) { // after analysis is either int or bool
     LiteralData *data = node->GetData<LiteralData>();
     gen->instructions.emplace_back(MOVQ, Transform::LiteralToImmediate(data), RAX);
 }
 
-
-
 void NodeGenerators::GenerateASSIGNMENT(ASTNode *node) {
     this->EvaluateAssignment(node->GetChild(0), node->GetChild(1), node->GetOperandType(1));
 }
 
-
-
 void NodeGenerators::GenerateVARIABLE_DEFINITION(ASTNode *node) {
     this->EvaluateAssignment(node, node->GetChild(0), node->GetOperandType(0));
 }
-
-
 
 void NodeGenerators::GenerateVARIABLE_DECLARATION(ASTNode *node) {
     VariableData *data = node->GetData<VariableData>();
     Type variableType = data->GetType();
     static bool floatDeclared = false; // avoid redeclaring default values again
     static bool stringDeclared = false;
-
 
     if ( (variableType == Type::FLOAT) && ( ! floatDeclared) ) {
         gen->symbolTable.AddFloatStringLiteral( Snippets::floatDeclaration, Type::FLOAT, SymbolTable::defaultFLOAT );
@@ -128,77 +113,57 @@ void NodeGenerators::GenerateVARIABLE_DECLARATION(ASTNode *node) {
     gen->ConnectSequence( Snippets::DeclareDefault(variableType, location) );
 }
 
-
-
 void NodeGenerators::GenerateADDITION(ASTNode *node) {
     this->EvaluateSubexpressions(node);
     this->EvaluateCurrentExpression(node, ADD);
 }
-
-
 
 void NodeGenerators::GenerateSUBTRACTION(ASTNode *node) {
     this->EvaluateSubexpressions(node);
     this->EvaluateCurrentExpression(node, SUB);
 }
 
-
-
 void NodeGenerators::GenerateMULTIPLICATION(ASTNode *node) {
     this->EvaluateSubexpressions(node);
     this->EvaluateCurrentExpression(node, IMUL);
 }
 
-
-
 void NodeGenerators::GenerateDIVISION(ASTNode *node) {
     this->EvaluateSubexpressions(node);
-    gen->instructions.emplace_back(PUSH, RDX);
-    gen->instructions.emplace_back(CQO);
+    gen->instructions.emplace_back(PUSH, RDX); // TODO BACKUP WITH FUNCTION
+    gen->instructions.emplace_back(CQO); // TODO ONLY NEEDED WITH INTEGER
     this->EvaluateCurrentExpression(node, IDIV);
     gen->instructions.emplace_back(POP, RDX);
 }
-
-
 
 void NodeGenerators::GenerateMODULO(ASTNode *node) { // float division will never appear here by semantics
     this->EvaluateSubexpressions(node);
-    gen->instructions.emplace_back(PUSH, RDX);
-    gen->instructions.emplace_back(CQO);
+    gen->instructions.emplace_back(PUSH, RDX); // TODO BACKUP WITH FUNCTION
+    gen->instructions.emplace_back(CQO); // TODO ONLY NEEDED WITH INTEGERS
     this->EvaluateCurrentExpression(node, IDIV);
-    gen->instructions.emplace_back(MOVQ, RDX, RAX);
+    gen->instructions.emplace_back(MOVQ, RDX, RAX); // TODO ONLY NEEDED WITH INTEGERS
     gen->instructions.emplace_back(POP, RDX);
 }
-
-
 
 void NodeGenerators::GenerateINT2FLOAT(ASTNode *node) {
     gen->GenerateNode(node->GetChild(0));
     gen->instructions.emplace_back(CVTSI2SS, RAX, XMM6);
 }
 
-
-
 void NodeGenerators::GenerateFLOAT2INT(ASTNode *node) {
     gen->GenerateNode(node->GetChild(0));
     gen->instructions.emplace_back(CVTTSS2SI, XMM6, RAX);
 }
 
-
-
 void NodeGenerators::GenerateBOOL2INT(ASTNode *node) { // internally, 0 and 1 are both bool and int
     gen->GenerateNode(node->GetChild(0));
 }
-
-
 
 void NodeGenerators::GenerateINT2BOOL(ASTNode *node) {
     gen->GenerateNode(node->GetChild(0));
     gen->instructions.emplace_back(TEST, RAX, RAX);
     gen->instructions.emplace_back(CMOVNZ, R10, RAX);
 }
-
-
 
 void NodeGenerators::GenerateIF(ASTNode *node) {
     vector<string> labelSet = ControlFlow::MakeNewIFLabelSet();
@@ -223,15 +188,11 @@ void NodeGenerators::GenerateIF(ASTNode *node) {
     gen->instructions.emplace_back( Transform::IdentifierToLabel(endLabel) );
 }
 
-
-
 void NodeGenerators::GenerateBODY(ASTNode *node) { // only generate contents, stack frame applies only to functions
     for (int i = 0; i < node->GetChildrenCount(); i++) {
         gen->GenerateNode(node->GetChild(i));
     }
 }
-
-
 
 void NodeGenerators::GenerateWHILE(ASTNode *node) {
     vector<string> labelSet = ControlFlow::MakeNewWHILELabelSet();
@@ -252,8 +213,6 @@ void NodeGenerators::GenerateWHILE(ASTNode *node) {
 
     this->PopLoopLabels();
 }
-
-
 
 void NodeGenerators::GenerateFOR(ASTNode *node) {
     vector<string> labelSet = ControlFlow::MakeNewFORLabelSet();
@@ -315,49 +274,33 @@ void NodeGenerators::GenerateFOR(ASTNode *node) {
     this->PopLoopLabels();
 }
 
-
-
 void NodeGenerators::GenerateFOR_HEADER1(ASTNode *node) {
     gen->GenerateNode(node->GetChild(0));
 }
-
-
 
 void NodeGenerators::GenerateFOR_HEADER2(ASTNode *node) {
     this->EvaluateCondition(node->GetChild(0), this->GetCurrentEnd());
 }
 
-
-
 void NodeGenerators::GenerateFOR_HEADER3(ASTNode *node) {
     gen->GenerateNode(node->GetChild(0));
 }
-
-
 
 void NodeGenerators::GenerateBREAK(ASTNode *node) {
     gen->instructions.emplace_back(JMP, this->GetBreakTarget());
 }
 
-
-
 void NodeGenerators::GenerateCONTINUE(ASTNode *node) {
     gen->instructions.emplace_back(JMP, this->GetContinueTarget());
 }
-
-
 
 void NodeGenerators::GenerateREDO(ASTNode *node) {
     gen->instructions.emplace_back(JMP, this->GetRedoTarget());
 }
 
-
-
 void NodeGenerators::GenerateRESTART(ASTNode *node) {
     gen->instructions.emplace_back(JMP, this->GetRestartTarget());
 }
-
-
 
 void NodeGenerators::GenerateFUNCTION_CALL(ASTNode *node) {
     FunctionCallData *data = node->GetData<FunctionCallData>();
@@ -393,8 +336,6 @@ void NodeGenerators::GenerateFUNCTION_CALL(ASTNode *node) {
     }
 }
 
-
-
 void NodeGenerators::GenerateRETURN(ASTNode *node) {
     ASTNode *value = node->GetChild(0);
     
@@ -411,24 +352,33 @@ void NodeGenerators::GenerateRETURN(ASTNode *node) {
 // PRIVATE:
 
 void NodeGenerators::EvaluateSubexpressions(ASTNode *node) {
-// (1) put left operand result in %rax or %xmm6
+    // (1) put left operand result in %rax or %xmm6
     ASTNode *lSide = node->GetChild(0);
     gen->GenerateNode(lSide);
 
-// (2) push the register where the value is stored
+    // (2) push register with left operand result
     Type lSideType = node->GetOperandType(0);
-    gen->ConnectSequence( Snippets::PushPreparedOperand(lSideType) ); // TODO generalise
+    string lSideResult = (lSideType == Type::FLOAT) ? XMM6 : RAX;
+    gen->ConnectSequence( Snippets::PushRegister(lSideType, lSideResult) );
 
-// (3) put right operand result in %rax or %xmm6
+    // (3) put right operand result in %rax or %xmm6
     ASTNode *rSide = node->GetChild(1);
     gen->GenerateNode(rSide);
 
-// (4) pop the register into where it can be processed
-    gen->ConnectSequence( Snippets::PopPreparedOperand(lSideType) ); // TODO generalise
+    // (4) transfer right operand to correct place
+    Type rSideType = node->GetOperandType(1);
+    if (rSideType == Type::FLOAT) {
+        gen->instructions.emplace_back(MOVSS, XMM6, XMM7);
+    } else {
+        gen->instructions.emplace_back(MOVQ, RAX, RBX);
+    }
+
+    // (5) pop register with left operand result
+    gen->ConnectSequence( Snippets::PopRegister(lSideType, lSideResult) );
 }
 
 void NodeGenerators::EvaluateCurrentExpression(ASTNode *node, string OPCODE) {
-// (5) operation with result stored in %rax or $xmm6
+    // (6) compute desired operation
     Type typeHere = node->GetData<ExpressionData>()->GetType();
     if (typeHere == Type::FLOAT) {
         gen->instructions.emplace_back(Opcode::SSE.at(OPCODE), XMM7, XMM6);

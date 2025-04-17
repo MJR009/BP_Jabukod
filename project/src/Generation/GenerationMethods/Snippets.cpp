@@ -5,13 +5,13 @@ const string Snippets::stringDeclaration = "__declstring";
 
 
 
-const vector<Instruction> Snippets::Prolog(int variablesToReserve) {
+const vector<Instruction> Snippets::Prolog(int bytesToReserve) {
     vector<Instruction> prolog;
 
     prolog.emplace_back(PUSH, RBP);
     prolog.emplace_back(MOV, RSP, RBP);
-    if (variablesToReserve != 0) {
-        prolog.emplace_back(SUB, Transform::IntToImmediate(variablesToReserve), RSP);
+    if (bytesToReserve != 0) {
+        prolog.emplace_back(SUB, Transform::IntToImmediate(bytesToReserve), RSP);
     }
     prolog.emplace_back(PUSH, RBX);
 
@@ -75,38 +75,29 @@ const vector<Instruction> Snippets::Exit(int exitCode) {
     return exitSequence;
 }
 
-const vector<Instruction> Snippets::PushPreparedOperand(Type operandType) {
+
+
+const vector<Instruction> Snippets::PushRegister(Type type, string reg) {
     vector<Instruction> pushSequence;
 
-    // string will again by semantics never appear, as well as bool
-    switch (operandType) {
-        case Type::INT:
-            pushSequence.emplace_back(PUSH, RAX);
-            break;
-
-        case Type::FLOAT:
-            pushSequence.emplace_back(SUBQ, Transform::IntToImmediate( 8 ), RSP);
-            pushSequence.emplace_back(MOVSS, XMM6, Transform::RegisterToAddress( RSP ));
-            break;
+    if (type == Type::FLOAT) {
+        pushSequence.emplace_back(SUBQ, Transform::IntToImmediate(8), RSP);
+        pushSequence.emplace_back(MOVSS, XMM6, Transform::RegisterToAddress(RSP));
+    } else {
+        pushSequence.emplace_back(PUSH, reg);
     }
 
     return pushSequence;
 }
 
-const vector<Instruction> Snippets::PopPreparedOperand(Type operandType) {
+const vector<Instruction> Snippets::PopRegister(Type type, string reg) {
     vector<Instruction> popSequence;
 
-    switch (operandType) {
-        case Type::INT:
-            popSequence.emplace_back(MOVQ, RAX, RBX); // needed for correct order of operations
-            popSequence.emplace_back(POP, RAX); // RBX (when operations were reversed)
-            break;
-
-        case Type::FLOAT:
-            popSequence.emplace_back(MOVSS, XMM6, XMM7); // needed for correct order of operations
-            popSequence.emplace_back(MOVSS, Transform::RegisterToAddress( RSP ), XMM6); // XMM7
-            popSequence.emplace_back(ADDQ, Transform::IntToImmediate( 8 ), RSP);
-            break;
+    if (type == Type::FLOAT) {
+        popSequence.emplace_back(MOVSS, Transform::RegisterToAddress(RSP), XMM6);
+        popSequence.emplace_back(ADDQ, Transform::IntToImmediate(8), RSP);
+    } else {
+        popSequence.emplace_back(POP, reg);
     }
 
     return popSequence;
