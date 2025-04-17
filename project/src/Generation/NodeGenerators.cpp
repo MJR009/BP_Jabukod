@@ -130,19 +130,31 @@ void NodeGenerators::GenerateMULTIPLICATION(ASTNode *node) {
 
 void NodeGenerators::GenerateDIVISION(ASTNode *node) {
     this->EvaluateSubexpressions(node);
-    gen->instructions.emplace_back(PUSH, RDX); // TODO BACKUP WITH FUNCTION
-    gen->instructions.emplace_back(CQO); // TODO ONLY NEEDED WITH INTEGER
+
+    Type type = node->GetData<ExpressionData>()->GetType();
+    if (type != Type::FLOAT) {
+        gen->ConnectSequence( Snippets::PushRegister(type, RDX) );
+        gen->instructions.emplace_back(CQO); // no extension to octal with SSE
+    }
+
     this->EvaluateCurrentExpression(node, IDIV);
-    gen->instructions.emplace_back(POP, RDX);
+
+    if (type != Type::FLOAT) {
+        gen->ConnectSequence( Snippets::PopRegister(type, RDX) );
+    }
 }
 
-void NodeGenerators::GenerateMODULO(ASTNode *node) { // float division will never appear here by semantics
+void NodeGenerators::GenerateMODULO(ASTNode *node) { // float modulo cannot appear by semantics
     this->EvaluateSubexpressions(node);
-    gen->instructions.emplace_back(PUSH, RDX); // TODO BACKUP WITH FUNCTION
-    gen->instructions.emplace_back(CQO); // TODO ONLY NEEDED WITH INTEGERS
+
+    Type type = node->GetData<ExpressionData>()->GetType();
+    gen->ConnectSequence( Snippets::PushRegister(type, RDX) );
+    gen->instructions.emplace_back(CQO);
+
     this->EvaluateCurrentExpression(node, IDIV);
-    gen->instructions.emplace_back(MOVQ, RDX, RAX); // TODO ONLY NEEDED WITH INTEGERS
-    gen->instructions.emplace_back(POP, RDX);
+
+    gen->instructions.emplace_back(MOVQ, RDX, RAX);
+    gen->ConnectSequence( Snippets::PopRegister(type, RDX) );
 }
 
 void NodeGenerators::GenerateINT2FLOAT(ASTNode *node) {

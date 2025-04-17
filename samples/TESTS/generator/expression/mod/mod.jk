@@ -1,4 +1,6 @@
 int main() {
     int x = 10 % 4;
     int y = -7 % x;
+
+    //float z = 2.5 % 3;
 }
