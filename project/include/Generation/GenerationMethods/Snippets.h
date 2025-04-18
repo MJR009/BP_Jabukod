@@ -10,6 +10,9 @@ class Snippets {
 public:
     static const string floatDeclaration;
     static const string stringDeclaration;
+    static const string signMask;
+    static const string bitNotMask;
+    static const string notMask;
 
 public:
     static const vector<Instruction> Prolog(int bytesToReserve);

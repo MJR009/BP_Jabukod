@@ -265,7 +265,7 @@ any ASTGenerationVisitor::visitPrefixUnaryExpression(JabukodParser::PrefixUnaryE
 
     Type type = Type::VOID;
     switch (sign) {
-        case NodeKind::minus:
+        case NodeKind::UNARY_MINUS:
             type = this->ast.ConvertExpressionUnaryArithmetic(ctx->getStart());
             break;
         case NodeKind::BIT_NOT:
@@ -596,7 +596,7 @@ any ASTGenerationVisitor::visitLiteral(JabukodParser::LiteralContext *ctx) {
     if ((type == Type::FLOAT) || (type == Type::STRING)) {
         string uniqueLiteralName = this->ast.GenerateUniqueLiteralId(type);
 
-        Variable *variable = this->ast.AddFloatStringLiteral(uniqueLiteralName, type, value);
+        Variable *variable = this->ast.AddGlobalLiteral(uniqueLiteralName, type, value);
         VariableData *data = new VariableData(variable);
 
         this->ast.AddNode(NodeKind::VARIABLE, data);

@@ -71,10 +71,16 @@
 
 #define XOR "xor"
 #define XORQ "xorq"
+#define XORPS "xorps" // xorss does not exists
 
 #define ANDi "and"
 #define ANDQ "andq"
 #define ANDSS "andss"
+
+#define NEGQ "negq"
+
+#define NOTQ "notq"
+#define NOTSS "notss"
 
 class Opcode {
 public:

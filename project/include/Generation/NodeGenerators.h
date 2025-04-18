@@ -35,6 +35,9 @@ public:
     void GenerateGREATER_EQUAL(ASTNode *node);
     void GenerateEQUAL(ASTNode *node);
     void GenerateNOT_EQUAL(ASTNode *node);
+    void GenerateUNARY_MINUS(ASTNode *node);
+    void GenerateBIT_NOT(ASTNode *node);
+    void GenerateNOT(ASTNode *node);
     void GenerateINT2FLOAT(ASTNode *node);
     void GenerateFLOAT2INT(ASTNode *node);
     void GenerateBOOL2INT(ASTNode *node);
@@ -55,9 +58,6 @@ public:
     void GenerateEXIT(ASTNode *node);
     /*
     void GeneratePOWER(ASTNode *node);
-    void GenerateUNARY_MINUS(ASTNode *node);
-    void GenerateBIT_NOT(ASTNode *node);
-    void GenerateNOT(ASTNode *node);
     void GenerateFOREACH(ASTNode *node);
     void GenerateSUSPEND(ASTNode *node);
     void GenerateRESUME(ASTNode *node);
@@ -71,6 +71,8 @@ private:
     void EvaluateCurrentExpression(ASTNode *node, string OPCODE);
     // evaluates to bool
     void EvaluateComparison(ASTNode *node);
+
+    void EvaluateUnarySubexpression(ASTNode *node);
 
     void EvaluateAssignment(ASTNode *lSide, ASTNode *rSide, Type rSideType);
     void EvaluateCondition(ASTNode *condition, string falseLabel);

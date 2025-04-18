@@ -33,7 +33,7 @@ public:
         antlr4::Token *itemValue
     );
 
-    Variable *AddFloatStringLiteral(const string & name, Type type, any value);
+    Variable *AddGlobalLiteral(const string & name, Type type, any value);
 
     void SetCurrentEnum(EnumTableEntry *theEnum);
     void ResetCurrentEnum();

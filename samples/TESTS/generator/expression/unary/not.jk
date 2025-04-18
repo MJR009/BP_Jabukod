@@ -1,0 +1,6 @@
+int main() {
+    int x = !!false;
+    int y = ~0xff00;
+
+    //float z = !1;
+}

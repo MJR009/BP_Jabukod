@@ -105,11 +105,11 @@ void NodeGenerators::GenerateVARIABLE_DECLARATION(ASTNode *node) {
     static bool stringDeclared = false;
 
     if ( (variableType == Type::FLOAT) && ( ! floatDeclared) ) {
-        gen->symbolTable.AddFloatStringLiteral( Snippets::floatDeclaration, Type::FLOAT, SymbolTable::defaultFLOAT );
+        gen->symbolTable.AddGlobalLiteral( Snippets::floatDeclaration, Type::FLOAT, SymbolTable::defaultFLOAT );
         floatDeclared = true;
     }
     if ( (variableType == Type::STRING) && ( ! stringDeclared) ) {
-        gen->symbolTable.AddFloatStringLiteral( Snippets::stringDeclaration, Type::STRING, SymbolTable::defaultSTRING );
+        gen->symbolTable.AddGlobalLiteral( Snippets::stringDeclaration, Type::STRING, SymbolTable::defaultSTRING );
         stringDeclared = true;
     }
 
@@ -239,6 +239,65 @@ void NodeGenerators::GenerateEQUAL(ASTNode *node) {
 void NodeGenerators::GenerateNOT_EQUAL(ASTNode *node) {
     this->EvaluateSubexpressions(node);
     this->EvaluateComparison(node);
+}
+
+void NodeGenerators::GenerateUNARY_MINUS(ASTNode *node) {
+    static bool signMaskDeclared = false;
+    this->EvaluateUnarySubexpression(node);
+
+    const int signMask = 0x80000000;
+
+    if (node->GetData<ExpressionData>()->GetType() == Type::FLOAT) {
+        if ( ! signMaskDeclared) {
+            gen->symbolTable.AddGlobalLiteral(Snippets::signMask, Type::INT, signMask);
+            signMaskDeclared = true;
+        }
+
+        gen->instructions.emplace_back(MOVSS, Transform::GlobalToAddress(Snippets::signMask), XMM7);
+        gen->instructions.emplace_back(XORPS, XMM7, XMM6);
+    } else {
+        gen->instructions.emplace_back(NEGQ, RAX);
+    }
+}
+
+void NodeGenerators::GenerateBIT_NOT(ASTNode *node) {
+    static bool bitNotMaskDeclared = false;
+    this->EvaluateUnarySubexpression(node);
+    
+    const int bitNotMask = 0xFFFFFFFF;
+
+    if (node->GetData<ExpressionData>()->GetType() == Type::FLOAT) {
+        if ( ! bitNotMaskDeclared) {
+            gen->symbolTable.AddGlobalLiteral(Snippets::bitNotMask, Type::INT, bitNotMask);
+            bitNotMaskDeclared = true;
+        }
+
+        gen->instructions.emplace_back(MOVSS, Transform::GlobalToAddress(Snippets::bitNotMask), XMM7);
+        gen->instructions.emplace_back(XORPS, XMM7, XMM6);
+    } else {
+        gen->instructions.emplace_back(NOTQ, RAX);
+    }
+}
+
+void NodeGenerators::GenerateNOT(ASTNode *node) {
+    static bool notMaskDeclared = false;
+    this->EvaluateUnarySubexpression(node);
+    
+    const int notMask = 0x00000001;
+
+    if ( ! notMaskDeclared) {
+        gen->symbolTable.AddGlobalLiteral(Snippets::notMask, Type::INT, notMask);
+        notMaskDeclared = true;
+    }
+
+    if (node->GetData<ExpressionData>()->GetType() == Type::FLOAT) {
+        gen->instructions.emplace_back(MOVSS, Transform::GlobalToAddress(Snippets::notMask), XMM7);
+        gen->instructions.emplace_back(XORPS, XMM7, XMM6);
+
+    } else {
+        gen->instructions.emplace_back(MOVQ, Transform::GlobalToAddress(Snippets::notMask), RBX);
+        gen->instructions.emplace_back(XORQ, RBX, RAX);
+    }
 }
 
 void NodeGenerators::GenerateINT2FLOAT(ASTNode *node) {
@@ -505,6 +564,16 @@ void NodeGenerators::EvaluateComparison(ASTNode *node) {
 
     gen->instructions.emplace_back(MOVQ, Transform::IntToImmediate(0), RAX); // xor sets flags, can't be used
     gen->instructions.emplace_back( Transform::ConditionToCMove(node->GetKind(), comparisonType) , R10, RAX);
+}
+
+
+
+void NodeGenerators::EvaluateUnarySubexpression(ASTNode *node) {
+    // (1) put operand result in %rax or %xmm6
+    ASTNode *operand = node->GetChild(0);
+    gen->GenerateNode(operand);
+
+    // (2) to (5) is not applicable here
 }
 
 

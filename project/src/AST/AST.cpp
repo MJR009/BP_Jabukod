@@ -482,8 +482,8 @@ void AST::ConvertExit(antlr4::Token *exitToken) {
 
 
 
-Variable *AST::AddFloatStringLiteral(const string & name, Type type, any value) {
-    return this->symbolTable.AddFloatStringLiteral(name, type, value);
+Variable *AST::AddGlobalLiteral(const string & name, Type type, any value) {
+    return this->symbolTable.AddGlobalLiteral(name, type, value);
 }
 
 string AST::GenerateUniqueLiteralId(Type type) {

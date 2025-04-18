@@ -2,7 +2,9 @@
 
 const string Snippets::floatDeclaration = "__declfloat";
 const string Snippets::stringDeclaration = "__declstring";
-
+const string Snippets::signMask = "__signMask";
+const string Snippets::bitNotMask = "__bitNotMask";
+const string Snippets::notMask = "__notMask";
 
 
 const vector<Instruction> Snippets::Prolog(int bytesToReserve) {
