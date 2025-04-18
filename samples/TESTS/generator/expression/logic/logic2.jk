@@ -1,0 +1,6 @@
+int main() {
+    int x = 0xf && false;
+    float y = 0.0 || 0.01;
+
+    int z = y;
+}

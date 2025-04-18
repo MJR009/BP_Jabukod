@@ -201,6 +201,16 @@ void NodeGenerators::GenerateBIT_AND(ASTNode *node) {
     this->EvaluateCurrentExpression(node, ANDi);
 }
 
+void NodeGenerators::GenerateOR(ASTNode *node) {
+    this->EvaluateSubexpressions(node);
+    this->EvaluateCurrentExpression(node, ORi);
+}
+
+void NodeGenerators::GenerateAND(ASTNode *node) {
+    this->EvaluateSubexpressions(node);
+    this->EvaluateCurrentExpression(node, ANDi);
+}
+
 void NodeGenerators::GenerateINT2FLOAT(ASTNode *node) {
     gen->GenerateNode(node->GetChild(0));
     gen->instructions.emplace_back(CVTSI2SS, RAX, XMM6);

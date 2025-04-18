@@ -57,6 +57,8 @@ void Generator::GenerateNode(ASTNode *node) {
         Generate_case(BIT_OR);
         Generate_case(BIT_XOR);
         Generate_case(BIT_AND);
+        Generate_case(OR);
+        Generate_case(AND);
         Generate_case(INT2FLOAT);
         Generate_case(FLOAT2INT);
         Generate_case(BOOL2INT);
@@ -77,8 +79,6 @@ void Generator::GenerateNode(ASTNode *node) {
         Generate_case(EXIT);
         /*
         Generate_case(POWER);
-        Generate_case(OR);
-        Generate_case(AND);
         Generate_case(LESS);
         Generate_case(LESS_EQUAL);
         Generate_case(GREATER);

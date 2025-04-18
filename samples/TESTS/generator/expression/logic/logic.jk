@@ -1,0 +1,5 @@
+int main() {
+    bool x = true && true;
+    bool y = false || x;
+    bool z = false && y;
+}
