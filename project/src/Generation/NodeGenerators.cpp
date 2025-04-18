@@ -162,6 +162,30 @@ void NodeGenerators::GenerateMODULO(ASTNode *node) { // float modulo cannot appe
     gen->ConnectSequence( Snippets::PopRegister(type, RDX) );
 }
 
+void NodeGenerators::GenerateLEFT_SHIFT(ASTNode *node) {
+    this->EvaluateSubexpressions(node);
+    
+    Type type = node->GetData<ExpressionData>()->GetType();
+    gen->ConnectSequence( Snippets::PushRegister(type, RCX) );
+    gen->instructions.emplace_back(MOV, BL, CL);
+
+    gen->instructions.emplace_back(Opcode::GPR.at(SHL), CL, RAX);
+
+    gen->ConnectSequence( Snippets::PopRegister(type, RCX) );
+}
+
+void NodeGenerators::GenerateRIGHT_SHIFT(ASTNode *node) {
+    this->EvaluateSubexpressions(node);
+
+    Type type = node->GetData<ExpressionData>()->GetType();
+    gen->ConnectSequence( Snippets::PushRegister(type, RCX) );
+    gen->instructions.emplace_back(MOV, BL, CL);
+
+    gen->instructions.emplace_back(Opcode::GPR.at(SHR), CL, RAX);
+
+    gen->ConnectSequence( Snippets::PopRegister(type, RCX) );
+}
+
 void NodeGenerators::GenerateINT2FLOAT(ASTNode *node) {
     gen->GenerateNode(node->GetChild(0));
     gen->instructions.emplace_back(CVTSI2SS, RAX, XMM6);

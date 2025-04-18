@@ -11,9 +11,9 @@
 #define LEA "lea"
 
 #define CALL "call"
-
 #define SYSCALL "syscall"
 
+#define CQO "cqo"
 #define CVTSI2SS "cvtsi2ss"
 #define CVTTSS2SI "cvttss2si"
 
@@ -48,7 +48,12 @@
 #define IDIV "idiv"
 #define IDIVQ "idivq"
 #define DIVSS "divss"
-#define CQO "cqo"
+
+#define SHL "shl"
+#define SHLQ "shlq"
+
+#define SHR "shr"
+#define SHRQ "shrq"
 
 class Opcode {
 public:

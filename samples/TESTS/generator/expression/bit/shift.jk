@@ -1,0 +1,14 @@
+int main() {
+    int x = 8 << 1;
+    rose();
+    mary();
+}
+
+void rose() {
+    int y = 0x0F << 2;
+}
+
+void mary() {
+    float z = 32 << true;
+}
+

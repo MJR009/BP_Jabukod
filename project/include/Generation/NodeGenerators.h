@@ -22,6 +22,8 @@ public:
     void GenerateMULTIPLICATION(ASTNode *node);
     void GenerateDIVISION(ASTNode *node);
     void GenerateMODULO(ASTNode *node);
+    void GenerateLEFT_SHIFT(ASTNode *node);
+    void GenerateRIGHT_SHIFT(ASTNode *node);
     void GenerateINT2FLOAT(ASTNode *node);
     void GenerateFLOAT2INT(ASTNode *node);
     void GenerateBOOL2INT(ASTNode *node);
@@ -42,8 +44,6 @@ public:
     void GenerateEXIT(ASTNode *node);
     /*
     void GeneratePOWER(ASTNode *node);
-    void GenerateLEFT_SHIFT(ASTNode *node);
-    void GenerateRIGHT_SHIFT(ASTNode *node);
     void GenerateBIT_OR(ASTNode *node);
     void GenerateBIT_XOR(ASTNode *node);
     void GenerateOR(ASTNode *node);

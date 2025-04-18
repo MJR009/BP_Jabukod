@@ -26,6 +26,10 @@
 #define R10 "%r10"
 #define R11 "%r11"
 
+// for << and >>
+#define CL "%cl"
+#define BL "%bl"
+
 // FLOATING POINT, SCRATCH
 #define XMM0 "%xmm0"
 #define XMM1 "%xmm1"
