@@ -21,7 +21,7 @@ void NodeGenerators::GenerateFUNCTION(ASTNode *node) {
         gen->GenerateNode(node->GetChild(i));
     }
 
-    // fallback epilogues at the end of functions // TODO should this be here?
+    // fallback epilogues at the end of functions
     if (gen->IsInMain()) {
         gen->instructions.emplace_back(MOVQ, Transform::IntToImmediate(0), RAX);
         gen->ConnectSequence( Snippets::Exit(RAX) );
