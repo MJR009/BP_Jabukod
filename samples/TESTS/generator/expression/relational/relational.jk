@@ -1,0 +1,5 @@
+int main() {
+    bool x = 1.2 == 1;
+    bool y = 1 != 2;
+    bool z = true >= -5;
+}

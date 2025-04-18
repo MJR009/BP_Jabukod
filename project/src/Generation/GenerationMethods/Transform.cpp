@@ -107,3 +107,17 @@ string Transform::ConditionToJump(NodeKind condition, Type comparisonType) {
 
     return jump[ signednessSelector ][ jumpSelector ];
 }
+
+string Transform::ConditionToCMove(NodeKind condition, Type comparisonType) {
+    const string cmove[2][6] = {
+    //     <       <=       >       >=       ==       !=      ///////
+        {CMOVBQ, CMOVBEQ, CMOVAQ, CMOVAEQ, CMOVEQ, CMOVNEQ},  // SSE
+        {CMOVLQ, CMOVLEQ, CMOVGQ, CMOVGEQ, CMOVEQ, CMOVNEQ}   // signed
+    };
+    const int nodeKindCorrection = -17;
+
+    int cmoveSelector = condition + nodeKindCorrection;
+    int signednessSelector = (comparisonType == Type::FLOAT) ? 0 : 1;
+
+    return cmove[ signednessSelector ][ cmoveSelector ];
+}

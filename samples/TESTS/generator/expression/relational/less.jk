@@ -1,0 +1,4 @@
+int main() {
+    bool x = 5 < 2;
+    bool y = 2 < 5;
+}

@@ -63,3 +63,14 @@ Položka enumu
     // MŮŽE být stejné jako parametr funkce, před i za
     // MŮŽE být stejné jako název svého enumu a i jiného enumu
     // NEMŮŽE být stejné jako jiná položka stejného enumu ANI JINÉHO ENUMU
+    
+    
+    
+    
+---TEXT---
+
+- Vyhodnocování výrazů porovnání má jináý princip
+	- stejně tak zmínit dělení a modulo, kde se registry chovají jinak
+	- to samé pro bitshifty
+	- také platí pro mocnění, HLAVNĚ
+

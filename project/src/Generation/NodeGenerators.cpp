@@ -211,6 +211,36 @@ void NodeGenerators::GenerateAND(ASTNode *node) {
     this->EvaluateCurrentExpression(node, ANDi);
 }
 
+void NodeGenerators::GenerateLESS(ASTNode *node) {
+    this->EvaluateSubexpressions(node);
+    this->EvaluateComparison(node);
+}
+
+void NodeGenerators::GenerateLESS_EQUAL(ASTNode *node) {
+    this->EvaluateSubexpressions(node);
+    this->EvaluateComparison(node);
+}
+
+void NodeGenerators::GenerateGREATER(ASTNode *node) {
+    this->EvaluateSubexpressions(node);
+    this->EvaluateComparison(node);
+}
+
+void NodeGenerators::GenerateGREATER_EQUAL(ASTNode *node) {
+    this->EvaluateSubexpressions(node);
+    this->EvaluateComparison(node);
+}
+
+void NodeGenerators::GenerateEQUAL(ASTNode *node) {
+    this->EvaluateSubexpressions(node);
+    this->EvaluateComparison(node);
+}
+
+void NodeGenerators::GenerateNOT_EQUAL(ASTNode *node) {
+    this->EvaluateSubexpressions(node);
+    this->EvaluateComparison(node);
+}
+
 void NodeGenerators::GenerateINT2FLOAT(ASTNode *node) {
     gen->GenerateNode(node->GetChild(0));
     gen->instructions.emplace_back(CVTSI2SS, RAX, XMM6);
@@ -461,6 +491,22 @@ void NodeGenerators::EvaluateCurrentExpression(ASTNode *node, string OPCODE) {
     }
 }
 
+void NodeGenerators::EvaluateComparison(ASTNode *node) {
+    // (6) -//- - comparison result in flags, bool must be resolved otherwise
+    Type comparisonType = node->GetOperandType(0);
+    // comparison result always bool, operand type must be used
+    // both operands same after implicit conversions
+
+    if (comparisonType == Type::FLOAT) {
+        gen->instructions.emplace_back(COMISS, XMM7, XMM6);
+    } else {
+        gen->instructions.emplace_back(CMP, RBX, RAX);
+    }
+
+    gen->instructions.emplace_back(MOVQ, Transform::IntToImmediate(0), RAX); // xor sets flags, can't be used
+    gen->instructions.emplace_back( Transform::ConditionToCMove(node->GetKind(), comparisonType) , R10, RAX);
+}
+
 
 
 void NodeGenerators::EvaluateAssignment(ASTNode *lSide, ASTNode *rSide, Type rSideType) {
@@ -482,8 +528,6 @@ void NodeGenerators::EvaluateAssignment(ASTNode *lSide, ASTNode *rSide, Type rSi
     gen->instructions.emplace_back(opcode, source, target);
 }
 
-
-
 void NodeGenerators::EvaluateCondition(ASTNode *condition, string falseLabel) {
     Type comparisonType = Type::VOID;
     string comparison, left, right;
@@ -498,15 +542,14 @@ void NodeGenerators::EvaluateCondition(ASTNode *condition, string falseLabel) {
         case NodeKind::NOT_EQUAL:
             this->EvaluateSubexpressions(condition);
 
-            comparisonType = condition->GetOperandType(0); // type of comparison is always bool, type of operands is needed
-
-            comparison = (comparisonType == Type::FLOAT) ? COMISS : CMP;
-            left = (comparisonType == Type::FLOAT) ? XMM6 : RAX;
-            right = (comparisonType == Type::FLOAT) ? XMM7 : RBX;
+            comparisonType = condition->GetOperandType(0);
+            if (comparisonType == Type::FLOAT) {
+                gen->instructions.emplace_back(COMISS, XMM7, XMM6);
+            } else {
+                gen->instructions.emplace_back(CMP, RBX, RAX);
+            }
 
             jumpKind = Transform::ConditionToJump( condition->GetKind(), comparisonType );
-
-            gen->instructions.emplace_back(comparison, right, left);
             break;
 
         // TODO !!!

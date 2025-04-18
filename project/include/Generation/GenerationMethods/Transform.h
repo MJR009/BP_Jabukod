@@ -24,4 +24,5 @@ public:
     static string VariableToLocation(VariableData *data); // either register or memory
     // conditions are negated to jump on false and continue flow on true
     static string ConditionToJump(NodeKind condition, Type comparisonType);
+    static string ConditionToCMove(NodeKind condition, Type comparisonType);
 };

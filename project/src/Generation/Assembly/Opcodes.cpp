@@ -5,9 +5,9 @@ const map<string, string> Opcode::GPR = {
     {SUB, SUBQ},
     {IMUL, IMULQ},
     {IDIV, IDIVQ},
+
     {ORi, ORQ},
     {ANDi, ANDQ},
-    
     {SHL, SHLQ},
     {SHR, SHRQ},
     {XOR, XORQ}
@@ -18,6 +18,4 @@ const map<string, string> Opcode::SSE = {
     {SUB, SUBSS},
     {IMUL, MULSS},
     {IDIV, DIVSS},
-    {ORi, ORSS},
-    {ANDi, ANDSS}
 };
