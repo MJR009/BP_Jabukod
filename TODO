@@ -73,4 +73,5 @@ Položka enumu
 	- stejně tak zmínit dělení a modulo, kde se registry chovají jinak
 	- to samé pro bitshifty
 	- také platí pro mocnění, HLAVNĚ
+	- binární operátory pořád vnitřně používají rbx
 

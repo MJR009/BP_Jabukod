@@ -1,0 +1,13 @@
+int main() {
+    if (25 + 52) {
+        write "HERE\n";
+    }
+
+    if (false) {
+        write "THERE\n";
+    }
+
+    if (3.14 + 1.41) {
+        write "YONDER\n";
+    }
+}

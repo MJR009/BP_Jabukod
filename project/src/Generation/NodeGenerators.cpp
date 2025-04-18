@@ -621,9 +621,11 @@ void NodeGenerators::EvaluateCondition(ASTNode *condition, string falseLabel) {
             jumpKind = Transform::ConditionToJump( condition->GetKind(), comparisonType );
             break;
 
-        // TODO !!!
-        // case NodeKind::AND: case NodeKind::OR: case NodeKind::NOT:
-        default: // bool evaluated into RAX
+        default: // bool evaluated into RAX, non bool get converted
+            gen->GenerateNode(condition); // either binary or unary
+
+            gen->instructions.emplace_back(TEST, RAX, RAX);
+            jumpKind = JZ;
             break;
     }
 

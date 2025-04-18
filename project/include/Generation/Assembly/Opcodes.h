@@ -19,6 +19,7 @@
 
 #define TEST "test"
 #define CMOVNZ "cmovnz"
+#define JZ "jz"
 #define CMP "cmp"
 #define COMISS "comiss"
 #define JMP "jmp"
@@ -75,12 +76,10 @@
 
 #define ANDi "and"
 #define ANDQ "andq"
-#define ANDSS "andss"
 
 #define NEGQ "negq"
 
 #define NOTQ "notq"
-#define NOTSS "notss"
 
 class Opcode {
 public:
