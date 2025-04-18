@@ -186,6 +186,21 @@ void NodeGenerators::GenerateRIGHT_SHIFT(ASTNode *node) {
     gen->ConnectSequence( Snippets::PopRegister(type, RCX) );
 }
 
+void NodeGenerators::GenerateBIT_OR(ASTNode *node) {
+    this->EvaluateSubexpressions(node);
+    this->EvaluateCurrentExpression(node, ORi);
+}
+
+void NodeGenerators::GenerateBIT_XOR(ASTNode *node) {
+    this->EvaluateSubexpressions(node);
+    this->EvaluateCurrentExpression(node, XOR);
+}
+
+void NodeGenerators::GenerateBIT_AND(ASTNode *node) {
+    this->EvaluateSubexpressions(node);
+    this->EvaluateCurrentExpression(node, ANDi);
+}
+
 void NodeGenerators::GenerateINT2FLOAT(ASTNode *node) {
     gen->GenerateNode(node->GetChild(0));
     gen->instructions.emplace_back(CVTSI2SS, RAX, XMM6);

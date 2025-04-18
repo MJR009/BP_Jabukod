@@ -1,0 +1,4 @@
+int main() {
+    int x = 0x00f0 | 0x000f;
+    int y = false | true;
+}

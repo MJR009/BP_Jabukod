@@ -55,6 +55,17 @@
 #define SHR "shr"
 #define SHRQ "shrq"
 
+#define ORi "or"
+#define ORQ "orq"
+#define ORSS "orss"
+
+#define XOR "xor"
+#define XORQ "xorq"
+
+#define ANDi "and"
+#define ANDQ "andq"
+#define ANDSS "andss"
+
 class Opcode {
 public:
     static const map<string, string> GPR;
