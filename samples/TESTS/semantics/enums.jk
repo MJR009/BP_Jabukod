@@ -14,8 +14,6 @@ int main() {
     z = 1 + B;
 }
 
-enum X gl = D;
-
 void rose(enum Y arg, float a) {
     arg = 5;
     return;

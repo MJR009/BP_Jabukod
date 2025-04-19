@@ -135,6 +135,14 @@ void Generator::OutputRODataSection() {
         this->OutputVariable(variable);
     }
 
+    list<EnumTableEntry> enums = this->symbolTable.GetAllEnums();
+
+    for (auto & anEnum : enums) {
+        for (auto & enumItem : anEnum.GetEntryItems()) {
+            this->OutputVariable(enumItem);
+        }
+    }
+
     jout << endl;
 }
 

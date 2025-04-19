@@ -19,7 +19,7 @@ string Transform::IdentifierToLabel(const string & name) {
 string Transform::TypeToDirective(Type type) {
     switch (type) {
         case Type::INT: case Type::BOOL:
-            return ".long";
+            return ".quad";
         case Type::FLOAT:
             return ".float";
         case Type::STRING:

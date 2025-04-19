@@ -17,7 +17,7 @@ int main(int argc, char **argv) {
         cout << HELP_MESSAGE;
         return OK;
     } catch (const char *msg) {
-        cerr << RED << BOLD << "Input error" << "\t" << DEFAULT;
+        cerr << RED << "Input error" << "\t" << DEFAULT;
         cerr << DIM << msg << endl << DEFAULT;
         return NOK;
     }

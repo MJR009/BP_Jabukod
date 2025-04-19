@@ -190,6 +190,10 @@ Scope SymbolTable::GetGlobalVariables() {
     return this->globalScope;
 }
 
+list<EnumTableEntry> & SymbolTable::GetAllEnums() {
+    return this->enumTable.GetEnums();
+}
+
 
 
 bool SymbolTable::IsIdentifierAllowed(const string & identifier) const {

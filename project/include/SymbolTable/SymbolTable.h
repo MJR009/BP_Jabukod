@@ -49,6 +49,7 @@ public:
     bool IsIdEnumName(const string & name);
 
     Scope GetGlobalVariables();
+    list<EnumTableEntry> & GetAllEnums();
 
     bool IsIdentifierAllowed(const string & identifier) const;
 

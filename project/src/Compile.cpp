@@ -18,7 +18,7 @@ int Compile(PrepareArguments *args) {
     try {
         input = new antlr4::ANTLRInputStream(stream);
     } catch (...) {
-        cerr << RED << BOLD << "Input error" << "\t" << DEFAULT;
+        cerr << RED << "Input error" << "\t" << DEFAULT;
         cerr << DIM << INVALID_INPUT_FILE << DEFAULT << endl;
         return NOK;
     }
@@ -88,7 +88,7 @@ int Compile(PrepareArguments *args) {
         }
 
     } catch (const string & msg) {
-        cerr << RED << BOLD << "Compilation error" << "\t" << DEFAULT;
+        cerr << RED << "Compilation error" << "\t" << DEFAULT;
         cerr << DIM << msg << endl << DEFAULT;
         delete input;
         return NOK;
@@ -104,7 +104,7 @@ int OpenSourceFile(const char *name, ifstream & stream) {
     const filesystem::path fileName(name);
     error_code ec;
     if ( ! filesystem::is_regular_file(fileName, ec)) {
-        cerr << RED << BOLD << "Input error" << "\t" << DEFAULT;
+        cerr << RED << "Input error" << "\t" << DEFAULT;
         cerr << DIM << name << " is not a file" << endl << DEFAULT;
         return NOK;
     }
