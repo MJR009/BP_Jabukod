@@ -8,4 +8,5 @@ enum Y {
 
 int main() {
     enum Y x = 1;
+    enum X y;
 }

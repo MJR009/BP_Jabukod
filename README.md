@@ -23,10 +23,9 @@ BP_Jabukod
 │   ├── include
 │   │
 │   ├── common.h
+│   ├── SemanticErrors.h
 │   ├── main.h
 │   ├── main.cpp
-│   ├── Compile.h
-│   ├── Compile.cpp
 │   └── CMakeLists.txt
 ├── samples
 ├── tool
@@ -42,7 +41,7 @@ Project requirements are analogous to ANTLR4 version 4.13.2:
 - Minimum C++ standard <b>C++17</b>
 - Minimum <b>CMake 2.8</b>
 - `java` installed (needed for `make visualise`, tested with `openjdk 21.0.6 2025-01-21`)
-- `javac` installed (needed for `make visualise`)
+- `javac` installed ( -//- )
 - `dot` installed ( -//- )
 
 Some of the outputs use ANSI escape sequences which may not visualise text as
@@ -58,6 +57,15 @@ The following is the recommended command for first time <b>building</b> the prog
 `cmake -B build -S project && make -C build`<br>
 
 The resulting <b>executable</b> `jabukod` will be located in the `build` subdirectory.
+<b>
+As the build process needs to download and build the ANTLR4 runtime, initial
+build may take a long time.
+</b>
+</br>
+</br>
+Also, due to several deprecation warnings shown during the build of the ANTLR4 runtime,
+build is not processed without warnings. For this compiler, they pose no
+limitation to intended functionality.
 
 ---
 
@@ -87,16 +95,6 @@ the `build` subdirectory or with `-C build` argument:
 - `make visualise INPUT_FILE=[file from subdir. 'samples']` <br> Opens a window
 with a syntax tree visualisation (note this target requires `java`, `javac` and `dot` installed).
 - `make pack` <br> Creates a `Jabukod.zip` file with everything needed for build.
-
-<b>
-As the build process needs to download and build the ANTLR4 runtime, initial
-build may take a long time.
-</b>
-</br>
-</br>
-Also, due to several deprecation warnings shown during the build of the ANTLR4 runtime,
-build is not processed without warnings. For this compiler, they pose no
-limitation to intended functionality.
 
 ### Syntax highlighting
 
