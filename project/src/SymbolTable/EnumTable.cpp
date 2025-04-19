@@ -29,11 +29,13 @@ list<EnumTableEntry> & EnumTable::GetEnums() {
 
 
 Variable *EnumTable::GetItemFromAcrossAll(const string & name) {
-    for (auto currentEnum : this->enums) {
-        for (auto & currentItem : currentEnum.GetEntryItems()) {
-            if (currentItem.GetName() == name) {
-                return &currentItem;
-            }
+    Variable *aux = nullptr;
+
+    for (auto & currentEnum : this->enums) {
+        aux = currentEnum.GetItem(name);
+
+        if (aux != nullptr) {
+            return aux;
         }
     }
 

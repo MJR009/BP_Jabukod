@@ -5,7 +5,7 @@ void EnumTableEntry::AddItem(string itemName, int itemValue) {
         itemName,
         StorageSpecifier::CONST,
         Type::INT,
-        itemValue,
+        any(itemValue),
         0,
         true,
         false
@@ -20,6 +20,12 @@ string EnumTableEntry::GetEntryName() const {
 
 list<Variable> & EnumTableEntry::GetEntryItems() {
     return this->items.GetVariables();
+}
+
+
+
+Variable *EnumTableEntry::GetItem(const string & name) {
+    return this->items.GetVariable(name);
 }
 
 

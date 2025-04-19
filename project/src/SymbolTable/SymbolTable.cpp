@@ -28,7 +28,14 @@ void SymbolTable::AddGlobalVariable(
 
 FunctionTableEntry *SymbolTable::AddFunction(antlr4::Token *function, JabukodParser::TypeContext *returnType) {
     string name = function->getText();
-    Type type = Type::toType( returnType->getText() );
+
+    if (returnType->getStart()->getText() == "enum") {
+        antlr4::tree::TerminalNode *returnTypeId = returnType->nonVoidType()->IDENTIFIER();
+        if ( ! this->IsIdEnumName(returnTypeId->getText()) ) {
+            this->parser->notifyErrorListeners(returnTypeId->getSymbol(), UNDEFINED_ENUM_RETURN_TYPE, nullptr);
+        }
+    }
+    Type type = Type::toType( returnType->getStart()->getText() );
 
     if (this->IsFunctionNameAvailable(name)) {
         if ( ! this->IsIdentifierAllowed(name)) {
@@ -43,7 +50,12 @@ FunctionTableEntry *SymbolTable::AddFunction(antlr4::Token *function, JabukodPar
 }
 
 void SymbolTable::AddFunctionParameter(JabukodParser::NonVoidTypeContext *parameterType, antlr4::Token *parameterName) {
-    Type type = Type::toType( parameterType->getText() );
+    if (parameterType->getStart()->getText() == "enum") {
+        if ( ! this->IsIdEnumName(parameterType->IDENTIFIER()->getText()) ) {
+            this->parser->notifyErrorListeners(parameterType->IDENTIFIER()->getSymbol(), UNDEFINED_ENUM_PARAMETER, nullptr);
+        }
+    }    
+    Type type = Type::toType( parameterType->getStart()->getText() );
 
     string name = parameterName->getText();
     if ( ! this->IsFunctionParameterNameAvailable(name)) {

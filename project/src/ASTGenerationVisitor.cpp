@@ -67,6 +67,11 @@ any ASTGenerationVisitor::visitFunctionDefinition(JabukodParser::FunctionDefinit
     string name = ctx->IDENTIFIER()->getText();
     
     FunctionTableEntry *function = this->ast.SetActiveFunction(name);
+
+    if ( ! function) { // needed in case of function name collision during global symbols processing
+        return OK;
+    }
+
     FunctionData *data = new FunctionData(function);
 
     this->ast.AddNode(NodeKind::FUNCTION, data);

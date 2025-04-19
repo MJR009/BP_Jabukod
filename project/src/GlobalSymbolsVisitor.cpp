@@ -44,9 +44,13 @@ any GlobalSymbolsVisitor::visitVariableDefinition(JabukodParser::VariableDefinit
 any GlobalSymbolsVisitor::visitFunctionDefinition(JabukodParser::FunctionDefinitionContext *ctx) {
     antlr4::Token *function = ctx->IDENTIFIER()->getSymbol();
     JabukodParser::TypeContext *returnType = ctx->type();
-    FunctionTableEntry *newFunctionPointer = this->symbolTable.AddFunction(function, returnType);
+    FunctionTableEntry *newFunction = this->symbolTable.AddFunction(function, returnType);
 
-    this->symbolTable.SetCurrentFunction(newFunctionPointer);
+    if ( ! newFunction) {
+        return OK;
+    }
+
+    this->symbolTable.SetCurrentFunction(newFunction);
     if (ctx->functionParameters()) {
         this->visit(ctx->functionParameters());
     }

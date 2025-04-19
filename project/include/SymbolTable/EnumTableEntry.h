@@ -12,6 +12,8 @@ public:
     string GetEntryName() const;
     list<Variable> & GetEntryItems();
 
+    Variable *GetItem(const string & name);
+
     void Print() const;
 
 private:

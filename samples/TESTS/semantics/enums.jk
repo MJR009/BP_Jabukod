@@ -1,23 +1,28 @@
 enum X {
-    A, B
+    A, X, B
 }
 
 enum Y {
     C = -1, D
 }
 
-//void A() { // SEGFAULTS !!!!!
-//    return;
-//}
+void f() { // SEGFAULTS !!!!!
+    return;
+}
 
 int main() {
     enum Y x = 1;
-    enum X y;
+    enum X y = X;
 
-    enum X z = A;
+    enum X z = A + 1;
+    z = 1 + B;
 }
 
-void rose(enum X arg) {
+void rose(enum Y arg, float a) {
     arg = 5;
     return;
+}
+
+enum X mary() {
+    return D;
 }
