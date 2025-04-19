@@ -1,9 +1,10 @@
 #include "GlobalSymbolsVisitor.h"
 
-// TODO ZPRACOVÁNÍ POLÍ A ENUMŮ 
+// TODO ZPRACOVÁNÍ POLÍ 
 
 any GlobalSymbolsVisitor::visitSourceFile(JabukodParser::SourceFileContext *ctx) {
     visitChildren(ctx);
+
     this->symbolTable.CheckIfIntMainPresent();
 
     return OK;
@@ -11,12 +12,10 @@ any GlobalSymbolsVisitor::visitSourceFile(JabukodParser::SourceFileContext *ctx)
 
 any GlobalSymbolsVisitor::visitVariableDeclaration(JabukodParser::VariableDeclarationContext *ctx) {
     antlr4::Token *variable = ctx->IDENTIFIER()->getSymbol();
-    JabukodParser::StorageSpecifierContext *storageSpecifier;
+    JabukodParser::StorageSpecifierContext *storageSpecifier = nullptr;
 
     if (ctx->storageSpecifier()) {
         storageSpecifier = ctx->storageSpecifier();
-    } else {
-        storageSpecifier = nullptr;
     }
 
     JabukodParser::NonVoidTypeContext *type = ctx->nonVoidType();
@@ -28,12 +27,10 @@ any GlobalSymbolsVisitor::visitVariableDeclaration(JabukodParser::VariableDeclar
 
 any GlobalSymbolsVisitor::visitVariableDefinition(JabukodParser::VariableDefinitionContext *ctx) {
     antlr4::Token *variable = ctx->IDENTIFIER()->getSymbol();
-    JabukodParser::StorageSpecifierContext *storageSpecifier;
+    JabukodParser::StorageSpecifierContext *storageSpecifier = nullptr;
 
     if (ctx->storageSpecifier()) {
         storageSpecifier = ctx->storageSpecifier();
-    } else {
-        storageSpecifier = nullptr;
     }
 
     JabukodParser::NonVoidTypeContext *type = ctx->nonVoidType();
@@ -80,12 +77,10 @@ any GlobalSymbolsVisitor::visitEnumDefinition(JabukodParser::EnumDefinitionConte
 
 any GlobalSymbolsVisitor::visitEnumItem(JabukodParser::EnumItemContext *ctx) {
     antlr4::Token *itemName = ctx->IDENTIFIER()->getSymbol();
-    antlr4::Token *itemValue;
+    antlr4::Token *itemValue = nullptr;
 
     if (ctx->INT_LITERAL()) {
         itemValue = ctx->INT_LITERAL()->getSymbol();
-    } else {
-        itemValue = nullptr;
     }
 
     this->symbolTable.AddEnumItem(itemName, itemValue);

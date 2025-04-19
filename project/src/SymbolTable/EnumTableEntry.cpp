@@ -1,7 +1,15 @@
 #include "EnumTableEntry.h"
 
 void EnumTableEntry::AddItem(string itemName, int itemValue) {
-    this->items.emplace_back(itemName, itemValue);
+    this->items.AddEntry(
+        itemName,
+        StorageSpecifier::CONST,
+        Type::INT,
+        itemValue,
+        0,
+        true,
+        false
+    );
 }
 
 
@@ -10,8 +18,8 @@ string EnumTableEntry::GetEntryName() const {
     return this->name;
 }
 
-list<EnumItem> & EnumTableEntry::GetEntryItems() {
-    return this->items;
+list<Variable> & EnumTableEntry::GetEntryItems() {
+    return this->items.GetVariables();
 }
 
 
@@ -19,15 +27,7 @@ list<EnumItem> & EnumTableEntry::GetEntryItems() {
 void EnumTableEntry::Print() const {
     cout << YELLOW << this->name << DEFAULT << " {" << endl << "  ";
 
-    bool first = true;
-    for_each(this->items.begin(), this->items.end(),
-        [ & first ](const EnumItem & current) {
-            cout << DIM << (first ? "" : ", ") << DEFAULT;
-            current.Print();
-            first = false;
-        }
-    );
+    this->items.PrintAsEnum();
 
-    cout << endl;
-    cout << "}" << endl;
+    cout << endl << "}" << endl;
 }

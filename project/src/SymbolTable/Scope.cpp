@@ -75,3 +75,15 @@ void Scope::PrintDeclarations() const {
         }
     );
 }
+
+void Scope::PrintAsEnum() const {
+    bool first = true;
+    for_each(this->variables.begin(), this->variables.end(),
+        [ & first ](const Variable & current) {
+            cout << DIM << (first ? "" : ", ") << DEFAULT;
+            cout << current.GetName();
+            cout << DIM << " = " << current.GetDefaultValue<int>() << DEFAULT;
+            first = false;
+        }
+    );
+}

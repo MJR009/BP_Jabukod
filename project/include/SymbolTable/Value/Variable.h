@@ -31,7 +31,7 @@ public:
     Type GetType();
     StorageSpecifier GetSpecifier();
     template <typename T>
-    T GetDefaultValue() {
+    T GetDefaultValue() const {
         return any_cast<T>( this->defaultValue );
     }
 

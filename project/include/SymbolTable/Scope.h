@@ -22,6 +22,7 @@ public:
 
     void PrintComplete() const;
     void PrintDeclarations() const;
+    void PrintAsEnum() const;
 
 private:
     list<Variable> variables;

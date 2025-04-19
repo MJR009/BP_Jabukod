@@ -58,15 +58,15 @@ void SymbolTable::AddFunctionParameter(JabukodParser::NonVoidTypeContext *parame
 EnumTableEntry *SymbolTable::AddEnum(antlr4::Token *theEnum) {
     string name = theEnum->getText();
 
-    if (this->IsEnumNameAvailable(name)) {
-        if ( ! this->IsIdentifierAllowed(name)) {
-            this->parser->notifyErrorListeners(theEnum, INTERNAL_ID_USE, nullptr);
-        }
-        return this->enumTable.AddEntry(name);
-    } else {
+    if ( ! this->IsEnumNameAvailable(name)) {
         this->parser->notifyErrorListeners(theEnum, ENUM_REDEFINITION, nullptr);
         return nullptr;
     }
+    if ( ! this->IsIdentifierAllowed(name)) {
+        this->parser->notifyErrorListeners(theEnum, INTERNAL_ID_USE, nullptr);
+    }
+
+    return this->enumTable.AddEntry(name);
 }
 
 void SymbolTable::AddEnumItem(antlr4::Token *itemName, antlr4::Token *itemValue) {
@@ -88,10 +88,11 @@ void SymbolTable::AddEnumItem(antlr4::Token *itemName, antlr4::Token *itemValue)
         }
     }
 
-    if (this->currentEnum) { // if enum does not have original name, it is not stored
+    if (this->currentEnum) { // if enum does not have original name, it was not stored
         if ( ! this->IsIdentifierAllowed(name)) {
             this->parser->notifyErrorListeners(itemName, INTERNAL_ID_USE, nullptr);
         }
+        
         this->currentEnum->AddItem(name, this->currentEnumItemValue);
     }
 

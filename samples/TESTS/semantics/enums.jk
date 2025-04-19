@@ -1,0 +1,11 @@
+enum X {
+    A, B
+}
+
+enum Y {
+    C = -1, D
+}
+
+int main() {
+    enum Y x = 1;
+}

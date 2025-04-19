@@ -39,7 +39,7 @@ bool EnumTable::IsNameAvailable(const string & name) const {
 
 bool EnumTable::IsItemNameAvailableAcrossAll(const string & name) const {
     for (auto currentEnum : this->enums) {
-        for (auto & currentItem :currentEnum.GetEntryItems()) {
+        for (auto & currentItem : currentEnum.GetEntryItems()) {
             if (currentItem.GetName() == name) {
                 return false;
             }
@@ -50,23 +50,23 @@ bool EnumTable::IsItemNameAvailableAcrossAll(const string & name) const {
 }
 
 bool EnumTable::IsItemNameAvailable(const string & name, EnumTableEntry *theEnum) const {
-    list<EnumItem> items = theEnum->GetEntryItems();
+    auto items = theEnum->GetEntryItems();
 
     return
         none_of(items.begin(), items.end(),
-            [ & name ](const EnumItem & current) {
+            [ & name ](const Variable & current) {
                 return current.GetName() == name;
             }
         );
 }
 
 bool EnumTable::IsItemValueAvailable(const int & value, EnumTableEntry *theEnum) const {
-    list<EnumItem> items = theEnum->GetEntryItems();
+    auto items = theEnum->GetEntryItems();
 
     return
         none_of(items.begin(), items.end(),
-            [ & value ](const EnumItem & current) {
-                return current.GetValue() == value;
+            [ & value ](const Variable & current) {
+                return current.GetDefaultValue<int>() == value;
             }
         );
 }
