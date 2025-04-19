@@ -54,3 +54,4 @@
 #define UNDEFINED_ENUM_DECLARATION "variable declared as enum cannot use an undefined enum"
 #define UNDEFINED_ENUM_PARAMETER "parameter cannot use an undefined enum as type"
 #define UNDEFINED_ENUM_RETURN_TYPE "function return type cannot use an undefined enum"
+#define GLOBAL_ENUM_VARIABLE "global variables of type enum are not allowed"

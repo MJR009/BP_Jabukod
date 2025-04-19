@@ -6,10 +6,6 @@ enum Y {
     C = -1, D
 }
 
-void f() { // SEGFAULTS !!!!!
-    return;
-}
-
 int main() {
     enum Y x = 1;
     enum X y = X;
@@ -17,6 +13,8 @@ int main() {
     enum X z = A + 1;
     z = 1 + B;
 }
+
+enum X gl = D;
 
 void rose(enum Y arg, float a) {
     arg = 5;

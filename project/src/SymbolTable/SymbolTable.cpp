@@ -12,7 +12,12 @@ void SymbolTable::AddGlobalVariable(
     if (storageSpecifier) {
         storage = this->ResolveStorageSpecifier(storageSpecifier);
     }
-    Type type = Type::toType( variableType->getText() );
+    string givenType = variableType->getStart()->getText();
+    if (givenType == "enum") {
+        this->parser->notifyErrorListeners(variableType->getStart(), GLOBAL_ENUM_VARIABLE, nullptr);
+        return;
+    }
+    Type type = Type::toType(givenType);
     any value = this->ResolveDefaultValue(defaultValue, type); // returns default to process as many errors as possible
 
     if (this->IsGlobalVariableNameAvailable(name)) {
