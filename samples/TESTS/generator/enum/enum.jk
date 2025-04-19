@@ -1,0 +1,13 @@
+enum COLORS {
+    R, G, B
+}
+
+int main() {
+    enum COLORS x = B;
+
+    int y = x;
+
+    if (y == R) write "RED\n";
+    if (y == G) write "GREEN\n";
+    if (y == B) write "BLUE\n";
+}
