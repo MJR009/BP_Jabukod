@@ -10,6 +10,8 @@ public:
     EnumTableEntry *GetEntryByName(const string & name);
     list<EnumTableEntry> & GetEnums();
 
+    Variable *GetItemFromAcrossAll(const string & name);
+
     bool IsNameAvailable(const string & name) const;
     bool IsItemNameAvailableAcrossAll(const string & name) const;
     bool IsItemNameAvailable(const string & name, EnumTableEntry *theEnum) const;

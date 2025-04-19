@@ -96,6 +96,8 @@ the `build` subdirectory or with `-C build` argument:
 with a syntax tree visualisation (note this target requires `java`, `javac` and `dot` installed).
 - `make pack` <br> Creates a `Jabukod.zip` file with everything needed for build.
 
+---
+
 ### Syntax highlighting
 
 At // TODO PUBLIC EXTENNSION REPO LINK you can get a custom extension for syntax highlighting of Jabukód files

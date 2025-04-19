@@ -28,6 +28,20 @@ list<EnumTableEntry> & EnumTable::GetEnums() {
 
 
 
+Variable *EnumTable::GetItemFromAcrossAll(const string & name) {
+    for (auto currentEnum : this->enums) {
+        for (auto & currentItem : currentEnum.GetEntryItems()) {
+            if (currentItem.GetName() == name) {
+                return &currentItem;
+            }
+        }
+    }
+
+    return nullptr;
+}
+
+
+
 bool EnumTable::IsNameAvailable(const string & name) const {
     return
         none_of(this->enums.begin(), this->enums.end(),

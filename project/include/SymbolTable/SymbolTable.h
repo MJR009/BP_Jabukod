@@ -44,7 +44,9 @@ public:
 
     bool IsIdFunctionParameter(const string & functionName, const string & identifier);
     Variable *IsIdGlobalVariable(const string & name);
+    Variable *IsIdEnumItem(const string & name);
     FunctionTableEntry *IsIdFunction(const string & name);
+    bool IsIdEnumName(const string & name);
 
     Scope GetGlobalVariables();
 

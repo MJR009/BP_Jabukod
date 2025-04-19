@@ -50,3 +50,5 @@
 #define BAD_EXIT_TYPE "exit value type cannot be converted to an int"
 
 #define INTERNAL_ID_USE "identifiers may not start with \"__\" prefix"
+
+#define UNDEFINED_ENUM_DECLARATION "variable declared as enum cannot use an undefined enum"

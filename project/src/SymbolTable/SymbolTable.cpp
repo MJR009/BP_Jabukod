@@ -155,8 +155,16 @@ Variable *SymbolTable::IsIdGlobalVariable(const string & name) {
     return this->globalScope.GetVariable(name);
 }
 
+Variable *SymbolTable::IsIdEnumItem(const string & name) {
+    return this->enumTable.GetItemFromAcrossAll(name);
+}
+
 FunctionTableEntry *SymbolTable::IsIdFunction(const string & name) {
     return this->functionTable.GetFunctionByName(name);
+}
+
+bool SymbolTable::IsIdEnumName(const string & name) {
+    return ( ! this->enumTable.IsNameAvailable(name));
 }
 
 

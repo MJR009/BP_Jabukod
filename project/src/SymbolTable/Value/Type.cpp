@@ -13,7 +13,8 @@ string Type::toString() const {
 }
 
 Type Type::toType(const string & str) {
-    if (str == "int") return INT;
+    if ( (str == "int") ||
+         (str == "enum") ) return INT;
     if (str == "float") return FLOAT;
     if (str == "bool") return BOOL;
     if (str == "string") return STRING;

@@ -6,7 +6,18 @@ enum Y {
     C = -1, D
 }
 
+//void A() { // SEGFAULTS !!!!!
+//    return;
+//}
+
 int main() {
     enum Y x = 1;
     enum X y;
+
+    enum X z = A;
+}
+
+void rose(enum X arg) {
+    arg = 5;
+    return;
 }

@@ -78,7 +78,13 @@ Variable *AST::PutVariableInScope(
     if (storageSpecifier) {
         specifier = StorageSpecifier::toSpecifier( storageSpecifier->getText() );
     }
-    Type type = Type::toType(variableType->getText());
+    
+    if (variableType->getStart()->getText() == "enum") {
+        if ( ! this->IsExistingEnum(variableType->IDENTIFIER()->getText()) ) {
+            this->parser->notifyErrorListeners(variableType->IDENTIFIER()->getSymbol(), UNDEFINED_ENUM_DECLARATION, nullptr);
+        }
+    }    
+    Type type = Type::toType( variableType->getStart()->getText() );
 
     ASTNode *parent = this->activeNode->GetParent(); // definitions/declarations are always children of a node with scope (according to grammar)
 
@@ -161,8 +167,9 @@ Variable *AST::LookupVariable(antlr4::Token *variableToken, bool produceError) {
     if (variable = this->IsDefinedGlobally(name)) {
         return variable;
     }
-
-    // TODO enum
+    if (variable = this->IsEnumItem(name)) {
+        return variable;
+    }
 
     if (produceError) {
         this->parser->notifyErrorListeners(variableToken, UNDEFINED_VARIABLE, nullptr);
@@ -687,8 +694,18 @@ Variable *AST::IsDefinedGlobally(const string & name) {
     return this->symbolTable.IsIdGlobalVariable(name);
 }
 
+Variable *AST::IsEnumItem(const string & name) {
+    return this->symbolTable.IsIdEnumItem(name);
+}
+
 FunctionTableEntry *AST::IsFunctionDefined(const string & name) {
     return this->symbolTable.IsIdFunction(name);
+}
+
+
+
+bool AST::IsExistingEnum(const string & name) {
+    return this->symbolTable.IsIdEnumName(name);
 }
 
 
