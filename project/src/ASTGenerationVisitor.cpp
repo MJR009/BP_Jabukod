@@ -162,24 +162,6 @@ any ASTGenerationVisitor::visitIdentifierExpression(JabukodParser::IdentifierExp
     return OK;
 }
 
-any ASTGenerationVisitor::visitAddSubExpression(JabukodParser::AddSubExpressionContext *ctx) {
-    NodeKind sign = NodeKind::toNodeKind( ctx->sign->getText() );
-    if (sign == NodeKind::minus) {
-        sign = NodeKind::SUBTRACTION;
-    }
-    this->ast.AddNode(sign);
-
-    this->visitChildren(ctx);
-
-    Type type = this->ast.ConvertExpressionBinaryArithmetic(ctx->getStart());
-    ExpressionData *data = new ExpressionData(type);
-    this->ast.GiveActiveNodeData(data);
-
-    this->ast.MoveToParent();
-
-    return OK;
-}
-
 any ASTGenerationVisitor::visitBitXorExpression(JabukodParser::BitXorExpressionContext *ctx) {
     this->ast.AddNode(NodeKind::BIT_XOR);
     this->visitChildren(ctx);
@@ -224,6 +206,24 @@ any ASTGenerationVisitor::visitBitAndExpression(JabukodParser::BitAndExpressionC
     this->visitChildren(ctx);
 
     Type type = this->ast.ConvertExpressionBinaryBitwise(ctx->getStart());
+    ExpressionData *data = new ExpressionData(type);
+    this->ast.GiveActiveNodeData(data);
+
+    this->ast.MoveToParent();
+
+    return OK;
+}
+
+any ASTGenerationVisitor::visitAddSubExpression(JabukodParser::AddSubExpressionContext *ctx) {
+    NodeKind sign = NodeKind::toNodeKind( ctx->sign->getText() );
+    if (sign == NodeKind::minus) {
+        sign = NodeKind::SUBTRACTION;
+    }
+    this->ast.AddNode(sign);
+
+    this->visitChildren(ctx);
+
+    Type type = this->ast.ConvertExpressionBinaryArithmetic(ctx->getStart());
     ExpressionData *data = new ExpressionData(type);
     this->ast.GiveActiveNodeData(data);
 

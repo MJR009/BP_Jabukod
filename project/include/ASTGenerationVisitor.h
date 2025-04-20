@@ -34,11 +34,11 @@ public:
     any visitAssignExpression(JabukodParser::AssignExpressionContext *ctx) override;
     any visitIdentifierExpression(JabukodParser::IdentifierExpressionContext *ctx) override;
     // any visitParenthesisExpression(JabukodParser::ParenthesisExpressionContext *ctx) override; // only enforces precedence, in AST can be ignored
-    any visitAddSubExpression(JabukodParser::AddSubExpressionContext *ctx) override;
     any visitBitXorExpression(JabukodParser::BitXorExpressionContext *ctx) override;
     any visitOrExpression(JabukodParser::OrExpressionContext *ctx) override;
     any visitAndExpression(JabukodParser::AndExpressionContext *ctx) override;
     any visitBitAndExpression(JabukodParser::BitAndExpressionContext *ctx) override;
+    any visitAddSubExpression(JabukodParser::AddSubExpressionContext *ctx) override;
     any visitLessMoreExpression(JabukodParser::LessMoreExpressionContext *ctx) override;
     any visitEqualityExpression(JabukodParser::EqualityExpressionContext *ctx) override;
     // any visitFunctionCallExpression(JabukodParser::FunctionCallExpressionContext *ctx) override; // processed by visitFunctionCall
@@ -48,7 +48,6 @@ public:
     any visitFunctionCall(JabukodParser::FunctionCallContext *ctx) override;
     // any visitFunctionArguments(JabukodParser::FunctionArgumentsContext *ctx) override;
     // any visitFunctionArgument(JabukodParser::FunctionArgumentContext *ctx) override;     // both processed as expression from function call
-    //TODO//any visitListAccess(JabukodParser::ListAccessContext *ctx) override;
     // any visitStatementBlock(JabukodParser::StatementBlockContext *ctx) override; // needed for parse tree
     any visitIfStatement(JabukodParser::IfStatementContext *ctx) override;
     any visitWhileStatement(JabukodParser::WhileStatementContext *ctx) override;
@@ -78,8 +77,7 @@ public:
     // any visitType(JabukodParser::TypeContext *ctx) override; // only needed for functions
     // any visitNonVoidType(JabukodParser::NonVoidTypeContext *ctx) override; // accesed through parent rules
     //TODO//any visitListSpecifier(JabukodParser::ListSpecifierContext *ctx) override;
-
-    // TODO PŘIDATA METODY Z UPRAVENÉ GRAMATIKY!!!
+    //TODO//any visitListAccess(JabukodParser::ListAccessContext *ctx) override;
 
 private:
     AST & ast;
