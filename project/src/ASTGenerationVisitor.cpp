@@ -4,7 +4,7 @@ any ASTGenerationVisitor::visitSourceFile(JabukodParser::SourceFileContext *ctx)
     this->ast.AddNode(NodeKind::PROGRAM);
     this->visitChildren(ctx);
 
-    //this->ast.CorrectStaticVariables();
+    this->ast.CorrectStaticVariables();
 
     // TODO //
     // suspend, resume pair occurence

@@ -534,9 +534,16 @@ int AST::GetVariableCount() {
 void AST::CorrectStaticVariables() {
     void (*checker)(ASTNode *) = [](ASTNode *node) {
         NodeKind kind = node->GetKind();
-        if ((kind == NodeKind::VARIABLE_DECLARATION) || (kind == NodeKind::VARIABLE_DEFINITION)) {
-            // různé chování, deklarace nemá hodnotu
+
+        if (kind == NodeKind::VARIABLE_DECLARATION) {
+            // inic na 0
         }
+
+        if (kind == NodeKind::VARIABLE_DEFINITION) {
+            // dát do global scope
+        }
+
+        //odebrat uzly - přepsalo by se
     };
 
     this->PreorderForEachNode(checker);
@@ -613,7 +620,11 @@ Variable *AST::PutVariableInFunctionScope(
         this->parser->notifyErrorListeners(variable, INTERNAL_ID_USE, nullptr);
     }
 
-    return data->AddVariable(name, specifier, type, this->GetStackOffset());
+    int stackOffset = 0;
+    if (specifier != StorageSpecifier::STATIC) { // static variable should not take up stack space
+        stackOffset = this->GetStackOffset();
+    }
+    return data->AddVariable(name, specifier, type, stackOffset);
 }
 
 Variable *AST::PutVariableInNestedScope(
@@ -637,7 +648,11 @@ Variable *AST::PutVariableInNestedScope(
         this->parser->notifyErrorListeners(variable, INTERNAL_ID_USE, nullptr);
     }
 
-    return data->AddVariable(name, specifier, type, this->GetStackOffset());
+    int stackOffset = 0;
+    if (specifier != StorageSpecifier::STATIC) {
+        stackOffset = this->GetStackOffset();
+    }
+    return data->AddVariable(name, specifier, type, stackOffset);
 }
 
 Variable *AST::PutVariableInForHeader(
@@ -684,7 +699,11 @@ Variable *AST::PutVariableInForeachHeader(
         this->parser->notifyErrorListeners(variable, INTERNAL_ID_USE, nullptr);
     }
 
-    return data->AddVariable(name, specifier, type, this->GetStackOffset());
+    int stackOffset = 0;
+    if (specifier != StorageSpecifier::STATIC) {
+        stackOffset = this->GetStackOffset();
+    }
+    return data->AddVariable(name, specifier, type, stackOffset);
 }
 
 
