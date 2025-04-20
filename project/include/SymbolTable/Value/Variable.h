@@ -41,7 +41,7 @@ public:
     bool IsParameter();
     string GetParameterLocation();
 
-    void SetGlobalFlag();
+    void SetGlobalFlag(); // when moving to global scope
 
     void SetName(const string & name);
     void SetDefaultValue(any value);

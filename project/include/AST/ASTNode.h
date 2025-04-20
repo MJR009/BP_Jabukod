@@ -5,10 +5,7 @@
 #include "Type.h"
 #include "GenericNodeData.h"
 #include "SpecificNodeData.h"
-
 #include "SymbolTable.h"
-
-class AST;
 
 class ASTNode {
 public:

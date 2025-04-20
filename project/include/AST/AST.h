@@ -64,7 +64,6 @@ public:
 
     int GetVariableCount();
 
-    // TODO maybe refactor...
     void CorrectStaticVariables();
 
     void Print();
@@ -128,4 +127,9 @@ private:
     bool IsLiteralExpression(JabukodParser::ExpressionContext *expression);
 
     int GetStackOffset();
+
+    void MangleStaticVariableNames(); // make names globally unique
+    vector<Variable *> PrepareAndGetAllStatic(); // gives default values, eases removal
+    void PurgeLocalStaticVariables(); // removal from scopes
+    void RemoveStaticDefDeclSubtrees(); // removal of subtrees
 };    

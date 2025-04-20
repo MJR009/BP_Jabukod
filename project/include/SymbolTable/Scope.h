@@ -25,8 +25,6 @@ public:
     void PrintDeclarations() const;
     void PrintAsEnum() const;
 
-    void PurgeStaticVariables();
-
     ~Scope() {
         for_each(this->variables.begin(), this->variables.end(),
             [ ](Variable *current) {
@@ -34,6 +32,9 @@ public:
             }
         );
     }
+
+public:
+    void PurgeStaticVariables();
 
 private:
     list<Variable *> variables;
