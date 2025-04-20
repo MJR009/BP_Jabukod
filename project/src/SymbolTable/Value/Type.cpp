@@ -1,12 +1,54 @@
 #include "Type.h"
 
+bool Type::IsArrayType() {
+    vector<Type> arrayTypes = {
+        Type::ARRAY_INT,
+        Type::ARRAY_FLOAT,
+        Type::ARRAY_BOOL
+    };
+
+    auto position = find(arrayTypes.begin(), arrayTypes.end(), this->value);
+
+    if (position != arrayTypes.end()) {
+        return true;
+    }
+
+    return false;
+}
+
+void Type::MakeArray(int size) {
+    switch (this->value) {
+        case Type::INT:
+            this->value = Type::ARRAY_INT;
+            break;
+
+        case Type::FLOAT:
+            this->value = Type::ARRAY_FLOAT;
+            break;
+
+        case Type::BOOL:
+            this->value = Type::ARRAY_BOOL;
+            break;
+
+        default:
+            break;
+    }
+
+    this->size = size;
+}
+            
+
+
 string Type::toString() const {
     switch (this->value) {
-        case INT: return "int";
-        case FLOAT: return "float";
-        case BOOL: return "bool";
-        case STRING: return "string";
-        case VOID: return "void";
+        case Type::INT: return "int";
+        case Type::FLOAT: return "float";
+        case Type::BOOL: return "bool";
+        case Type::STRING: return "string";
+        case Type::VOID: return "void";
+        case Type::ARRAY_INT: return "int " TEAL "array" DEFAULT;
+        case Type::ARRAY_FLOAT: return "float " TEAL "array" DEFAULT;
+        case Type::ARRAY_BOOL: return "bool " TEAL "array" DEFAULT;
     }
 
     return "ERR";
@@ -52,7 +94,19 @@ void Type::PrintAnyValueByType(any value, Type type) {
             
         case Type::STRING:
             cout << any_cast<string>( value );
-            break;        
+            break;
+
+        case Type::ARRAY_INT:
+            Type::PrintArray<int>( value );
+            break;
+
+        case Type::ARRAY_FLOAT:
+            Type::PrintArray<float>( value );
+            break;
+
+        case Type::ARRAY_BOOL:
+            Type::PrintArray<bool>( value );
+            break;
     }
 
     cout << DEFAULT;

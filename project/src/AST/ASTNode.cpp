@@ -126,7 +126,7 @@ bool ASTNode::IsScopeHavingNode() {
         NodeKind::FOR, NodeKind::FOREACH
     };
     
-    vector<NodeKind>::iterator position = find(haveScope.begin(), haveScope.end(), this->GetKind());
+    auto position = find(haveScope.begin(), haveScope.end(), this->GetKind());
 
     if (position != haveScope.end()) {
         return true;

@@ -485,7 +485,7 @@ void NodeGenerators::GenerateFUNCTION_CALL(ASTNode *node) {
 
     gen->instructions.emplace_back(CALL, data->GetName());
 
-    vector<string>::reverse_iterator toPop = backedUpRegisters.rbegin();
+    auto toPop = backedUpRegisters.rbegin();
     for (; toPop != backedUpRegisters.rend(); toPop++) {
         gen->instructions.emplace_back(POP, *toPop);
     }

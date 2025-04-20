@@ -77,3 +77,5 @@ Položka enumu
 
 statické proměnné - name magling, přesuny do globálního rozsahu
 
+uložení polí - vektor - není třeba znát velikost
+
