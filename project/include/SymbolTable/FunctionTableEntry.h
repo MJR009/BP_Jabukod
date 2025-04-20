@@ -11,7 +11,7 @@ public:
 
     string GetFunctionName() const;
     Type GetReturnType() const;
-    list<Variable> & GetParameters();
+    list<Variable *> *GetParameters();
     Variable *GetParameter(const string & name);
 
     const string GetParameterSlot(int order);
@@ -22,10 +22,18 @@ public:
 
     void Print() const;
 
+    ~FunctionTableEntry() {
+        for_each(this->parameters.begin(), this->parameters.end(),
+            [ ](Variable *current) {
+                delete current;
+            }
+        );
+    }
+
 private:
     string name;
     Type returnType;
-    list<Variable> parameters;
+    list<Variable *> parameters;
 
     int parameterCount = 0;
     int totalVariables = 0;

@@ -9,7 +9,11 @@
 
 class SymbolTable {
 public:
-    SymbolTable(JabukodParser *parser) : parser(parser) {}
+    SymbolTable(JabukodParser *parser) : parser(parser) {
+        this->globalScope = new Scope();
+        this->functionTable = new FunctionTable();
+        this->enumTable = new EnumTable();
+    }
 
     void AddGlobalVariable(
         antlr4::Token *variable,
@@ -48,12 +52,18 @@ public:
     FunctionTableEntry *IsIdFunction(const string & name);
     bool IsIdEnumName(const string & name);
 
-    Scope GetGlobalVariables();
-    list<EnumTableEntry> & GetAllEnums();
+    Scope *GetGlobalVariables();
+    list<EnumTableEntry *> *GetAllEnums();
 
     bool IsIdentifierAllowed(const string & identifier) const;
 
     void Print() const;
+
+    ~SymbolTable() {
+        delete this->globalScope;
+        delete this->functionTable;
+        delete this->enumTable;
+    }
 
 public:
     static const int defaultINT;
@@ -64,9 +74,9 @@ public:
 private:
     JabukodParser *parser; // for semantic error reporting via notifyErrorListeners()
 
-    Scope globalScope;
-    FunctionTable functionTable;
-    EnumTable enumTable;
+    Scope *globalScope;
+    FunctionTable *functionTable;
+    EnumTable *enumTable;
 
     EnumTableEntry *currentEnum = nullptr; // used for adding entries
     int currentEnumItemValue = 0;

@@ -301,7 +301,7 @@ any ASTGenerationVisitor::visitFunctionCall(JabukodParser::FunctionCallContext *
 
     if (function) {
         exists = true;
-        correctArgumentCount = this->ast.CheckIfCorrectArgumentCount(function->GetParameters().size(), ctx->getStart());
+        correctArgumentCount = this->ast.CheckIfCorrectArgumentCount( function->GetParameters()->size(), ctx->getStart() );
     }
     if (correctArgumentCount) {
         this->ast.ConvertFunctionArguments(ctx->functionArguments(), function);

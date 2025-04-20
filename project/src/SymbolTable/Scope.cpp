@@ -9,7 +9,7 @@ Variable *Scope::AddEntry(
     bool isGlobal,
     bool isParameter
 ) {
-    this->variables.emplace_back(
+    Variable *newVariable = new Variable(
         name,
         specifier,
         type,
@@ -19,7 +19,9 @@ Variable *Scope::AddEntry(
         isParameter
     );
 
-    return &this->variables.back();
+    this->variables.push_back(newVariable);
+
+    return newVariable;
 }
 
 
@@ -27,8 +29,8 @@ Variable *Scope::AddEntry(
 bool Scope::IsVariableNameAvailable(const string & name) const {
     return 
         none_of(this->variables.begin(), this->variables.end(), 
-            [ & name ](const Variable & current) {
-                return current.GetName() == name;
+            [ & name ](const Variable *current) {
+                return current->GetName() == name;
             }
         );
 }
@@ -38,8 +40,8 @@ bool Scope::IsVariableNameAvailable(const string & name) const {
 Variable *Scope::GetVariable(const string & name) {
     auto lookup =
         find_if(this->variables.begin(), this->variables.end(),
-            [ & name ](const Variable & current) {
-                return current.GetName() == name;
+            [ & name ](const Variable *current) {
+                return current->GetName() == name;
             }
         );
 
@@ -47,19 +49,19 @@ Variable *Scope::GetVariable(const string & name) {
         return nullptr;
     }
 
-    return &(*lookup);
+    return *lookup;
 }
 
-list<Variable> & Scope::GetVariables() {
-    return this->variables;
+list<Variable *> *Scope::GetVariables() {
+    return &this->variables;
 }
 
 
 
 void Scope::PrintComplete() const {
     for_each(this->variables.begin(), this->variables.end(),
-        [ ](const Variable & current){
-            current.Print();
+        [ ](const Variable *current){
+            current->Print();
             cout << endl;
         }
     );
@@ -68,10 +70,10 @@ void Scope::PrintComplete() const {
 void Scope::PrintDeclarations() const {
     bool first = true;
     for_each(this->variables.begin(), this->variables.end(),
-        [ & first ](const Variable & current){
+        [ & first ](const Variable *current){
             cout << (first ? "" : ( DIM ", " DEFAULT ));
             first = false;
-            current.PrintDeclaration();
+            current->PrintDeclaration();
         }
     );
 }
@@ -79,10 +81,10 @@ void Scope::PrintDeclarations() const {
 void Scope::PrintAsEnum() const {
     bool first = true;
     for_each(this->variables.begin(), this->variables.end(),
-        [ & first ](const Variable & current) {
+        [ & first ](const Variable *current) {
             cout << DIM << (first ? "" : ", ") << DEFAULT;
-            cout << current.GetName();
-            cout << DIM << " = " << current.GetDefaultValue<int>() << DEFAULT;
+            cout << current->GetName();
+            cout << DIM << " = " << current->GetDefaultValue<int>() << DEFAULT;
             first = false;
         }
     );

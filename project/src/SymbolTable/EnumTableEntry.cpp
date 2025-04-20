@@ -1,7 +1,7 @@
 #include "EnumTableEntry.h"
 
 void EnumTableEntry::AddItem(string itemName, int itemValue) {
-    this->items.AddEntry(
+    this->items->AddEntry(
         itemName,
         StorageSpecifier::CONST,
         Type::INT,
@@ -18,14 +18,14 @@ string EnumTableEntry::GetEntryName() const {
     return this->name;
 }
 
-list<Variable> & EnumTableEntry::GetEntryItems() {
-    return this->items.GetVariables();
+list<Variable *> *EnumTableEntry::GetEntryItems() {
+    return this->items->GetVariables();
 }
 
 
 
 Variable *EnumTableEntry::GetItem(const string & name) {
-    return this->items.GetVariable(name);
+    return this->items->GetVariable(name);
 }
 
 
@@ -33,7 +33,7 @@ Variable *EnumTableEntry::GetItem(const string & name) {
 void EnumTableEntry::Print() const {
     cout << YELLOW << this->name << DEFAULT << " {" << endl << "  ";
 
-    this->items.PrintAsEnum();
+    this->items->PrintAsEnum();
 
     cout << endl << "}" << endl;
 }

@@ -37,7 +37,7 @@ private:
     void OutputRODataSection();
     void OutputTextSection();
 
-    void OutputVariable(Variable & variable);
+    void OutputVariable(Variable *variable);
 
 private:
     void ConnectSequence(const vector<Instruction> & sequence);

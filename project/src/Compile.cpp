@@ -69,7 +69,7 @@ int Compile(PrepareArguments *args) {
         delete input;
         return OK;
     }
-
+    
     try {
         // Phase 4: generate target code and output to a file
         Generator generator(args->outputFile, ast, symbolTable);

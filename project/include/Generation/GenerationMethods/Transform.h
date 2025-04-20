@@ -14,7 +14,7 @@ public:
 
     // .data, .rodata
     static string TypeToDirective(Type type);
-    static string DefaultValueToInitializer(Variable & variable);
+    static string DefaultValueToInitializer(Variable *variable);
 
     // .text
     static string GlobalToAddress(const string & variableName);

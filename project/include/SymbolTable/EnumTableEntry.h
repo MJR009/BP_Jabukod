@@ -5,18 +5,24 @@
 
 class EnumTableEntry {
 public:
-    EnumTableEntry(const string & name) : name(name) {}
+    EnumTableEntry(const string & name) : name(name) {
+        this->items = new Scope();
+    }
 
     void AddItem(string itemName, int itemValue);
 
     string GetEntryName() const;
-    list<Variable> & GetEntryItems();
+    list<Variable *> *GetEntryItems();
 
     Variable *GetItem(const string & name);
 
     void Print() const;
 
+    ~EnumTableEntry() {
+        delete this->items;
+    }
+
 private:
     string name;
-    Scope items;
+    Scope *items;
 };

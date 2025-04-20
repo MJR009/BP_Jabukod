@@ -29,16 +29,16 @@ string Transform::TypeToDirective(Type type) {
     return "ERR";
 }
 
-string Transform::DefaultValueToInitializer(Variable & variable) {
-    switch (variable.GetType()) {
+string Transform::DefaultValueToInitializer(Variable *variable) {
+    switch (variable->GetType()) {
         case Type::INT:
-            return to_string( variable.GetDefaultValue<int>() );
+            return to_string( variable->GetDefaultValue<int>() );
         case Type::FLOAT:
-            return to_string( variable.GetDefaultValue<float>() );
+            return to_string( variable->GetDefaultValue<float>() );
         case Type::BOOL:
-            return ( variable.GetDefaultValue<bool>() ) ? "1" : "0";
+            return ( variable->GetDefaultValue<bool>() ) ? "1" : "0";
         case Type::STRING:
-            return variable.GetDefaultValue<string>();
+            return variable->GetDefaultValue<string>();
     }
 
     return "";

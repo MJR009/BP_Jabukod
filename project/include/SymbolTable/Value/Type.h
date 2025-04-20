@@ -4,7 +4,8 @@
 class Type {
 public:
     enum Options {
-        INT, FLOAT, BOOL, STRING,
+        INT, FLOAT, BOOL,
+        STRING,
         VOID
     };
 

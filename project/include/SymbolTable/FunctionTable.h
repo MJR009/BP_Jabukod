@@ -14,6 +14,14 @@ public:
 
     void Print() const;
 
+    ~FunctionTable() {
+        for_each(this->functions.begin(), this->functions.end(),
+            [ ](FunctionTableEntry *current) {
+                delete current;
+            }
+        );
+    }
+
 private:
-    list<FunctionTableEntry> functions;
+    list<FunctionTableEntry *> functions;
 };

@@ -432,12 +432,12 @@ Type AST::ConvertExpressionAssignment(antlr4::Token *expressionStart) {
 
 void AST::ConvertFunctionArguments(JabukodParser::FunctionArgumentsContext *arguments, FunctionTableEntry *function) {
     int argumentCount = this->activeNode->GetChildrenCount();
-    auto currentParameter = function->GetParameters().begin();
+    auto currentParameter = function->GetParameters()->begin();
 
     for (int i = 0; i < argumentCount; i++) {
         try {
             Type presentType = this->activeNode->GetOperandType(0);
-            Type actualType = currentParameter->GetType();
+            Type actualType = (*currentParameter)->GetType();
 
             Conversion::Arguments(actualType, presentType, this->activeNode);
 
@@ -585,9 +585,6 @@ Variable *AST::PutVariableInFunctionScope(
     if (this->symbolTable.IsIdFunctionParameter(functionName, name)) {
         this->parser->notifyErrorListeners(variable, VARIABLE_SAME_AS_PARAMETER, nullptr);
     }
-
-    Variable *variableInScope = nullptr;
-
     if ( ! data->IsVariableNameAvailable(name) ) {
         this->parser->notifyErrorListeners(variable, LOCAL_VARIABLE_REDEFINITION, nullptr);
     }
@@ -611,8 +608,6 @@ Variable *AST::PutVariableInNestedScope(
         return nullptr;
     }
     BodyData *data = parent->GetData<BodyData>();
-
-    Variable *variableInScope = nullptr;
 
     if ( ! data->IsVariableNameAvailable(name) ) {
         this->parser->notifyErrorListeners(variable, LOCAL_VARIABLE_REDEFINITION, nullptr);

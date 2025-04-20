@@ -109,10 +109,11 @@ void Generator::OutputAssembly() {
 void Generator::OutputDataSection() {
     jout << "\t.data" << endl;
 
-    Scope globals = this->symbolTable.GetGlobalVariables();
+    Scope *globals = this->symbolTable.GetGlobalVariables();
+    auto variables = globals->GetVariables();
 
-    for (auto & variable : globals.GetVariables()) {
-        if (variable.GetSpecifier() == StorageSpecifier::CONST) {
+    for (auto variable : *variables) {
+        if (variable->GetSpecifier() == StorageSpecifier::CONST) {
             continue;
         }
 
@@ -125,20 +126,23 @@ void Generator::OutputDataSection() {
 void Generator::OutputRODataSection() {
     jout << "\t.section .rodata" << endl;
 
-    Scope globals = this->symbolTable.GetGlobalVariables();
+    Scope *globals = this->symbolTable.GetGlobalVariables();
+    auto variables = globals->GetVariables();
 
-    for (auto & variable : globals.GetVariables()) {
-        if (variable.GetSpecifier() != StorageSpecifier::CONST) {
+    for (auto variable : *variables) {
+        if (variable->GetSpecifier() != StorageSpecifier::CONST) {
             continue;
         }
 
         this->OutputVariable(variable);
     }
 
-    list<EnumTableEntry> enums = this->symbolTable.GetAllEnums();
+    auto enums = this->symbolTable.GetAllEnums();
 
-    for (auto & anEnum : enums) {
-        for (auto & enumItem : anEnum.GetEntryItems()) {
+    for (auto anEnum : *enums) {
+        auto items = anEnum->GetEntryItems();
+
+        for (auto enumItem : *items) {
             this->OutputVariable(enumItem);
         }
     }
@@ -170,10 +174,10 @@ void Generator::OutputTextSection() {
 
 
 
-void Generator::OutputVariable(Variable & variable) {
-    jout << Transform::IdentifierToLabel( variable.GetName() );
+void Generator::OutputVariable(Variable *variable) {
+    jout << Transform::IdentifierToLabel( variable->GetName() );
     jout << "\t";
-    jout << Transform::TypeToDirective( variable.GetType() );
+    jout << Transform::TypeToDirective( variable->GetType() );
     jout << "\t";
     jout << Transform::DefaultValueToInitializer( variable );
     jout << endl;

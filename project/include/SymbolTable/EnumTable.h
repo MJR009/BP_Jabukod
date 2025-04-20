@@ -8,7 +8,7 @@ public:
     EnumTableEntry *AddEntry(const string & name);
 
     EnumTableEntry *GetEntryByName(const string & name);
-    list<EnumTableEntry> & GetEnums();
+    list<EnumTableEntry *> *GetEnums();
 
     Variable *GetItemFromAcrossAll(const string & name);
 
@@ -19,6 +19,14 @@ public:
 
     void Print() const;
 
+    ~EnumTable() {
+        for_each(this->enums.begin(), this->enums.end(),
+            [ ](EnumTableEntry *current) {
+                delete current;
+            }
+        );
+    }
+
 private:
-    list<EnumTableEntry> enums;
+    list<EnumTableEntry *> enums;
 };

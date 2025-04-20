@@ -1,8 +1,11 @@
 #include "FunctionTable.h"
 
 FunctionTableEntry *FunctionTable::AddEntry(const string & name, const Type returnType) {
-    this->functions.emplace_back(name, returnType);
-    return &this->functions.back();
+    FunctionTableEntry *newFunction = new FunctionTableEntry(name, returnType);
+
+    this->functions.push_back(newFunction);
+
+    return newFunction;
 }
 
 
@@ -10,8 +13,8 @@ FunctionTableEntry *FunctionTable::AddEntry(const string & name, const Type retu
 FunctionTableEntry *FunctionTable::GetFunctionByName(const string & name) {
     auto lookup =
         find_if(this->functions.begin(), this->functions.end(),
-            [ & name ](const FunctionTableEntry & current) {
-                return current.GetFunctionName() == name;
+            [ & name ](const FunctionTableEntry *current) {
+                return current->GetFunctionName() == name;
             }
         );
 
@@ -19,7 +22,7 @@ FunctionTableEntry *FunctionTable::GetFunctionByName(const string & name) {
         return nullptr;
     }
 
-    return &(*lookup);
+    return *lookup;
 }
 
 
@@ -27,19 +30,19 @@ FunctionTableEntry *FunctionTable::GetFunctionByName(const string & name) {
 bool FunctionTable::IsNameAvailable(const string & name) const {
     return
         none_of(this->functions.begin(), this->functions.end(),
-            [ & name ](const FunctionTableEntry & current) {
-                return current.GetFunctionName() == name;
+            [ & name ](const FunctionTableEntry *current) {
+                return current->GetFunctionName() == name;
             }
         );
 }
 
 bool FunctionTable::IsParameterNameAvailable(const string & name, FunctionTableEntry *function) const {
-    list<Variable> parameters = function->GetParameters();
+    list<Variable *> *parameters = function->GetParameters();
 
     return
-        none_of(parameters.begin(), parameters.end(),
-            [ & name ](const Variable & current) {
-                return current.GetName() == name;
+        none_of(parameters->begin(), parameters->end(),
+            [ & name ](const Variable *current) {
+                return current->GetName() == name;
             }
         );
 }
@@ -48,8 +51,8 @@ bool FunctionTable::IsParameterNameAvailable(const string & name, FunctionTableE
 
 void FunctionTable::Print() const {
     for_each(this->functions.begin(), this->functions.end(),
-        [ ](const FunctionTableEntry & current) {
-            current.Print();
+        [ ](const FunctionTableEntry *current) {
+            current->Print();
         }
     );
 }

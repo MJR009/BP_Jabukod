@@ -1,7 +1,7 @@
 #include "FunctionTableEntry.h"
 
 void FunctionTableEntry::AddParameter(const Type parameterType, const string & parameterName) {
-    this->parameters.emplace_back(
+    Variable *newParameter = new Variable(
         parameterName,
         StorageSpecifier::NONE,
         parameterType,
@@ -11,6 +11,8 @@ void FunctionTableEntry::AddParameter(const Type parameterType, const string & p
         true,
         this->AllocateNewParameter(parameterType)
     );
+
+    this->parameters.push_back(newParameter);
 
     this->parameterCount++;
 }
@@ -25,15 +27,15 @@ Type FunctionTableEntry::GetReturnType() const {
     return this->returnType;
 }
 
-list<Variable> & FunctionTableEntry::GetParameters() {
-    return this->parameters;
+list<Variable *> *FunctionTableEntry::GetParameters() {
+    return &this->parameters;
 }
 
 Variable *FunctionTableEntry::GetParameter(const string & name) {
     auto lookup =
         find_if(this->parameters.begin(), this->parameters.end(),
-            [ & name ](const Variable & current) {
-                return current.GetName() == name;
+            [ & name ](const Variable *current) {
+                return current->GetName() == name;
             }
         );
 
@@ -41,29 +43,33 @@ Variable *FunctionTableEntry::GetParameter(const string & name) {
         return nullptr;
     }
 
-    return &(*lookup);
+    return *lookup;
 }
 
 
 
 const string FunctionTableEntry::GetParameterSlot(int order) {
-    list<Variable>::iterator parameter = this->parameters.begin();
+    auto parameter = this->parameters.begin();
 
     for (int i = 0; i < order; i++) {
         parameter++;
     }
 
-    return parameter->GetParameterLocation();
+    auto theParameter = *parameter; // go from iterator to pointer
+
+    return theParameter->GetParameterLocation();
 }
 
 Type FunctionTableEntry::GetParameterType(int order) {
-    list<Variable>::iterator parameter = this->parameters.begin();
+    auto parameter = this->parameters.begin();
 
     for (int i = 0; i < order; i++) {
         parameter++;
     }
 
-    return parameter->GetType();
+    auto theParameter = *parameter;
+
+    return theParameter->GetType();
 }
 
 
@@ -88,10 +94,10 @@ void FunctionTableEntry::Print() const {
     cout << DIM << "  < parameters: " << DEFAULT;
     bool first = true;
     for_each(this->parameters.begin(), this->parameters.end(),
-        [ & first ](const Variable & current) {
+        [ & first ](const Variable *current) {
             cout << (first ? "" : " , ");
             first = false;
-            current.PrintAsParameter();
+            current->PrintAsParameter();
         }
     );
     cout << DIM << " >" << DEFAULT;

@@ -24,7 +24,7 @@ void SymbolTable::AddGlobalVariable(
         if ( ! this->IsIdentifierAllowed(name)) {
             this->parser->notifyErrorListeners(variable, INTERNAL_ID_USE, nullptr);
         }
-        this->globalScope.AddEntry(name, storage, type, value, 0, true, false);
+        this->globalScope->AddEntry(name, storage, type, value, 0, true, false);
 
     } else {
         this->parser->notifyErrorListeners(variable, VARIABLE_REDEFINITION, nullptr);
@@ -46,7 +46,7 @@ FunctionTableEntry *SymbolTable::AddFunction(antlr4::Token *function, JabukodPar
         if ( ! this->IsIdentifierAllowed(name)) {
             this->parser->notifyErrorListeners(function, INTERNAL_ID_USE, nullptr);
         }
-        return this->functionTable.AddEntry(name, type);
+        return this->functionTable->AddEntry(name, type);
         
     } else {
         this->parser->notifyErrorListeners(function, FUNCTION_REDEFINITION, nullptr);
@@ -83,7 +83,7 @@ EnumTableEntry *SymbolTable::AddEnum(antlr4::Token *theEnum) {
         this->parser->notifyErrorListeners(theEnum, INTERNAL_ID_USE, nullptr);
     }
 
-    return this->enumTable.AddEntry(name);
+    return this->enumTable->AddEntry(name);
 }
 
 void SymbolTable::AddEnumItem(antlr4::Token *itemName, antlr4::Token *itemValue) {
@@ -119,7 +119,7 @@ void SymbolTable::AddEnumItem(antlr4::Token *itemName, antlr4::Token *itemValue)
 
 
 Variable *SymbolTable::AddGlobalLiteral(const string & name, Type type, any value) {
-    return this->globalScope.AddEntry(name, StorageSpecifier::CONST, type, value, 0, true, false);
+    return this->globalScope->AddEntry(name, StorageSpecifier::CONST, type, value, 0, true, false);
 }
 
 
@@ -144,7 +144,7 @@ void SymbolTable::ResetCurrentFunction() {
 
 
 void SymbolTable::CheckIfIntMainPresent() {
-    FunctionTableEntry *mainFunction = this->functionTable.GetFunctionByName("main");
+    FunctionTableEntry *mainFunction = this->functionTable->GetFunctionByName("main");
 
     if (mainFunction) {
         if (mainFunction->GetReturnType() != Type::INT) {
@@ -158,9 +158,12 @@ void SymbolTable::CheckIfIntMainPresent() {
 
 
 bool SymbolTable::IsIdFunctionParameter(const string & functionName, const string & identifier) {
-    FunctionTableEntry *function = this->functionTable.GetFunctionByName(functionName);
-    for (auto & parameter : function->GetParameters()) {
-        if (parameter.GetName() == identifier) {
+    FunctionTableEntry *function = this->functionTable->GetFunctionByName(functionName);
+
+    auto parameters = function->GetParameters();
+
+    for (auto parameter : *parameters) {
+        if (parameter->GetName() == identifier) {
             return true;
         }
     }
@@ -169,29 +172,29 @@ bool SymbolTable::IsIdFunctionParameter(const string & functionName, const strin
 }
 
 Variable *SymbolTable::IsIdGlobalVariable(const string & name) {
-    return this->globalScope.GetVariable(name);
+    return this->globalScope->GetVariable(name);
 }
 
 Variable *SymbolTable::IsIdEnumItem(const string & name) {
-    return this->enumTable.GetItemFromAcrossAll(name);
+    return this->enumTable->GetItemFromAcrossAll(name);
 }
 
 FunctionTableEntry *SymbolTable::IsIdFunction(const string & name) {
-    return this->functionTable.GetFunctionByName(name);
+    return this->functionTable->GetFunctionByName(name);
 }
 
 bool SymbolTable::IsIdEnumName(const string & name) {
-    return ( ! this->enumTable.IsNameAvailable(name));
+    return ( ! this->enumTable->IsNameAvailable(name));
 }
 
 
 
-Scope SymbolTable::GetGlobalVariables() {
+Scope *SymbolTable::GetGlobalVariables() {
     return this->globalScope;
 }
 
-list<EnumTableEntry> & SymbolTable::GetAllEnums() {
-    return this->enumTable.GetEnums();
+list<EnumTableEntry *> *SymbolTable::GetAllEnums() {
+    return this->enumTable->GetEnums();
 }
 
 
@@ -212,17 +215,17 @@ bool SymbolTable::IsIdentifierAllowed(const string & identifier) const {
 
 void SymbolTable::Print() const {
     cout << CYAN << "Functions:\n=====" << DEFAULT << endl;
-    this->functionTable.Print();
+    this->functionTable->Print();
     
     cout << endl;
 
     cout << CYAN << "Global variables:\n=====" << DEFAULT << endl;
-    this->globalScope.PrintComplete();
+    this->globalScope->PrintComplete();
 
     cout << endl;
 
     cout << CYAN << "Enums:\n=====" << DEFAULT << endl;
-    this->enumTable.Print();
+    this->enumTable->Print();
 
     cout << endl;
 }
@@ -239,13 +242,13 @@ const string SymbolTable::defaultSTRING = string("\"\"");
 // PRIVATE: 
 
 bool SymbolTable::IsGlobalVariableNameAvailable(const string & name) const {
-    if ( ! this->globalScope.IsVariableNameAvailable(name)) {
+    if ( ! this->globalScope->IsVariableNameAvailable(name)) {
         return false;
     }
-    if ( ! this->functionTable.IsNameAvailable(name)) {
+    if ( ! this->functionTable->IsNameAvailable(name)) {
         return false;
     }
-    if ( ! this->enumTable.IsItemNameAvailableAcrossAll(name)) {
+    if ( ! this->enumTable->IsItemNameAvailableAcrossAll(name)) {
         return false;
     }
 
@@ -253,13 +256,13 @@ bool SymbolTable::IsGlobalVariableNameAvailable(const string & name) const {
 }
 
 bool SymbolTable::IsFunctionNameAvailable(const string & name) const {
-    if ( ! this->globalScope.IsVariableNameAvailable(name)) {
+    if ( ! this->globalScope->IsVariableNameAvailable(name)) {
         return false;
     }
-    if ( ! this->functionTable.IsNameAvailable(name)) {
+    if ( ! this->functionTable->IsNameAvailable(name)) {
         return false;
     }
-    if ( ! this->enumTable.IsItemNameAvailableAcrossAll(name)) {
+    if ( ! this->enumTable->IsItemNameAvailableAcrossAll(name)) {
         return false;
     }
 
@@ -268,7 +271,7 @@ bool SymbolTable::IsFunctionNameAvailable(const string & name) const {
 
 bool SymbolTable::IsFunctionParameterNameAvailable(const string & name) const { // checks in currentFunction
     if (this->currentFunction) {
-        if ( ! this->functionTable.IsParameterNameAvailable(name, this->currentFunction)) {
+        if ( ! this->functionTable->IsParameterNameAvailable(name, this->currentFunction)) {
             return false;
         }
     }
@@ -277,17 +280,17 @@ bool SymbolTable::IsFunctionParameterNameAvailable(const string & name) const { 
 }
 
 bool SymbolTable::IsEnumNameAvailable(const string & name) const {
-    return this->enumTable.IsNameAvailable(name);
+    return this->enumTable->IsNameAvailable(name);
 }
 
 bool SymbolTable::IsEnumItemNameAvailable(const string & name) const { // checks in currentEnum
-    if ( ! this->globalScope.IsVariableNameAvailable(name)) {
+    if ( ! this->globalScope->IsVariableNameAvailable(name)) {
         return false;
     }
-    if ( ! this->functionTable.IsNameAvailable(name)) {
+    if ( ! this->functionTable->IsNameAvailable(name)) {
         return false;
     }
-    if ( ! this->enumTable.IsItemNameAvailableAcrossAll(name)) {
+    if ( ! this->enumTable->IsItemNameAvailableAcrossAll(name)) {
         return false;
     }
 
@@ -296,7 +299,7 @@ bool SymbolTable::IsEnumItemNameAvailable(const string & name) const { // checks
 
 bool SymbolTable::IsEnumItemValueAvailable(const int & value) const { // -//-
     if (this->currentEnum) {
-        return this->enumTable.IsItemValueAvailable(value, this->currentEnum);
+        return this->enumTable->IsItemValueAvailable(value, this->currentEnum);
     } else {
         return true; // if no enum is active, no value is stored, and no errors should be shown
     }
@@ -441,4 +444,3 @@ any SymbolTable::ConvertLiteralByType(JabukodParser::LiteralContext *defaultValu
 
     return value;
 }
-
