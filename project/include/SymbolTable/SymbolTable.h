@@ -71,6 +71,8 @@ public:
     static const bool defaultBOOL;
     static const string defaultSTRING;
 
+    static const string MangleNames(const string & data, const string & location);
+
 private:
     JabukodParser *parser; // for semantic error reporting via notifyErrorListeners()
 

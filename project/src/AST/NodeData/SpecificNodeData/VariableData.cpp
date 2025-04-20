@@ -40,3 +40,9 @@ bool VariableData::IsParameter() {
 string VariableData::GetParamaterLocation() {
     return this->location->GetParameterLocation();
 }
+
+
+
+void VariableData::SetName(const string & name) {
+    this->location->SetName(name);
+}

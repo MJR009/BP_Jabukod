@@ -27,6 +27,8 @@ public:
     bool IsParameter();
     string GetParamaterLocation();
 
+    void SetName(const string & name);
+
 private:
     Variable *location;
 };

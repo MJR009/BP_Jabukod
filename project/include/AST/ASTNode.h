@@ -21,6 +21,8 @@ public:
         return dynamic_cast<T *>( this->data );
     }
 
+    void RenameVariable(const string & newName);
+
     // used for expressions
     Type GetOperandType(int i) const;
     int GetChildrenCount() const;
@@ -35,6 +37,8 @@ public:
     void InsertAfter(ASTNode *newChild, int childIdx);
     // performs a rotation, putting first child at the end, so the second argument can be converted the same as first
     void AdjustArguments();
+
+    const string LocatedInFunction();
 
     void Print();
 

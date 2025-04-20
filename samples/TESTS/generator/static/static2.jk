@@ -1,0 +1,21 @@
+int main() {
+    f();
+    g();
+}
+
+void f() {
+    static int a = 0;
+    static float b = 3.14;
+}
+
+void g() {
+    static int c;
+
+    while(true) {
+        static int c = 25;
+        c = c + 1;
+        break;
+    }
+
+    c = 25;
+}

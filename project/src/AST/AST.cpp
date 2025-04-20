@@ -532,14 +532,17 @@ int AST::GetVariableCount() {
 
 
 void AST::CorrectStaticVariables() {
-    void (*checker)(ASTNode *) = [](ASTNode *node) {
+    void (*checker)(ASTNode *) = [ ](ASTNode *node) {
         NodeKind kind = node->GetKind();
 
-        if (kind == NodeKind::VARIABLE_DECLARATION) {
-            // inic na 0
-        }
+        if ((kind == NodeKind::VARIABLE_DECLARATION) || (kind == NodeKind::VARIABLE_DEFINITION)) {
+            VariableData *data = node->GetData<VariableData>();
+            if (data->GetSpecifier() != StorageSpecifier::STATIC) {
+                return;
+            }
 
-        if (kind == NodeKind::VARIABLE_DEFINITION) {
+            node->RenameVariable( SymbolTable::MangleNames(data->GetName(), node->LocatedInFunction()) );
+            // inic na 0
             // dát do global scope
         }
 

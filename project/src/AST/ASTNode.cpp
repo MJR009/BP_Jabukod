@@ -36,6 +36,17 @@ ASTNode *ASTNode::GetChild(int order) {
 
 
 
+void ASTNode::RenameVariable(const string & newName) {
+    VariableData *data = this->GetData<VariableData>();
+    if ( ! data) {
+        return;
+    }
+
+    data->SetName(newName);
+}
+
+
+
 Type ASTNode::GetOperandType(int i) const {
     if (this->children.size() <= i) { // no operands to get the type of
         return Type::VOID;
@@ -112,6 +123,18 @@ void ASTNode::InsertAfter(ASTNode *newChild, int childIdx) {
 
 void ASTNode::AdjustArguments() {
     rotate(this->children.begin(), this->children.begin() + 1, this->children.end());
+}
+
+
+
+const string ASTNode::LocatedInFunction() {
+    ASTNode *aux = this;
+
+    while (aux->GetKind() != NodeKind::FUNCTION) {
+        aux = aux->parent;
+    }
+
+    return aux->GetData<FunctionData>()->GetName();
 }
 
 

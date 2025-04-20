@@ -28,6 +28,12 @@ string Variable::GetParameterLocation() {
 
 
 
+void Variable::SetName(const string & name) {
+    this->name = name;
+}
+
+
+
 void Variable::Print() const {
     cout <<
         this->storage.toString() << " " <<

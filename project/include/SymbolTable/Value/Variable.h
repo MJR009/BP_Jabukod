@@ -40,6 +40,8 @@ public:
     bool IsParameter();
     string GetParameterLocation();
 
+    void SetName(const string & name);
+
     void Print() const override;
     void PrintDeclaration() const;
     void PrintAsParameter() const;

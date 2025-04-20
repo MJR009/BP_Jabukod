@@ -239,6 +239,15 @@ const string SymbolTable::defaultSTRING = string("\"\"");
 
 
 
+const string SymbolTable::MangleNames(const string & data, const string & location) {
+    static int unique = 0;
+    ostringstream stream;
+    stream << setw(4) << setfill('0') << unique;
+    unique++;
+
+    return ( "__" + location + "_" + data + "_" + stream.str() );
+}
+
 // PRIVATE: 
 
 bool SymbolTable::IsGlobalVariableNameAvailable(const string & name) const {
