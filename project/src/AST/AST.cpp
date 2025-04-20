@@ -274,6 +274,14 @@ void AST::CheckIfValidForUpdate(antlr4::Token *updateToken) {
     }
 }
 
+void AST::CheckIfStaticDefinedByLiteral(StorageSpecifier specifier, JabukodParser::ExpressionContext *expression) {
+    if (specifier == StorageSpecifier::STATIC) {
+        if ( ! this->IsLiteralExpression(expression)) {
+            this->parser->notifyErrorListeners(expression->getStart(), STATIC_INIT_NOT_LITERAL, nullptr);
+        }
+    }
+}
+
 
 
 Type AST::ConvertExpressionBinaryArithmetic(antlr4::Token *expressionStart) {
@@ -523,6 +531,19 @@ int AST::GetVariableCount() {
 
 
 
+void AST::CorrectStaticVariables() {
+    void (*checker)(ASTNode *) = [](ASTNode *node) {
+        NodeKind kind = node->GetKind();
+        if ((kind == NodeKind::VARIABLE_DECLARATION) || (kind == NodeKind::VARIABLE_DEFINITION)) {
+            // různé chování, deklarace nemá hodnotu
+        }
+    };
+
+    this->PreorderForEachNode(checker);
+}
+
+
+
 void AST::Print() {
     void (*printNode)(ASTNode *) = [](ASTNode *node) {
         if (node) {
@@ -743,6 +764,12 @@ Variable *AST::IsInThisScope(const string & name, ASTNode *node) {
 
 Variable *AST::IsParameter(const string & name) {
     return this->activeFunction->GetParameter(name);
+}
+
+
+
+bool AST::IsLiteralExpression(JabukodParser::ExpressionContext *expression) {
+    return dynamic_cast<JabukodParser::LiteralExpressionContext *>( expression );
 }
 
 

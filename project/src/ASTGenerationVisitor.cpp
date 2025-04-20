@@ -4,6 +4,8 @@ any ASTGenerationVisitor::visitSourceFile(JabukodParser::SourceFileContext *ctx)
     this->ast.AddNode(NodeKind::PROGRAM);
     this->visitChildren(ctx);
 
+    //this->ast.CorrectStaticVariables();
+
     // TODO //
     // suspend, resume pair occurence
     // return, exit in every path
@@ -55,6 +57,7 @@ any ASTGenerationVisitor::visitVariableDefinition(JabukodParser::VariableDefinit
         this->ast.GiveActiveNodeData(data);
 
         this->visit(ctx->expression());
+        this->ast.CheckIfStaticDefinedByLiteral(data->GetSpecifier(), ctx->expression());
         this->ast.ConvertExpressionDefinition(ctx->getStart());
         
         this->ast.MoveToParent();

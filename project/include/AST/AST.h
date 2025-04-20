@@ -43,6 +43,7 @@ public:
     bool CheckIfCorrectArgumentCount(int countInTable, antlr4::Token *functionToken);
     void CheckIfValidForInit(antlr4::Token *initToken);
     void CheckIfValidForUpdate(antlr4::Token *updateToken);
+    void CheckIfStaticDefinedByLiteral(StorageSpecifier specifier, JabukodParser::ExpressionContext *expression);
 
     Type ConvertExpressionBinaryArithmetic(antlr4::Token *expressionStart);
     Type ConvertExpressionBinaryLogical(antlr4::Token *expressionStart);
@@ -62,6 +63,8 @@ public:
     string GenerateUniqueLiteralId(Type type);
 
     int GetVariableCount();
+
+    void CorrectStaticVariables();
 
     void Print();
 
@@ -120,6 +123,8 @@ private:
     bool IsScopeHavingNode(ASTNode *node);
     Variable *IsInThisScope(const string & name, ASTNode *node);
     Variable *IsParameter(const string & name);
+
+    bool IsLiteralExpression(JabukodParser::ExpressionContext *expression);
 
     int GetStackOffset();
 };    
