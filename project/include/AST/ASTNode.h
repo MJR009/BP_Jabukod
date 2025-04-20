@@ -6,6 +6,10 @@
 #include "GenericNodeData.h"
 #include "SpecificNodeData.h"
 
+#include "SymbolTable.h"
+
+class AST;
+
 class ASTNode {
 public:
     ASTNode(NodeKind kind, GenericNodeData *data) : kind(kind), data(data) {}
@@ -29,9 +33,12 @@ public:
 
     void SetData(GenericNodeData *data);
 
+    void DeleteSubtree(int childIndex);
+
     // returns whether the current node is a last child of the previous node for every node all the way to root
     // goes from this node to root, first item represents this and last the root
     vector<bool> IsLastChildAllToRoot();
+    bool IsScopeHavingNode();
 
     void AppendNewChild(ASTNode *newChild);
     void InsertAfter(ASTNode *newChild, int childIdx);
@@ -39,6 +46,7 @@ public:
     void AdjustArguments();
 
     const string LocatedInFunction();
+    void RemoveStaticFromScope();
 
     void Print();
 

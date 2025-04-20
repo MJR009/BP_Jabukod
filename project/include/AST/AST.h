@@ -64,6 +64,7 @@ public:
 
     int GetVariableCount();
 
+    // TODO maybe refactor...
     void CorrectStaticVariables();
 
     void Print();

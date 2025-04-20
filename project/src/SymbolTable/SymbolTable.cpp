@@ -122,6 +122,11 @@ Variable *SymbolTable::AddGlobalLiteral(const string & name, Type type, any valu
     return this->globalScope->AddEntry(name, StorageSpecifier::CONST, type, value, 0, true, false);
 }
 
+void SymbolTable::AddExistingGlobalVariable(Variable *variable) {
+    variable->SetGlobalFlag();
+    this->globalScope->AddExistingEntry(variable);
+}
+
 
 
 void SymbolTable::SetCurrentEnum(EnumTableEntry *theEnum) {
@@ -236,6 +241,17 @@ const int SymbolTable::defaultINT = 0;
 const float SymbolTable::defaultFLOAT = 0.0f;
 const bool SymbolTable::defaultBOOL = false;
 const string SymbolTable::defaultSTRING = string("\"\"");
+
+any SymbolTable::GetDefaultByType(Type type) {
+    switch (type) {
+        case Type::INT: return SymbolTable::defaultINT;
+        case Type::FLOAT: return SymbolTable::defaultFLOAT;
+        case Type::BOOL: return SymbolTable::defaultBOOL;
+        case Type::STRING: return SymbolTable::defaultSTRING;
+    }
+
+    return 0;
+}
 
 
 

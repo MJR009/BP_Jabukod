@@ -1,5 +1,11 @@
 #include "VariableData.h"
 
+Variable *VariableData::GetSelf() {
+    return this->location;
+}
+
+
+
 Type VariableData::GetType() {
     if (this->location) {
         return this->location->GetType();
@@ -19,6 +25,15 @@ StorageSpecifier VariableData::GetSpecifier() {
         return this->location->GetSpecifier();
     }
     return StorageSpecifier::NONE;
+}
+
+
+
+any VariableData::GetActualDefaultValue() {
+    if (this->location) {
+        return this->location->GetActualDefaultValue();
+    }
+    return any{};
 }
 
 

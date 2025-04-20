@@ -85,6 +85,22 @@ void ASTNode::SetData(GenericNodeData *data) {
 }
 
 
+void ASTNode::DeleteSubtree(int childIndex) {
+    if (this->children.size() <= childIndex) {
+        return;
+    }
+
+    void (*eraseNode)(ASTNode *) = [ ](ASTNode *node) {
+        delete node;
+    };
+
+    auto subtreeToErase = this->children.begin() + childIndex;
+    (*subtreeToErase)->PostorderWalkthrough(eraseNode);
+
+    this->children.erase(subtreeToErase);
+}
+
+
 
 vector<bool> ASTNode::IsLastChildAllToRoot() {
     vector<bool> areLast;
@@ -102,6 +118,21 @@ vector<bool> ASTNode::IsLastChildAllToRoot() {
     }
 
     return areLast;
+}
+
+bool ASTNode::IsScopeHavingNode() {
+    vector<NodeKind> haveScope = {
+        NodeKind::BODY, NodeKind::FUNCTION,
+        NodeKind::FOR, NodeKind::FOREACH
+    };
+    
+    vector<NodeKind>::iterator position = find(haveScope.begin(), haveScope.end(), this->GetKind());
+
+    if (position != haveScope.end()) {
+        return true;
+    }
+
+    return false;
 }
     
 
@@ -135,6 +166,19 @@ const string ASTNode::LocatedInFunction() {
     }
 
     return aux->GetData<FunctionData>()->GetName();
+}
+
+void ASTNode::RemoveStaticFromScope() {
+    // only these can have static variables, are derived or straigh BodyData
+    if (this->kind == NodeKind::BODY) {
+        this->GetData<BodyData>()->RemoveStaticVariables();
+    }
+    if (this->kind == NodeKind::FOREACH) {
+        this->GetData<ForeachData>()->RemoveStaticVariables();
+    }
+    if (this->kind == NodeKind::FUNCTION) {
+        this->GetData<FunctionData>()->RemoveStaticVariables();
+    }
 }
 
 

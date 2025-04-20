@@ -9,7 +9,7 @@ void f() {
 }
 
 void g() {
-    static int c;
+    static bool c;
 
     while(true) {
         static int c = 25;

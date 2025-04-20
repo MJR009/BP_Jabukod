@@ -34,17 +34,22 @@ public:
     T GetDefaultValue() const {
         return any_cast<T>( this->defaultValue );
     }
+    any GetActualDefaultValue();
 
     int GetStackOffset();
     bool IsGlobal();
     bool IsParameter();
     string GetParameterLocation();
 
+    void SetGlobalFlag();
+
     void SetName(const string & name);
+    void SetDefaultValue(any value);
 
     void Print() const override;
     void PrintDeclaration() const;
     void PrintAsParameter() const;
+    void PrintDefaultValue() const;
 
 private:
     StorageSpecifier storage;
@@ -55,6 +60,4 @@ private:
     bool isGlobal;
     bool isParameter;
     string parameterStorage;
-
-    void PrintDefaultValue() const;
 };

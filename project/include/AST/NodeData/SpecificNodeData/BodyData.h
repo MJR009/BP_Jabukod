@@ -6,6 +6,10 @@
 
 class BodyData : public GenericNodeData {
 public:
+    BodyData() {
+        this->scope = new Scope();
+    }
+
     Variable *AddVariable(
         const string & name,
         StorageSpecifier specifier,
@@ -15,9 +19,14 @@ public:
     bool IsVariableNameAvailable(const string & name) const;
     Variable *GetVariable(const string & name);
 
+    void RemoveStaticVariables();
+
     void PrintScope();
 
-protected:
-    Scope scope;
-};
+    ~BodyData() {
+        delete this->scope;
+    }
 
+protected:
+    Scope *scope;
+};

@@ -24,6 +24,10 @@ Variable *Scope::AddEntry(
     return newVariable;
 }
 
+void Scope::AddExistingEntry(Variable *variable) {
+    this->variables.push_back(variable);
+}
+
 
 
 bool Scope::IsVariableNameAvailable(const string & name) const {
@@ -88,4 +92,18 @@ void Scope::PrintAsEnum() const {
             first = false;
         }
     );
+}
+
+
+
+void Scope::PurgeStaticVariables() {
+    auto variable = this->variables.begin();
+
+    while (variable != this->variables.end()) {
+        if ((*variable)->GetSpecifier() == StorageSpecifier::STATIC) {
+            variable = this->variables.erase(variable);
+        } else {
+            variable++;
+        }
+    }
 }

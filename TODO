@@ -75,3 +75,5 @@ Položka enumu
 	- také platí pro mocnění, HLAVNĚ
 	- binární operátory pořád vnitřně používají rbx
 
+statické proměnné - name magling, přesuny do globálního rozsahu
+

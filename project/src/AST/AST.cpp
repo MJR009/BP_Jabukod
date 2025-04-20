@@ -532,30 +532,103 @@ int AST::GetVariableCount() {
 
 
 void AST::CorrectStaticVariables() {
-    void (*checker)(ASTNode *) = [ ](ASTNode *node) {
+    // (1) rename static variables with name mangling
+    void (*renameStatic)(ASTNode *) = [ ](ASTNode *node) {
         NodeKind kind = node->GetKind();
 
-        if ((kind == NodeKind::VARIABLE_DECLARATION) || (kind == NodeKind::VARIABLE_DEFINITION)) {
+        if ( (kind == NodeKind::VARIABLE_DECLARATION) ||
+             (kind == NodeKind::VARIABLE_DEFINITION)
+        ) {
             VariableData *data = node->GetData<VariableData>();
-            if (data->GetSpecifier() != StorageSpecifier::STATIC) {
-                return;
-            }
 
-            node->RenameVariable( SymbolTable::MangleNames(data->GetName(), node->LocatedInFunction()) );
-            // inic na 0
-            // dát do global scope
+            if (data->GetSpecifier() == StorageSpecifier::STATIC) {
+                node->RenameVariable( SymbolTable::MangleNames(data->GetName(), node->LocatedInFunction()) );
+            }
+        }
+    };
+    this->PreorderForEachNode(renameStatic);
+
+    // (2) give the variables their default values
+    // (pre 3) retrieve all static variables
+    vector<Variable *> staticVariables;
+
+    stack<ASTNode *> toProcess;
+    toProcess.push(this->root);
+
+    while( ! toProcess.empty() ) {
+        ASTNode *current = toProcess.top();
+        toProcess.pop();
+
+        if ((current->GetKind() == NodeKind::VARIABLE_DECLARATION) ||
+            (current->GetKind() == NodeKind::VARIABLE_DEFINITION)
+        ) {
+            Variable *aStaticVariable = current->GetData<VariableData>()->GetSelf();
+            if (aStaticVariable->GetSpecifier() == StorageSpecifier::STATIC) {
+                staticVariables.push_back(aStaticVariable); // (pre 3)
+
+                if (current->GetKind() == NodeKind::VARIABLE_DECLARATION) {
+                    aStaticVariable->SetDefaultValue( SymbolTable::GetDefaultByType(aStaticVariable->GetType()) );
+                } else {
+                    ASTNode *defaultValue = current->GetChild(0);
+                    any theValue;
+                    
+                    if (defaultValue->GetKind() == NodeKind::VARIABLE) {
+                        theValue = defaultValue->GetData<VariableData>()->GetActualDefaultValue();
+                    } else { // LITERAL
+                        theValue = defaultValue->GetData<LiteralData>()->GetValue();
+                    }
+
+                    aStaticVariable->SetDefaultValue(theValue);
+                }
+            }
         }
 
-        //odebrat uzly - přepsalo by se
-    };
+        for (int i = 0; i < current->GetChildrenCount(); i++) { // can be reverse, just need the variables
+            toProcess.push(current->GetChild(i));
+        }
+    }
 
-    this->PreorderForEachNode(checker);
+    // (3) put the variables in global scope
+    for (auto variable : staticVariables) {
+        this->symbolTable.AddExistingGlobalVariable(variable);
+    }
+
+    // (4) remove the variables from their original scopes
+    stack<ASTNode *> toWeedOut;
+    toWeedOut.push(this->root);
+
+    while( ! toWeedOut.empty() ) {
+        ASTNode *current = toWeedOut.top();
+        toWeedOut.pop();
+
+        current->RemoveStaticFromScope();
+
+        for (int i = 0; i < current->GetChildrenCount(); i++) { // can be reverse, just need the variables
+            toWeedOut.push(current->GetChild(i));
+        }
+    }
+
+    // (5) remove their declaration or definition subtree
+    void (*removeStaticDefDecls)(ASTNode *) = [ ](ASTNode *node) {
+        for (int i = node->GetChildrenCount() - 1; i >= 0; i--) { // reverse to not move the nodes under my hands
+            NodeKind childKind = node->GetChild(i)->GetKind();
+
+            if ((childKind == NodeKind::VARIABLE_DECLARATION) ||
+                (childKind == NodeKind::VARIABLE_DEFINITION)
+            ) {
+                if (node->GetChild(i)->GetData<VariableData>()->GetSpecifier() == StorageSpecifier::STATIC) {
+                    node->DeleteSubtree(i);
+                }
+            }
+        }
+    };
+    this->PostorderForEachNode(removeStaticDefDecls);
 }
 
 
 
 void AST::Print() {
-    void (*printNode)(ASTNode *) = [](ASTNode *node) {
+    void (*printNode)(ASTNode *) = [ ](ASTNode *node) {
         if (node) {
             bool lastChildWasPrinted = false;
             string treeLadder = "";
@@ -749,18 +822,7 @@ bool AST::IsExistingEnum(const string & name) {
 
 
 bool AST::IsScopeHavingNode(ASTNode *node) {
-    vector<NodeKind> haveScope = {
-        NodeKind::BODY, NodeKind::FUNCTION,
-        NodeKind::FOR, NodeKind::FOREACH
-    };
-    
-    vector<NodeKind>::iterator position = find(haveScope.begin(), haveScope.end(), node->GetKind());
-
-    if (position != haveScope.end()) {
-        return true;
-    }
-
-    return false;
+    return node->IsScopeHavingNode();
 }
 
 Variable *AST::IsInThisScope(const string & name, ASTNode *node) {

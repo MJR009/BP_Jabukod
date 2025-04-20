@@ -38,6 +38,7 @@ public:
     );
 
     Variable *AddGlobalLiteral(const string & name, Type type, any value);
+    void AddExistingGlobalVariable(Variable *variable);
 
     void SetCurrentEnum(EnumTableEntry *theEnum);
     void ResetCurrentEnum();
@@ -70,6 +71,7 @@ public:
     static const float defaultFLOAT;
     static const bool defaultBOOL;
     static const string defaultSTRING;
+    static any GetDefaultByType(Type type);
 
     static const string MangleNames(const string & data, const string & location);
 

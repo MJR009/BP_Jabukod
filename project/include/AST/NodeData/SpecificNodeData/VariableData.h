@@ -8,6 +8,8 @@ class VariableData : public GenericNodeData {
 public:
     VariableData(Variable *variable) : location(variable) {}
 
+    Variable *GetSelf();
+
     Type GetType();
     string GetName();
     StorageSpecifier GetSpecifier();
@@ -20,6 +22,7 @@ public:
         ERR::BadData();
         return T{};
     }
+    any GetActualDefaultValue();
 
     int GetStackOffset();
 

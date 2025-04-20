@@ -14,6 +14,7 @@ public:
         bool isGlobal,
         bool isParameter
     );
+    void AddExistingEntry(Variable *variable);
 
     bool IsVariableNameAvailable(const string & name) const;
 
@@ -23,6 +24,8 @@ public:
     void PrintComplete() const;
     void PrintDeclarations() const;
     void PrintAsEnum() const;
+
+    void PurgeStaticVariables();
 
     ~Scope() {
         for_each(this->variables.begin(), this->variables.end(),

@@ -8,6 +8,10 @@ StorageSpecifier Variable::GetSpecifier() {
     return this->storage;
 }
 
+any Variable::GetActualDefaultValue() {
+    return this->defaultValue;
+}
+
 
 
 int Variable::GetStackOffset() {
@@ -28,8 +32,18 @@ string Variable::GetParameterLocation() {
 
 
 
+void Variable::SetGlobalFlag() {
+    this->isGlobal = true;
+}
+
+
+
 void Variable::SetName(const string & name) {
     this->name = name;
+}
+
+void Variable::SetDefaultValue(any value) {
+    this->defaultValue = value;
 }
 
 
@@ -61,10 +75,6 @@ void Variable::PrintAsParameter() const {
 
     cout << DIM << CYAN << " (" << this->stackOffset << ". - " << this->parameterStorage << ")" << DEFAULT;
 }
-
-
-
-// PRIVATE:
 
 void Variable::PrintDefaultValue() const {
     Type::PrintAnyValueByType( this->defaultValue, this->type );
