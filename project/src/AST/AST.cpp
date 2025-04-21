@@ -298,9 +298,60 @@ void AST::CheckIfStaticDefinedByLiteral(StorageSpecifier specifier, JabukodParse
     }
 }
 
-void AST::CheckIfDefinedByList(JabukodParser::ExpressionContext *expression) {
+bool AST::CheckIfDefinedByList(JabukodParser::ExpressionContext *expression) {
     if ( ! this->IsListExpression(expression) ) {
         this->parser->notifyErrorListeners(expression->getStart(), ARRAY_DEFINITION_NOT_LIST, nullptr);
+        return false;
+    }
+
+    return true;
+}
+
+bool AST::CheckIfAtArrayDefinition(JabukodParser::ListContext *list) {
+    NodeKind location = this->activeNode->GetKind();
+
+    if (location != NodeKind::VARIABLE_DEFINITION) {
+        this->parser->notifyErrorListeners(list->getStart(), OUT_OF_PLACE_LIST, nullptr);
+        return false;
+    }
+
+    return true;
+}
+
+void AST::CheckIfTypeIsArray(Type type, JabukodParser::ListContext *list) {
+    if ( ! type.IsArrayType()) {
+        this->parser->notifyErrorListeners(list->getStart(), OUT_OF_PLACE_LIST, nullptr);
+    }
+}
+
+void AST::CheckIfInArrayAccess(JabukodParser::IdentifierExpressionContext *variable) {
+    if (this->activeNode->GetKind() != NodeKind::LIST_ACCESS) {
+        this->parser->notifyErrorListeners(variable->getStart(), STRAY_ARRAY_VARIABLE, nullptr);
+    }
+}
+
+void AST::CheckIfAccessedNotArray(Type type, antlr4::Token *variable) {
+    if ( ! type.IsArrayType()) {
+        this->parser->notifyErrorListeners(variable, ARRAY_ACCESS_ON_SCALAR, nullptr);
+    }
+}
+
+void AST::CheckIfCorrectListAccess(Type type, JabukodParser::ListAccessContext *listAccess, antlr4::Token *variable) {
+    bool hasListAccess = listAccess;
+    bool isArray = type.IsArrayType();
+
+    if (isArray != hasListAccess) {
+        if (isArray) {
+            this->parser->notifyErrorListeners(variable, STRAY_ARRAY_VARIABLE, nullptr);
+        } else {
+            this->parser->notifyErrorListeners(listAccess->getStart(), ARRAY_ACCESS_ON_SCALAR, nullptr);
+        }
+    }
+}
+
+void AST::CheckIfListFits(int capacity, int size, JabukodParser::ListContext *list) {
+    if (size > capacity) {
+        this->parser->notifyErrorListeners(list->getStart(), LIST_TOO_BIG, nullptr);
     }
 }
 
@@ -420,6 +471,10 @@ void AST::ConvertExpressionDefinition(antlr4::Token *expressionStart) {
         Type lside = this->activeNode->GetData<VariableData>()->GetType();
         Type rside = this->activeNode->GetOperandType(0);
 
+        if (lside.IsArrayType()) { // array assignment is resolved other way
+            return;
+        }
+
         Conversion::ExpressionDefinition(lside, rside, this->activeNode);
 
     } catch (const char *msg) {
@@ -432,7 +487,9 @@ Type AST::ConvertExpressionAssignment(antlr4::Token *expressionStart) {
     if( ! assignmentTarget) {
         return Type::VOID;
     }
-    if (assignmentTarget->GetKind() != NodeKind::VARIABLE) {
+    if ((assignmentTarget->GetKind() != NodeKind::VARIABLE) &&
+        (assignmentTarget->GetKind() != NodeKind::LIST_ACCESS)
+    ) {
         this->parser->notifyErrorListeners(expressionStart, LSIDE_NOT_ASSIGNABLE, nullptr);
         return Type::VOID;
     }
@@ -450,6 +507,10 @@ Type AST::ConvertExpressionAssignment(antlr4::Token *expressionStart) {
     try {
         Type lside = targetData->GetType();
         Type rside = this->activeNode->GetOperandType(1);
+
+        if (lside.IsArrayType()) {
+            lside = lside.GetScalarEquivalent();
+        }
 
         inferedType = Conversion::ExpressionAssignment(lside, rside, this->activeNode);
 

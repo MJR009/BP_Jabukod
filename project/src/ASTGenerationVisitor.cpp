@@ -13,6 +13,9 @@ any ASTGenerationVisitor::visitVariableDeclaration(JabukodParser::VariableDeclar
     if (this->ast.CurrentlyIn() != NodeKind::PROGRAM) { // global declarations are already processed
         this->ast.AddNode(NodeKind::VARIABLE_DECLARATION);
 
+        if ( ! ctx->IDENTIFIER()) {
+            return NOK;
+        }
         antlr4::Token *variable = ctx->IDENTIFIER()->getSymbol();
 
         JabukodParser::StorageSpecifierContext *storage = nullptr;
@@ -41,7 +44,10 @@ any ASTGenerationVisitor::visitVariableDeclaration(JabukodParser::VariableDeclar
 any ASTGenerationVisitor::visitVariableDefinition(JabukodParser::VariableDefinitionContext *ctx) {
     if (this->ast.CurrentlyIn() != NodeKind::PROGRAM) {
         this->ast.AddNode(NodeKind::VARIABLE_DEFINITION);
-        
+
+        if ( ! ctx->IDENTIFIER()) {
+            return NOK;
+        }        
         antlr4::Token *variable = ctx->IDENTIFIER()->getSymbol();
 
         JabukodParser::StorageSpecifierContext *storage = nullptr;
@@ -61,12 +67,14 @@ any ASTGenerationVisitor::visitVariableDefinition(JabukodParser::VariableDefinit
         this->ast.GiveActiveNodeData(data);
 
         if (data->GetType().IsArrayType()) {
-            this->ast.CheckIfDefinedByList(ctx->expression());
+            if ( ! this->ast.CheckIfDefinedByList(ctx->expression()) ) {
+                return NOK;
+            }
         }
 
         this->visit(ctx->expression());
-        this->ast.CheckIfStaticDefinedByLiteral(data->GetSpecifier(), ctx->expression()); // TODO MUST BE LIST FOR ARRAY !!!
-        this->ast.ConvertExpressionDefinition(ctx->getStart()); // TODO !!!
+        this->ast.CheckIfStaticDefinedByLiteral(data->GetSpecifier(), ctx->expression()); // here we know there is a list after array
+        this->ast.ConvertExpressionDefinition(ctx->getStart()); // TODO CORRECT CONVERSION
         
         this->ast.MoveToParent();
     }
@@ -90,6 +98,31 @@ any ASTGenerationVisitor::visitFunctionDefinition(JabukodParser::FunctionDefinit
     this->ast.MoveToParent();
 
     this->ast.ResetActiveFunction();
+
+    return OK;
+}
+
+any ASTGenerationVisitor::visitListAccessExpression(JabukodParser::ListAccessExpressionContext *ctx) {
+    this->ast.AddNode(NodeKind::LIST_ACCESS);
+
+    Variable *variableInScope = this->ast.LookupVariable( ctx->IDENTIFIER()->getSymbol() );
+    if ( ! variableInScope) {
+        return NOK;
+    }
+
+    this->ast.CheckIfAccessedNotArray(variableInScope->GetType(), ctx->IDENTIFIER()->getSymbol());
+
+    VariableData *arrayData = new VariableData(variableInScope);
+    this->ast.AddNode(NodeKind::VARIABLE, arrayData);
+    this->ast.MoveToParent();
+
+    this->visitChildren(ctx);
+    // TODO CONVERSION TO INT
+
+    ExpressionData *accessData = new ExpressionData( arrayData->GetType().GetScalarEquivalent() );
+    this->ast.GiveActiveNodeData(accessData);
+
+    this->ast.MoveToParent();
 
     return OK;
 }
@@ -166,6 +199,10 @@ any ASTGenerationVisitor::visitAssignExpression(JabukodParser::AssignExpressionC
 any ASTGenerationVisitor::visitIdentifierExpression(JabukodParser::IdentifierExpressionContext *ctx) { // concerns only variables
     Variable *variableInScope = this->ast.LookupVariable( ctx->IDENTIFIER()->getSymbol() );
     VariableData *data = new VariableData(variableInScope);
+
+    if (data->GetType().IsArrayType()) {
+        this->ast.CheckIfInArrayAccess(ctx);
+    }
 
     this->ast.AddNode(NodeKind::VARIABLE, data);
     this->ast.MoveToParent();
@@ -399,7 +436,7 @@ any ASTGenerationVisitor::visitForeachStatement(JabukodParser::ForeachStatementC
     this->ast.AddNode(NodeKind::FOREACH, data);
 
     if (ctx->foreachHeader()) {
-        this->visit(ctx->foreachHeader());
+        this->visit(ctx->foreachHeader()); // TODO REIMPLEMENT - CHECK ITERATED OVER IS ARRAY ID
     }
 
     {
@@ -523,19 +560,45 @@ any ASTGenerationVisitor::visitWriteStatement(JabukodParser::WriteStatementConte
 any ASTGenerationVisitor::visitAssignment(JabukodParser::AssignmentContext *ctx) { // forced assignment expression
     this->ast.AddNode(NodeKind::ASSIGNMENT);
 
+    if (ctx->listAccess()) {
+        this->ast.AddNode(NodeKind::LIST_ACCESS); // added here for nesting, resolved later
+    }
+
+    VariableData *lSideData;
+    
     if (ctx->IDENTIFIER()) {
         this->ast.AddNode(NodeKind::VARIABLE);
 
         Variable *variable = this->ast.LookupVariable( ctx->IDENTIFIER()->getSymbol() );
-        VariableData *lSideData = new VariableData(variable);
+        if ( ! variable) {
+            // this occurs when an array definition size is not an int, parsing fails, we revover all the way to above node assignment
+            this->ast.MoveToParent();
+            this->ast.MoveToParent();
+            this->ast.MoveToParent();
+            return NOK;
+        }
+        lSideData = new VariableData(variable);
         this->ast.GiveActiveNodeData(lSideData);
 
         this->ast.MoveToParent();
     }
 
-    this->visit(ctx->expression());
+    if (ctx->listAccess()) {
+        this->visit(ctx->listAccess()); // prepares the index expression
+        // TODO convert to int
+
+        ExpressionData *accessData = new ExpressionData( lSideData->GetType().GetScalarEquivalent() );
+        this->ast.GiveActiveNodeData(accessData);
+
+        this->ast.MoveToParent();
+    }
+
+    this->ast.CheckIfCorrectListAccess(lSideData->GetType(), ctx->listAccess(), ctx->IDENTIFIER()->getSymbol());
+
+    this->visit( ctx->expression() );
 
     Type type = this->ast.ConvertExpressionAssignment(ctx->getStart());
+
     ExpressionData *rSideData = new ExpressionData(type);
     this->ast.GiveActiveNodeData(rSideData);
 
@@ -567,6 +630,28 @@ any ASTGenerationVisitor::visitForHeader(JabukodParser::ForHeaderContext *ctx) {
         this->ast.CheckIfValidForUpdate(ctx->update->getStart());
         this->ast.MoveToParent();
     }
+
+    return OK;
+}
+
+any ASTGenerationVisitor::visitList(JabukodParser::ListContext *ctx) {
+    if ( ! this->ast.CheckIfAtArrayDefinition(ctx)) {
+        return NOK;
+    }
+
+    Type arrayType = this->ast.GetActiveNodeData<VariableData>()->GetType();
+    this->ast.CheckIfTypeIsArray(arrayType, ctx);
+    ExpressionData *data = new ExpressionData(arrayType);
+    this->ast.AddNode(NodeKind::LIST, data);
+
+    this->ast.CheckIfListFits(arrayType.GetSize(), ctx->expression().size(), ctx);
+
+    for (auto & item : ctx->expression()) {
+        this->visit(item);
+        // TODO do conversion to array item type
+    }
+
+    this->ast.MoveToParent();
 
     return OK;
 }

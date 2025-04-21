@@ -317,6 +317,7 @@ void ASTNode::Print() {
         case NodeKind::GREATER: case NodeKind::GREATER_EQUAL: case NodeKind::EQUAL:
         case NodeKind::NOT_EQUAL: case NodeKind::UNARY_MINUS: case NodeKind::NOT:
         case NodeKind::BIT_NOT: case NodeKind::ASSIGNMENT:
+        case NodeKind::LIST: case NodeKind::LIST_ACCESS:
             expressionData = this->GetData<ExpressionData>();
             if (expressionData) {
                 cout << CYAN << "(" << this->kind.toSign() << ")" << DEFAULT;
@@ -334,7 +335,6 @@ void ASTNode::Print() {
                 cout << MAGENTA << functionCallData->GetReturnType().toString() << DEFAULT;
             } else ERR::BadData();
             break;
-
 
         default:
             cout << RED << BOLD << this->kind.toString();

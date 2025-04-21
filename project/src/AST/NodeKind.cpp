@@ -106,6 +106,7 @@ string NodeKind::toSign() const {
         case NodeKind::ASSIGNMENT: return "=";
 
         case NodeKind::LIST_ACCESS: return "[]";
+        case NodeKind::LIST: return "{}";
     }
 
     return "ERR";

@@ -26,7 +26,7 @@ public:
     // any visitEnumDefinition(JabukodParser::EnumDefinitionContext *ctx) override;         // all processed in GlobalSymbolsVisitor
     // any visitEnumBlock(JabukodParser::EnumBlockContext *ctx) override;
     // any visitEnumItem(JabukodParser::EnumItemContext *ctx) override;
-    //TODO//any visitListAccessExpression(JabukodParser::ListAccessExpressionContext *ctx) override;
+    any visitListAccessExpression(JabukodParser::ListAccessExpressionContext *ctx) override;
     any visitMulDivModExpression(JabukodParser::MulDivModExpressionContext *ctx) override;
     any visitExponentExpression(JabukodParser::ExponentExpressionContext *ctx) override;
     any visitShiftExpression(JabukodParser::ShiftExpressionContext *ctx) override;
@@ -43,7 +43,7 @@ public:
     any visitEqualityExpression(JabukodParser::EqualityExpressionContext *ctx) override;
     // any visitFunctionCallExpression(JabukodParser::FunctionCallExpressionContext *ctx) override; // processed by visitFunctionCall
     any visitPrefixUnaryExpression(JabukodParser::PrefixUnaryExpressionContext *ctx) override;
-    //TODO//any visitListExpression(JabukodParser::ListExpressionContext *ctx) override;
+    // any visitListExpression(JabukodParser::ListExpressionContext *ctx) override; // resolved in List
     // any visitLiteralExpression(JabukodParser::LiteralExpressionContext *ctx) override; // processed by literal
     any visitFunctionCall(JabukodParser::FunctionCallContext *ctx) override;
     // any visitFunctionArguments(JabukodParser::FunctionArgumentsContext *ctx) override;
@@ -71,13 +71,13 @@ public:
     any visitAssignment(JabukodParser::AssignmentContext *ctx) override;
     any visitForHeader(JabukodParser::ForHeaderContext *ctx) override;
     // any visitForInitializer(JabukodParser::ForInitializerContext *ctx) override; // default behaviour suffices
-    // any visitForeachHeader(JabukodParser::ForeachHeaderContext *ctx) override; // default behaviour suffices
-    //TODO//any visitList(JabukodParser::ListContext *ctx) override;
+    //TODO//any visitForeachHeader(JabukodParser::ForeachHeaderContext *ctx) override; // default behaviour suffices
+    any visitList(JabukodParser::ListContext *ctx) override;
     any visitLiteral(JabukodParser::LiteralContext *ctx) override;
     // any visitType(JabukodParser::TypeContext *ctx) override; // only needed for functions
     // any visitNonVoidType(JabukodParser::NonVoidTypeContext *ctx) override; // accesed through parent rules
-    //TODO//any visitListSpecifier(JabukodParser::ListSpecifierContext *ctx) override;
-    //TODO//any visitListAccess(JabukodParser::ListAccessContext *ctx) override;
+    // any visitListSpecifier(JabukodParser::ListSpecifierContext *ctx) override; // resolved in definition and declaration
+    // any visitListAccess(JabukodParser::ListAccessContext *ctx) override; // resolved in ListAccessExpression and Assignment
 
 private:
     AST & ast;

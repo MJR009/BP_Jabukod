@@ -18,6 +18,10 @@ public:
     void AddNode(NodeKind kind);
     void AddNode(NodeKind kind, GenericNodeData *data); // Newly added node is always made active !
     void GiveActiveNodeData(GenericNodeData *data);
+    template <typename T>
+    T *GetActiveNodeData() {
+        return this->activeNode->GetData<T>();
+    }
     void MoveToParent();
     FunctionTableEntry *SetActiveFunction(const string & name);
     void ResetActiveFunction();
@@ -45,7 +49,13 @@ public:
     void CheckIfValidForInit(antlr4::Token *initToken);
     void CheckIfValidForUpdate(antlr4::Token *updateToken);
     void CheckIfStaticDefinedByLiteral(StorageSpecifier specifier, JabukodParser::ExpressionContext *expression);
-    void CheckIfDefinedByList(JabukodParser::ExpressionContext *expression);
+    bool CheckIfDefinedByList(JabukodParser::ExpressionContext *expression);
+    bool CheckIfAtArrayDefinition(JabukodParser::ListContext *list);
+    void CheckIfTypeIsArray(Type type, JabukodParser::ListContext *list);
+    void CheckIfInArrayAccess(JabukodParser::IdentifierExpressionContext *variable);
+    void CheckIfAccessedNotArray(Type type, antlr4::Token *variable);
+    void CheckIfCorrectListAccess(Type type, JabukodParser::ListAccessContext *listAccess, antlr4::Token *variable);
+    void CheckIfListFits(int capacity, int size, JabukodParser::ListContext *list);
 
     Type ConvertExpressionBinaryArithmetic(antlr4::Token *expressionStart);
     Type ConvertExpressionBinaryLogical(antlr4::Token *expressionStart);
