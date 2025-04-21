@@ -21,7 +21,7 @@
 #define CMOVNZ "cmovnz"
 #define JZ "jz"
 #define CMP "cmp"
-#define COMISS "comiss"
+#define COMISS "comiss" // "ucomiss"
 #define JMP "jmp"
 #define JLE "jle"
 #define JGE "jge"

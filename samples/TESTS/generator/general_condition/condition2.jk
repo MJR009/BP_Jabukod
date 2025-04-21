@@ -1,0 +1,13 @@
+int main() {
+    if (0.0) {
+        write "FALSE\n";
+    }
+
+    if (0.1) {
+        write "TRUE\n";
+    }
+
+    if (3.14) {
+        write "VERY TRUE\n";
+    }
+}

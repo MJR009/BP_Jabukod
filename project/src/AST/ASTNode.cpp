@@ -295,8 +295,9 @@ void ASTNode::Print() {
                 cout << " )";
             } else ERR::BadData();
             break;
-        
+            
         case NodeKind::INT2FLOAT:
+        case NodeKind::BOOL2FLOAT:
             cout << "(" << MAGENTA << "float" << DEFAULT << ")";
             break;
 
@@ -306,6 +307,7 @@ void ASTNode::Print() {
             break;
 
         case NodeKind::INT2BOOL:
+        case NodeKind::FLOAT2BOOL:
             cout << "(" << MAGENTA << "bool" << DEFAULT << ")";
             break;
 

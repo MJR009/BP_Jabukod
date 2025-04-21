@@ -320,6 +320,19 @@ void NodeGenerators::GenerateINT2BOOL(ASTNode *node) {
     gen->instructions.emplace_back(CMOVNZ, R10, RAX);
 }
 
+void NodeGenerators::GenerateFLOAT2BOOL(ASTNode *node) {
+    gen->GenerateNode(node->GetChild(0));
+    gen->instructions.emplace_back(XORPS, XMM7, XMM7);
+    gen->instructions.emplace_back(COMISS, XMM7, XMM6);
+    gen->instructions.emplace_back(MOVQ, Transform::IntToImmediate(0), RAX);
+    gen->instructions.emplace_back(CMOVNZ, R10, RAX);
+}
+
+void NodeGenerators::GenerateBOOL2FLOAT(ASTNode *node) { // same as GenerateINT2FLOAT
+    gen->GenerateNode(node->GetChild(0));
+    gen->instructions.emplace_back(CVTSI2SS, RAX, XMM6);
+}
+
 void NodeGenerators::GenerateIF(ASTNode *node) {
     vector<string> labelSet = ControlFlow::MakeNewIFLabelSet();
     string elseLabel = labelSet.at(ControlFlow::ELSE);

@@ -42,6 +42,8 @@ public:
     void GenerateFLOAT2INT(ASTNode *node);
     void GenerateBOOL2INT(ASTNode *node);
     void GenerateINT2BOOL(ASTNode *node);
+    void GenerateFLOAT2BOOL(ASTNode *node);
+    void GenerateBOOL2FLOAT(ASTNode *node);
     void GenerateIF(ASTNode *node);
     void GenerateBODY(ASTNode *node);
     void GenerateWHILE(ASTNode *node);

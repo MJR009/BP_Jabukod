@@ -72,6 +72,8 @@ void Generator::GenerateNode(ASTNode *node) {
         Generate_case(FLOAT2INT);
         Generate_case(BOOL2INT);
         Generate_case(INT2BOOL);
+        Generate_case(FLOAT2BOOL);
+        Generate_case(BOOL2FLOAT);
         Generate_case(IF);
         Generate_case(BODY);
         Generate_case(WHILE);

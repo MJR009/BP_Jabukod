@@ -40,6 +40,7 @@ public:
     
         INT2FLOAT, BOOL2INT,
         INT2BOOL, FLOAT2INT,
+        BOOL2FLOAT, FLOAT2BOOL,
     
         LIST_ACCESS, LIST,
 
