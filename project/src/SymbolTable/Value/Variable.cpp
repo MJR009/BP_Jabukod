@@ -76,6 +76,8 @@ void Variable::PrintAsParameter() const {
     cout << DIM << CYAN << " (" << this->stackOffset << ". - " << this->parameterStorage << ")" << DEFAULT;
 }
 
+
+
 void Variable::PrintDefaultValue() const {
     Type::PrintAnyValueByType( this->defaultValue, this->type );
 }

@@ -26,6 +26,7 @@ private:
     Options value;
     int size = 0;
 
+private:
     template <typename T>
     static void PrintArray(any inputArray) {
         vector<T> array = any_cast<vector<T>>( inputArray );

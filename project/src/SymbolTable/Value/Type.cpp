@@ -40,15 +40,27 @@ void Type::MakeArray(int size) {
 
 
 string Type::toString() const {
+    string aux;
     switch (this->value) {
         case Type::INT: return "int";
         case Type::FLOAT: return "float";
         case Type::BOOL: return "bool";
         case Type::STRING: return "string";
         case Type::VOID: return "void";
-        case Type::ARRAY_INT: return "int " TEAL "array" DEFAULT;
-        case Type::ARRAY_FLOAT: return "float " TEAL "array" DEFAULT;
-        case Type::ARRAY_BOOL: return "bool " TEAL "array" DEFAULT;
+        case Type::ARRAY_INT:
+            aux = ("int " TEAL "array" DEFAULT);
+            aux += " [" + to_string(this->size) + "]";
+            return aux;
+
+        case Type::ARRAY_FLOAT:
+            aux = ("float " TEAL "array" DEFAULT);
+            aux += " [" + to_string(this->size) + "]";
+            return aux;
+
+        case Type::ARRAY_BOOL:
+            aux = ("bool " TEAL "array" DEFAULT);
+            aux += " [" + to_string(this->size) + "]";
+            return aux;
     }
 
     return "ERR";

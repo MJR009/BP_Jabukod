@@ -44,11 +44,12 @@ public:
     void SetGlobalFlag(); // when moving to global scope
 
     void SetName(const string & name);
-    void SetDefaultValue(any value);
+    void SetDefaultValue(any value); // important mainly with static variables
 
     void Print() const override;
     void PrintDeclaration() const;
     void PrintAsParameter() const;
+    
     void PrintDefaultValue() const;
 
 private:
