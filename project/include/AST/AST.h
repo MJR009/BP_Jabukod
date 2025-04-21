@@ -70,6 +70,7 @@ public:
     void ConvertCondition(antlr4::Token *expressionStart);
     void ConvertReturn(antlr4::Token *returnToken);
     void ConvertExit(antlr4::Token *exitToken);
+    void ConvertIndexing(antlr4::Token *indexToken);
 
     Variable *AddGlobalLiteral(const string & name, Type type, any value);
     string GenerateUniqueLiteralId(Type type);

@@ -67,3 +67,4 @@
 #define STRAY_ARRAY_VARIABLE "array variable cannot be used without accessing an element"
 #define ARRAY_ACCESS_ON_SCALAR "non-array variable cannot be associated with array access via []"
 #define LIST_TOO_BIG "array initialiser is too large"
+#define BAD_INDEX "value cannot be used to index an array"

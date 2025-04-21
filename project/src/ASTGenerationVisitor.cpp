@@ -117,7 +117,7 @@ any ASTGenerationVisitor::visitListAccessExpression(JabukodParser::ListAccessExp
     this->ast.MoveToParent();
 
     this->visitChildren(ctx);
-    // TODO CONVERSION TO INT
+    this->ast.ConvertIndexing(ctx->getStart());
 
     ExpressionData *accessData = new ExpressionData( arrayData->GetType().GetScalarEquivalent() );
     this->ast.GiveActiveNodeData(accessData);
@@ -585,7 +585,7 @@ any ASTGenerationVisitor::visitAssignment(JabukodParser::AssignmentContext *ctx)
 
     if (ctx->listAccess()) {
         this->visit(ctx->listAccess()); // prepares the index expression
-        // TODO convert to int
+        this->ast.ConvertIndexing(ctx->getStart());
 
         ExpressionData *accessData = new ExpressionData( lSideData->GetType().GetScalarEquivalent() );
         this->ast.GiveActiveNodeData(accessData);

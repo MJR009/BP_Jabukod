@@ -23,6 +23,7 @@ public:
     static void Condition(Type condition, ASTNode *expressionRoot);
     static void Return(Type function, Type present, ASTNode *expressionRoot);
     static void Exit(Type present, ASTNode *expressionRoot);
+    static void Indexing(Type index, ASTNode *expressionRoot);
 
 private:
     static Type (*arithmeticBinaryTable[5][5])(ASTNode *);
@@ -40,6 +41,7 @@ private:
     static Type (*conditionTable[5])(ASTNode *);
     static Type (*returnTable[5][5])(ASTNode *);
     static Type (*exitTable[5])(ASTNode *);
+    static Type (*indexTable[5])(ASTNode *);
 
     // actual conversions:
     static Type I2F_1(ASTNode *expressionRoot); // int to float first
@@ -80,6 +82,7 @@ private:
     static Type e_CNL(ASTNode *expressionRoot); // condition not logical value
     static Type e_BRT(ASTNode *expressionRoot); // bad return type
     static Type e_BET(ASTNode *expressionRoot); // bad exit type
+    static Type e_INI(ASTNode *expressionRoot); // invalid index
 
     // upcasts:
     static void IntToFloat(ASTNode *expressionRoot, int operandIdx);

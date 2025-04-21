@@ -116,6 +116,14 @@ void Conversion::Exit(Type present, ASTNode *expressionRoot) {
     }
 }
 
+void Conversion::Indexing(Type index, ASTNode *expressionRoot) {
+    try {
+        Conversion::indexTable[index](expressionRoot);
+    } catch (...) {
+        throw;
+    }
+}
+
 
 
 // PRIVATE:
@@ -232,6 +240,10 @@ Type (*Conversion::returnTable[5][5])(ASTNode *) =
 Type (*Conversion::exitTable[5])(ASTNode *) =
 // op // INT / FLOAT / BOOL / STRING / VOID //
         {NOCVI, F2I_1, B2I_1, e_BET, e_BET};
+
+Type (*Conversion::indexTable[5])(ASTNode *) =
+// op // INT / FLOAT / BOOL / STRING / VOID //
+        {NOCVI, F2I_2, B2I_2, e_INI, e_INI};
 
 
 
@@ -404,6 +416,11 @@ Type Conversion::e_BRT(ASTNode *expressionRoot) {
 
 Type Conversion::e_BET(ASTNode *expressionRoot) {
     throw BAD_EXIT_TYPE;
+    return Type::VOID;
+}
+
+Type Conversion::e_INI(ASTNode *expressionRoot) {
+    throw BAD_INDEX;
     return Type::VOID;
 }
 

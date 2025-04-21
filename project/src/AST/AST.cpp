@@ -364,6 +364,10 @@ Type AST::ConvertExpressionBinaryArithmetic(antlr4::Token *expressionStart) {
         Type op1 = this->activeNode->GetOperandType(0);
         Type op2 = this->activeNode->GetOperandType(1);
 
+        if (op1.IsArrayType() || op2.IsArrayType()) {
+            return Type::VOID;
+        }
+
         inferedType = Conversion::ExpressionBinaryArithmetic(op1, op2, this->activeNode);
         
     } catch (const char *msg) {
@@ -379,6 +383,10 @@ Type AST::ConvertExpressionBinaryLogical(antlr4::Token *expressionStart) {
     try {
         Type op1 = this->activeNode->GetOperandType(0);
         Type op2 = this->activeNode->GetOperandType(1);
+
+        if (op1.IsArrayType() || op2.IsArrayType()) {
+            return Type::VOID;
+        }
 
         inferedType = Conversion::ExpressionBinaryLogical(op1, op2, this->activeNode);
 
@@ -396,6 +404,10 @@ Type AST::ConvertExpressionBinaryRelational(antlr4::Token *expressionStart) {
         Type op1 = this->activeNode->GetOperandType(0);
         Type op2 = this->activeNode->GetOperandType(1);
 
+        if (op1.IsArrayType() || op2.IsArrayType()) {
+            return Type::VOID;
+        }
+
         inferedType = Conversion::ExpressionBinaryRelational(op1, op2, this->activeNode);
 
     } catch (const char *msg) {
@@ -412,6 +424,10 @@ Type AST::ConvertExpressionBinaryBitwise(antlr4::Token *expressionStart) {
         Type op1 = this->activeNode->GetOperandType(0);
         Type op2 = this->activeNode->GetOperandType(1);
 
+        if (op1.IsArrayType() || op2.IsArrayType()) {
+            return Type::VOID;
+        }
+
         inferedType = Conversion::ExpressionBinaryBitwise(op1, op2, this->activeNode);
 
     } catch (const char *msg) {
@@ -426,6 +442,10 @@ Type AST::ConvertExpressionUnaryArithmetic(antlr4::Token *expressionStart) {
     
     try {
         Type op = this->activeNode->GetOperandType(0);
+
+        if (op.IsArrayType()) {
+            return Type::VOID;
+        }
 
         inferedType = Conversion::ExpressionUnaryArithmetic(op, this->activeNode);
 
@@ -442,6 +462,10 @@ Type AST::ConvertExpressionUnaryLogical(antlr4::Token *expressionStart) {
     try {
         Type op = this->activeNode->GetOperandType(0);
 
+        if (op.IsArrayType()) {
+            return Type::VOID;
+        }
+
         inferedType = Conversion::ExpressionUnaryLogical(op, this->activeNode);
 
     } catch (const char *msg) {
@@ -456,6 +480,10 @@ Type AST::ConvertExpressionUnaryBitwise(antlr4::Token *expressionStart) {
 
     try {
         Type op = this->activeNode->GetOperandType(0);
+
+        if (op.IsArrayType()) {
+            return Type::VOID;
+        }
 
         inferedType = Conversion::ExpressionUnaryBitwise(op, this->activeNode);
 
@@ -484,7 +512,7 @@ void AST::ConvertExpressionDefinition(antlr4::Token *expressionStart) {
 
 Type AST::ConvertExpressionAssignment(antlr4::Token *expressionStart) {
     ASTNode* assignmentTarget = this->activeNode->GetChild(0);
-    if( ! assignmentTarget) {
+    if ( ! assignmentTarget) {
         return Type::VOID;
     }
     if ((assignmentTarget->GetKind() != NodeKind::VARIABLE) &&
@@ -494,18 +522,35 @@ Type AST::ConvertExpressionAssignment(antlr4::Token *expressionStart) {
         return Type::VOID;
     }
 
-    VariableData *targetData = assignmentTarget->GetData<VariableData>();
-    if ( ! targetData) {
-        return Type::VOID;
-    }
-    if (targetData->GetSpecifier() == StorageSpecifier::CONST) {
-        this->parser->notifyErrorListeners(expressionStart, CONSTANT_ASSIGNMENT, nullptr);
+    Type auxLeftSideType = Type::VOID;
+
+    if (assignmentTarget->GetKind() == NodeKind::VARIABLE) {
+        VariableData *targetData = assignmentTarget->GetData<VariableData>();
+        if ( ! targetData) {
+            return Type::VOID;
+        }
+        auxLeftSideType = targetData->GetType();
+
+        if (targetData->GetSpecifier() == StorageSpecifier::CONST) {
+            this->parser->notifyErrorListeners(expressionStart, CONSTANT_ASSIGNMENT, nullptr);
+        }
+
+    } else { // LIST_ACCESS
+        ExpressionData *targetData = assignmentTarget->GetData<ExpressionData>();
+        if ( ! targetData) {
+            return Type::VOID;
+        }
+        auxLeftSideType = targetData->GetType();
+
+        if (assignmentTarget->GetChild(0)->GetData<VariableData>()->GetSpecifier() == StorageSpecifier::CONST) {
+            this->parser->notifyErrorListeners(expressionStart, CONSTANT_ASSIGNMENT, nullptr);
+        }
     }
 
     Type inferedType = Type::VOID;
 
     try {
-        Type lside = targetData->GetType();
+        Type lside = auxLeftSideType;
         Type rside = this->activeNode->GetOperandType(1);
 
         if (lside.IsArrayType()) {
@@ -575,6 +620,17 @@ void AST::ConvertExit(antlr4::Token *exitToken) {
 
     } catch (const char *msg) {
         this->parser->notifyErrorListeners(exitToken, msg, nullptr);
+    }
+}
+
+void AST::ConvertIndexing(antlr4::Token *indexToken) {
+    try {
+        Type index = this->activeNode->GetOperandType(1);
+
+        Conversion::Indexing(index, this->activeNode);
+
+    } catch (const char *msg) {
+        this->parser->notifyErrorListeners(indexToken, msg, nullptr);
     }
 }
 

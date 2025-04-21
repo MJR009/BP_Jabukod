@@ -19,8 +19,6 @@ int main() {
     def[base + def[1]] = def[0];
     //def = base*4;
     def[2] = base*4;
-
-    //TODO//def[2] = "hello";
 }
 
 void rose() {
