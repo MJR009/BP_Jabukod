@@ -8,12 +8,15 @@ int xxxxx[5] = {0, true, 3.14};
 float y[3] = {false, 3.14159};
 //float y[3] = {};
 
+bool s = true;
+
 //bool z[5] = 1;
 //bool zz[5] = 1 + 1;
 //bool zzz[5] = {} + 3;
 //bool zzzz[5] = {1 + 1};
-//bool zzzzz[5] = {false, true, false, !false, false};
-bool zzzzzz[5] = {0, 1, 2, 3};
+//bool zzzzz[5] = {s};
+//bool zzzzzz[5] = {false, true, false, !false, false};
+bool zzzzzzz[5] = {0, 1, 2, 3};
 
 int main() {
     return 0;
