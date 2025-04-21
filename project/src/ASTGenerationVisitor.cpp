@@ -6,10 +6,6 @@ any ASTGenerationVisitor::visitSourceFile(JabukodParser::SourceFileContext *ctx)
 
     this->ast.CorrectStaticVariables();
 
-    // TODO //
-    // suspend, resume pair occurence
-    // return, exit in every path
-
     return OK;
 }
 
@@ -17,17 +13,21 @@ any ASTGenerationVisitor::visitVariableDeclaration(JabukodParser::VariableDeclar
     if (this->ast.CurrentlyIn() != NodeKind::PROGRAM) { // global declarations are already processed
         this->ast.AddNode(NodeKind::VARIABLE_DECLARATION);
 
-        if ( ! ctx->IDENTIFIER()) {
-            return NOK;
-        }
         antlr4::Token *variable = ctx->IDENTIFIER()->getSymbol();
+
         JabukodParser::StorageSpecifierContext *storage = nullptr;
         if (ctx->storageSpecifier()) {
             storage = ctx->storageSpecifier();
             this->ast.CheckIfConstantDeclaration(StorageSpecifier::toSpecifier( storage->getText() ), variable);
         }
+
         JabukodParser::NonVoidTypeContext *type = ctx->nonVoidType();
-        Variable *variableInScope = this->ast.PutVariableInScope(variable, storage, type);
+        JabukodParser::ListSpecifierContext *listSpecifier = nullptr;
+        if (ctx->listSpecifier()) {
+            listSpecifier = ctx->listSpecifier();
+        }
+
+        Variable *variableInScope = this->ast.PutVariableInScope(variable, storage, type, listSpecifier);
         
         VariableData *data = new VariableData(variableInScope);
         this->ast.GiveActiveNodeData(data);
@@ -42,23 +42,31 @@ any ASTGenerationVisitor::visitVariableDefinition(JabukodParser::VariableDefinit
     if (this->ast.CurrentlyIn() != NodeKind::PROGRAM) {
         this->ast.AddNode(NodeKind::VARIABLE_DEFINITION);
         
-        if ( ! ctx->IDENTIFIER()) {
-            return NOK;
-        }
         antlr4::Token *variable = ctx->IDENTIFIER()->getSymbol();
+
         JabukodParser::StorageSpecifierContext *storage = nullptr;
         if (ctx->storageSpecifier()) {
             storage = ctx->storageSpecifier();
         }
+
         JabukodParser::NonVoidTypeContext *type = ctx->nonVoidType();
-        Variable *variableInScope = this->ast.PutVariableInScope(variable, storage, type);
+        JabukodParser::ListSpecifierContext *listSpecifier = nullptr;
+        if (ctx->listSpecifier()) {
+            listSpecifier = ctx->listSpecifier();
+        }
+
+        Variable *variableInScope = this->ast.PutVariableInScope(variable, storage, type, listSpecifier);
 
         VariableData *data = new VariableData(variableInScope);
         this->ast.GiveActiveNodeData(data);
 
+        if (data->GetType().IsArrayType()) {
+            this->ast.CheckIfDefinedByList(ctx->expression());
+        }
+
         this->visit(ctx->expression());
-        this->ast.CheckIfStaticDefinedByLiteral(data->GetSpecifier(), ctx->expression());
-        this->ast.ConvertExpressionDefinition(ctx->getStart());
+        this->ast.CheckIfStaticDefinedByLiteral(data->GetSpecifier(), ctx->expression()); // TODO MUST BE LIST FOR ARRAY !!!
+        this->ast.ConvertExpressionDefinition(ctx->getStart()); // TODO !!!
         
         this->ast.MoveToParent();
     }

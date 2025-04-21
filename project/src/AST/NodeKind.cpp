@@ -63,6 +63,9 @@ string NodeKind::toString() const {
         Conversion_case(INT2BOOL);
         Conversion_case(FLOAT2INT);
 
+        Conversion_case(LIST_ACCESS);
+        Conversion_case(LIST);
+
         Conversion_case(invalid);
     }
 
@@ -101,6 +104,8 @@ string NodeKind::toSign() const {
         case NodeKind::BIT_NOT: return "~";
 
         case NodeKind::ASSIGNMENT: return "=";
+
+        case NodeKind::LIST_ACCESS: return "[]";
     }
 
     return "ERR";

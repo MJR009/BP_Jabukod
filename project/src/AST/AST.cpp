@@ -71,7 +71,8 @@ ASTNode* AST::GetRoot() {
 Variable *AST::PutVariableInScope(
     antlr4::Token *variable,
     JabukodParser::StorageSpecifierContext *storageSpecifier,
-    JabukodParser::NonVoidTypeContext *variableType
+    JabukodParser::NonVoidTypeContext *variableType,
+    JabukodParser::ListSpecifierContext *listSpecifier
 ) {
     string variableName = variable->getText();
     StorageSpecifier specifier = StorageSpecifier::NONE;
@@ -86,8 +87,23 @@ Variable *AST::PutVariableInScope(
     }    
     Type type = Type::toType( variableType->getStart()->getText() );
 
+    if (listSpecifier) {
+        int givenSize = stoi( listSpecifier->INT_LITERAL()->getText() );
+
+        if (type == Type::STRING) {
+            this->parser->notifyErrorListeners(variableType->getStart(), STRING_ARRAY, nullptr);
+        }
+        if (givenSize <= 0) {
+            this->parser->notifyErrorListeners(listSpecifier->INT_LITERAL()->getSymbol(), INVALID_ARRAY_SIZE, nullptr);
+            givenSize = 1;
+        }
+
+        type.MakeArray(givenSize);
+    }
+
     ASTNode *parent = this->activeNode->GetParent(); // definitions/declarations are always children of a node with scope (according to grammar)
 
+    // each of the following have completely different definedeness resolution characteristics
     if (parent->GetKind() == NodeKind::FUNCTION) {
         return this->PutVariableInFunctionScope(variable, variableName, specifier, type);
     } else if (parent->GetKind() == NodeKind::BODY) {
@@ -279,6 +295,12 @@ void AST::CheckIfStaticDefinedByLiteral(StorageSpecifier specifier, JabukodParse
         if ( ! this->IsLiteralExpression(expression)) {
             this->parser->notifyErrorListeners(expression->getStart(), STATIC_INIT_NOT_LITERAL, nullptr);
         }
+    }
+}
+
+void AST::CheckIfDefinedByList(JabukodParser::ExpressionContext *expression) {
+    if ( ! this->IsListExpression(expression) ) {
+        this->parser->notifyErrorListeners(expression->getStart(), ARRAY_DEFINITION_NOT_LIST, nullptr);
     }
 }
 
@@ -616,7 +638,7 @@ Variable *AST::PutVariableInFunctionScope(
 
     int stackOffset = 0;
     if (specifier != StorageSpecifier::STATIC) { // static variable should not take up stack space
-        stackOffset = this->GetStackOffset();
+        stackOffset = this->GetStackOffset(type);
     }
     return data->AddVariable(name, specifier, type, stackOffset);
 }
@@ -644,7 +666,7 @@ Variable *AST::PutVariableInNestedScope(
 
     int stackOffset = 0;
     if (specifier != StorageSpecifier::STATIC) {
-        stackOffset = this->GetStackOffset();
+        stackOffset = this->GetStackOffset(type);
     }
     return data->AddVariable(name, specifier, type, stackOffset);
 }
@@ -655,7 +677,7 @@ Variable *AST::PutVariableInForHeader(
     StorageSpecifier specifier,
     Type type
 ) {
-    // there is one more intermediate node, DEF. -> FOR_HEADER1 -> FOR hierarchy
+    // there is one more intermediate node; DEF. -> FOR_HEADER1 -> FOR hierarchy
     ASTNode *grandparent = this->activeNode->GetParent()->GetParent();
 
     if ( ! grandparent->GetData<ForData>()) {
@@ -671,7 +693,7 @@ Variable *AST::PutVariableInForHeader(
         this->parser->notifyErrorListeners(variable, INTERNAL_ID_USE, nullptr);
     }
 
-    return data->AddVariable(name, specifier, type, this->GetStackOffset()); // in for header there can only occur one definition, no need to check
+    return data->AddVariable(name, specifier, type, this->GetStackOffset(type)); // in for header there can only occur one definition, no need to check
 }
 
 Variable *AST::PutVariableInForeachHeader(
@@ -695,7 +717,7 @@ Variable *AST::PutVariableInForeachHeader(
 
     int stackOffset = 0;
     if (specifier != StorageSpecifier::STATIC) {
-        stackOffset = this->GetStackOffset();
+        stackOffset = this->GetStackOffset(type);
     }
     return data->AddVariable(name, specifier, type, stackOffset);
 }
@@ -774,12 +796,22 @@ bool AST::IsLiteralExpression(JabukodParser::ExpressionContext *expression) {
     return dynamic_cast<JabukodParser::LiteralExpressionContext *>( expression );
 }
 
+bool AST::IsListExpression(JabukodParser::ExpressionContext *expression) {
+    return dynamic_cast<JabukodParser::ListExpressionContext *>( expression );
+}
 
 
-int AST::GetStackOffset() {
-    this->variableCount++;
+
+int AST::GetStackOffset(Type type) {
+    int amount = type.GetSize();
+
+    if (amount == 0) { // SCALAR
+        this->variableCount++;
+    } else { // ARRAY
+        this->variableCount += amount;
+    }
+
     const int offsetBase = -8;
-
     return (offsetBase * this->variableCount);
 }
 

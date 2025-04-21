@@ -27,7 +27,8 @@ public:
     Variable *PutVariableInScope(
         antlr4::Token *variable,
         JabukodParser::StorageSpecifierContext *storageSpecifier,
-        JabukodParser::NonVoidTypeContext *variableType
+        JabukodParser::NonVoidTypeContext *variableType,
+        JabukodParser::ListSpecifierContext *listSpecifier
     );
 
     NodeKind CurrentlyIn();
@@ -44,6 +45,7 @@ public:
     void CheckIfValidForInit(antlr4::Token *initToken);
     void CheckIfValidForUpdate(antlr4::Token *updateToken);
     void CheckIfStaticDefinedByLiteral(StorageSpecifier specifier, JabukodParser::ExpressionContext *expression);
+    void CheckIfDefinedByList(JabukodParser::ExpressionContext *expression);
 
     Type ConvertExpressionBinaryArithmetic(antlr4::Token *expressionStart);
     Type ConvertExpressionBinaryLogical(antlr4::Token *expressionStart);
@@ -125,8 +127,9 @@ private:
     Variable *IsParameter(const string & name);
 
     bool IsLiteralExpression(JabukodParser::ExpressionContext *expression);
+    bool IsListExpression(JabukodParser::ExpressionContext *expression);
 
-    int GetStackOffset();
+    int GetStackOffset(Type type);
 
     void MangleStaticVariableNames(); // make names globally unique
     vector<Variable *> PrepareAndGetAllStatic(); // gives default values, eases removal

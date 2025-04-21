@@ -49,19 +49,6 @@ int Compile(PrepareArguments *args) {
     GlobalSymbolsVisitor GlobalSymbolsVisitor(symbolTable);
     GlobalSymbolsVisitor.visit(parseTree);
 
-
-
-    if (parser.getNumberOfSyntaxErrors() != 0) {
-        delete input;
-        return NOK;
-    }
-    symbolTable.Print();
-    delete input;
-    return OK;
-
-
-
-
     // Phase 2: generate abstract syntax tree and do final semantic checks
     //        -> makes the tree, gathers local symbols and checks symbol usage, ensures statement use validity
     AST ast(&parser, symbolTable);
@@ -82,6 +69,16 @@ int Compile(PrepareArguments *args) {
         delete input;
         return OK;
     }
+
+
+
+
+    symbolTable.Print();
+    ast.Print();
+    delete input;
+    return OK;
+
+
     
     try {
         // Phase 4: generate target code and output to a file

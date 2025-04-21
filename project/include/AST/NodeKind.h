@@ -8,7 +8,7 @@ public:
         DO NOT REARRANGE !!!
     */
     enum Options {
-        PROGRAM, 
+        PROGRAM,
         VARIABLE_DECLARATION, VARIABLE_DEFINITION,
         FUNCTION,
     
@@ -41,6 +41,8 @@ public:
         INT2FLOAT, BOOL2INT,
         INT2BOOL, FLOAT2INT,
     
+        LIST_ACCESS, LIST,
+
         invalid
     };
     
