@@ -378,24 +378,80 @@ bool SymbolTable::IsFromDeclaration(JabukodParser::StorageSpecifierContext *spec
 
 any SymbolTable::ResolveDefaultValue(JabukodParser::ExpressionContext *expression, Type type) const {
     if (expression) { // DEFINITION
-        if (this->IsLiteralExpression(expression)) {
-            JabukodParser::LiteralExpressionContext *literalExpression =
-                dynamic_cast<JabukodParser::LiteralExpressionContext *>( expression ); // downcast to actual expression type
-            return this->ResolveExplicitDefaultValue(literalExpression->literal(), type);
-
-        } else {
-            this->parser->notifyErrorListeners(expression->getStart(), GLOBAL_VARIABLE_DEFINITION_EXPRESSION, nullptr);
-            return any( 0 );
-        }
+        return this->GetExplicitDefaultValue(expression, type);
 
     } else { // DECLARATION
         return this->GetImplicitDefaultValue(type);
     }
 }
 
+any SymbolTable::GetExplicitDefaultValue(JabukodParser::ExpressionContext *expression, Type type) const {
+    if (type.IsArrayType()) { // ARRAY
+        if ( ! this->IsListExpression(expression)) {
+            this->parser->notifyErrorListeners(expression->getStart(), GLOBAL_ARRAY_NOT_DEFINED_BY_LIST, nullptr);
+            return any( 0 );
+        }
+
+        JabukodParser::ListExpressionContext *listExpression =
+            dynamic_cast<JabukodParser::ListExpressionContext *>( expression ); // downcast to actual expression type
+
+        auto items = listExpression->list()->expression();
+
+        vector<any> initialArray;
+        for (auto item = items.begin(); item != items.end(); item++) {
+            any itemInArray = this->GetExplicitDefaultValue(*item, type.GetScalarEquivalent());
+            initialArray.push_back(itemInArray);
+        }
+
+        any typedArray = this->MakeArrayValuesTyped(initialArray, type, listExpression);
+        return typedArray;
+
+    } else { // SCALAR
+        if ( ! this->IsLiteralExpression(expression)) {
+            this->parser->notifyErrorListeners(expression->getStart(), GLOBAL_VARIABLE_DEFINITION_EXPRESSION, nullptr);
+            return any( 0 );
+        }
+    
+        JabukodParser::LiteralExpressionContext *literalExpression =
+            dynamic_cast<JabukodParser::LiteralExpressionContext *>( expression );
+
+        return this->ResolveExplicitDefaultValue(literalExpression->literal(), type);
+    }
+}
+
+any SymbolTable::GetImplicitDefaultValue(Type type) const {
+    switch (type) {
+        case Type::INT:
+            return any( SymbolTable::defaultINT );
+        case Type::FLOAT:
+            return any( SymbolTable::defaultFLOAT );
+        case Type::BOOL:
+            return any( SymbolTable::defaultBOOL );
+        case Type::STRING:
+            return any( SymbolTable::defaultSTRING );
+
+        case Type::ARRAY_INT:
+            return any( vector<int>( type.GetSize(), SymbolTable::defaultINT ) );
+        case Type::ARRAY_FLOAT:
+            return any( vector<float>( type.GetSize(), SymbolTable::defaultFLOAT ) );
+        case Type::ARRAY_BOOL:
+            return any( vector<bool>( type.GetSize(), SymbolTable::defaultBOOL ) );
+    }
+
+    return any( 0 ); // suppress warning
+}
+
+
+
 bool SymbolTable::IsLiteralExpression(JabukodParser::ExpressionContext *expression) const {
     return dynamic_cast<JabukodParser::LiteralExpressionContext *>( expression );
 }
+
+bool SymbolTable::IsListExpression(JabukodParser::ExpressionContext *expression) const {
+    return dynamic_cast<JabukodParser::ListExpressionContext *>( expression );
+}
+
+
 
 any SymbolTable::ResolveExplicitDefaultValue(JabukodParser::LiteralContext *defaultValue, Type variableType) const {
     Type literalType = Type::VOID;
@@ -419,28 +475,6 @@ any SymbolTable::ResolveExplicitDefaultValue(JabukodParser::LiteralContext *defa
 
         default:
             break;
-    }
-
-    return any( 0 ); // suppress warning
-}
-
-any SymbolTable::GetImplicitDefaultValue(Type type) const {
-    switch (type) {
-        case Type::INT:
-            return any( SymbolTable::defaultINT );
-        case Type::FLOAT:
-            return any( SymbolTable::defaultFLOAT );
-        case Type::BOOL:
-            return any( SymbolTable::defaultBOOL );
-        case Type::STRING:
-            return any( SymbolTable::defaultSTRING );
-
-        case Type::ARRAY_INT:
-            return any( vector<int>( type.GetSize(), SymbolTable::defaultINT ) );
-        case Type::ARRAY_FLOAT:
-            return any( vector<float>( type.GetSize(), SymbolTable::defaultFLOAT ) );
-        case Type::ARRAY_BOOL:
-            return any( vector<bool>( type.GetSize(), SymbolTable::defaultBOOL ) );
     }
 
     return any( 0 ); // suppress warning
@@ -487,8 +521,24 @@ any SymbolTable::ConvertLiteralByType(JabukodParser::LiteralContext *defaultValu
             case Type::BOOL:
                 break;
         }
-
     }
 
     return value;
+}
+
+
+
+// also fills in the vector or produces error on wrong size
+any SymbolTable::MakeArrayValuesTyped(vector<any> & initialArray, Type arrayType, JabukodParser::ListExpressionContext *list) const {
+    if (arrayType == Type::ARRAY_INT) {
+        return this->MakeArrayValueTyped_Specific<int>(initialArray, arrayType, list);
+    }
+    if (arrayType == Type::ARRAY_FLOAT) {
+        return this->MakeArrayValueTyped_Specific<float>(initialArray, arrayType, list);
+    }
+    if (arrayType == Type::ARRAY_BOOL) {
+        return this->MakeArrayValueTyped_Specific<bool>(initialArray, arrayType, list);
+    }
+
+    return any( 0 );
 }

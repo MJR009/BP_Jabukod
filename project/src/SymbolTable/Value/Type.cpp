@@ -41,6 +41,16 @@ int Type::GetSize() {
     return this->size;
 }
 
+Type Type::GetScalarEquivalent() {
+    switch (this->value) {
+        case ARRAY_INT: return Type::INT;
+        case ARRAY_FLOAT: return Type::FLOAT;
+        case ARRAY_BOOL: return Type::BOOL;
+    }
+
+    return Type::VOID;
+}
+
 
 
 string Type::toString() const {

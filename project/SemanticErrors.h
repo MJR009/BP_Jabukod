@@ -60,3 +60,5 @@
 
 #define INVALID_ARRAY_SIZE "array size may only be a positive integer"
 #define STRING_ARRAY "array of type string is not allowed"
+#define GLOBAL_ARRAY_NOT_DEFINED_BY_LIST "global array variable must be initialised by list"
+#define GLOBAL_LIST_TOO_BIG "global array initialiser is too large"

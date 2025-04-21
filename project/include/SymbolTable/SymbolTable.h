@@ -100,8 +100,39 @@ private:
     bool IsFromDeclaration(JabukodParser::StorageSpecifierContext *specifier) const;
 
     any ResolveDefaultValue(JabukodParser::ExpressionContext *expression, Type type) const;
-    bool IsLiteralExpression(JabukodParser::ExpressionContext *expression) const;
-    any ResolveExplicitDefaultValue(JabukodParser::LiteralContext *defaultValue, Type variableType) const; // for definitions, also does conversions
+    any GetExplicitDefaultValue(JabukodParser::ExpressionContext *expression, Type type) const; // for ddefinitions
     any GetImplicitDefaultValue(Type type) const; // for declarations
+
+    bool IsLiteralExpression(JabukodParser::ExpressionContext *expression) const;
+    bool IsListExpression(JabukodParser::ExpressionContext *expression) const;
+
+    any ResolveExplicitDefaultValue(JabukodParser::LiteralContext *defaultValue, Type variableType) const; // for definitions, also does conversions
     any ConvertLiteralByType(JabukodParser::LiteralContext *defaultValue, Type literalType, Type variableType) const;
+
+    any MakeArrayValuesTyped(vector<any> & initialArray, Type arrayType, JabukodParser::ListExpressionContext *list) const;
+    template <typename T>
+    any MakeArrayValueTyped_Specific(vector<any> & initialArray, Type arrayType, JabukodParser::ListExpressionContext *list) const {
+        vector<T> array;
+        for (const auto & item : initialArray) {
+            if (item.type() != typeid(T)) {
+                continue;
+            }
+
+            array.push_back( any_cast<T>(item) );
+        }
+
+        if (array.size() > arrayType.GetSize()) {
+            this->parser->notifyErrorListeners(list->getStart(), GLOBAL_LIST_TOO_BIG, nullptr);
+        }
+        if (array.size() < arrayType.GetSize()) {
+            int tailLength = arrayType.GetSize() - array.size();
+
+            T defaultTail = any_cast<T>( SymbolTable::GetDefaultByType( arrayType.GetScalarEquivalent() ) );
+            for (int i = 0; i < tailLength; i++) {
+                array.push_back(defaultTail);
+            }
+        }
+
+        return array;
+    }
 };

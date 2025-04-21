@@ -17,6 +17,7 @@ public:
     bool IsArrayType();
     void MakeArray(int size);
     int GetSize();
+    Type GetScalarEquivalent();
 
     string toString() const;
     static Type toType(const string & str);

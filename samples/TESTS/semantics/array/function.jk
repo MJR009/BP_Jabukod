@@ -1,0 +1,15 @@
+int main() {
+    return 0;
+}
+
+/*int [5]f() {
+    return 0;
+}*/
+
+/*int ff(int [5]x) {
+    return 0;
+}*/
+
+int fff() {
+    return 0;
+}
