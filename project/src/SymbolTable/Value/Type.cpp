@@ -36,7 +36,11 @@ void Type::MakeArray(int size) {
 
     this->size = size;
 }
-            
+
+int Type::GetSize() {
+    return this->size;
+}
+
 
 
 string Type::toString() const {
@@ -48,18 +52,21 @@ string Type::toString() const {
         case Type::STRING: return "string";
         case Type::VOID: return "void";
         case Type::ARRAY_INT:
-            aux = ("int " TEAL "array" DEFAULT);
+            aux = ("int " TEAL "array");
             aux += " [" + to_string(this->size) + "]";
+            aux += DEFAULT;
             return aux;
 
         case Type::ARRAY_FLOAT:
-            aux = ("float " TEAL "array" DEFAULT);
+            aux = ("float " TEAL "array");
             aux += " [" + to_string(this->size) + "]";
+            aux += DEFAULT;
             return aux;
 
         case Type::ARRAY_BOOL:
-            aux = ("bool " TEAL "array" DEFAULT);
+            aux = ("bool " TEAL "array");
             aux += " [" + to_string(this->size) + "]";
+            aux += DEFAULT;
             return aux;
     }
 
@@ -97,11 +104,7 @@ void Type::PrintAnyValueByType(any value, Type type) {
             break;
 
         case Type::BOOL:
-            if (any_cast<bool>( value )) {
-                cout << "true";
-            } else {
-                cout << "false";
-            }
+            cout << boolalpha << any_cast<bool>( value );
             break;
             
         case Type::STRING:
@@ -109,15 +112,15 @@ void Type::PrintAnyValueByType(any value, Type type) {
             break;
 
         case Type::ARRAY_INT:
-            Type::PrintArray<int>( value );
+            Type::PrintArray<int>( value, Type::INT );
             break;
 
         case Type::ARRAY_FLOAT:
-            Type::PrintArray<float>( value );
+            Type::PrintArray<float>( value, Type::FLOAT );
             break;
 
         case Type::ARRAY_BOOL:
-            Type::PrintArray<bool>( value );
+            Type::PrintArray<bool>( value, Type::BOOL );
             break;
     }
 

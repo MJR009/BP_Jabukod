@@ -1,7 +1,5 @@
 #include "GlobalSymbolsVisitor.h"
 
-// TODO ZPRACOVÁNÍ POLÍ 
-
 any GlobalSymbolsVisitor::visitSourceFile(JabukodParser::SourceFileContext *ctx) {
     visitChildren(ctx);
 
@@ -12,31 +10,42 @@ any GlobalSymbolsVisitor::visitSourceFile(JabukodParser::SourceFileContext *ctx)
 
 any GlobalSymbolsVisitor::visitVariableDeclaration(JabukodParser::VariableDeclarationContext *ctx) {
     antlr4::Token *variable = ctx->IDENTIFIER()->getSymbol();
-    JabukodParser::StorageSpecifierContext *storageSpecifier = nullptr;
 
+    JabukodParser::StorageSpecifierContext *storageSpecifier = nullptr;
     if (ctx->storageSpecifier()) {
         storageSpecifier = ctx->storageSpecifier();
     }
 
     JabukodParser::NonVoidTypeContext *type = ctx->nonVoidType();
 
-    this->symbolTable.AddGlobalVariable(variable, storageSpecifier, type, nullptr);
+    JabukodParser::ListSpecifierContext *listSpecifier = nullptr;
+    if (ctx->listSpecifier()) {
+        listSpecifier = ctx->listSpecifier();
+    }
+
+    this->symbolTable.AddGlobalVariable(variable, storageSpecifier, type, nullptr, listSpecifier);
 
     return OK;
 }
 
 any GlobalSymbolsVisitor::visitVariableDefinition(JabukodParser::VariableDefinitionContext *ctx) {
     antlr4::Token *variable = ctx->IDENTIFIER()->getSymbol();
-    JabukodParser::StorageSpecifierContext *storageSpecifier = nullptr;
 
+    JabukodParser::StorageSpecifierContext *storageSpecifier = nullptr;
     if (ctx->storageSpecifier()) {
         storageSpecifier = ctx->storageSpecifier();
     }
 
     JabukodParser::NonVoidTypeContext *type = ctx->nonVoidType();
+
+    JabukodParser::ListSpecifierContext *listSpecifier = nullptr;
+    if (ctx->listSpecifier()) {
+        listSpecifier = ctx->listSpecifier();
+    }
+
     JabukodParser::ExpressionContext *toAssign = ctx->expression();
 
-    this->symbolTable.AddGlobalVariable(variable, storageSpecifier, type, toAssign);
+    this->symbolTable.AddGlobalVariable(variable, storageSpecifier, type, toAssign, listSpecifier);
 
     return OK;
 }

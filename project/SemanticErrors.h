@@ -57,3 +57,6 @@
 #define GLOBAL_ENUM_VARIABLE "global variables of type enum are not allowed"
 
 #define STATIC_INIT_NOT_LITERAL "static variables can only be initialised by literals"
+
+#define INVALID_ARRAY_SIZE "array size may only be a positive integer"
+#define STRING_ARRAY "array of type string is not allowed"

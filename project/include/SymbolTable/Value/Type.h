@@ -16,6 +16,7 @@ public:
 
     bool IsArrayType();
     void MakeArray(int size);
+    int GetSize();
 
     string toString() const;
     static Type toType(const string & str);
@@ -28,18 +29,21 @@ private:
 
 private:
     template <typename T>
-    static void PrintArray(any inputArray) {
-        vector<T> array = any_cast<vector<T>>( inputArray );
+    static void PrintArray(any value, Type itemType) {
+        cout << ORANGE << "{" << DEFAULT;
 
-        cout << "{";
+        auto array = any_cast< vector<T> >( value );
 
         bool first = true;
+
         for (auto item = array.begin(); item != array.end(); item++) {
-            cout << (first ? "" : ", ");
-            cout << *item;
+            cout << ORANGE << (first ? "" : ", ") << DEFAULT;
+
+            Type::PrintAnyValueByType(T(*item), itemType);
+
             first = false;
         }
-    
-        cout << "}";
+
+        cout << ORANGE << "}" << DEFAULT;
     }
 };

@@ -1,0 +1,13 @@
+bool zz;
+int x[5];
+float y[3];
+int xx;
+bool z[8];
+
+//int w[0];
+//int a[-5];
+//string b[3];
+
+int main() {
+    return 0;
+}

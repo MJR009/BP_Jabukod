@@ -4,7 +4,8 @@ void SymbolTable::AddGlobalVariable(
     antlr4::Token *variable,
     JabukodParser::StorageSpecifierContext *storageSpecifier,
     JabukodParser::NonVoidTypeContext *variableType,
-    JabukodParser::ExpressionContext *defaultValue
+    JabukodParser::ExpressionContext *defaultValue,
+    JabukodParser::ListSpecifierContext *listSpecifier
 ) {
     string name = variable->getText();
 
@@ -12,23 +13,37 @@ void SymbolTable::AddGlobalVariable(
     if (storageSpecifier) {
         storage = this->ResolveStorageSpecifier(storageSpecifier);
     }
+
     string givenType = variableType->getStart()->getText();
     if (givenType == "enum") {
         this->parser->notifyErrorListeners(variableType->getStart(), GLOBAL_ENUM_VARIABLE, nullptr);
         return;
     }
     Type type = Type::toType(givenType);
+
+    if (listSpecifier) {
+        int arraySize = stoi( listSpecifier->INT_LITERAL()->getText() );
+
+        if (type == Type::STRING) {
+            this->parser->notifyErrorListeners(listSpecifier->getStart(), STRING_ARRAY, nullptr);
+        } else if (arraySize <= 0) {
+            this->parser->notifyErrorListeners(listSpecifier->INT_LITERAL()->getSymbol(), INVALID_ARRAY_SIZE, nullptr);
+        } else {
+            type.MakeArray(arraySize);
+        }
+    }
+
     any value = this->ResolveDefaultValue(defaultValue, type); // returns default to process as many errors as possible
 
-    if (this->IsGlobalVariableNameAvailable(name)) {
-        if ( ! this->IsIdentifierAllowed(name)) {
-            this->parser->notifyErrorListeners(variable, INTERNAL_ID_USE, nullptr);
-        }
-        this->globalScope->AddEntry(name, storage, type, value, 0, true, false);
-
-    } else {
+    if ( ! this->IsGlobalVariableNameAvailable(name)) {
         this->parser->notifyErrorListeners(variable, VARIABLE_REDEFINITION, nullptr);
+        return;
     }
+    if ( ! this->IsIdentifierAllowed(name)) {
+        this->parser->notifyErrorListeners(variable, INTERNAL_ID_USE, nullptr);
+    }
+
+    this->globalScope->AddEntry(name, storage, type, value, 0, true, false);
 }
 
 FunctionTableEntry *SymbolTable::AddFunction(antlr4::Token *function, JabukodParser::TypeContext *returnType) {
@@ -362,17 +377,18 @@ bool SymbolTable::IsFromDeclaration(JabukodParser::StorageSpecifierContext *spec
 
 
 any SymbolTable::ResolveDefaultValue(JabukodParser::ExpressionContext *expression, Type type) const {
-    if (expression) {
+    if (expression) { // DEFINITION
         if (this->IsLiteralExpression(expression)) {
             JabukodParser::LiteralExpressionContext *literalExpression =
                 dynamic_cast<JabukodParser::LiteralExpressionContext *>( expression ); // downcast to actual expression type
             return this->ResolveExplicitDefaultValue(literalExpression->literal(), type);
+
         } else {
             this->parser->notifyErrorListeners(expression->getStart(), GLOBAL_VARIABLE_DEFINITION_EXPRESSION, nullptr);
             return any( 0 );
         }
 
-    } else {
+    } else { // DECLARATION
         return this->GetImplicitDefaultValue(type);
     }
 }
@@ -418,6 +434,13 @@ any SymbolTable::GetImplicitDefaultValue(Type type) const {
             return any( SymbolTable::defaultBOOL );
         case Type::STRING:
             return any( SymbolTable::defaultSTRING );
+
+        case Type::ARRAY_INT:
+            return any( vector<int>( type.GetSize(), SymbolTable::defaultINT ) );
+        case Type::ARRAY_FLOAT:
+            return any( vector<float>( type.GetSize(), SymbolTable::defaultFLOAT ) );
+        case Type::ARRAY_BOOL:
+            return any( vector<bool>( type.GetSize(), SymbolTable::defaultBOOL ) );
     }
 
     return any( 0 ); // suppress warning

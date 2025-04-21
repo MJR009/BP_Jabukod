@@ -19,7 +19,8 @@ public:
         antlr4::Token *variable,
         JabukodParser::StorageSpecifierContext *storageSpecifier,
         JabukodParser::NonVoidTypeContext *variableType,
-        JabukodParser::ExpressionContext *defaultValue
+        JabukodParser::ExpressionContext *defaultValue,
+        JabukodParser::ListSpecifierContext *listSpecifier
     );
     FunctionTableEntry *AddFunction(
         antlr4::Token *function,
