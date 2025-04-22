@@ -19,9 +19,13 @@ string Transform::IdentifierToLabel(const string & name) {
 string Transform::TypeToDirective(Type type) {
     switch (type) {
         case Type::INT: case Type::BOOL:
+        case Type::ARRAY_INT: case Type::ARRAY_BOOL:
             return ".quad";
+
         case Type::FLOAT:
+        case Type::ARRAY_FLOAT:
             return ".float";
+
         case Type::STRING:
             return ".asciz";
     }
@@ -30,6 +34,9 @@ string Transform::TypeToDirective(Type type) {
 }
 
 string Transform::DefaultValueToInitializer(Variable *variable) {
+    string aux;
+    bool first = true;
+
     switch (variable->GetType()) {
         case Type::INT:
             return to_string( variable->GetDefaultValue<int>() );
@@ -39,6 +46,30 @@ string Transform::DefaultValueToInitializer(Variable *variable) {
             return ( variable->GetDefaultValue<bool>() ) ? "1" : "0";
         case Type::STRING:
             return variable->GetDefaultValue<string>();
+
+        case Type::ARRAY_INT:
+            for (auto & item : variable->GetDefaultValue<vector<int>>()) {
+                aux += (first ? "" : ", ");
+                aux += to_string( item );
+                first = false;
+            }
+            return aux;
+
+        case Type::ARRAY_FLOAT:
+            for (auto & item : variable->GetDefaultValue<vector<float>>()) {
+                aux += (first ? "" : ", ");
+                aux += to_string( item );
+                first = false;
+            }
+            return aux;
+
+        case Type::ARRAY_BOOL:
+            for (auto item : variable->GetDefaultValue<vector<bool>>()) {
+                aux += (first ? "" : ", ");
+                aux += (item ? "1" : "0");
+                first = false;
+            }
+            return aux;
     }
 
     return "";

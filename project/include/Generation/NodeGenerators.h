@@ -59,6 +59,8 @@ public:
     void GenerateRETURN(ASTNode *node);
     void GenerateEXIT(ASTNode *node);
     /*
+    void GenerateLIST(ASTNode *node);
+    void GenerateLIST_ACCESS(ASTNode *node);
     void GeneratePOWER(ASTNode *node);
     void GenerateFOREACH(ASTNode *node);
     void GenerateSUSPEND(ASTNode *node);

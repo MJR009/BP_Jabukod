@@ -89,6 +89,8 @@ void Generator::GenerateNode(ASTNode *node) {
         Generate_case(RETURN);
         Generate_case(EXIT);
         /*
+        Generate_case(LIST);
+        Generate_case(LIST_ACCESS);
         Generate_case(POWER);
         Generate_case(FOREACH);
         Generate_case(SUSPEND);

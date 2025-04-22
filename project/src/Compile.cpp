@@ -69,16 +69,6 @@ int Compile(PrepareArguments *args) {
         delete input;
         return OK;
     }
-
-
-
-
-    symbolTable.Print();
-    ast.Print();
-    delete input;
-    return OK;
-
-
     
     try {
         // Phase 4: generate target code and output to a file
