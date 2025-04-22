@@ -6,7 +6,7 @@
 // TODO description - copy english abstract?
 
 All testing and development was done on a x86_64 machine using <b>Ubuntu 24.04.2 LTS</b> operating
-system.
+system with functionality verified on the `merlin` faculty server.
 
 ### Project structure
 

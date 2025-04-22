@@ -11,3 +11,7 @@ assembly/experiments/**
 
 c.c
 a.out
+
+docs/doxygen
+docs/html
+docs/latex
