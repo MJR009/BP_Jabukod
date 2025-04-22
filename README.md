@@ -100,6 +100,6 @@ with a syntax tree visualisation (note this target requires `java`, `javac` and 
 
 ### Syntax highlighting
 
-At // TODO PUBLIC EXTENNSION REPO LINK you can get a custom extension for syntax highlighting of Jabukód files
+A part of this repository is a custom extension for syntax highlighting of Jabukód files
 with `.jk` filename extension. For correct functionality, move cloned repository containing the extension
-to `~/.vscode/extensions/`.
+to `~/.vscode/extensions/`. The extension is purposefully not available publicly.
