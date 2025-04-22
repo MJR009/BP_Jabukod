@@ -135,7 +135,11 @@ void NodeGenerators::GenerateLIST_ACCESS(ASTNode *node) {
         address = to_string(array->GetStackOffset()) + "(" RBP  + address;
     }
 
-    gen->instructions.emplace_back(MOVQ, address, RAX);
+    if (node->GetData<ExpressionData>()->GetType() == Type::FLOAT) {
+        gen->instructions.emplace_back(MOVSS, address, XMM6);
+    } else {
+        gen->instructions.emplace_back(MOVQ, address, RAX);
+    }
 }
 
 void NodeGenerators::GenerateADDITION(ASTNode *node) {
