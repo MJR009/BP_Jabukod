@@ -109,5 +109,8 @@ file(GLOB PACK_FILES
 )
 add_custom_target(pack
     COMMAND ${CMAKE_COMMAND} -E tar cfv ${PROJECT_NAME}.zip --format=zip ${PACK_FILES}
+    COMMAND ${CMAKE_COMMAND} -E echo ""
+    COMMAND ${CMAKE_COMMAND} -E echo "!!!!!! DO NOT FORGET THE SYNTAX HIGHLIGHTOING FOR HANDIN !!!!!!"
+    COMMAND ${CMAKE_COMMAND} -E echo ""
     WORKING_DIRECTORY ${ARCHIVE_BASE_DIR}
 )
