@@ -625,8 +625,12 @@ void NodeGenerators::EvaluateAssignment(ASTNode *lSide, ASTNode *rSide, Type rSi
         source = (rSideType == Type::FLOAT) ? XMM6 : RAX;
     }
 
-    VariableData *lData = lSide->GetData<VariableData>();
-    target = Transform::VariableToLocation(lData);
+    if (lSide->GetKind() == NodeKind::VARIABLE) {
+        VariableData *lData = lSide->GetData<VariableData>();
+        target = Transform::VariableToLocation(lData);
+    } else { // LIST_ASSIGN
+        // 
+    }
 
     gen->instructions.emplace_back(opcode, source, target);
 }
