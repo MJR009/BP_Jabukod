@@ -17,6 +17,7 @@ public:
     void GenerateASSIGNMENT(ASTNode *node);
     void GenerateVARIABLE_DEFINITION(ASTNode *node);
     void GenerateVARIABLE_DECLARATION(ASTNode *node);
+    void GenerateLIST_ACCESS(ASTNode *node);
     void GenerateADDITION(ASTNode *node);
     void GenerateSUBTRACTION(ASTNode *node);
     void GenerateMULTIPLICATION(ASTNode *node);
@@ -60,7 +61,6 @@ public:
     void GenerateEXIT(ASTNode *node);
     /*
     void GenerateLIST(ASTNode *node);
-    void GenerateLIST_ACCESS(ASTNode *node);
     void GeneratePOWER(ASTNode *node);
     void GenerateFOREACH(ASTNode *node);
     void GenerateSUSPEND(ASTNode *node);

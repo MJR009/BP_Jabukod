@@ -1,9 +1,8 @@
 #pragma once
 #include "common.h"
 
-#include "NodeKind.h"
+#include "ASTNode.h"
 #include "Instruction.h"
-#include "SpecificNodeData.h"
 #include "Registers.h"
 
 class Transform {

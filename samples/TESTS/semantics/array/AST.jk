@@ -19,6 +19,11 @@ int main() {
     def[base + def[1]] = def[0];
     //def = base*4;
     def[2] = base*4;
+
+    // int number = def[def];
+
+    int number = 0;
+    int number2 = x[0] = x[number = 3.14];
 }
 
 void rose() {

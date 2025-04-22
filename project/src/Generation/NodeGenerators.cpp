@@ -118,6 +118,10 @@ void NodeGenerators::GenerateVARIABLE_DECLARATION(ASTNode *node) {
     gen->ConnectSequence( Snippets::DeclareDefault(variableType, location) );
 }
 
+void NodeGenerators::GenerateLIST_ACCESS(ASTNode *node) {
+    gen->GenerateNode(node->GetChild(1));
+}
+
 void NodeGenerators::GenerateADDITION(ASTNode *node) {
     this->EvaluateSubexpressions(node);
     this->EvaluateCurrentExpression(node, ADD);

@@ -200,11 +200,10 @@ any ASTGenerationVisitor::visitIdentifierExpression(JabukodParser::IdentifierExp
     Variable *variableInScope = this->ast.LookupVariable( ctx->IDENTIFIER()->getSymbol() );
     VariableData *data = new VariableData(variableInScope);
 
+    this->ast.AddNode(NodeKind::VARIABLE, data);
     if (data->GetType().IsArrayType()) {
         this->ast.CheckIfInArrayAccess(ctx);
     }
-
-    this->ast.AddNode(NodeKind::VARIABLE, data);
     this->ast.MoveToParent();
 
     return OK;

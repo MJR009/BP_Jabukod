@@ -325,7 +325,11 @@ void AST::CheckIfTypeIsArray(Type type, JabukodParser::ListContext *list) {
 }
 
 void AST::CheckIfInArrayAccess(JabukodParser::IdentifierExpressionContext *variable) {
-    if (this->activeNode->GetKind() != NodeKind::LIST_ACCESS) {
+    if (this->activeNode->GetParent()->GetKind() != NodeKind::LIST_ACCESS) {
+        this->parser->notifyErrorListeners(variable->getStart(), STRAY_ARRAY_VARIABLE, nullptr);
+    }
+
+    if (this->activeNode != this->activeNode->GetParent()->GetChild(0)) {
         this->parser->notifyErrorListeners(variable->getStart(), STRAY_ARRAY_VARIABLE, nullptr);
     }
 }
@@ -626,6 +630,10 @@ void AST::ConvertExit(antlr4::Token *exitToken) {
 void AST::ConvertIndexing(antlr4::Token *indexToken) {
     try {
         Type index = this->activeNode->GetOperandType(1);
+
+        if (index.IsArrayType()) {
+            return;
+        }
 
         Conversion::Indexing(index, this->activeNode);
 
