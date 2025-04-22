@@ -119,7 +119,23 @@ void NodeGenerators::GenerateVARIABLE_DECLARATION(ASTNode *node) {
 }
 
 void NodeGenerators::GenerateLIST_ACCESS(ASTNode *node) {
+    // (1) calculate index into %rax
     gen->GenerateNode(node->GetChild(1));
+
+    // (2) get array variable inforamtion
+    VariableData *array = node->GetChild(0)->GetData<VariableData>();
+
+    string address = ", " RAX ", 8)";
+
+    if (array->IsGlobal()) {
+        gen->instructions.emplace_back(LEA, Transform::GlobalToAddress(array->GetName()), RBX);
+        address = "(" RBX + address;
+
+    } else { // local
+        address = to_string(array->GetStackOffset()) + "(" RBP  + address;
+    }
+
+    gen->instructions.emplace_back(MOVQ, address, RAX);
 }
 
 void NodeGenerators::GenerateADDITION(ASTNode *node) {
@@ -598,11 +614,12 @@ void NodeGenerators::EvaluateUnarySubexpression(ASTNode *node) {
 void NodeGenerators::EvaluateAssignment(ASTNode *lSide, ASTNode *rSide, Type rSideType) {
     string opcode, source, target;
 
+    // (1) prepare right side
     if (rSide->GetKind() == NodeKind::LITERAL) { // in an assignment, there is no need to move immediate value to register
         opcode = MOVQ;
         source = Transform::LiteralToImmediate( rSide->GetData<LiteralData>() );
         
-    } else {
+    } else { // general expression
         gen->GenerateNode(rSide);
         opcode = (rSideType == Type::FLOAT) ? MOVSS : MOVQ;
         source = (rSideType == Type::FLOAT) ? XMM6 : RAX;
@@ -708,3 +725,4 @@ string NodeGenerators::GetRestartTarget() {
 
     return "ERR";
 }
+string FormulateAddress(ASTNode *target);
