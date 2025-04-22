@@ -499,11 +499,11 @@ void AST::ConvertExpressionDefinition(antlr4::Token *expressionStart) {
         Type lside = this->activeNode->GetData<VariableData>()->GetType();
         Type rside = this->activeNode->GetOperandType(0);
 
-        if (lside.IsArrayType()) { // array assignment is resolved other way
-            return;
+        if (lside.IsArrayType()) {
+            Conversion::List(rside.GetScalarEquivalent(), this->activeNode->GetChild(0));
+        } else {
+            Conversion::ExpressionDefinition(lside, rside, this->activeNode);
         }
-
-        Conversion::ExpressionDefinition(lside, rside, this->activeNode);
 
     } catch (const char *msg) {
         this->parser->notifyErrorListeners(expressionStart, msg, nullptr);

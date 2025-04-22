@@ -126,6 +126,21 @@ void Conversion::Indexing(Type index, ASTNode *expressionRoot) {
 
 
 
+void Conversion::List(Type target, ASTNode *expressionRoot) {
+    try {
+        for (int i = 0; i < expressionRoot->GetChildrenCount(); i++) {
+            Conversion::definitionTable[target][expressionRoot->GetOperandType(0)](expressionRoot);
+
+            expressionRoot->AdjustArguments();
+        }
+
+    } catch (...) {
+        throw;
+    }
+}
+
+
+
 // PRIVATE:
 
 Type (*Conversion::arithmeticBinaryTable[5][5])(ASTNode *) =

@@ -25,6 +25,8 @@ public:
     static void Exit(Type present, ASTNode *expressionRoot);
     static void Indexing(Type index, ASTNode *expressionRoot);
 
+    static void List(Type target, ASTNode *expressionRoot);
+
 private:
     static Type (*arithmeticBinaryTable[5][5])(ASTNode *);
     static Type (*logicalBinaryTable[5][5])(ASTNode *);

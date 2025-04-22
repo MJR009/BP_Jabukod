@@ -74,7 +74,7 @@ any ASTGenerationVisitor::visitVariableDefinition(JabukodParser::VariableDefinit
 
         this->visit(ctx->expression());
         this->ast.CheckIfStaticDefinedByLiteral(data->GetSpecifier(), ctx->expression()); // here we know there is a list after array
-        this->ast.ConvertExpressionDefinition(ctx->getStart()); // TODO CORRECT CONVERSION
+        this->ast.ConvertExpressionDefinition(ctx->getStart());
         
         this->ast.MoveToParent();
     }
@@ -648,7 +648,6 @@ any ASTGenerationVisitor::visitList(JabukodParser::ListContext *ctx) {
 
     for (auto & item : ctx->expression()) {
         this->visit(item);
-        // TODO do conversion to array item type
     }
 
     this->ast.MoveToParent();

@@ -1,0 +1,11 @@
+int main() {
+    int x[5] = {true, 2.3/*, "hi"*/};
+    float y[5] = {1, false, 8.2};
+    bool z[5] = {true, -55, 3.14};
+
+    int wow[3] = {
+        z[4] * 6,
+        !y[0],
+        (1 + true) * 3.14
+    };
+}
