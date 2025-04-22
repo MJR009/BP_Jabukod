@@ -101,21 +101,28 @@ void NodeGenerators::GenerateVARIABLE_DEFINITION(ASTNode *node) {
 void NodeGenerators::GenerateVARIABLE_DECLARATION(ASTNode *node) {
     VariableData *data = node->GetData<VariableData>();
     Type variableType = data->GetType();
-    static bool floatDeclared = false; // avoid redeclaring default values again
-    static bool stringDeclared = false;
 
-    if ( (variableType == Type::FLOAT) && ( ! floatDeclared) ) {
-        gen->symbolTable.AddGlobalLiteral( Snippets::floatDeclaration, Type::FLOAT, SymbolTable::defaultFLOAT );
-        floatDeclared = true;
+    this->AddNeededDeclarationData(variableType);
+
+    if ( ! variableType.IsArrayType()) { // scalar
+        string location = Transform::VariableToLocation(data);
+        gen->ConnectSequence( Snippets::DeclareDefault(variableType, location) );
+
+    } else { // array - generate each item
+        Type itemType = variableType.GetScalarEquivalent();
+        int size = variableType.GetSize();
+
+        for (int i = 0; i < size; i++) {
+            gen->instructions.emplace_back(MOVQ, Transform::IntToImmediate(i), RAX);
+
+            string location = Transform::ListAccessToLocation(data);
+            gen->ConnectSequence( Snippets::DeclareDefault(itemType, location) );
+        }
     }
-    if ( (variableType == Type::STRING) && ( ! stringDeclared) ) {
-        gen->symbolTable.AddGlobalLiteral( Snippets::stringDeclaration, Type::STRING, SymbolTable::defaultSTRING );
-        stringDeclared = true;
-    }
+}
 
-    string location = Transform::VariableToLocation(data);
-
-    gen->ConnectSequence( Snippets::DeclareDefault(variableType, location) );
+void NodeGenerators::GenerateLIST(ASTNode *node) {
+    ;
 }
 
 void NodeGenerators::GenerateLIST_ACCESS(ASTNode *node) {
@@ -125,20 +132,16 @@ void NodeGenerators::GenerateLIST_ACCESS(ASTNode *node) {
     // (2) get array variable inforamtion
     VariableData *array = node->GetChild(0)->GetData<VariableData>();
 
-    string address = ", " RAX ", 8)";
-
-    if (array->IsGlobal()) {
+    if (array->IsGlobal()) { // x86_64 cannot load from %rip relative address when using index and scale
         gen->instructions.emplace_back(LEA, Transform::GlobalToAddress(array->GetName()), RBX);
-        address = "(" RBX + address;
-
-    } else { // local
-        address = to_string(array->GetStackOffset()) + "(" RBP  + address;
     }
 
+    string source = Transform::ListAccessToLocation(array);
+
     if (node->GetData<ExpressionData>()->GetType() == Type::FLOAT) {
-        gen->instructions.emplace_back(MOVSS, address, XMM6);
+        gen->instructions.emplace_back(MOVSS, source, XMM6);
     } else {
-        gen->instructions.emplace_back(MOVQ, address, RAX);
+        gen->instructions.emplace_back(MOVQ, source, RAX);
     }
 }
 
@@ -616,6 +619,9 @@ void NodeGenerators::EvaluateUnarySubexpression(ASTNode *node) {
 
 
 void NodeGenerators::EvaluateAssignment(ASTNode *lSide, ASTNode *rSide, Type rSideType) {
+    cout << lSide->GetKind().toString() << " ";
+    cout << rSide->GetKind().toString() << endl;
+
     string opcode, source, target;
 
     // (1) prepare right side
@@ -658,7 +664,6 @@ void NodeGenerators::EvaluateAssignmentToArray(ASTNode *lSide, string opcode, st
         string target = to_string(data->GetStackOffset());
         target += "(" RBP ", " RBX ", 8)";
         gen->instructions.emplace_back(opcode, source, target);
-
     }
 }
 
@@ -695,6 +700,26 @@ void NodeGenerators::EvaluateCondition(ASTNode *condition, string falseLabel) {
     }
 
     gen->instructions.emplace_back(jumpKind, falseLabel);
+}
+
+
+
+void NodeGenerators::AddNeededDeclarationData(Type declarationType) {
+    static bool floatDeclared = false; // avoid redeclaring default values again
+    static bool stringDeclared = false;
+
+    if (declarationType.IsArrayType()) {
+        declarationType = declarationType.GetScalarEquivalent();
+    } 
+
+    if ((declarationType == Type::FLOAT) && ( ! floatDeclared)) {
+        gen->symbolTable.AddGlobalLiteral( Snippets::floatDeclaration, Type::FLOAT, SymbolTable::defaultFLOAT );
+        floatDeclared = true;
+    }
+    if ((declarationType == Type::STRING) && ( ! stringDeclared)) {
+        gen->symbolTable.AddGlobalLiteral( Snippets::stringDeclaration, Type::STRING, SymbolTable::defaultSTRING );
+        stringDeclared = true;
+    }
 }
 
 
@@ -756,4 +781,3 @@ string NodeGenerators::GetRestartTarget() {
 
     return "ERR";
 }
-string FormulateAddress(ASTNode *target);

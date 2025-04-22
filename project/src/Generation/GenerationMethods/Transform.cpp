@@ -125,6 +125,21 @@ string Transform::VariableToLocation(VariableData *data) {
     return "ERR";
 }
 
+string Transform::ListAccessToLocation(VariableData *array) {
+    string address;
+
+    if (array->IsGlobal()) {
+        address = "(" RBX; // %rbx base
+    } else { // local
+        address = to_string( array->GetStackOffset() ); // literal stack offset
+        address += "(" RBP; // %rbp base
+    }
+
+    address += (", " RAX ", 8)"); // %rax index, scale is 8 bytes
+
+    return address;
+}
+
 string Transform::ConditionToJump(NodeKind condition, Type comparisonType) {
     const string jump[2][6] = {
     //    <   <=   >   >=   ==  !=    ///////

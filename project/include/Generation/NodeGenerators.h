@@ -17,6 +17,7 @@ public:
     void GenerateASSIGNMENT(ASTNode *node);
     void GenerateVARIABLE_DEFINITION(ASTNode *node);
     void GenerateVARIABLE_DECLARATION(ASTNode *node);
+    void GenerateLIST(ASTNode *node);
     void GenerateLIST_ACCESS(ASTNode *node);
     void GenerateADDITION(ASTNode *node);
     void GenerateSUBTRACTION(ASTNode *node);
@@ -60,7 +61,6 @@ public:
     void GenerateRETURN(ASTNode *node);
     void GenerateEXIT(ASTNode *node);
     /*
-    void GenerateLIST(ASTNode *node);
     void GeneratePOWER(ASTNode *node);
     void GenerateFOREACH(ASTNode *node);
     void GenerateSUSPEND(ASTNode *node);
@@ -81,6 +81,9 @@ private:
     void EvaluateAssignment(ASTNode *lSide, ASTNode *rSide, Type rSideType);
     void EvaluateAssignmentToArray(ASTNode *lSide, string opcode, string source);
     void EvaluateCondition(ASTNode *condition, string falseLabel);
+
+    // literal float and string have to be in .data section, immediate values cannot be used
+    void AddNeededDeclarationData(Type declarationType);
 
 private:
     enum LoopKind { WHILE, FOR }; // TODO FOREACH
