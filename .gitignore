@@ -11,3 +11,8 @@ assembly/experiments/**
 
 c.c
 a.out
+
+Jabukod_syntax-highlighting/.gitignore
+Jabukod_syntax-highlighting/assignment.pdf
+Jabukod_syntax-highlighting/.vscode
+Jabukod_syntax-highlighting/.git
