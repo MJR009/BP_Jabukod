@@ -625,14 +625,37 @@ void NodeGenerators::EvaluateAssignment(ASTNode *lSide, ASTNode *rSide, Type rSi
         source = (rSideType == Type::FLOAT) ? XMM6 : RAX;
     }
 
-    if (lSide->GetKind() == NodeKind::VARIABLE) {
+    // (2) prepare assignment target
+    if (lSide->GetKind() != NodeKind::LIST_ACCESS) { // VARIABLE or VARIABLE_DEFINITION
         VariableData *lData = lSide->GetData<VariableData>();
         target = Transform::VariableToLocation(lData);
-    } else { // LIST_ASSIGN
-        // 
-    }
+        gen->instructions.emplace_back(opcode, source, target);
 
-    gen->instructions.emplace_back(opcode, source, target);
+    } else {
+        this->EvaluateAssignmentToArray(lSide, opcode, source);
+    }
+}
+
+void NodeGenerators::EvaluateAssignmentToArray(ASTNode *lSide, string opcode, string source) {
+    gen->instructions.emplace_back(PUSH, RAX);
+    gen->GenerateNode(lSide->GetChild(1)); // index will alway be integer
+    gen->instructions.emplace_back(MOVQ, RAX, RBX);
+    gen->instructions.emplace_back(POP, RAX);
+
+    VariableData *data = lSide->GetChild(0)->GetData<VariableData>();
+
+    if (data->IsGlobal()) {
+        gen->instructions.emplace_back(PUSH, RCX);
+        gen->instructions.emplace_back(LEA, Transform::GlobalToAddress(data->GetName()), RCX);
+        gen->instructions.emplace_back(opcode, source, ("(" RCX ", " RBX ", 8)"));
+        gen->instructions.emplace_back(POP, RCX);
+
+    } else { // local
+        string target = to_string(data->GetStackOffset());
+        target += "(" RBP ", " RBX ", 8)";
+        gen->instructions.emplace_back(opcode, source, target);
+
+    }
 }
 
 void NodeGenerators::EvaluateCondition(ASTNode *condition, string falseLabel) {

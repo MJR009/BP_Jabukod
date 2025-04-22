@@ -79,6 +79,7 @@ private:
     void EvaluateUnarySubexpression(ASTNode *node);
 
     void EvaluateAssignment(ASTNode *lSide, ASTNode *rSide, Type rSideType);
+    void EvaluateAssignmentToArray(ASTNode *lSide, string opcode, string source);
     void EvaluateCondition(ASTNode *condition, string falseLabel);
 
 private:
