@@ -95,7 +95,12 @@ void NodeGenerators::GenerateASSIGNMENT(ASTNode *node) {
 }
 
 void NodeGenerators::GenerateVARIABLE_DEFINITION(ASTNode *node) {
-    this->EvaluateAssignment(node, node->GetChild(0), node->GetOperandType(0));
+    Type defined = node->GetData<VariableData>()->GetType();
+    if (defined.IsArrayType()) {
+        this->EvaluateArrayDefinition(node);
+    } else { // scalar
+        this->EvaluateAssignment(node, node->GetChild(0), node->GetOperandType(0));
+    }
 }
 
 void NodeGenerators::GenerateVARIABLE_DECLARATION(ASTNode *node) {
@@ -619,9 +624,6 @@ void NodeGenerators::EvaluateUnarySubexpression(ASTNode *node) {
 
 
 void NodeGenerators::EvaluateAssignment(ASTNode *lSide, ASTNode *rSide, Type rSideType) {
-    cout << lSide->GetKind().toString() << " ";
-    cout << rSide->GetKind().toString() << endl;
-
     string opcode, source, target;
 
     // (1) prepare right side
@@ -662,10 +664,46 @@ void NodeGenerators::EvaluateAssignmentToArray(ASTNode *lSide, string opcode, st
 
     } else { // local
         string target = to_string(data->GetStackOffset());
-        target += "(" RBP ", " RBX ", 8)";
+        target += ( "(" RBP ", " RBX ", 8)" );
         gen->instructions.emplace_back(opcode, source, target);
     }
 }
+
+void NodeGenerators::EvaluateArrayDefinition(ASTNode *variable) {
+    VariableData *target = variable->GetData<VariableData>();
+
+    ASTNode *list = variable->GetChild(0);
+    for (int i = 0; i < target->GetType().GetSize(); i++) {
+        string opcode, source, targetAddress;
+        Type targetType = target->GetType().GetScalarEquivalent();
+
+        if (targetType == Type::FLOAT) {
+            opcode = MOVSS;
+            source = XMM6;
+        } else {
+            opcode = MOVQ;
+            source = RAX;
+        }
+
+        // here we know the processed variable has to be local
+        targetAddress = to_string(target->GetStackOffset());
+        targetAddress += ( "(" RBP ", " RBX ", 8)" );
+
+        if (i >= list->GetChildrenCount()) { // fill in tail with implicit declarations
+            this->AddNeededDeclarationData(targetType);
+
+            gen->instructions.emplace_back(MOVQ, Transform::IntToImmediate(i), RBX); // index
+            gen->ConnectSequence( Snippets::DeclareDefault(targetType, targetAddress) );
+
+        } else { // take from the list when it still remains
+            gen->GenerateNode(list->GetChild(i));
+            gen->instructions.emplace_back(MOVQ, Transform::IntToImmediate(i), RBX);
+            gen->instructions.emplace_back(opcode, source, targetAddress);
+        }
+    }
+}
+
+
 
 void NodeGenerators::EvaluateCondition(ASTNode *condition, string falseLabel) {
     Type comparisonType = Type::VOID;

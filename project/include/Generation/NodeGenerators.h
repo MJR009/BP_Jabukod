@@ -80,6 +80,8 @@ private:
 
     void EvaluateAssignment(ASTNode *lSide, ASTNode *rSide, Type rSideType);
     void EvaluateAssignmentToArray(ASTNode *lSide, string opcode, string source);
+    void EvaluateArrayDefinition(ASTNode *variable);
+
     void EvaluateCondition(ASTNode *condition, string falseLabel);
 
     // literal float and string have to be in .data section, immediate values cannot be used

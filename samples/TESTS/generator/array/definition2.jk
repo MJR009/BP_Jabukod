@@ -1,0 +1,7 @@
+int main() {
+    float x[3] = {1, 2.2};
+
+    int a = x[2];
+
+    return 0;
+}
