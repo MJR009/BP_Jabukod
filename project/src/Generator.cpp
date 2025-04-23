@@ -2,7 +2,7 @@
  * @file Generator.cpp
  * @author Martin Jabůrek
  * 
- * Implementation of:
+ * Implementation of
  * @link Generator.h
  */
 

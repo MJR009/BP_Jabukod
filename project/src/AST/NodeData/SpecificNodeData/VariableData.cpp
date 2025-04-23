@@ -1,3 +1,12 @@
+/**
+ * @file VariableData.cpp
+ * @author Martin Jabůrek
+ * 
+ * Implementation of
+ * @link VariableData.h
+ */
+
+
 #include "VariableData.h"
 
 Variable *VariableData::GetSelf() {

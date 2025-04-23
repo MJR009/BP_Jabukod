@@ -1,3 +1,13 @@
+/**
+ * @file SpecificNodeData.h
+ * @author Martin Jabůrek
+ * 
+ * @brief Includes for all node data specialised classes.
+ * 
+ * This file is used to simplify includes of all node data kinds wherever they are needed.
+ * Everywhere they are used, any of the kinds may occur.
+ */
+
 #pragma once
 
 #include "LiteralData.h"

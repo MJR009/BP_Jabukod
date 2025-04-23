@@ -1,3 +1,11 @@
+/**
+ * @file BodyData.cpp
+ * @author Martin Jabůrek
+ * 
+ * Implementation of
+ * @link BodyData.h
+ */
+
 #include "BodyData.h"
 
 Variable *BodyData::AddVariable(

@@ -2,7 +2,7 @@
  * @file Assembler.cpp
  * @author Martin Jabůrek
  * 
- * Implementation of:
+ * Implementation of
  * @link Assembler.h
  */
 

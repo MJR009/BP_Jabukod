@@ -2,7 +2,7 @@
  * @file Compile.cpp
  * @author Martin Jabůrek
  * 
- * Implementation of:
+ * Implementation of
  * @link Compile.h
  */
 

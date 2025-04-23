@@ -1,3 +1,11 @@
+/**
+ * @file FunctionData.cpp
+ * @author Martin Jabůrek
+ * 
+ * Implementation of
+ * @link FunctionData.h
+ */
+
 #include "FunctionData.h"
 
 string FunctionData::GetName() {

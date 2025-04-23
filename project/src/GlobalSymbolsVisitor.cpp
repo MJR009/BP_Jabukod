@@ -2,7 +2,7 @@
  * @file GlobalSymbolsVisitor.cpp
  * @author Martin Jabůrek
  * 
- * Implementation of:
+ * Implementation of
  * @link GlobalSymbolsVisitor.h
  */
 

@@ -2,7 +2,7 @@
  * @file ASTGenerationVisitor.cpp
  * @author Martin Jabůrek
  * 
- * Implementation of:
+ * Implementation of
  * @link ASTGenerationVisitor.h
  */
 
