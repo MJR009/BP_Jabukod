@@ -30,7 +30,7 @@ public:
 
     void SetData(GenericNodeData *data);
 
-    void DeleteSubtree(int childIndex);
+    void DeleteAfter(int childIndex);
 
     // returns whether the current node is a last child of the previous node for every node all the way to root
     // goes from this node to root, first item represents this and last the root

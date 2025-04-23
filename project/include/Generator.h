@@ -39,36 +39,17 @@ public:
      * @param ast Associated abstract syntax tree.
      * @param symbolTable Associated symbol table.
      */
-    Generator(string outputPath, AST & ast, SymbolTable & symbolTable) : ast(ast), symbolTable(symbolTable) {
-        if (outputPath.back() == '/') {
-            throw (outputPath + " is a path");
-        }
-
-        jout.open(outputPath + ".s");
-        if ( ! jout.is_open()) {
-            throw ("failed to open file " + outputPath + ".s");
-        }
-
-        this->nodeGenerators = new NodeGenerators(this);
-    }
-
+    Generator(string outputPath, AST & ast, SymbolTable & symbolTable);
     /**
      * @brief Method to transform the created internal representation into output assembly.
      * 
      */
     void Generate();
-
     /**
      * @brief Desctructor responsible for closing the output file stream and deleting associated friend class.
      * 
      */
-    ~Generator() {
-        delete this->nodeGenerators;
-
-        if (jout.is_open()) {
-            jout.close();
-        }
-    }
+    ~Generator();
 
 private:
     /// @brief Accociated abstract syntax tree.
@@ -116,7 +97,7 @@ private:
     /**
      * @brief Generates the .text section of the output assembly, containing all the instructions needed to carry out the input program.
      * 
-     * A stable $1 is hard inserted here. It is needed for bool conversions, as conditional move instructions cannot work with
+     * A stable $1 is hard inserted here. It is needed for bool conversions, as conditional move instructions do not work with
      * immediate values.
      */
     void OutputTextSection();

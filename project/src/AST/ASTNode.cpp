@@ -85,7 +85,7 @@ void ASTNode::SetData(GenericNodeData *data) {
 }
 
 
-void ASTNode::DeleteSubtree(int childIndex) {
+void ASTNode::DeleteAfter(int childIndex) {
     if (this->children.size() <= childIndex) {
         return;
     }

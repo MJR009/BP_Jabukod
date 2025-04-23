@@ -1,3 +1,11 @@
+/**
+ * @file AST.cpp
+ * @author Martin Jabůrek
+ * 
+ * Implementation of
+ * @link AST.h
+ */
+
 #include "AST.h"
 
 void AST::PreorderForEachNode( void (*action)(ASTNode *) ) {
@@ -125,6 +133,45 @@ NodeKind AST::CurrentlyIn() {
 
 
 
+FunctionTableEntry *AST::LookupFunction(antlr4::Token *functionToken, bool produceError) {
+    string name = functionToken->getText();
+    FunctionTableEntry *function = nullptr;
+
+    if (function = this->IsFunctionDefined(name)) {
+        return function;
+    }
+
+    if (produceError) {
+        this->parser->notifyErrorListeners(functionToken, UNDEFINED_FUNCTION, nullptr);
+    }
+    return nullptr;
+}
+
+Variable *AST::LookupVariable(antlr4::Token *variableToken, bool produceError) {
+    string name = variableToken->getText();
+    Variable *variable = nullptr;
+
+    if (variable = this->IsDefinedLocally(name)) {
+        return variable;
+    }
+    if (variable = this->IsParameter(name)) {
+        return variable;
+    }
+    if (variable = this->IsDefinedGlobally(name)) {
+        return variable;
+    }
+    if (variable = this->IsEnumItem(name)) {
+        return variable;
+    }
+
+    if (produceError) {
+        this->parser->notifyErrorListeners(variableToken, UNDEFINED_VARIABLE, nullptr);
+    }
+    return nullptr;
+}
+
+
+
 void AST::CheckIfNodeWithinLoop(antlr4::Token *token) {
     if ( ! this->activeNode) { // do nothing on empty tree
         return;
@@ -169,45 +216,6 @@ void AST::CheckIfNodeWithinLoop(antlr4::Token *token) {
 
     return;
 }
-
-Variable *AST::LookupVariable(antlr4::Token *variableToken, bool produceError) {
-    string name = variableToken->getText();
-    Variable *variable = nullptr;
-
-    if (variable = this->IsDefinedLocally(name)) {
-        return variable;
-    }
-    if (variable = this->IsParameter(name)) {
-        return variable;
-    }
-    if (variable = this->IsDefinedGlobally(name)) {
-        return variable;
-    }
-    if (variable = this->IsEnumItem(name)) {
-        return variable;
-    }
-
-    if (produceError) {
-        this->parser->notifyErrorListeners(variableToken, UNDEFINED_VARIABLE, nullptr);
-    }
-    return nullptr;
-}
-
-FunctionTableEntry *AST::LookupFunction(antlr4::Token *functionToken, bool produceError) {
-    string name = functionToken->getText();
-    FunctionTableEntry *function = nullptr;
-
-    if (function = this->IsFunctionDefined(name)) {
-        return function;
-    }
-
-    if (produceError) {
-        this->parser->notifyErrorListeners(functionToken, UNDEFINED_FUNCTION, nullptr);
-    }
-    return nullptr;
-}
-
-
 
 void AST::CheckIfModuloFloatOperands(JabukodParser::MulDivModExpressionContext *ctx) {
     if (ctx->sign->getText() == "%") {
@@ -672,12 +680,6 @@ string AST::GenerateUniqueLiteralId(Type type) {
 
 
 
-int AST::GetVariableCount() {
-    return this->variableCount;
-}
-
-
-
 void AST::CorrectStaticVariables() {
     this->MangleStaticVariableNames();
 
@@ -1028,7 +1030,7 @@ void AST::RemoveStaticDefDeclSubtrees() {
                 (childKind == NodeKind::VARIABLE_DEFINITION)
             ) {
                 if (node->GetChild(i)->GetData<VariableData>()->GetSpecifier() == StorageSpecifier::STATIC) {
-                    node->DeleteSubtree(i);
+                    node->DeleteAfter(i);
                 }
             }
         }

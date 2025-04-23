@@ -9,9 +9,30 @@
 #include "Generator.h"
 #include "NodeGenerators.h"
 
+Generator::Generator(string outputPath, AST & ast, SymbolTable & symbolTable) : ast(ast), symbolTable(symbolTable) {
+    if (outputPath.back() == '/') {
+        throw (outputPath + " is a path");
+    }
+
+    jout.open(outputPath + ".s");
+    if ( ! jout.is_open()) {
+        throw ("failed to open file " + outputPath + ".s");
+    }
+
+    this->nodeGenerators = new NodeGenerators(this);
+}
+
 void Generator::Generate() {
     this->GenerateCode();
     this->OutputAssembly();
+}
+
+Generator::~Generator() {
+    delete this->nodeGenerators;
+
+    if (jout.is_open()) {
+        jout.close();
+    }
 }
 
 
