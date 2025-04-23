@@ -101,6 +101,7 @@ file(GLOB PACK_FILES
     ${ARCHIVE_BASE_DIR}/samples/*
     ${ARCHIVE_BASE_DIR}/tool/*
     ${ARCHIVE_BASE_DIR}/README.md
+    ${ARCHIVE_BASE_DIR}/assignment.pdf
     ${ARCHIVE_BASE_DIR}/Jabukod_syntax-highlighting/images/*
     ${ARCHIVE_BASE_DIR}/Jabukod_syntax-highlighting/syntaxes/*
     ${ARCHIVE_BASE_DIR}/Jabukod_syntax-highlighting/language-configuration.json
@@ -115,12 +116,22 @@ add_custom_target(pack
     WORKING_DIRECTORY ${ARCHIVE_BASE_DIR}
 )
 
-# Generate documentation
-#add_custom_target(docs
-#    COMMAND 
-#)
+find_package(Doxygen)
 
-# Clean up generated documentation
-#add_custom_target(clean_docs
-#    COMMAND
-#)
+if(DOXYGEN_FOUND)
+    set (DOCS_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../docs)
+    set (DOXYFILE ${DOCS_DIR}/Doxyfile)
+
+    # Generate documentation
+    add_custom_target(docs
+        COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYFILE}
+        WORKING_DIRECTORY ${DOCS_DIR}
+    )
+
+    # Clean up generated documentation
+    add_custom_target(clean_docs
+        COMMAND ${CMAKE_COMMAND} -E rm -rf ${DOCS_DIR}/html ${DOCS_DIR}/latex
+    )
+else()
+    message(STATUS "Doxygen not found. `make docs` is not available")
+endif()
