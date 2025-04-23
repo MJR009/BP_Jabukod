@@ -56,6 +56,10 @@ The following is the recommended command for first time <b>building</b> the prog
 
 `cmake -B build -S project && make -C build`<br>
 
+To speed up the build process, build in parallel with `-j$(nproc)`:
+
+`cmake -B build -S project && make -j$(nproc) -C build`<br>
+
 The resulting <b>executable</b> `jabukod` will be located in the `build` subdirectory.
 <b>
 As the build process needs to download and build the ANTLR4 runtime, initial

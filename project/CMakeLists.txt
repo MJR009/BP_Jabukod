@@ -114,3 +114,13 @@ add_custom_target(pack
     COMMAND ${CMAKE_COMMAND} -E echo ""
     WORKING_DIRECTORY ${ARCHIVE_BASE_DIR}
 )
+
+# Generate documentation
+#add_custom_target(docs
+#    COMMAND 
+#)
+
+# Clean up generated documentation
+#add_custom_target(clean_docs
+#    COMMAND
+#)
