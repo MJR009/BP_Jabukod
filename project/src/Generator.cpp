@@ -1,30 +1,17 @@
+/**
+ * @file Generator.cpp
+ * @author Martin Jabůrek
+ * 
+ * Implementation of:
+ * @link Generator.h
+ */
+
 #include "Generator.h"
 #include "NodeGenerators.h"
-
-Generator::Generator(string outputPath, AST & ast, SymbolTable & symbolTable) : ast(ast), symbolTable(symbolTable) {
-    if (outputPath.back() == '/') {
-        throw (outputPath + " is a path");
-    }
-
-    jout.open(outputPath + ".s");
-    if ( ! jout.is_open()) {
-        throw ("failed to open file " + outputPath + ".s");
-    }
-
-    this->nodeGenerators = new NodeGenerators(this);
-}
 
 void Generator::Generate() {
     this->GenerateCode();
     this->OutputAssembly();
-}
-
-Generator::~Generator() {
-    delete this->nodeGenerators;
-
-    if (jout.is_open()) {
-        jout.close();
-    }
 }
 
 
@@ -35,6 +22,12 @@ void Generator::GenerateCode() {
     this->GenerateNode( this->ast.GetRoot() );
 }
 
+/**
+ * @brief Macro to simplify writing all selects for each node generation method.
+ * 
+ * The names of each node generation method have a specific format: "Generate" with the node kind as suffix.
+ * This makes it easiser to write them all out inside a switch statement.
+ */
 #define Generate_case(item) case NodeKind::item: nodeGenerators->Generate##item(node); return
 
 void Generator::GenerateNode(ASTNode *node) {
@@ -158,7 +151,7 @@ void Generator::OutputTextSection() {
     jout << "\t.text" << endl;
     jout << "\t.globl _start" << endl;
     jout << "_start:" << endl;
-    jout << "\tmovq $1, %r10" << endl; // stable one for bool conversions
+    jout << "\tmovq $1, %r10" << endl;
     jout << "\tjmp main" << endl;
     
     for_each(this->instructions.begin(), this->instructions.end(),

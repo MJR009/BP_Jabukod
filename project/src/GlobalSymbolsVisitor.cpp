@@ -1,3 +1,11 @@
+/**
+ * @file GlobalSymbolsVisitor.cpp
+ * @author Martin Jabůrek
+ * 
+ * Implementation of:
+ * @link GlobalSymbolsVisitor.h
+ */
+
 #include "GlobalSymbolsVisitor.h"
 
 any GlobalSymbolsVisitor::visitSourceFile(JabukodParser::SourceFileContext *ctx) {

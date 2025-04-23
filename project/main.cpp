@@ -15,10 +15,13 @@ void ERR::BadData() {
 #include "main.h"
 #include "Compile.h"
 
-/// @brief Program entry point.
-/// @param argc 
-/// @param argv 
-/// @return Error code.
+/**
+ * @brief Program entry point.
+ * 
+ * @param argc 
+ * @param argv 
+ * @return Program error code.
+ */
 int main(int argc, char **argv) {
     PrepareArguments *args = nullptr;
     try {

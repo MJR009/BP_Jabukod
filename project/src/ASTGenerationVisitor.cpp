@@ -1,3 +1,11 @@
+/**
+ * @file ASTGenerationVisitor.cpp
+ * @author Martin Jabůrek
+ * 
+ * Implementation of:
+ * @link ASTGenerationVisitor.h
+ */
+
 #include "ASTGenerationVisitor.h"
 
 any ASTGenerationVisitor::visitSourceFile(JabukodParser::SourceFileContext *ctx) {

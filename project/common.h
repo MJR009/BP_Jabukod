@@ -30,7 +30,7 @@
 using namespace std;
 
 /**
- * @name Error codes. Sometimes used as placeholders for return type "any" not being used.
+ * @name Exit codes. Sometimes used as placeholders for return type "any" not being used.
  * @{
  */
 #define OK 0

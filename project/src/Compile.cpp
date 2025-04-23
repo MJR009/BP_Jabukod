@@ -1,3 +1,11 @@
+/**
+ * @file Compile.cpp
+ * @author Martin Jabůrek
+ * 
+ * Implementation of:
+ * @link Compile.h
+ */
+
 #include "Compile.h"
 
 #include "LexerErrorListener.h"

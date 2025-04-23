@@ -1,3 +1,10 @@
+/**
+ * @file ASTGenerationVisitor.h
+ * @author Martin Jabůrek
+ *
+ * @brief ANTLR4 derived parse tree visitor to generate an abstract syntax tree.
+ */
+
 #pragma once
 #include "common.h"
 
@@ -8,12 +15,31 @@
 
 #include "SpecificNodeData.h"
 
+/**
+ * @class ASTGenerationVisitor
+ * @brief Class implementing methods for abstract syntax tree construction.
+ * 
+ * Only implements visit methods for relevant nodes. Some are unnecessary or are resolved by other implemented ones.
+ * Their return values of type any are unused.
+ */
 class ASTGenerationVisitor : public JabukodBaseVisitor {
 public:
+    /**
+     * @brief Prepares the visitor by giving it reference to the constructed abstract syntax tree.
+     * 
+     * @param ast Reference to currently constructed abstract syntax tree
+     */
     ASTGenerationVisitor(AST & ast) : ast(ast) {}
 
-    // commented out methods included for completeness, default implementation used ( visitChildren() )
+    // Commented out methods included for completeness, default implementation used.
 
+    /**
+     * @name Implemented visit methods.
+     * 
+     * @param ctx Associated nodes context object, holding all its data. 
+     * 
+     * @{
+     */
     any visitSourceFile(JabukodParser::SourceFileContext *ctx) override;
     // any visitProgram(JabukodParser::ProgramContext *ctx) override; // needed for parse tree
     // any visitDefinition(JabukodParser::DefinitionContext *ctx) override; // needed for parse tree
@@ -78,7 +104,9 @@ public:
     // any visitNonVoidType(JabukodParser::NonVoidTypeContext *ctx) override; // accesed through parent rules
     // any visitListSpecifier(JabukodParser::ListSpecifierContext *ctx) override; // resolved in definition and declaration
     // any visitListAccess(JabukodParser::ListAccessContext *ctx) override; // resolved in ListAccessExpression and Assignment
+    /** @} */
 
 private:
+    /// @brief Associated abstract syntax tree object.
     AST & ast;
 };
