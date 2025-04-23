@@ -1,3 +1,10 @@
+/**
+ * @file main.cpp
+ * @author Martin Jabůrek
+ *
+ * @brief Compilation entry point and command line parsing.
+ */
+
 #include "common.h"
 
 void ERR::BadData() {
@@ -8,6 +15,10 @@ void ERR::BadData() {
 #include "main.h"
 #include "Compile.h"
 
+/// @brief Program entry point.
+/// @param argc 
+/// @param argv 
+/// @return Error code.
 int main(int argc, char **argv) {
     PrepareArguments *args = nullptr;
     try {
@@ -24,5 +35,6 @@ int main(int argc, char **argv) {
 
     int ret = Compile(args);
     delete args;
+    
     return ret;
 }

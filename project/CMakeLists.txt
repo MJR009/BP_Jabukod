@@ -128,6 +128,7 @@ if(DOXYGEN_FOUND)
     # Generate documentation
     add_custom_target(docs
         COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYFILE}
+        COMMAND make -C ${DOCS_DIR}/latex 
         WORKING_DIRECTORY ${DOCS_DIR}
     )
 

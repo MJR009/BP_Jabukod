@@ -1,3 +1,11 @@
+/**
+ * @file Assembler.cpp
+ * @author Martin Jabůrek
+ * 
+ * Implementation of:
+ * @link Assembler.h
+ */
+
 #include "Assembler.h"
 
 int Assembler::Assemble(const string & outputPath, bool withDebugSymbols) {
