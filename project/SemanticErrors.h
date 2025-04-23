@@ -1,5 +1,16 @@
+/**
+ * @file SemanticErrors.h
+ * @author Martin Jabůrek
+ *
+ * @brief File containing all semantic error strings as macros.
+ */
+
 #pragma once
 
+/**
+ * @name Errors that can occur when parsing global symbols
+ * @{
+ */
 #define VARIABLE_REDEFINITION "identifier used for variable is already taken"
 #define FUNCTION_REDEFINITION "identifier used for function is already taken"
 #define ENUM_REDEFINITION "identifier used for an enum name is already taken"
@@ -17,7 +28,12 @@
 #define MISPLACED_STRING_VARIABLE "cannot assign literal other than type string"
 #define CONSTANT_DECLARATION "constant assignment missing value"
 #define REDEFINITION_OF_PARAMETER "identifier used for function parameter is already taken"
+/** @} */
 
+/**
+ * @name Errors that can occur when parsing local symbols
+ * @{
+ */
 #define VARIABLE_SAME_AS_PARAMETER "variable name in functions top scope must not be the same as a its parameter"
 #define LOCAL_VARIABLE_REDEFINITION "identifier used for variable is already taken in its scope"
 #define FOR_HEADER_DEFINITION_WITH_SPECIFIER "definition in for header must not have a storage specifier"
@@ -48,16 +64,36 @@
 #define FOR_HEADER_UPDATE_EXPRESSION "for loop update must be an only assignment"
 #define BAD_RETURN_TYPE "return value type does not match the expected function return type"
 #define BAD_EXIT_TYPE "exit value type cannot be converted to an int"
+/** @} */
 
+/**
+ * @name Internal IDs will cause an error when compiling. This ensures there are no collisions with user defined ones.
+ * @{
+ */
 #define INTERNAL_ID_USE "identifiers may not start with \"__\" prefix"
+/** @} */
 
+/**
+ * @name Possible enum errors
+ * @{
+ */
 #define UNDEFINED_ENUM_DECLARATION "variable declared as enum cannot use an undefined enum"
 #define UNDEFINED_ENUM_PARAMETER "parameter cannot use an undefined enum as type"
 #define UNDEFINED_ENUM_RETURN_TYPE "function return type cannot use an undefined enum"
 #define GLOBAL_ENUM_VARIABLE "global variables of type enum are not allowed"
+/** @} */
 
+/**
+ * @name Possible static variable errors
+ * @{
+ */
 #define STATIC_INIT_NOT_LITERAL "static variables can only be initialised by literals"
+/** @} */
 
+/**
+ * @name Possible array related errors
+ * @{
+ */
 #define INVALID_ARRAY_SIZE "array size may only be a positive integer"
 #define STRING_ARRAY "array of type string is not allowed"
 #define GLOBAL_ARRAY_NOT_DEFINED_BY_LIST "global array variable must be initialised by list literal"
@@ -68,3 +104,4 @@
 #define ARRAY_ACCESS_ON_SCALAR "non-array variable cannot be associated with array access via []"
 #define LIST_TOO_BIG "array initialiser is too large"
 #define BAD_INDEX "value cannot be used to index an array"
+/** @} */

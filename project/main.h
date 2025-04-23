@@ -1,12 +1,31 @@
+/**
+ * @file main.h
+ * @author Martin Jabůrek
+ *
+ * @brief General definitions for top level functionality.
+ * 
+ * This file implements command line argument parsing and definitions need for its error handling.
+ */
+
 #pragma once
 #include "common.h"
 
 #include "getopt.h"
+
+/// @brief Macros defining the command line arguments available for use with getopt function
 #define ARGUMENTS "adDgho:"
 
+/**
+ * @name Macros defining command line argument error text.
+ * @{
+ */
+/// @brief To be printed when there are unexpected or extraneous command line arguments
 #define INVALID_CLA ("invalid command line arguments, try " BOLD "-h" DEFAULT)
+/// @brief To be printed when provided input file does not exist
 #define INVALID_INPUT_FILE ("given input file could not be read")
+/** @} */
 
+/// @brief Macro definining text of the programs help message, it can be printed with -h argument.
 #define HELP_MESSAGE \
     ( \
         CYAN BOLD "Usage:\n" DEFAULT \
@@ -21,10 +40,32 @@
         EMPH "path_to_program " DEFAULT "- " BOLD "mandatory " DEFAULT "path to input program (any text file, use .jk filename extension)\n" \
     )
 
+/**
+ * @brief An empty struct to differentiate print help and error
+ * 
+ * This error will be treated differently from others. When caught, the help message will be printed and program
+ * will terminate without an error. This is an exception, other errors are not desired and program will terminate
+ * with an error (exit code 1) when they are caught.
+ */
 struct PrintHelp {};
 
+/**
+ * @class PrepareArguments
+ * @brief Class defining methods for command line argument parsing.
+ * 
+ * Object derived from this class is used later in code to modify optional behaviour.
+ * Triggers for it are represented with bool flags.
+ * 
+ */
 class PrepareArguments {
 public:
+    /**
+     * @brief The preparation of command line arguments is done straight inside the constructor.
+     * All attributes are set here and available publicly.
+     * 
+     * @param argc argc as provided in main function
+     * @param argv argv as provided in main function
+     */
     PrepareArguments(int argc, char **argv) {
         int arg;
         opterr = 0;
@@ -67,8 +108,7 @@ public:
     }
 
 public:
-    // both path and name
-    string inputFile = "";
+    string inputFile = ""; // both path and name
     string outputFile = "out";
 
     bool onlyDoAnalysis = false;

@@ -3,6 +3,4 @@
  * @author Martin Jabůrek
  *
  * @brief ANTLR4 grammar describing the Jabukód programming language syntax and lexeme
- *
- * The whole grammar can be viewed in Jabukod.g4 file.
  */
