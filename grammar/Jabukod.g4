@@ -1,3 +1,10 @@
+/**
+ * @file Jabukod.g4
+ * @author Martin Jabůrek
+ *
+ * @brief ANTLR4 grammar describing the Jabukód programming language syntax and lexeme
+ */
+
 grammar Jabukod;
 
 // Parser rules:

@@ -107,6 +107,9 @@ file(GLOB PACK_FILES
     ${ARCHIVE_BASE_DIR}/Jabukod_syntax-highlighting/language-configuration.json
     ${ARCHIVE_BASE_DIR}/Jabukod_syntax-highlighting/package.json
     ${ARCHIVE_BASE_DIR}/Jabukod_syntax-highlighting/README.md
+    ${ARCHIVE_BASE_DIR}/docs/Doxyfile
+    ${ARCHIVE_BASE_DIR}/docs/images/*
+    ${ARCHIVE_BASE_DIR}/grammar/Jabukod.dox
 )
 add_custom_target(pack
     COMMAND ${CMAKE_COMMAND} -E tar cfv ${PROJECT_NAME}.zip --format=zip ${PACK_FILES}
