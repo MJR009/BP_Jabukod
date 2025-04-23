@@ -108,11 +108,17 @@ public:
     }
 
 public:
+    /// @brief Input file with a Jabukód program.
     string inputFile = ""; // both path and name
+    /// @brief Name given to generated assembly, relocatable object and executable files.
     string outputFile = "out";
 
+    /// @brief Compilation will not proceed past source code analysis.
     bool onlyDoAnalysis = false;
+    /// @brief Output executable will be generated with debug symbols
     bool generateWithDebugSymbols = false;
+    /// @brief After compilation, gdb is automaticly run with TUI and register contents view.
     bool runDebug = false;
+    /// @brief After successful code analysis, contents of the symbol table and abstract syntax tree will be printed.
     bool printGraphicalRepresentation = false;
 };

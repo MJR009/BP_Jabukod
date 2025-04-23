@@ -3,6 +3,9 @@
  * @author Martin Jabůrek
  *
  * @brief File containing all semantic error strings as macros.
+ * 
+ * All errors are used later during syntactit analysis and passes to ANTLR4s notifyErrorListeners method
+ * together with related offending token.
  */
 
 #pragma once
