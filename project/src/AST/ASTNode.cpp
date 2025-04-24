@@ -1,3 +1,11 @@
+/**
+ * @file ASTNode.cpp
+ * @author Martin Jabůrek
+ * 
+ * Implementation of
+ * @link ASTNode.h
+ */
+
 #include "ASTNode.h"
 
 void ASTNode::PreorderWalkthorugh( void (*action)(ASTNode *) ) {

@@ -1,5 +1,14 @@
+/**
+ * @file NodeKind.cpp
+ * @author Martin Jabůrek
+ * 
+ * Implementation of
+ * @link NodeKind.h
+ */
+
 #include "NodeKind.h"
 
+/// @brief Macro to simplify writing out each of the node kind conversion cases.
 #define Conversion_case(item) case NodeKind::item: return #item
 
 string NodeKind::toString() const {

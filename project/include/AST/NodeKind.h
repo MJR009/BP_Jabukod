@@ -1,13 +1,26 @@
+/**
+ * @file NodeKind.h
+ * @author Martin Jabůrek
+ *
+ * @brief Available and differentiable kinds of abstract syntax tree nodes.
+ */
+
 #pragma once
 #include "common.h"
 
+/**
+ * @class NodeKind
+ * @brief Defines all available abstract syntax tree node kinds and possible operations with them.
+ * 
+ */
 class NodeKind {
 public:
-    /*
-        USED IN TABLE CONVERSIONS (Transform.cpp, ...)
-        DO NOT REARRANGE !!!
-    */
+    /// @brief Available node kinds.
     enum Options {
+        /*
+            USED IN TABLE CONVERSIONS (Transform.cpp, ...)
+            DO NOT REARRANGE !!!
+        */
         PROGRAM,
         VARIABLE_DECLARATION, VARIABLE_DEFINITION,
         FUNCTION,
@@ -48,14 +61,20 @@ public:
     };
     
 public:
+    /// @brief Constructs the node kind object according to the desire value
     NodeKind(Options value) : value(value) {}
 
+    /// @brief To ease access to the actual node kind, namespace resolution operator :: can be used.
     operator Options() const { return value; }
 
+    /// @brief Converts node kind to string. 
     string toString() const;
+    /// @brief For expression operators, converts node kind to sign. 
     string toSign() const;
+    /// @brief  Converts expression signs to node kind.
     static NodeKind toNodeKind(const string & sign);
 
 private:
+    /// @brief Value of any given NodeKind object.
     Options value;
 };
