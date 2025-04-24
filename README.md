@@ -129,7 +129,8 @@ to `~/.vscode/extensions/`. The extension is purposefully not available publicly
 
 This project uses the <b>GNU General Public License v3.0</b>. The only copyrighted dependency of this project is
 ANTLR4 parser generator, which uses the 'BSD 3-Clause "New" or "Revised" License'.
-This license is preserved in `/project/cmake/LICENSE.txt` of this repository, as the subdirectory also contains CMake files taken
+This original license and copyright notice is preserved in `/project/cmake/LICENSE.txt` of this
+repository, as the subdirectory also contains CMake files taken
 over from ANTLR4 for guaranteing correct functionality and interoperability.
 
 According to: <br/>
