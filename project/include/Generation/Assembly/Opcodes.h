@@ -1,22 +1,58 @@
+/**
+ * @file Opcodes.h
+ * @author Martin Jabůrek
+ *
+ * @brief File containing macros of each instruction, that can be generated in the target code.
+ */
+
 #pragma once
 #include "common.h"
 
+/**
+ * @name Stack manipulation.
+ * 
+ * @{
+ */
 #define PUSH "push"
 #define POP "pop"
+#define CALL "call"
 #define RET "ret"
+/** @} */
 
+/**
+ * @name Data transfers.
+ * 
+ * @{
+ */
 #define MOV "mov"
 #define MOVQ "movq"
 #define MOVSS "movss"
 #define LEA "lea"
+/** @} */
 
-#define CALL "call"
+/**
+ * @name OS interaction.
+ * 
+ * @{
+ */
 #define SYSCALL "syscall"
+/** @} */
 
+/**
+ * @name Data type conversions.
+ * 
+ * @{
+ */
 #define CQO "cqo"
 #define CVTSI2SS "cvtsi2ss"
 #define CVTTSS2SI "cvttss2si"
+/** @} */
 
+/**
+ * @name Conditions and coditional operations.
+ * 
+ * @{
+ */
 #define TEST "test"
 #define CMOVNZ "cmovnz"
 #define JZ "jz"
@@ -43,7 +79,13 @@
 #define CMOVAEQ "cmovaeq"
 #define CMOVAQ "cmovaq"
 #define CMOVBQ "cmovbq"
+/** @} */
 
+/**
+ * @name General computation.
+ * 
+ * @{
+ */
 #define ADD "add"
 #define ADDQ "addq"
 #define ADDSS "addss"
@@ -80,9 +122,15 @@
 #define NEGQ "negq"
 
 #define NOTQ "notq"
+/** @} */
 
+/**
+ * @class Opcode
+ * @brief Static class used to determine what instruction operation code should be used according to operation data type.
+ * 
+ */
 class Opcode {
 public:
-    static const map<string, string> GPR;
-    static const map<string, string> SSE;
+    static const map<string, string> GPR; ///< Returns operation to be used in general purpose registers.
+    static const map<string, string> SSE; ///< Returns operation to be used in floating point registers.
 };

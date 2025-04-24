@@ -1,3 +1,11 @@
+/**
+ * @file Registers.cpp
+ * @author Martin Jabůrek
+ * 
+ * Implementation of
+ * @link Registers.h
+ */
+
 #include "Registers.h"
 
 string Registers::NormalParameter(int order) {

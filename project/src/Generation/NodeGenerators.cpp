@@ -1,3 +1,11 @@
+/**
+ * @file NodeGenerators.cpp
+ * @author Martin Jabůrek
+ * 
+ * Implementation of
+ * @link NodeGenerators.h
+ */
+
 #include "NodeGenerators.h"
 #include "Generator.h"
 

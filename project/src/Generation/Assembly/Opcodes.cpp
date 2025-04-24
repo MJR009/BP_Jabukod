@@ -1,3 +1,11 @@
+/**
+ * @file Opcodes.cpp
+ * @author Martin Jabůrek
+ * 
+ * Implementation of
+ * @link Opcodes.h
+ */
+
 #include "Opcodes.h"
 
 const map<string, string> Opcode::GPR = {

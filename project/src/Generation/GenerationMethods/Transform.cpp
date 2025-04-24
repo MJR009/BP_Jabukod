@@ -1,3 +1,11 @@
+/**
+ * @file Transform.cpp
+ * @author Martin Jabůrek
+ * 
+ * Implementation of
+ * @link Transform.h
+ */
+
 #include "Transform.h"
 
 bool Transform::IsLabel(Instruction & instruction) {

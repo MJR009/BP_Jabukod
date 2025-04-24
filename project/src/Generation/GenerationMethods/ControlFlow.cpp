@@ -1,3 +1,11 @@
+/**
+ * @file ControlFlow.cpp
+ * @author Martin Jabůrek
+ * 
+ * Implementation of
+ * @link ControlFlow.h
+ */
+
 #include "ControlFlow.h"
 
 const vector<string> ControlFlow::MakeNewIFLabelSet() {

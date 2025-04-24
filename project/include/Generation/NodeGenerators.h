@@ -1,14 +1,33 @@
+/**
+ * @file NodeGenerators.h
+ * @author Martin Jabůrek
+ *
+ * @brief Internal representation of one instruction.
+ */
+
 #pragma once
 #include "common.h"
 
 #include "ASTNode.h"
 
+/// @brief Generator class using this node generation methods.
 class Generator;
 
+/**
+ * @class NodeGenerators
+ * @brief Implements methods for generating three address code from each of the abstract syntax tree nodes.
+ * 
+ */
 class NodeGenerators {
 public:
+    /// @brief Constructor, associating the generator using this class.
     NodeGenerators(Generator *associatedGenerator) : gen(associatedGenerator) {}
 
+    /**
+     * @name All available node generation methods.
+     * 
+     * @{
+     */
     void GeneratePROGRAM(ASTNode *node);
     void GenerateFUNCTION(ASTNode *node);
     void GenerateWRITE(ASTNode *node);
@@ -67,35 +86,54 @@ public:
     void GenerateRESUME(ASTNode *node);
     void GenerateREAD(ASTNode *node);
     */
+    /** @} */
 
 private:
-    Generator *gen;
+    Generator *gen; ///< Associated Generator.
 
+    /// @brief Helper method for generating code of a subexpression to be processed by an operator.
     void EvaluateSubexpressions(ASTNode *node);
+    /// @brief Creates an instruction fitting the desired operation and operand data types.
     void EvaluateCurrentExpression(ASTNode *node, string OPCODE);
-    // evaluates to bool
+    /// @brief Evaluates comparison needed for a condition.
     void EvaluateComparison(ASTNode *node);
 
+    /// @brief Helper method for generating code of an unary subexpression to be processed by an operator.
     void EvaluateUnarySubexpression(ASTNode *node);
 
-    void EvaluateAssignment(ASTNode *lSide, ASTNode *rSide, Type rSideType);
+    /// @brief Processes value assignments according to data types.
+    void EvaluateAssignment(ASTNode *lSide, ASTNode *rSide, Type rSdeType);
+    /// @brief Specifically resolves assigning to a variable of an array type.
     void EvaluateAssignmentToArray(ASTNode *lSide, string opcode, string source);
+    /// @brief Generates code to initialise an array from a list.
     void EvaluateArrayDefinition(ASTNode *variable);
 
+    /// @brief Evaluates a condition for either a conditional jump or move.
     void EvaluateCondition(ASTNode *condition, string falseLabel);
 
-    // literal float and string have to be in .data section, immediate values cannot be used
+    /// @brief Literal float and string have to be in .data section, immediate values cannot be used
     void AddNeededDeclarationData(Type declarationType);
 
 private:
-    enum LoopKind { WHILE, FOR }; // TODO FOREACH
-    stack<pair<vector<string>, LoopKind>> loopStack; // used to resolve jump targets
+    /**
+     * @name Functions used for correctly resolving labels of control flow structures.
+     * 
+     * A stack is kept of all labels associated with a specific control flow structure.
+     * Like this, the can be nested and current loop can be easily found.
+     * 
+     * @{
+     */
+    // TODO FOREACH
+    /// @brief Differentiable loops.
+    enum LoopKind { WHILE, FOR };
+    stack<pair<vector<string>, LoopKind>> loopStack; ///< Used to resolve jump targets.
 
-    void PushLoopLabels(const vector<string> & labels, LoopKind kind);
-    void PopLoopLabels();
-    string GetCurrentEnd();
-    string GetBreakTarget();
-    string GetContinueTarget();
-    string GetRedoTarget();
-    string GetRestartTarget();
+    void PushLoopLabels(const vector<string> & labels, LoopKind kind); ///< upon entering a loop, it's labels are stored.
+    void PopLoopLabels(); ///< When a loop is left, labels are popped and the previous loop is visible again.
+    string GetCurrentEnd(); ///< Returns the ending label of the current loop.
+    string GetBreakTarget(); ///< Return the label to jump to upon encountering a break command.
+    string GetContinueTarget(); ///< Return the label to jump to upon encountering a continue command.
+    string GetRedoTarget(); ///< Return the label to jump to upon encountering a redo command.
+    string GetRestartTarget(); ///< Return the label to jump to upon encountering a restart command.
+    /** @} */
 };

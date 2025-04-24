@@ -1,3 +1,10 @@
+/**
+ * @file Snippets.h
+ * @author Martin Jabůrek
+ *
+ * @brief Reusable intermediate code sequences.
+ */
+
 #pragma once
 #include "common.h"
 
@@ -6,22 +13,38 @@
 #include "ASTNode.h"
 #include "SymbolTable.h"
 
+/**
+ * @class Snippets
+ * @brief Some code sequences are needed quite often. This static class makes it easier to generate them repeatedly.
+ * 
+ */
 class Snippets {
 public:
+    /**
+     * @name Names of different literals, which are always the same.
+     * 
+     * @{
+     */
     static const string floatDeclaration;
     static const string stringDeclaration;
     static const string signMask;
     static const string bitNotMask;
     static const string notMask;
+    /** @} */
 
 public:
+    /// @brief Generates a function prologue sequence. 
     static const vector<Instruction> Prolog(int bytesToReserve);
+    /// @brief Generates a function epilogue sequence.
     static const vector<Instruction> Epilog();
-    // reg is register containing exit code to use
+    /// @brief Generates an exit syscall, using exit code from the provided register,
     static const vector<Instruction> Exit(string reg);
 
+    /// @brief Initialises the target memory location to its default value according to the data type. 
     static const vector<Instruction> DeclareDefault(Type type, string target);
 
+    /// @brief Stores a register on the stack
     static const vector<Instruction> PushRegister(Type type, string reg);
+    /// @brief Puts a variable into a register from the top of the stack and pops.
     static const vector<Instruction> PopRegister(Type type, string reg);
 };

@@ -1,3 +1,11 @@
+/**
+ * @file Instruction.cpp
+ * @author Martin Jabůrek
+ * 
+ * Implementation of
+ * @link Instruction.h
+ */
+
 #include "Instruction.h"
 
 void Instruction::Output(ofstream & file) {
