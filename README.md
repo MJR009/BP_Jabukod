@@ -123,7 +123,11 @@ under the name `xjabur02_Jabukod_documentation.pdf`.
 
 A part of this project is a custom extension for syntax highlighting of Jabukód files
 with `.jk` filename extension. For correct functionality, move cloned repository containing the extension
-to `~/.vscode/extensions/`. The extension is purposefully not available publicly.
+to `~/.vscode/extensions/`. The extension is purposefully not available through Visual Studio
+Code marketplace, as it is part of this bachelor thesis project.
+
+You can clone the extension code from: <br/>
+https://github.com/MJR009/Jabukod_syntax-highlighting
 
 ## License
 
