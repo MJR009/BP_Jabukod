@@ -14,8 +14,17 @@
 
 #include "main.h"
 
+/**
+ * @defgroup _1 Functions for compilation
+ * @brief Functions providing the compilation of the source input files.
+ * 
+ * @{
+ */
+
 /// @brief The function to process the entire compilation.
 int Compile(PrepareArguments *args);
 
 /// @brief Opens the input file with all required checks
 static int OpenSourceFile(const char *name, ifstream & stream);
+
+/** @} */

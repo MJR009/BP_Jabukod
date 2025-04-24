@@ -15,6 +15,13 @@ void ERR::BadData() {
 #include "main.h"
 #include "Compile.h"
 
+/**
+ * @defgroup _2 Main function
+ * @brief Program entry point.
+ * 
+ * @{
+ */
+
 /// @brief Program entry point.
 int main(int argc, char **argv) {
     PrepareArguments *args = nullptr;
@@ -35,3 +42,5 @@ int main(int argc, char **argv) {
     
     return ret;
 }
+
+/** @} */

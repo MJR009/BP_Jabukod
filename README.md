@@ -104,7 +104,7 @@ There are also other build options. All of the available options are as follows,
 the `build` subdirectory or with `-C build` argument:
 - `make` <br> Build the compiler binary.
 - `make clean` <br> deletes the generated `jabukod` executable.
-- `make visualise INPUT_FILE=[file from subdir. 'samples']` <br> Opens a window
+- `make visualise INPUT_FILE=[file from samples subdirectory]` <br> Opens a window
 with a syntax tree visualisation (note this target requires `java`, `javac` and `dot` installed).
 - `make pack` <br> Creates a `Jabukod.zip` file with everything needed for build.
 - `make docs` <br> Generates code documentation into the `docs` subdirectory, including generating
