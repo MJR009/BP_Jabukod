@@ -1,3 +1,11 @@
+/**
+ * @file TypeChecking.cpp
+ * @author Martin Jabůrek
+ * 
+ * Implementation of
+ * @link TypeChecking.h
+ */
+
 #include "TypeChecking.h"
 
 Type Conversion::ExpressionBinaryArithmetic(Type op1, Type op2, ASTNode *expressionRoot) {

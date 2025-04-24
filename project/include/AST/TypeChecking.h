@@ -1,13 +1,33 @@
+/**
+ * @file TypeChecking.h
+ * @author Martin Jabůrek
+ *
+ * @brief All logic surrounding implemented coertions.
+ */
+
 #pragma once
 #include "common.h"
 
 #include "Type.h"
 #include "ASTNode.h"
 
-// TODO OPERACE NAD ŘETĚZCI
-
+/**
+ * @class Conversion
+ * @brief A static class implementing all methods used for implicit data type conversions.
+ * 
+ * If data types of operand/s are consistent, no coertion occurs. Otherwise
+ * new nodes are added after the given node.
+ */
 class Conversion {
 public:
+    /**
+     * @name Top level coertion methods, called from outside,
+     * 
+     * Each of the methods is called within to circumstances reflected by its name and
+     * provides an appropriate coertion.
+     * 
+     * @{
+     */
     static Type ExpressionBinaryArithmetic(Type op1, Type op2, ASTNode *expressionRoot);
     static Type ExpressionBinaryLogical(Type op1, Type op2, ASTNode *expressionRoot);
     static Type ExpressionBinaryRelational(Type op1, Type op2, ASTNode *expressionRoot);
@@ -26,8 +46,14 @@ public:
     static void Indexing(Type index, ASTNode *expressionRoot);
 
     static void List(Type target, ASTNode *expressionRoot);
+    /** @} */
 
 private:
+    /**
+     * @name Tables determing the action of each top level coertion method.
+     * 
+     * @{
+     */
     static Type (*arithmeticBinaryTable[5][5])(ASTNode *);
     static Type (*logicalBinaryTable[5][5])(ASTNode *);
     static Type (*relationalBinaryTable[5][5])(ASTNode *);
@@ -44,55 +70,70 @@ private:
     static Type (*returnTable[5][5])(ASTNode *);
     static Type (*exitTable[5])(ASTNode *);
     static Type (*indexTable[5])(ASTNode *);
+    /** @} */
 
-    // actual conversions:
-    static Type I2F_1(ASTNode *expressionRoot); // int to float first
-    static Type I2F_2(ASTNode *expressionRoot);
-    static Type B2I_1(ASTNode *expressionRoot);
-    static Type B2I_2(ASTNode *expressionRoot);
-    static Type B2F_1(ASTNode *expressionRoot);
-    static Type B2F_2(ASTNode *expressionRoot);
-    static Type B2I_B(ASTNode *expressionRoot); // bool to int both
+    /**
+     * @name Actual coertions done by the top level methods according to their tables.
+     * 
+     * Each either triggers an error or adds a new node past the current one.
+     * 
+     * @param expressionRoot The node representing the expression.
+     * @return Infered data type after coertions.
+     */
+    static Type I2F_1(ASTNode *expressionRoot); ///< int to float first
+    static Type I2F_2(ASTNode *expressionRoot); ///< int to float second
+    static Type B2I_1(ASTNode *expressionRoot); ///< bool to int first
+    static Type B2I_2(ASTNode *expressionRoot); ///< bool to int second
+    static Type B2F_1(ASTNode *expressionRoot); ///< bool to float first
+    static Type B2F_2(ASTNode *expressionRoot); ///< bool to float second
+    static Type B2I_B(ASTNode *expressionRoot); ///< bool to int both
 
-    static Type I2B_1(ASTNode *expressionRoot);
-    static Type I2B_2(ASTNode *expressionRoot);
-    static Type I2B_B(ASTNode *expressionRoot);
-    static Type F2B_1(ASTNode *expressionRoot);
-    static Type F2B_2(ASTNode *expressionRoot);
-    static Type F2B_B(ASTNode *expressionRoot);
-    static Type IF2B_(ASTNode *expressionRoot); // int and float to bool
-    static Type FI2B_(ASTNode *expressionRoot);
+    static Type I2B_1(ASTNode *expressionRoot); ///< int to bool first
+    static Type I2B_2(ASTNode *expressionRoot); ///< int to bool second
+    static Type I2B_B(ASTNode *expressionRoot); ///< int to bool both
+    static Type F2B_1(ASTNode *expressionRoot); ///< float to bool first
+    static Type F2B_2(ASTNode *expressionRoot); ///< float to bool second
+    static Type F2B_B(ASTNode *expressionRoot); ///< float to bool both
+    static Type IF2B_(ASTNode *expressionRoot); ///< int and float to bool
+    static Type FI2B_(ASTNode *expressionRoot); ///< float and int to bool
 
-    static Type F2I_1(ASTNode *expressionRoot);
-    static Type F2I_2(ASTNode *expressionRoot);
+    static Type F2I_1(ASTNode *expressionRoot); ///< float to int first
+    static Type F2I_2(ASTNode *expressionRoot); ///< float to int second
 
-    static Type NOCVI(ASTNode *expressionRoot); // no conversion, expression is int (in general reflects first operand)
-    static Type NOCVF(ASTNode *expressionRoot);
-    static Type NOCVB(ASTNode *expressionRoot);
-    static Type NOCVS(ASTNode *expressionRoot);
-    static Type NOCVV(ASTNode *expressionRoot); // return void - same as INVAL, for better documentation in return
+    static Type NOCVI(ASTNode *expressionRoot); ///< no conversion, expression is int (in general reflects first operand)
+    static Type NOCVF(ASTNode *expressionRoot); ///< no conversion, expression is float
+    static Type NOCVB(ASTNode *expressionRoot); ///< no conversion, expression is bool
+    static Type NOCVS(ASTNode *expressionRoot); ///< no conversion, expression is string
+    static Type NOCVV(ASTNode *expressionRoot); ///< return void, same as INVAL, used for better documentation
 
-    static Type INVAL(ASTNode *expressionRoot); // invalid - return void; due to undefined variables, void subexpression may still occur
+    static Type INVAL(ASTNode *expressionRoot); ///< invalid - return void; due to undefined variables, void subexpression may still occur
 
-    static Type e_ISC(ASTNode *expressionRoot); // implicit string conversion
-    static Type e_BFO(ASTNode *expressionRoot); // bitwise float operand
-    static Type e_BSO(ASTNode *expressionRoot); // bitwise string operand
-    static Type e_SAA(ASTNode *expressionRoot); // string assignment attempt
-    static Type e_ATS(ASTNode *expressionRoot); // assignment to string
-    static Type e_PSA(ASTNode *expressionRoot); // pass string as argument
-    static Type e_SAE(ASTNode *expressionRoot); // string argument expected
-    static Type e_CNL(ASTNode *expressionRoot); // condition not logical value
-    static Type e_BRT(ASTNode *expressionRoot); // bad return type
-    static Type e_BET(ASTNode *expressionRoot); // bad exit type
-    static Type e_INI(ASTNode *expressionRoot); // invalid index
+    static Type e_ISC(ASTNode *expressionRoot); ///< sematic error - implicit string conversion
+    static Type e_BFO(ASTNode *expressionRoot); ///< sematic error - bitwise float operand
+    static Type e_BSO(ASTNode *expressionRoot); ///< sematic error - bitwise string operand
+    static Type e_SAA(ASTNode *expressionRoot); ///< sematic error - string assignment attempt
+    static Type e_ATS(ASTNode *expressionRoot); ///< sematic error - assignment to string
+    static Type e_PSA(ASTNode *expressionRoot); ///< sematic error - pass string as argument
+    static Type e_SAE(ASTNode *expressionRoot); ///< sematic error - string argument expected
+    static Type e_CNL(ASTNode *expressionRoot); ///< sematic error - condition not logical value
+    static Type e_BRT(ASTNode *expressionRoot); ///< sematic error - bad return type
+    static Type e_BET(ASTNode *expressionRoot); ///< sematic error - bad exit type
+    static Type e_INI(ASTNode *expressionRoot); ///< sematic error - invalid index
 
-    // upcasts:
-    static void IntToFloat(ASTNode *expressionRoot, int operandIdx);
-    static void BoolToInt(ASTNode *expressionRoot, int operandIdx);
-    static void BoolToFloat(ASTNode *expressionRoot, int operandIdx);
+    /**
+     * @name Methods actually dding the conversion nodes after the given node.
+     * 
+     * @param expressionRoot The node representing the expression.
+     * @param operandIdx Order at which the conversion node should be inserted.
+     * 
+     * @{
+     */
+    static void IntToFloat(ASTNode *expressionRoot, int operandIdx); ///< Upcast int to float.
+    static void BoolToInt(ASTNode *expressionRoot, int operandIdx); ///< Upcast bool to int.
+    static void BoolToFloat(ASTNode *expressionRoot, int operandIdx); ///< Upcast bool to float.
 
-    // downcasts:
-    static void FloatToInt(ASTNode *expressionRoot, int operandIdx);
-    static void IntToBool(ASTNode *expressionRoot, int operandIdx);
-    static void FloatToBool(ASTNode *expressionRoot, int operandIdx);
+    static void FloatToInt(ASTNode *expressionRoot, int operandIdx); ///< Downcast float to int.
+    static void IntToBool(ASTNode *expressionRoot, int operandIdx); ///< Downcast int to bool.
+    static void FloatToBool(ASTNode *expressionRoot, int operandIdx); ///< Downcast float to bool.
+    /** @} */
 };
