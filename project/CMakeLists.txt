@@ -128,7 +128,8 @@ if(DOXYGEN_FOUND)
     # Generate documentation
     add_custom_target(docs
         COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYFILE}
-        COMMAND make -C ${DOCS_DIR}/latex 
+        COMMAND make -C ${DOCS_DIR}/latex
+        COMMAND cp ${DOCS_DIR}/latex/refman.pdf ${CMAKE_BINARY_DIR}/xjabur02_Jabukod_documentation.pdf
         WORKING_DIRECTORY ${DOCS_DIR}
     )
 
