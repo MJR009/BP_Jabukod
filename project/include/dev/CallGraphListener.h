@@ -1,8 +1,20 @@
+/**
+ * @file CallGraphListener.h
+ * @author Martin Jabůrek
+ *
+ * @brief Development tool, used to draw call graphs.
+ */
+
 #pragma once
 #include "common.h"
 
 #include "JabukodBaseListener.h"
 
+/**
+ * @class CallGraphListener
+ * @brief Class for drawing graphviz call graphs, used during development.
+ * 
+ */
 class CallGraphListener : public JabukodBaseListener {
 public:
     void enterFunctionDefinition(JabukodParser::FunctionDefinitionContext *ctx) override;

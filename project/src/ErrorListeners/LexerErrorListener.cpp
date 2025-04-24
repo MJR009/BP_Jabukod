@@ -1,3 +1,11 @@
+/**
+ * @file LexerErrorListener.cpp
+ * @author Martin Jabůrek
+ * 
+ * Implementation of
+ * @link LexerErrorListener.h
+ */
+
 #include "LexerErrorListener.h"
 
 void LexerErrorListener::syntaxError(

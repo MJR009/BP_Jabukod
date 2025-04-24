@@ -1,3 +1,11 @@
+/**
+ * @file ParserErrorListener.cpp
+ * @author Martin Jabůrek
+ * 
+ * Implementation of
+ * @link ParserErrorListener.h
+ */
+
 #include "ParserErrorListener.h"
 
 void ParserErrorListener::syntaxError(

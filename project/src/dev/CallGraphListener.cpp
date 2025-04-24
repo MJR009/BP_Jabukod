@@ -1,3 +1,11 @@
+/**
+ * @file CallGraphListener.cpp
+ * @author Martin Jabůrek
+ * 
+ * Implementation of
+ * @link CallGraphListener.h
+ */
+
 #include "CallGraphListener.h"
 
 void CallGraphListener::enterFunctionDefinition(JabukodParser::FunctionDefinitionContext *ctx) {
