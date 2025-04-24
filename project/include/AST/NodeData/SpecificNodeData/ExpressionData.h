@@ -12,26 +12,17 @@
 
 /**
  * @class ExpressionData
- * @brief Used to propagate the data type of a subexpression so coertions can be carried out correctly.
+ * @brief Used to propagate the data type of a subexpression so coertions can be carried out and code generated correctly.
  * 
  */
 class ExpressionData : public GenericNodeData {
 public:
-    /**
-     * @brief Store the expressions desired data type.
-     * 
-     * @param type Type of the subexpression.
-     */
+    /// @brief Store the expressions desired data type.
     ExpressionData(const Type type) : type(type) {}
 
-    /**
-     * @brief Stored data type getter.
-     * 
-     * @return Stored data type.
-     */
+    /// @brief Retrieves the stored data type.
     Type GetType();
 
 private:
-    /// @brief Data type associated with the subexpression.
-    Type type;
+    Type type; ///< Data type associated with the subexpression.
 };

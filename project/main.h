@@ -4,7 +4,7 @@
  *
  * @brief General definitions for top level functionality.
  * 
- * This file implements command line argument parsing and definitions need for its error handling.
+ * This file implements command line argument parsing and definitions needed for its error handling.
  */
 
 #pragma once
@@ -19,10 +19,8 @@
  * @name Macros defining command line argument error text.
  * @{
  */
-/// @brief To be printed when there are unexpected or extraneous command line arguments
-#define INVALID_CLA ("invalid command line arguments, try " BOLD "-h" DEFAULT)
-/// @brief To be printed when provided input file does not exist
-#define INVALID_INPUT_FILE ("given input file could not be read")
+#define INVALID_CLA ("invalid command line arguments, try " BOLD "-h" DEFAULT) ///< Unexpected or extraneous command line arguments
+#define INVALID_INPUT_FILE ("given input file could not be read") ///< Provided input file does not exist
 /** @} */
 
 /// @brief Macro definining text of the programs help message, it can be printed with -h argument.
@@ -59,13 +57,7 @@ struct PrintHelp {};
  */
 class PrepareArguments {
 public:
-    /**
-     * @brief The preparation of command line arguments is done straight inside the constructor.
-     * All attributes are set here and available publicly.
-     * 
-     * @param argc argc as provided in main function
-     * @param argv argv as provided in main function
-     */
+    /// @brief Constructor, preparing the command line arguments for later use.
     PrepareArguments(int argc, char **argv) {
         int arg;
         opterr = 0;
@@ -108,17 +100,11 @@ public:
     }
 
 public:
-    /// @brief Input file with a Jabukód program.
-    string inputFile = ""; // both path and name
-    /// @brief Name given to generated assembly, relocatable object and executable files.
-    string outputFile = "out";
+    string inputFile = ""; ///< Input file name and path with a Jabukód program.
+    string outputFile = "out"; ///< Name given to generated assembly, relocatable object and executable files.
 
-    /// @brief Compilation will not proceed past source code analysis.
-    bool onlyDoAnalysis = false;
-    /// @brief Output executable will be generated with debug symbols
-    bool generateWithDebugSymbols = false;
-    /// @brief After compilation, gdb is automaticly run with TUI and register contents view.
-    bool runDebug = false;
-    /// @brief After successful code analysis, contents of the symbol table and abstract syntax tree will be printed.
-    bool printGraphicalRepresentation = false;
+    bool onlyDoAnalysis = false; ///< If true, compilation will not proceed past source code analysis.
+    bool generateWithDebugSymbols = false; ///< If true, output executable will be generated with debug symbol.
+    bool runDebug = false; ///< If true, gdb is automaticly run with TUI and register contents view.
+    bool printGraphicalRepresentation = false; ///< If true, contents of the symbol table and abstract syntax tree will be printed.
 };

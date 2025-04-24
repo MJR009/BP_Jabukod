@@ -4,7 +4,7 @@
  * 
  * @brief Includes for all node data specialised classes.
  * 
- * This file is used to simplify includes of all node data kinds wherever they are needed.
+ * This file is used to simplify includes of all node data kinds.
  * Everywhere they are used, any of the kinds may occur.
  */
 

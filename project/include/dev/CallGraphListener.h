@@ -12,7 +12,7 @@
 
 /**
  * @class CallGraphListener
- * @brief Class for drawing graphviz call graphs, used during development.
+ * @brief Simple class for drawing graphviz call graphs, used during development.
  * 
  */
 class CallGraphListener : public JabukodBaseListener {

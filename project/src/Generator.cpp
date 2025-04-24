@@ -43,12 +43,7 @@ void Generator::GenerateCode() {
     this->GenerateNode( this->ast.GetRoot() );
 }
 
-/**
- * @brief Macro to simplify writing all selects for each node generation method.
- * 
- * The names of each node generation method have a specific format: "Generate" with the node kind as suffix.
- * This makes it easiser to write them all out inside a switch statement.
- */
+/// @brief Macro to simplify writing all selects for each node generation method.
 #define Generate_case(item) case NodeKind::item: nodeGenerators->Generate##item(node); return
 
 void Generator::GenerateNode(ASTNode *node) {

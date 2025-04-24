@@ -23,19 +23,13 @@
  */
 class GlobalSymbolsVisitor : public JabukodBaseVisitor {
 public:
-    /**
-     * @brief Associates the symbol table to be filled in with the visitor.
-     * 
-     * @param symbolTable The associate symbol table.
-     */
+    /// @brief Associates the symbol table to be filled in with the visitor.
     GlobalSymbolsVisitor(SymbolTable & symbolTable) : symbolTable(symbolTable) {}
 
     /**
      * @name Implemented visitor methods.
      * 
      * Only a small portion of them are needed here. Most of the rest are used in the ASTGenerationVisitor.
-     * 
-     * @param ctx Associated nodes context object, holding all its data.
      * 
      * @{     
      */
@@ -49,6 +43,5 @@ public:
     /// @}
 
 private:
-    /// @brief Associated symbol table reference.
-    SymbolTable & symbolTable;
+    SymbolTable & symbolTable; ///< Associated symbol table reference.
 };

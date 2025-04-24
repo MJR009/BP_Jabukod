@@ -80,25 +80,25 @@ private:
      * @param expressionRoot The node representing the expression.
      * @return Infered data type after coertions.
      */
-    static Type I2F_1(ASTNode *expressionRoot); ///< int to float first
-    static Type I2F_2(ASTNode *expressionRoot); ///< int to float second
-    static Type B2I_1(ASTNode *expressionRoot); ///< bool to int first
-    static Type B2I_2(ASTNode *expressionRoot); ///< bool to int second
-    static Type B2F_1(ASTNode *expressionRoot); ///< bool to float first
-    static Type B2F_2(ASTNode *expressionRoot); ///< bool to float second
-    static Type B2I_B(ASTNode *expressionRoot); ///< bool to int both
+    static Type I2F_1(ASTNode *expressionRoot); ///< int to float first operand
+    static Type I2F_2(ASTNode *expressionRoot); ///< int to float second operand
+    static Type B2I_1(ASTNode *expressionRoot); ///< bool to int first operand
+    static Type B2I_2(ASTNode *expressionRoot); ///< bool to int second operand
+    static Type B2F_1(ASTNode *expressionRoot); ///< bool to float first operand
+    static Type B2F_2(ASTNode *expressionRoot); ///< bool to float second operand
+    static Type B2I_B(ASTNode *expressionRoot); ///< bool to int both operands
 
-    static Type I2B_1(ASTNode *expressionRoot); ///< int to bool first
-    static Type I2B_2(ASTNode *expressionRoot); ///< int to bool second
-    static Type I2B_B(ASTNode *expressionRoot); ///< int to bool both
-    static Type F2B_1(ASTNode *expressionRoot); ///< float to bool first
-    static Type F2B_2(ASTNode *expressionRoot); ///< float to bool second
-    static Type F2B_B(ASTNode *expressionRoot); ///< float to bool both
-    static Type IF2B_(ASTNode *expressionRoot); ///< int and float to bool
-    static Type FI2B_(ASTNode *expressionRoot); ///< float and int to bool
+    static Type I2B_1(ASTNode *expressionRoot); ///< int to bool first operand
+    static Type I2B_2(ASTNode *expressionRoot); ///< int to bool second operand
+    static Type I2B_B(ASTNode *expressionRoot); ///< int to bool both operands
+    static Type F2B_1(ASTNode *expressionRoot); ///< float to bool first operand
+    static Type F2B_2(ASTNode *expressionRoot); ///< float to bool second operand
+    static Type F2B_B(ASTNode *expressionRoot); ///< float to bool both operands
+    static Type IF2B_(ASTNode *expressionRoot); ///< int and float operands to bool
+    static Type FI2B_(ASTNode *expressionRoot); ///< float and int operands to bool
 
-    static Type F2I_1(ASTNode *expressionRoot); ///< float to int first
-    static Type F2I_2(ASTNode *expressionRoot); ///< float to int second
+    static Type F2I_1(ASTNode *expressionRoot); ///< float to int first operand
+    static Type F2I_2(ASTNode *expressionRoot); ///< float to int second operand
 
     static Type NOCVI(ASTNode *expressionRoot); ///< no conversion, expression is int (in general reflects first operand)
     static Type NOCVF(ASTNode *expressionRoot); ///< no conversion, expression is float
@@ -121,7 +121,7 @@ private:
     static Type e_INI(ASTNode *expressionRoot); ///< sematic error - invalid index
 
     /**
-     * @name Methods actually dding the conversion nodes after the given node.
+     * @name Methods actually doing the conversion nodes after the given node.
      * 
      * @param expressionRoot The node representing the expression.
      * @param operandIdx Order at which the conversion node should be inserted.

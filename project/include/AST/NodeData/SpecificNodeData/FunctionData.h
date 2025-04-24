@@ -19,27 +19,14 @@
  */
 class FunctionData : public BodyData {
 public:
-    /**
-     * @brief Associates the function that is currently defined.
-     * 
-     * @param function 
-     */
+    /// @brief Associates the function that is currently defined.
     FunctionData(FunctionTableEntry *function) : location(function) {}
 
-    /**
-     * @brief Get the name of the function.
-     * 
-     * @return Function name.
-     */
+    /// @brief Gets the name of the function.
     string GetName();
-    /**
-     * @brief Retrieves how many variables are located within the function.
-     * 
-     * @return The variable count.
-     */
+    /// @brief Retrieves how many variables are located within the function.
     int GetVariableCount();
 
 private:
-    /// @brief Memory location of the defined function.
-    FunctionTableEntry *location;
+    FunctionTableEntry *location; ///< Memory location of the defined function.
 };

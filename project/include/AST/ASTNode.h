@@ -21,12 +21,7 @@
  */
 class ASTNode {
 public:
-    /**
-     * @brief Constructor, giving the node it's kind and potential extra data.
-     * 
-     * @param kind Given node kind.
-     * @param data Node data, derived from BaseData. May be nullptr if it does not yet exist.
-     */
+    /// @brief Constructor, giving the node it's kind and potential extra data.
     ASTNode(NodeKind kind, GenericNodeData *data) : kind(kind), data(data) {}
 
     /**
@@ -66,13 +61,7 @@ public:
     int GetChildrenCount() const; ///< Get the successor count of the curret node
     /** @} */
 
-    /**
-     * @brief Sets this nodes data to the provided.
-     * 
-     * This will overwrite the current node data. The method should be used with caution!
-     * 
-     * @param data Newly associated nodde data.
-     */
+    /// @brief Sets this nodes data to the provided.
     void SetData(GenericNodeData *data);
 
     /// @brief Completely deletes the subtree starting at the specified successor.
@@ -82,8 +71,6 @@ public:
      * @brief Returns whether the current node is a last child of the previous node for every node all the way to root.
      * 
      * Goes from this node to root, first item represents this and last the root.
-     * 
-     * @return Vector of bools, each saying whether the current node is the last child of the previous node.
      */
     vector<bool> IsLastChildAllToRoot();
     /// @brief Returns true if the node has a scope, otherwise returns false. 
@@ -91,14 +78,7 @@ public:
 
     /// @brief Adds a new node after this one.
     void AppendNewChild(ASTNode *newChild);
-    /**
-     * @brief Inserts a new node at the specified order after this one.
-     * 
-     * The former node at the specified index is pushed lower in the node tree.
-     * 
-     * @param newChild Newly inserted node.
-     * @param childIdx Order at which the new node should be put.
-     */
+    /// @brief Inserts a new node at the specified order after this one.
     void InsertAfter(ASTNode *newChild, int childIdx);
     /**
      * @brief Performs a rotation, putting first child at the end.
@@ -108,12 +88,7 @@ public:
      */
     void AdjustArguments();
 
-    /**
-     * @brief Returns the name of the function this node is located after.
-     * 
-     * Travels through its predecessors, all the way to root. When it finds a FUNCTION node, it returns the
-     * name of the associated function.
-     */
+    /// @brief Returns the name of the function this node is located after.
     const string LocatedInFunction();
     /// @brief Removes all static variables from this nodes associated scope, if it has one.
     void RemoveStaticFromScope();
@@ -127,13 +102,9 @@ public:
     }
 
 private:
-    /// @brief The kind of the node.
-    NodeKind kind;
-    /// @brief Address of predecessor node in the tree hierarchy.
-    ASTNode *parent = nullptr;
-    /// @brief An ordered vector of this nodes successors.
-    vector<ASTNode *> children;
+    NodeKind kind; ///< The kind of the node.
+    ASTNode *parent = nullptr; ///< Address of predecessor node in the tree hierarchy.
+    vector<ASTNode *> children; ///< An ordered vector of this nodes successors.
 
-    /// @brief Data associated with this node or nullptr, if there is none.
-    GenericNodeData *data = nullptr;
+    GenericNodeData *data = nullptr; ///< Data associated with this node or nullptr, if there is none.
 };

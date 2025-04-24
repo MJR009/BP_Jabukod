@@ -61,7 +61,7 @@ public:
     };
     
 public:
-    /// @brief Constructs the node kind object according to the desire value
+    /// @brief Constructs the node kind object according to the desired value
     NodeKind(Options value) : value(value) {}
 
     /// @brief To ease access to the actual node kind, namespace resolution operator :: can be used.
@@ -71,10 +71,9 @@ public:
     string toString() const;
     /// @brief For expression operators, converts node kind to sign. 
     string toSign() const;
-    /// @brief  Converts expression signs to node kind.
+    /// @brief Converts expression sign to node kind.
     static NodeKind toNodeKind(const string & sign);
 
 private:
-    /// @brief Value of any given NodeKind object.
-    Options value;
+    Options value; ///< Value of any given NodeKind object.
 };

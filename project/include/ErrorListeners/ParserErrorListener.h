@@ -22,7 +22,7 @@ typedef enum PHASE Phase;
  */
 class ParserErrorListener : public antlr4::BaseErrorListener {
 public:
-    /// @brief Custom lexical error print.
+    /// @brief Custom error print.
     void syntaxError(
         antlr4::Recognizer *recognizer,
         antlr4::Token *offendingSymbol,
@@ -32,7 +32,7 @@ public:
         exception_ptr e
     ) override;
 
-    /// @brief Switch to semantic analysis internally to print better errors.
+    /// @brief Switch to semantic analysis internally.
     void SetSemanticPhase();
 
 private:

@@ -27,91 +27,43 @@ public:
     /**
      * @brief AST constructor. Associates the previously generated symbol table with the abstract syntax tree.
      * Also gives the tree the memory location of the parser object to invoke errors.
-     * 
-     * @param parser The associated parser object.
-     * @param symbolTable The associated symbol table.
      */
     AST(JabukodParser *parser, SymbolTable & symbolTable) : parser(parser), symbolTable(symbolTable) {}
 
     /**
      * @brief Does a preorder walkthrough of the tree from root.
-     * 
      * @param action A function to be invoked upon entering each node.
      */
     void PreorderForEachNode( void (*action)(ASTNode *) );
     /**
      * @brief Does a postorder walkthrought of the tree from root.
-     * 
-     * @param action A function to be invokenupon leaving each node.
+     * @param action A function to be invoked upon leaving each node.
      */
     void PostorderForEachNode( void (*action)(ASTNode *) );
 
-    /**
-     * @brief Appeds a new node after the currently active node as it's last child.
-     * 
-     * A newly added node is always immediately also made active.
-     * 
-     * @param kind The desired node kind of the new node.
-     */
+    /// @brief Appeds a new node after the currently active node as it's last child.
     void AddNode(NodeKind kind);
-    /**
-     * @brief Appeds a new node after the currently active node as it's last child while also immediately giving
-     * the node a data object.
-     * 
-     * A newly added node is always immediately also made active.
-     * 
-     * @param kind The desired node kind of the new node.
-     * @param data A data object to be associated with the node.
-     */
+    /// @brief Appeds a new node after the currently active node as it's last child while also immediately giving the node a data object.
     void AddNode(NodeKind kind, GenericNodeData *data);
-    /**
-     * @brief A method to associate node data with a node at a later point, after it is inserted.
-     * 
-     * The data give is always associated with the active node. If the active node already has data,
-     * the reference to it may be lost. Use this function with caution!
-     * 
-     * @param data The data to be associated with current active node.
-     */
+    /// @brief  A method to associate node data with a curent active node, after it is inserted.
     void GiveActiveNodeData(GenericNodeData *data);
-    /**
-     * @brief Generic method to retrieve data of the current active node.
-     * 
-     * @tparam T Desired type of the returned data object.
-     * @return T* Address of the data object.
-     */
+    /// @brief Generic method to retrieve data of the current active node.
     template <typename T>
     T *GetActiveNodeData() {
         return this->activeNode->GetData<T>();
     }
     /// @brief Updates the active node to be the parent of the current active node, moving closer to the tree root.
     void MoveToParent();
-    /**
-     * @brief Set the function the analysis is currently processing for later reference.
-     * 
-     * @param name Name of the function the processing is currently in.
-     * @return Memory location of the actual function currently in.
-     */
+    /// @brief Set the function the analysis is currently processing for later reference.
     FunctionTableEntry *SetActiveFunction(const string & name);
     /// @brief Removes the reference to a current active function, setting it to nullptr.
     void ResetActiveFunction();
-    /**
-     * @brief Retrieve the root node of the abstract syntax tree.
-     * 
-     * The root node is a node of node kind PROGRAM, with children of kind FUNCTION.
-     * 
-     * @return Memory location of the tree root node.
-     */
+    /// @brief Retrieve the root node of the abstract syntax tree.
     ASTNode* GetRoot();
 
     /**
      * @brief Puts a newly variable in it's closest scope, generating it straight from ANTLR4 parse
      * tree provided data.
-     * 
-     * @param variable The new variable token.
-     * @param storageSpecifier Data regarding the storage specifier symbol.
-     * @param variableType Data regarding the varaibles data type symbol.
-     * @param listSpecifier If the varaible is a list, there is a list specifier following it. Otherwise it is considered a scalar.
-     * @return Memory location of the newly created varaible, stored withing one of the abstract syntax tree scopes.
      */
     Variable *PutVariableInScope(
         antlr4::Token *variable,
@@ -129,7 +81,6 @@ public:
      * During development, there were occasions when it was not desired to print an
      * error when an undefined varaible was found. The flag is left for backwards compatibility.
      * 
-     * @param variableToken The token representing the variable.
      * @param produceError Flag to set whether an error should be triggered when a variable is undefiened.
      * @return The address of the variable, or nullptr if it has not yet been defined in the source program.
      */
@@ -138,8 +89,7 @@ public:
      * @brief Finds a function according to its ANTLR4 token.
      * 
      * The same as for the variable holds. produceError flag is left for backwards compatibility.
-     * 
-     * @param functionToken Token representing the function.
+     *
      * @param produceError Flag to set whether an error should be triggered when a variable is undefiened.
      * @return The address of the function, or nullptr if it does not exist.
      */
@@ -201,26 +151,14 @@ public:
     /** @} */
 
     /**
-     * @brief Method used to add a new global constant variable, representing a literal
+     * @brief Method used to add a new global constant variable, representing a literal.
      * 
      * This is most importantly needed for float and string literals, which cannot be represented as immediate values
      * in code. They have to be coverted to global, %rip relative, constants, stored in the .rodata section of the
      * generated executable.
-     * 
-     * @param name Name of the new global variable.
-     * @param type Data type of the new global variable.
-     * @param value Mandatory default value of the new global variable.
-     * @return Address of the newly added global variable.
      */
     Variable *AddGlobalLiteral(const string & name, Type type, any value);
-    /**
-     * @brief Generates a unique name for a new global literal, added with the AddGlobalLiteral method.
-     * 
-     * The automatically generated name consists of its data type and a unique numerical ID.
-     * 
-     * @param type Data type of the literal, used as a part of the magled name.
-     * @return A unique variable identifier.
-     */
+    /// @brief Generates a unique name for a new global literal, added with the AddGlobalLiteral method.
     string GenerateUniqueLiteralId(Type type);
 
     /// @brief Function performing the completee transformation of all program static varaibles into global ones.
@@ -239,23 +177,16 @@ public:
     }
 
 private:
-    /// @brief Parser associated or semantic error reporting.
-    JabukodParser *parser;
+    JabukodParser *parser; ///< Parser associated or semantic error reporting.
 
-    /// @brief The associated symbol table.
-    SymbolTable & symbolTable;
+    SymbolTable & symbolTable; ///< The associated symbol table.
 
-    /// @brief The root node of the tree.
-    ASTNode *root = nullptr;
-    /// @brief The current active node of the tree.
-    ASTNode *activeNode = nullptr;
+    ASTNode *root = nullptr; ///< The root node of the tree.
+    ASTNode *activeNode = nullptr; ///< The current active node of the 
 
-    /// @brief A shortcut to currently processed function, mainly for resolving parameters.
-    FunctionTableEntry *activeFunction = nullptr;
+    FunctionTableEntry *activeFunction = nullptr; ///< A shortcut to currently processed function, mainly for resolving parameters.
 
-    /// @brief Attribute used mainly to determine the %rbp relative offset of a newly added variable on the stack
-    /// during the gneratd programs runtime.
-    int variableCount = 0;
+    int variableCount = 0; ///< Attribute used mainly to determine the %rbp relative offset of a newly added variable on the stack.
 
 private:
     /**
@@ -291,33 +222,13 @@ private:
     );
     /** @} */
 
-    /**
-     * @brief Tries to find a varaible within all possible local scopes, all the way to teh root of the tree.
-     * 
-     * @param name Searched variable name.
-     * @return Address of the found variable or nullptr, if it is not defined in any local scope.
-     */
+    /// @brief Tries to find a varaible within all possible local scopes, all the way to the root of the tree.
     Variable *IsDefinedLocally(const string & name);
-    /**
-     * @brief Checks whether a variable is defined within the global scope.
-     * 
-     * @param name Searched variable name.
-     * @return Address of the found variable or nullptr, if it is not defined in any local scope.
-     */
+    /// @brief Checks whether a variable is defined within the global scope.
     Variable *IsDefinedGlobally(const string & name);
-    /**
-     * @brief Checks whether a variable used is actually an item from an enum.
-     * 
-     * @param name Searched name.
-     * @return Address of the found enum item or nullptr, if it is not defined in any local scope.
-     */
+    /// @brief Checks whether a variable used is actually an item from an enum.
     Variable *IsEnumItem(const string & name);
-    /**
-     * @brief Looks up a function.
-     * 
-     * @param name Searched function name.
-     * @return Memory location of the function or a nullptr if it is not defined.
-     */
+    /// @brief Looks up a function.
     FunctionTableEntry *IsFunctionDefined(const string & name);
     
     /// @brief Returns true if the provided string is a name of an enum, otherwise returns false.
@@ -335,12 +246,7 @@ private:
     /// @brief Returns true if the provided ANTLR4 expression context represents a list.
     bool IsListExpression(JabukodParser::ExpressionContext *expression);
 
-    /**
-     * @brief Returns the stack offset to be given to a newly defined local variable.
-     * 
-     * @param type Data type of the new variable.
-     * @return Stack offset of the new variable.
-     */
+    /// @brief Returns the stack offset to be given to a newly defined local variable.
     int GetStackOffset(Type type);
 
     /**
@@ -349,7 +255,7 @@ private:
      * @{
      */
     void MangleStaticVariableNames(); ///< Make names globally unique.
-    vector<Variable *> PrepareAndGetAllStatic(); ///< Gives default values, eases removal.
+    vector<Variable *> PrepareAndGetAllStatic(); ///< Gives all the static variables default values, if they have them.
     void PurgeLocalStaticVariables(); ///< Removal from scopes.
     void RemoveStaticDefDeclSubtrees(); ///< Removal of subtrees.
     /** @} */

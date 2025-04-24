@@ -19,24 +19,18 @@
  * @class ASTGenerationVisitor
  * @brief Class implementing methods for abstract syntax tree construction.
  * 
- * Only implements visit methods for relevant nodes. Some are unnecessary or are resolved by other implemented ones.
- * Their return values of type any are unused.
+ * Only implements visit methods for relevant nodes. Some are unnecessary or are resolved by others.
+ * Their return values of type "any" are unused.
  */
 class ASTGenerationVisitor : public JabukodBaseVisitor {
 public:
-    /**
-     * @brief Prepares the visitor by giving it reference to the constructed abstract syntax tree.
-     * 
-     * @param ast Reference to currently constructed abstract syntax tree
-     */
+    /// @brief Prepares the visitor by giving it reference to the constructed abstract syntax tree.
     ASTGenerationVisitor(AST & ast) : ast(ast) {}
 
     // Commented out methods included for completeness, default implementation used.
 
     /**
      * @name Implemented visit methods.
-     * 
-     * @param ctx Associated nodes context object, holding all its data. 
      * 
      * @{
      */

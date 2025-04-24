@@ -73,11 +73,6 @@ using namespace std;
 
 namespace ERR {
 
-/**
- * @brief Function to be called when an error occurs in structure of generated internal code representation.
- * 
- * When called, prints a highlighted message.
- */
-void BadData();
+void BadData(); ///< Function to be called when an error occurs in structure of generated internal code representation.
 
 } // namespace ERR
