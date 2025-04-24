@@ -1,3 +1,11 @@
+/**
+ * @file EnumTableEntry.cpp
+ * @author Martin Jabůrek
+ * 
+ * Implementation of
+ * @link EnumTableEntry.h
+ */
+
 #include "EnumTableEntry.h"
 
 void EnumTableEntry::AddItem(string itemName, int itemValue) {

@@ -1,3 +1,11 @@
+/**
+ * @file Scope.cpp
+ * @author Martin Jabůrek
+ * 
+ * Implementation of
+ * @link Scope.h
+ */
+
 #include "Scope.h"
 
 Variable *Scope::AddEntry(

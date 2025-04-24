@@ -1,3 +1,11 @@
+/**
+ * @file EnumTable.cpp
+ * @author Martin Jabůrek
+ * 
+ * Implementation of
+ * @link EnumTable.h
+ */
+
 #include "EnumTable.h"
 
 EnumTableEntry *EnumTable::AddEntry(const string & name) {

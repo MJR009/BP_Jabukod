@@ -1,3 +1,11 @@
+/**
+ * @file FunctionTableEntry.cpp
+ * @author Martin Jabůrek
+ * 
+ * Implementation of
+ * @link FunctionTableEntry.h
+ */
+
 #include "FunctionTableEntry.h"
 
 void FunctionTableEntry::AddParameter(const Type parameterType, const string & parameterName) {

@@ -1,3 +1,11 @@
+/**
+ * @file SymbolTable.cpp
+ * @author Martin Jabůrek
+ * 
+ * Implementation of
+ * @link SymbolTable.h
+ */
+
 #include "SymbolTable.h"
 
 void SymbolTable::AddGlobalVariable(
@@ -368,8 +376,6 @@ StorageSpecifier SymbolTable::ResolveStorageSpecifier(JabukodParser::StorageSpec
     return specifierKind;
 }
 
-// dynamic cast only succeeds if the given instance is of the given type
-// for pointers it returns nullptr otherwise
 bool SymbolTable::IsFromDeclaration(JabukodParser::StorageSpecifierContext *specifier) const {
     return dynamic_cast<JabukodParser::VariableDeclarationContext *>( specifier->parent );
 }
@@ -528,7 +534,6 @@ any SymbolTable::ConvertLiteralByType(JabukodParser::LiteralContext *defaultValu
 
 
 
-// also fills in the vector or produces error on wrong size
 any SymbolTable::MakeArrayValuesTyped(vector<any> & initialArray, Type arrayType, JabukodParser::ListExpressionContext *list) const {
     if (arrayType == Type::ARRAY_INT) {
         return this->MakeArrayValueTyped_Specific<int>(initialArray, arrayType, list);

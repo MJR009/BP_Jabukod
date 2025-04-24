@@ -1,3 +1,11 @@
+/**
+ * @file FunctionTable.cpp
+ * @author Martin Jabůrek
+ * 
+ * Implementation of
+ * @link FunctionTable.h
+ */
+
 #include "FunctionTable.h"
 
 FunctionTableEntry *FunctionTable::AddEntry(const string & name, const Type returnType) {
