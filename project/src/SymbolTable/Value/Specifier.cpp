@@ -1,3 +1,11 @@
+/**
+ * @file Specifier.cpp
+ * @author Martin Jabůrek
+ * 
+ * Implementation of
+ * @link Specifier.h
+ */
+
 #include "Specifier.h"
 
 string StorageSpecifier::toString() const {

@@ -1,3 +1,11 @@
+/**
+ * @file Variable.cpp
+ * @author Martin Jabůrek
+ * 
+ * Implementation of
+ * @link Variable.h
+ */
+
 #include "Variable.h"
 
 Type Variable::GetType() {

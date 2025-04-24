@@ -1,3 +1,11 @@
+/**
+ * @file Type.cpp
+ * @author Martin Jabůrek
+ * 
+ * Implementation of
+ * @link Type.h
+ */
+
 #include "Type.h"
 
 bool Type::IsArrayType() {
