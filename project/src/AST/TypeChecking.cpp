@@ -238,10 +238,10 @@ Type (*Conversion::argumentTable[5][5])(ASTNode *) =
 {
        /*  op1   */
 // op2 /* ~~~~~~ */ INT / FLOAT / BOOL / STRING / VOID //
-       /* INT    */{NOCVI, F2I_1, B2I_1, e_PSA, INVAL},
-       /* FLOAT  */{I2F_1, NOCVF, B2F_1, e_PSA, INVAL},
-       /* BOOL   */{I2B_1, F2B_1, NOCVB, e_PSA, INVAL},
-       /* STRING */{e_SAE, e_SAE, e_SAE, NOCVS, INVAL},
+       /* INT    */{NOCVI, F2I_1, B2I_1, e_STA, INVAL},
+       /* FLOAT  */{I2F_1, NOCVF, B2F_1, e_STA, INVAL},
+       /* BOOL   */{I2B_1, F2B_1, NOCVB, e_STA, INVAL},
+       /* STRING */{e_STP, e_STP, e_STP, e_STP, INVAL},
        /* VOID   */{INVAL, INVAL, INVAL, INVAL, INVAL}
 };
 
@@ -417,13 +417,13 @@ Type Conversion::e_ATS(ASTNode *expressionRoot) {
     return Type::VOID;
 }
 
-Type Conversion::e_PSA(ASTNode *expressionRoot) {
-    throw BAD_STRING_ARGUMENT;
+Type Conversion::e_STA(ASTNode *expressionRoot) {
+    throw STRING_ARGUMENT;
     return Type::VOID;
 }
 
-Type Conversion::e_SAE(ASTNode *expressionRoot) {
-    throw STRING_ARGUMENT_EXPECTED;
+Type Conversion::e_STP(ASTNode *expressionRoot) {
+    throw STRING_PARAMETER;
     return Type::VOID;
 }
 

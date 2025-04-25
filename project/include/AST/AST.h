@@ -104,12 +104,14 @@ public:
      * @{
      */
     void CheckIfNodeWithinLoop(antlr4::Token *token);
+    void CheckIfWithinForeachLoop(antlr4::Token *token);
     void CheckIfModuloFloatOperands(JabukodParser::MulDivModExpressionContext *ctx);
     void CheckIfConstantDeclaration(StorageSpecifier specifier, antlr4::Token *variableToken);
     void CheckIfEligableForWrite(antlr4::Token *toWrite);
     bool CheckIfCorrectArgumentCount(int countInTable, antlr4::Token *functionToken);
     void CheckIfValidForInit(antlr4::Token *initToken);
     void CheckIfValidForUpdate(antlr4::Token *updateToken);
+    void CheckIfValidForeachControl(antlr4::Token *controlToken);
     void CheckIfValidForeachArray(antlr4::Token *arrayToken);
     bool CheckIfInForeach();
     void CheckIfStaticDefinedByLiteral(StorageSpecifier specifier, JabukodParser::ExpressionContext *expression);
@@ -166,7 +168,7 @@ public:
     void CorrectStaticVariables();
 
     /// @brief After processing a foreach header, flags the control variable for further processing.
-    void PrepareForeachControlVariable();
+    void PrepareForeachControlVariable(antlr4::Token *controlVariableToken);
 
     /// @brief Prints out pretty formatted abstract syntax tree representation.
     void Print();

@@ -451,6 +451,8 @@ any ASTGenerationVisitor::visitForeachStatement(JabukodParser::ForeachStatementC
         this->ast.MoveToParent();
     }
 
+    this->ast.CheckIfWithinForeachLoop(ctx->getStart());
+
     this->ast.MoveToParent();
 
     return OK;
@@ -607,6 +609,8 @@ any ASTGenerationVisitor::visitForHeader(JabukodParser::ForHeaderContext *ctx) {
 any ASTGenerationVisitor::visitForeachHeader(JabukodParser::ForeachHeaderContext *ctx) {
     if (ctx->variableDeclaration()) {
         this->visit(ctx->variableDeclaration());
+
+        this->ast.CheckIfValidForeachControl(ctx->variableDeclaration()->getStart());
     }
 
     if (ctx->expression()) {
@@ -615,7 +619,7 @@ any ASTGenerationVisitor::visitForeachHeader(JabukodParser::ForeachHeaderContext
         this->ast.CheckIfValidForeachArray(ctx->expression()->getStart());
     }
 
-    this->ast.PrepareForeachControlVariable();
+    this->ast.PrepareForeachControlVariable(ctx->variableDeclaration()->getStart());
 
     return OK;
 }

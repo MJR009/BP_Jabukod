@@ -50,8 +50,6 @@
 #define MODULE_ON_FLOAT "operator \"\%\" operands must not have type float"
 #define BIT_FLOAT_OPERAND "bitwise operator operands must not have type float"
 #define BIT_STRING_OPERAND "bitwise operator operands must not have type string"
-#define READ_NOT_STRING "read must be used with a variable of type string"
-#define READ_INTO_CONSTANT "cannot read into a constant variable"
 #define WRITE_EXPRESSION "write argument may only be a single literal or variable of type string"
 #define WRITE_NOT_STRING "write must be used with a variable of type string or a string literal"
 #define ASSIGN_STRING_TO_OTHER "cannot assign value of type string"
@@ -61,13 +59,17 @@
 #define UNDEFINED_FUNCTION "function is undefined"
 #define BAD_ARGUMENT_COUNT "function call has incorrect amount of arguments"
 #define VOID_FUNCTION_IN_EXPRESSION "function used in an expression has return type void"
-#define BAD_STRING_ARGUMENT "value of type string cannot be passed as argument here"
-#define STRING_ARGUMENT_EXPECTED "argument of type string was expected here"
+#define STRING_PARAMETER "function parameters of type string are not allowed"
+#define STRING_ARGUMENT "function arguments of type string are not allowed"
 #define STRING_CONDITION "cannot evaluate value of type string as a condition"
 #define FOR_HEADER_INIT_EXPRESSION "for loop inicialization may only be a variable definition or an only assignment"
 #define FOR_HEADER_UPDATE_EXPRESSION "for loop update must be an only assignment"
 #define BAD_RETURN_TYPE "return value type does not match the expected function return type"
 #define BAD_EXIT_TYPE "exit value type cannot be converted to an int"
+#define STRING_FOR_HEADER "the control variable of a for statement cannot be of type string"
+#define STRING_FOREACH_HEADER "the control variable of a foreach statement cannot be of type string"
+#define WRONG_CONTROL_VARIABLE_TYPE "the foreach control variable and iterated array types must match"
+#define NESTED_FOREACH "foreach statements cannot be nestes within the same function"
 /** @} */
 
 /**
@@ -112,4 +114,5 @@
 #define LIST_TOO_BIG "array initialiser is too large"
 #define BAD_INDEX "value cannot be used to index an array"
 #define FOREACH_NOT_ARRAY "variable iterated over in a foreach cycle must have an array type"
+#define STATIC_ARRAY "static arrays are not allowed"
 /** @} */

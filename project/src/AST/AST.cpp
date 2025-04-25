@@ -101,6 +101,10 @@ Variable *AST::PutVariableInScope(
     if (listSpecifier) {
         int givenSize = stoi( listSpecifier->INT_LITERAL()->getText() );
 
+        if (specifier == StorageSpecifier::STATIC) {
+            this->parser->notifyErrorListeners(storageSpecifier->getStart(), STATIC_ARRAY, nullptr);
+            specifier = StorageSpecifier::NONE;
+        }
         if (type == Type::STRING) {
             this->parser->notifyErrorListeners(variableType->getStart(), STRING_ARRAY, nullptr);
         }
@@ -220,6 +224,19 @@ void AST::CheckIfNodeWithinLoop(antlr4::Token *token) {
     return;
 }
 
+void AST::CheckIfWithinForeachLoop(antlr4::Token *token) {
+    ASTNode *aux = this->activeNode->GetParent();
+
+    while(aux->GetKind() != NodeKind::PROGRAM) {
+        if (aux->GetKind() == NodeKind::FOREACH) {
+            this->parser->notifyErrorListeners(token, NESTED_FOREACH, nullptr);
+            return;
+        }
+
+        aux = aux->GetParent();
+    }
+}
+
 void AST::CheckIfModuloFloatOperands(JabukodParser::MulDivModExpressionContext *ctx) {
     if (ctx->sign->getText() == "%") {
         Type op1 = this->activeNode->GetOperandType(0);
@@ -273,7 +290,13 @@ void AST::CheckIfValidForInit(antlr4::Token *initToken) {
     if ((initContents != NodeKind::ASSIGNMENT) &&
         (initContents != NodeKind::VARIABLE_DEFINITION)
     ) {
-        this->parser->notifyErrorListeners(initToken, FOR_HEADER_INIT_EXPRESSION, nullptr);        
+        this->parser->notifyErrorListeners(initToken, FOR_HEADER_INIT_EXPRESSION, nullptr);
+        return;
+    }
+
+    VariableData *data = this->activeNode->GetChild(0)->GetData<VariableData>();
+    if (data->GetType() == Type::STRING) {
+        this->parser->notifyErrorListeners(initToken, STRING_FOR_HEADER, nullptr);    
     }
 }
 
@@ -281,6 +304,24 @@ void AST::CheckIfValidForUpdate(antlr4::Token *updateToken) {
     NodeKind updateContents = this->activeNode->GetChild(0)->GetKind();
     if (updateContents != NodeKind::ASSIGNMENT) {
         this->parser->notifyErrorListeners(updateToken, FOR_HEADER_UPDATE_EXPRESSION, nullptr);
+    }
+}
+
+void AST::CheckIfValidForeachControl(antlr4::Token *controlToken) {
+    if ( ! this->activeNode->GetChild(0)) {
+        return;
+    }
+
+    ASTNode *controlNode = this->activeNode->GetChild(0);
+
+    if(controlNode->GetKind() != NodeKind::VARIABLE_DECLARATION) {
+        return;
+    }
+
+    VariableData *data = controlNode->GetData<VariableData>();
+
+    if (data->GetType() == Type::STRING) {
+        this->parser->notifyErrorListeners(controlToken, STRING_FOREACH_HEADER, nullptr);
     }
 }
 
@@ -701,12 +742,16 @@ void AST::CorrectStaticVariables() {
 
 
 
-void AST::PrepareForeachControlVariable() {
+void AST::PrepareForeachControlVariable(antlr4::Token *controlVariableToken) {
     ASTNode *controlVariableNode = this->activeNode->GetChild(0);
     ASTNode *iteratedArrayNode = this->activeNode->GetChild(1);
 
     Variable *controlVariable = controlVariableNode->GetData<VariableData>()->GetSelf();
     Variable *iteratedArray = iteratedArrayNode->GetData<VariableData>()->GetSelf();
+
+    if (controlVariable->GetType() != iteratedArray->GetType().GetScalarEquivalent()) {
+        this->parser->notifyErrorListeners(controlVariableToken, WRONG_CONTROL_VARIABLE_TYPE, nullptr);
+    }
 
     controlVariable->MakeForeachControlVariable(iteratedArray);
 }

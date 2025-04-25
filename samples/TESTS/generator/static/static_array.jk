@@ -1,0 +1,8 @@
+// results in an error
+
+static int g [3];
+//staic int g;
+
+int main() {
+    static int x[3] = {1};
+}

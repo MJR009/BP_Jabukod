@@ -113,8 +113,8 @@ private:
     static Type e_BSO(ASTNode *expressionRoot); ///< sematic error - bitwise string operand
     static Type e_SAA(ASTNode *expressionRoot); ///< sematic error - string assignment attempt
     static Type e_ATS(ASTNode *expressionRoot); ///< sematic error - assignment to string
-    static Type e_PSA(ASTNode *expressionRoot); ///< sematic error - pass string as argument
-    static Type e_SAE(ASTNode *expressionRoot); ///< sematic error - string argument expected
+    static Type e_STA(ASTNode *expressionRoot); ///< sematic error - string type argument
+    static Type e_STP(ASTNode *expressionRoot); ///< sematic error - string type parameter
     static Type e_CNL(ASTNode *expressionRoot); ///< sematic error - condition not logical value
     static Type e_BRT(ASTNode *expressionRoot); ///< sematic error - bad return type
     static Type e_BET(ASTNode *expressionRoot); ///< sematic error - bad exit type
