@@ -40,6 +40,7 @@
 #define VARIABLE_SAME_AS_PARAMETER "variable name in functions top scope must not be the same as a its parameter"
 #define LOCAL_VARIABLE_REDEFINITION "identifier used for variable is already taken in its scope"
 #define FOR_HEADER_DEFINITION_WITH_SPECIFIER "definition in for header must not have a storage specifier"
+#define FOREACH_HEADER_DEFINITION_WITH_SPECIFIER "declaration in foreach header must not have a storage specifier"
 #define BREAK_OUT_OF_LOOP "a break statement must be used within a loop"
 #define CONTINUE_OUT_OF_LOOP "a continue statement must be used within a loop"
 #define REDO_OUT_OF_LOOP "a redo statement must be used within a loop"
@@ -107,4 +108,5 @@
 #define ARRAY_ACCESS_ON_SCALAR "non-array variable cannot be associated with array access via []"
 #define LIST_TOO_BIG "array initialiser is too large"
 #define BAD_INDEX "value cannot be used to index an array"
+#define FOREACH_NOT_ARRAY "variable iterated over in a foreach cycle must have an array type"
 /** @} */

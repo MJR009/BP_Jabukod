@@ -1,0 +1,12 @@
+int main() {
+    int x;
+    int y[3];
+
+    foreach (int x : y) {
+        write "item";
+    }
+
+    //for (string x = "x";;) {
+    //    return 0;
+    //}
+}

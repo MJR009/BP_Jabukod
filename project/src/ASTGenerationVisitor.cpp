@@ -24,6 +24,7 @@ any ASTGenerationVisitor::visitVariableDeclaration(JabukodParser::VariableDeclar
         if ( ! ctx->IDENTIFIER()) {
             return NOK;
         }
+        
         antlr4::Token *variable = ctx->IDENTIFIER()->getSymbol();
 
         JabukodParser::StorageSpecifierContext *storage = nullptr;
@@ -33,13 +34,14 @@ any ASTGenerationVisitor::visitVariableDeclaration(JabukodParser::VariableDeclar
         }
 
         JabukodParser::NonVoidTypeContext *type = ctx->nonVoidType();
+
         JabukodParser::ListSpecifierContext *listSpecifier = nullptr;
         if (ctx->listSpecifier()) {
             listSpecifier = ctx->listSpecifier();
         }
 
         Variable *variableInScope = this->ast.PutVariableInScope(variable, storage, type, listSpecifier);
-        
+
         VariableData *data = new VariableData(variableInScope);
         this->ast.GiveActiveNodeData(data);
 
@@ -56,6 +58,7 @@ any ASTGenerationVisitor::visitVariableDefinition(JabukodParser::VariableDefinit
         if ( ! ctx->IDENTIFIER()) {
             return NOK;
         }        
+        
         antlr4::Token *variable = ctx->IDENTIFIER()->getSymbol();
 
         JabukodParser::StorageSpecifierContext *storage = nullptr;
@@ -80,9 +83,11 @@ any ASTGenerationVisitor::visitVariableDefinition(JabukodParser::VariableDefinit
             }
         }
 
-        this->visit(ctx->expression());
-        this->ast.CheckIfStaticDefinedByLiteral(data->GetSpecifier(), ctx->expression()); // here we know there is a list after array
-        this->ast.ConvertExpressionDefinition(ctx->getStart());
+        if (ctx->expression()) {
+            this->visit(ctx->expression());
+            this->ast.CheckIfStaticDefinedByLiteral(data->GetSpecifier(), ctx->expression()); // here we know there is a list after array
+            this->ast.ConvertExpressionDefinition(ctx->getStart());
+        }
         
         this->ast.MoveToParent();
     }
@@ -197,7 +202,9 @@ any ASTGenerationVisitor::visitIdentifierExpression(JabukodParser::IdentifierExp
 
     this->ast.AddNode(NodeKind::VARIABLE, data);
     if (data->GetType().IsArrayType()) {
-        this->ast.CheckIfInArrayAccess(ctx);
+        if ( ! this->ast.CheckIfInForeach()) {
+            this->ast.CheckIfInArrayAccess(ctx);
+        }
     }
     this->ast.MoveToParent();
 
@@ -430,16 +437,17 @@ any ASTGenerationVisitor::visitForeachStatement(JabukodParser::ForeachStatementC
     this->ast.AddNode(NodeKind::FOREACH, data);
 
     if (ctx->foreachHeader()) {
-        this->visit(ctx->foreachHeader()); // TODO REIMPLEMENT - CHECK ITERATED OVER IS ARRAY ID
+        this->visit(ctx->foreachHeader());
     }
 
     {
         BodyData *data = new BodyData();
-
         this->ast.AddNode(NodeKind::BODY, data);
+
         if (ctx->statementBlock()) {
             this->visit(ctx->statementBlock());
         }
+
         this->ast.MoveToParent();
     }
 
@@ -569,7 +577,9 @@ any ASTGenerationVisitor::visitForHeader(JabukodParser::ForHeaderContext *ctx) {
     if (ctx->init) {
         this->ast.AddNode(NodeKind::FOR_HEADER1);
         this->visit(ctx->init);
+
         this->ast.CheckIfValidForInit(ctx->init->getStart());
+
         this->ast.MoveToParent();
     }
 
@@ -585,8 +595,24 @@ any ASTGenerationVisitor::visitForHeader(JabukodParser::ForHeaderContext *ctx) {
     if (ctx->update) {
         this->ast.AddNode(NodeKind::FOR_HEADER3);
         this->visit(ctx->update);
+
         this->ast.CheckIfValidForUpdate(ctx->update->getStart());
+
         this->ast.MoveToParent();
+    }
+
+    return OK;
+}
+
+any ASTGenerationVisitor::visitForeachHeader(JabukodParser::ForeachHeaderContext *ctx) {
+    if (ctx->variableDeclaration()) {
+        this->visit(ctx->variableDeclaration());
+    }
+
+    if (ctx->expression()) {
+        this->visit(ctx->expression());
+
+        this->ast.CheckIfValidForeachArray(ctx->expression()->getStart());
     }
 
     return OK;

@@ -87,7 +87,7 @@ public:
     any visitAssignment(JabukodParser::AssignmentContext *ctx) override;
     any visitForHeader(JabukodParser::ForHeaderContext *ctx) override;
     // any visitForInitializer(JabukodParser::ForInitializerContext *ctx) override; // default behaviour suffices
-    //TODO//any visitForeachHeader(JabukodParser::ForeachHeaderContext *ctx) override; // default behaviour suffices
+    any visitForeachHeader(JabukodParser::ForeachHeaderContext *ctx) override;
     any visitList(JabukodParser::ListContext *ctx) override;
     any visitLiteral(JabukodParser::LiteralContext *ctx) override;
     // any visitType(JabukodParser::TypeContext *ctx) override; // only needed for functions

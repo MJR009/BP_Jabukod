@@ -110,6 +110,8 @@ public:
     bool CheckIfCorrectArgumentCount(int countInTable, antlr4::Token *functionToken);
     void CheckIfValidForInit(antlr4::Token *initToken);
     void CheckIfValidForUpdate(antlr4::Token *updateToken);
+    void CheckIfValidForeachArray(antlr4::Token *arrayToken);
+    bool CheckIfInForeach();
     void CheckIfStaticDefinedByLiteral(StorageSpecifier specifier, JabukodParser::ExpressionContext *expression);
     bool CheckIfDefinedByList(JabukodParser::ExpressionContext *expression);
     bool CheckIfAtArrayDefinition(JabukodParser::ListContext *list);

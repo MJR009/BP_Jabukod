@@ -284,6 +284,27 @@ void AST::CheckIfValidForUpdate(antlr4::Token *updateToken) {
     }
 }
 
+void AST::CheckIfValidForeachArray(antlr4::Token *arrayToken) {
+    ASTNode *variable = this->activeNode->GetChild(1);
+    if (variable->GetKind() != NodeKind::VARIABLE) {
+        this->parser->notifyErrorListeners(arrayToken, FOREACH_NOT_ARRAY, nullptr);
+        return;
+    }
+
+    VariableData *data = variable->GetData<VariableData>();
+    if ( ! data->GetType().IsArrayType()) {
+        this->parser->notifyErrorListeners(arrayToken, FOREACH_NOT_ARRAY , nullptr);
+    }
+}
+
+bool AST::CheckIfInForeach() {
+    if (this->activeNode->GetParent()->GetKind() == NodeKind::FOREACH) {
+        return true;
+    }
+
+    return false;
+}
+
 void AST::CheckIfStaticDefinedByLiteral(StorageSpecifier specifier, JabukodParser::ExpressionContext *expression) {
     if (specifier == StorageSpecifier::STATIC) {
         if ( ! this->IsLiteralExpression(expression)) {
@@ -323,7 +344,7 @@ void AST::CheckIfInArrayAccess(JabukodParser::IdentifierExpressionContext *varia
         this->parser->notifyErrorListeners(variable->getStart(), STRAY_ARRAY_VARIABLE, nullptr);
     }
 
-    if (this->activeNode != this->activeNode->GetParent()->GetChild(0)) {
+    if (this->activeNode != this->activeNode->GetParent()->GetChild(0)) { // this checks if the variable is at the index, which is not allowed
         this->parser->notifyErrorListeners(variable->getStart(), STRAY_ARRAY_VARIABLE, nullptr);
     }
 }
@@ -824,16 +845,14 @@ Variable *AST::PutVariableInForeachHeader(
     }
     ForeachData *data = parent->GetData<ForeachData>();
 
-    // foreach can keep storage specifier, can be const and static (might be useful)
+    if (specifier != StorageSpecifier::NONE) {
+        this->parser->notifyErrorListeners(variable, FOREACH_HEADER_DEFINITION_WITH_SPECIFIER, nullptr);
+    }
     if ( ! this->symbolTable.IsIdentifierAllowed(name)) {
         this->parser->notifyErrorListeners(variable, INTERNAL_ID_USE, nullptr);
     }
 
-    int stackOffset = 0;
-    if (specifier != StorageSpecifier::STATIC) {
-        stackOffset = this->GetStackOffset(type);
-    }
-    return data->AddVariable(name, specifier, type, stackOffset);
+    return data->AddVariable(name, specifier, type, this->GetStackOffset(type));
 }
 
 
