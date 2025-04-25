@@ -253,10 +253,10 @@ Type (*Conversion::returnTable[5][5])(ASTNode *) =
 {
        /*  op1   */
 // op2 /* ~~~~~~ */ INT / FLOAT / BOOL / STRING / VOID //
-       /* INT    */{NOCVI, F2I_1, B2I_1, e_BRT, e_BRT},
-       /* FLOAT  */{I2F_1, NOCVF, B2F_1, e_BRT, e_BRT},
-       /* BOOL   */{I2B_1, F2B_1, NOCVB, e_BRT, e_BRT},
-       /* STRING */{e_BRT, e_BRT, e_BRT, NOCVS, e_BRT},
+       /* INT    */{NOCVI, F2I_1, B2I_1, e_RVS, e_BRT},
+       /* FLOAT  */{I2F_1, NOCVF, B2F_1, e_RVS, e_BRT},
+       /* BOOL   */{I2B_1, F2B_1, NOCVB, e_RVS, e_BRT},
+       /* STRING */{e_RTS, e_RTS, e_RTS, e_RTS, e_BRT},
        /* VOID   */{e_BRT, e_BRT, e_BRT, e_BRT, NOCVV}
 };
 
@@ -434,6 +434,16 @@ Type Conversion::e_CNL(ASTNode *expressionRoot) {
 
 Type Conversion::e_BRT(ASTNode *expressionRoot) {
     throw BAD_RETURN_TYPE;
+    return Type::VOID;
+}
+
+Type Conversion::e_RTS(ASTNode *expressionRoot) {
+    throw STRING_RETURN;
+    return Type::VOID;
+}
+
+Type Conversion::e_RVS(ASTNode *expressionRoot) {
+    throw STRING_RETURN_VALUE;
     return Type::VOID;
 }
 

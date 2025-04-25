@@ -108,17 +108,19 @@ private:
 
     static Type INVAL(ASTNode *expressionRoot); ///< invalid - return void; due to undefined variables, void subexpression may still occur
 
-    static Type e_ISC(ASTNode *expressionRoot); ///< sematic error - implicit string conversion
-    static Type e_BFO(ASTNode *expressionRoot); ///< sematic error - bitwise float operand
-    static Type e_BSO(ASTNode *expressionRoot); ///< sematic error - bitwise string operand
-    static Type e_SAA(ASTNode *expressionRoot); ///< sematic error - string assignment attempt
-    static Type e_ATS(ASTNode *expressionRoot); ///< sematic error - assignment to string
-    static Type e_STA(ASTNode *expressionRoot); ///< sematic error - string type argument
-    static Type e_STP(ASTNode *expressionRoot); ///< sematic error - string type parameter
-    static Type e_CNL(ASTNode *expressionRoot); ///< sematic error - condition not logical value
-    static Type e_BRT(ASTNode *expressionRoot); ///< sematic error - bad return type
-    static Type e_BET(ASTNode *expressionRoot); ///< sematic error - bad exit type
-    static Type e_INI(ASTNode *expressionRoot); ///< sematic error - invalid index
+    static Type e_ISC(ASTNode *expressionRoot); ///< semantic error - implicit string conversion
+    static Type e_BFO(ASTNode *expressionRoot); ///< semantic error - bitwise float operand
+    static Type e_BSO(ASTNode *expressionRoot); ///< semantic error - bitwise string operand
+    static Type e_SAA(ASTNode *expressionRoot); ///< semantic error - string assignment attempt
+    static Type e_ATS(ASTNode *expressionRoot); ///< semantic error - assignment to string
+    static Type e_STA(ASTNode *expressionRoot); ///< semantic error - string type argument
+    static Type e_STP(ASTNode *expressionRoot); ///< semantic error - string type parameter
+    static Type e_CNL(ASTNode *expressionRoot); ///< semantic error - condition not logical value
+    static Type e_BRT(ASTNode *expressionRoot); ///< semantic error - bad return type
+    static Type e_RTS(ASTNode *expressionRoot); ///< semantic error - return type string
+    static Type e_RVS(ASTNode *expressionRoot); ///< semantic error - return value string
+    static Type e_BET(ASTNode *expressionRoot); ///< semantic error - bad exit type
+    static Type e_INI(ASTNode *expressionRoot); ///< semantic error - invalid index
 
     /**
      * @name Methods actually doing the conversion nodes after the given node.
