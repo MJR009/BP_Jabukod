@@ -71,7 +71,7 @@
 #define STRING_FOR_HEADER "the control variable of a for statement cannot be of type string"
 #define STRING_FOREACH_HEADER "the control variable of a foreach statement cannot be of type string"
 #define WRONG_CONTROL_VARIABLE_TYPE "the foreach control variable and iterated array types must match"
-#define NESTED_FOREACH "foreach statements cannot be nestes within the same function"
+#define NESTED_FOREACH "foreach statements cannot be nested within the same function"
 /** @} */
 
 /**

@@ -326,6 +326,10 @@ void AST::CheckIfValidForeachControl(antlr4::Token *controlToken) {
 }
 
 void AST::CheckIfValidForeachArray(antlr4::Token *arrayToken) {
+    if ( ! this->activeNode->GetChild(1)) {
+        return;
+    }
+
     ASTNode *variable = this->activeNode->GetChild(1);
     if (variable->GetKind() != NodeKind::VARIABLE) {
         this->parser->notifyErrorListeners(arrayToken, FOREACH_NOT_ARRAY, nullptr);
@@ -744,7 +748,13 @@ void AST::CorrectStaticVariables() {
 
 void AST::PrepareForeachControlVariable(antlr4::Token *controlVariableToken) {
     ASTNode *controlVariableNode = this->activeNode->GetChild(0);
+    if ( ! controlVariableNode) {
+        return;
+    }
     ASTNode *iteratedArrayNode = this->activeNode->GetChild(1);
+    if ( ! iteratedArrayNode) {
+        return;
+    }
 
     Variable *controlVariable = controlVariableNode->GetData<VariableData>()->GetSelf();
     Variable *iteratedArray = iteratedArrayNode->GetData<VariableData>()->GetSelf();
@@ -1017,6 +1027,9 @@ void AST::MangleStaticVariableNames() {
              (kind == NodeKind::VARIABLE_DEFINITION)
         ) {
             VariableData *data = node->GetData<VariableData>();
+            if ( ! data) {
+                return;
+            }
 
             if (data->GetSpecifier() == StorageSpecifier::STATIC) {
                 node->RenameVariable( SymbolTable::MangleNames(data->GetName(), node->LocatedInFunction()) );
@@ -1040,6 +1053,9 @@ vector<Variable *> AST::PrepareAndGetAllStatic() {
         if ((current->GetKind() == NodeKind::VARIABLE_DECLARATION) ||
             (current->GetKind() == NodeKind::VARIABLE_DEFINITION)
         ) {
+            if ( ! current->GetData<VariableData>()) {
+                continue;
+            }
             Variable *aStaticVariable = current->GetData<VariableData>()->GetSelf();
             if (aStaticVariable->GetSpecifier() == StorageSpecifier::STATIC) {
                 staticVariables.push_back(aStaticVariable);
@@ -1094,6 +1110,9 @@ void AST::RemoveStaticDefDeclSubtrees() {
             if ((childKind == NodeKind::VARIABLE_DECLARATION) ||
                 (childKind == NodeKind::VARIABLE_DEFINITION)
             ) {
+                if ( ! node->GetChild(i)->GetData<VariableData>()) {
+                    return;
+                }
                 if (node->GetChild(i)->GetData<VariableData>()->GetSpecifier() == StorageSpecifier::STATIC) {
                     node->DeleteAfter(i);
                 }

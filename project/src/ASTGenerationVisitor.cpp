@@ -607,17 +607,19 @@ any ASTGenerationVisitor::visitForHeader(JabukodParser::ForHeaderContext *ctx) {
 }
 
 any ASTGenerationVisitor::visitForeachHeader(JabukodParser::ForeachHeaderContext *ctx) {
-    if (ctx->variableDeclaration()) {
-        this->visit(ctx->variableDeclaration());
-
-        this->ast.CheckIfValidForeachControl(ctx->variableDeclaration()->getStart());
+    if ( ! ctx->variableDeclaration()) {
+        return NOK;
     }
 
-    if (ctx->expression()) {
-        this->visit(ctx->expression());
+    this->visit(ctx->variableDeclaration());
+    this->ast.CheckIfValidForeachControl(ctx->variableDeclaration()->getStart());
 
-        this->ast.CheckIfValidForeachArray(ctx->expression()->getStart());
+    if ( ! ctx->expression()) {
+        return NOK;
     }
+
+    this->visit(ctx->expression());
+    this->ast.CheckIfValidForeachArray(ctx->expression()->getStart());
 
     this->ast.PrepareForeachControlVariable(ctx->variableDeclaration()->getStart());
 
