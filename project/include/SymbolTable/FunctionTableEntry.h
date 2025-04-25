@@ -39,9 +39,13 @@ public:
     Type GetParameterType(int order);
 
     /// @brief Sets the number of variables within this function to a new value.
-    void SetTotalVariables(int variableCount);
+    void SetVariableCount(int variableCount);
     /// @brief Returns how many variables are currently located within this function.
-    int GetTotalVariables();
+    int GetVariableCount();
+    /// @brief Sets mow many bytes are needed to be allocated on stack at the start of this function.
+    void SetVariableStackSpace(int variableStackSpace);
+    /// @brief Returns how many bytes this function needs to have allocated on stack at its start. 
+    int GetVariableStackSpace();
 
     /// @brief Prints out all data regarding this function.
     void Print() const;
@@ -61,7 +65,9 @@ private:
     list<Variable *> parameters; ///< A list of all this functions parameters.
 
     int parameterCount = 0; ///< How many parameters does this function have
-    int totalVariables = 0; ///< How many variables are defined within this function.
+
+    int variableCount = 0; ///< How many variables are defined within this function.
+    int variableStackSpace = 0; ///< How much stack space is needed to allocate for variables.
 
 private:
     /// @brief Returns a string representing the memory location, that needs to be used for the next parameter.

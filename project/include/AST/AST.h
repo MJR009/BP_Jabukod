@@ -185,8 +185,8 @@ private:
     ASTNode *activeNode = nullptr; ///< The current active node of the 
 
     FunctionTableEntry *activeFunction = nullptr; ///< A shortcut to currently processed function, mainly for resolving parameters.
-
-    int variableCount = 0; ///< Attribute used mainly to determine the %rbp relative offset of a newly added variable on the stack.
+    int currentVariableCount = 0; ///< Helper attribute for seting the variable count of a new active function.
+    int currentStackSpace = 0; ///< Helper attribute for setting needed stack space of current active function. Needed because of varables.
 
 private:
     /**

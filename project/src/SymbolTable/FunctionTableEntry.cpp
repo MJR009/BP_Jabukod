@@ -82,19 +82,27 @@ Type FunctionTableEntry::GetParameterType(int order) {
 
 
 
-void FunctionTableEntry::SetTotalVariables(int variableCount) {
-    this->totalVariables = variableCount;
+void FunctionTableEntry::SetVariableCount(int variableCount) {
+    this->variableCount = variableCount;
 }
 
-int FunctionTableEntry::GetTotalVariables() {
-    return this->totalVariables;
+int FunctionTableEntry::GetVariableCount() {
+    return this->variableCount;
+}
+
+void FunctionTableEntry::SetVariableStackSpace(int variableStackSpace) {
+    this->variableStackSpace = variableStackSpace;
+}
+
+int FunctionTableEntry::GetVariableStackSpace() {
+    return this->variableStackSpace;
 }
 
 
 
 void FunctionTableEntry::Print() const {
     cout << YELLOW << this->name << DEFAULT;
-    cout << DIM << " (" << this->totalVariables << " variables)" << DEFAULT << endl;
+    cout << DIM << " (" << this->variableCount << " variables)" << DEFAULT << endl;
 
     cout << DIM << "  < returns: " << DEFAULT;
     cout << this->returnType.toString() << DIM << " >" << DEFAULT << endl;

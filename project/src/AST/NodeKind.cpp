@@ -21,7 +21,6 @@ string NodeKind::toString() const {
         Conversion_case(MULTIPLICATION);
         Conversion_case(DIVISION);
         Conversion_case(MODULO);
-        Conversion_case(POWER);
         Conversion_case(LEFT_SHIFT);
         Conversion_case(RIGHT_SHIFT);
         Conversion_case(BIT_OR);
@@ -57,8 +56,6 @@ string NodeKind::toString() const {
 
         Conversion_case(RETURN);
         Conversion_case(EXIT);
-        Conversion_case(SUSPEND);
-        Conversion_case(RESUME);
         Conversion_case(CONTINUE);
         Conversion_case(BREAK);
         Conversion_case(REDO);
@@ -89,8 +86,6 @@ string NodeKind::toSign() const {
         case NodeKind::MULTIPLICATION: return "*";
         case NodeKind::DIVISION: return "/";
         case NodeKind::MODULO: return "%";
-
-        case NodeKind::POWER: return "**";
 
         case NodeKind::LEFT_SHIFT: return "<<";
         case NodeKind::RIGHT_SHIFT: return ">>";

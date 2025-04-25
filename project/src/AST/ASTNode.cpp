@@ -211,7 +211,6 @@ void ASTNode::Print() {
         case NodeKind::CONTINUE: case NodeKind::BREAK:
         case NodeKind::REDO: case NodeKind::RESTART:
         case NodeKind::RETURN: case NodeKind::EXIT:
-        case NodeKind::SUSPEND: case NodeKind::RESUME:
         case NodeKind::READ: case NodeKind::WRITE:
             cout << this->kind.toString();
             break;
@@ -320,7 +319,7 @@ void ASTNode::Print() {
             break;
 
         case NodeKind::ADDITION: case NodeKind::SUBTRACTION: case NodeKind::MULTIPLICATION:
-        case NodeKind::DIVISION: case NodeKind::MODULO: case NodeKind::POWER:
+        case NodeKind::DIVISION: case NodeKind::MODULO:
         case NodeKind::LEFT_SHIFT: case NodeKind::RIGHT_SHIFT: case NodeKind::BIT_AND:
         case NodeKind::BIT_XOR: case NodeKind::BIT_OR: case NodeKind::OR:
         case NodeKind::AND: case NodeKind::LESS: case NodeKind::LESS_EQUAL:

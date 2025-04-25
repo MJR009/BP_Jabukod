@@ -80,10 +80,7 @@ public:
     void GenerateRETURN(ASTNode *node);
     void GenerateEXIT(ASTNode *node);
     /*
-    void GeneratePOWER(ASTNode *node);
     void GenerateFOREACH(ASTNode *node);
-    void GenerateSUSPEND(ASTNode *node);
-    void GenerateRESUME(ASTNode *node);
     void GenerateREAD(ASTNode *node);
     */
     /** @} */

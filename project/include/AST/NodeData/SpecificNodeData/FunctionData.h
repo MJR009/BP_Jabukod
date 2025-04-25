@@ -24,8 +24,8 @@ public:
 
     /// @brief Gets the name of the function.
     string GetName();
-    /// @brief Retrieves how many variables are located within the function.
-    int GetVariableCount();
+    /// @brief Retrieves how many bytes the associated function needs to allocate for its local variables.
+    int GetNeededStackSpace();
 
 private:
     FunctionTableEntry *location; ///< Memory location of the defined function.

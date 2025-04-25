@@ -151,19 +151,6 @@ any ASTGenerationVisitor::visitMulDivModExpression(JabukodParser::MulDivModExpre
     return OK;
 }
 
-any ASTGenerationVisitor::visitExponentExpression(JabukodParser::ExponentExpressionContext *ctx) {
-    this->ast.AddNode(NodeKind::POWER);
-    this->visitChildren(ctx);
-
-    Type type = this->ast.ConvertExpressionBinaryArithmetic(ctx->getStart());
-    ExpressionData *data = new ExpressionData(type);
-    this->ast.GiveActiveNodeData(data);
-
-    this->ast.MoveToParent();
-
-    return OK;
-}
-
 any ASTGenerationVisitor::visitShiftExpression(JabukodParser::ShiftExpressionContext *ctx) {
     NodeKind sign = NodeKind::toNodeKind( ctx->sign->getText() );
     this->ast.AddNode( sign );
@@ -480,22 +467,6 @@ any ASTGenerationVisitor::visitExitStatement(JabukodParser::ExitStatementContext
     this->visit(ctx->expression());
     this->ast.ConvertExit(ctx->getStart());
     
-    this->ast.MoveToParent();
-
-    return OK;
-}
-
-any ASTGenerationVisitor::visitSuspendStatement(JabukodParser::SuspendStatementContext *ctx) {
-    this->ast.AddNode(NodeKind::SUSPEND);
-    this->visitChildren(ctx);
-    this->ast.MoveToParent();
-
-    return OK;
-}
-
-any ASTGenerationVisitor::visitResumeStatement(JabukodParser::ResumeStatementContext *ctx) {
-    this->ast.AddNode(NodeKind::RESUME);
-    this->visitChildren(ctx);
     this->ast.MoveToParent();
 
     return OK;

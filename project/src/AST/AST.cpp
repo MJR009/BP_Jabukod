@@ -58,13 +58,16 @@ FunctionTableEntry *AST::SetActiveFunction(const string & name) {
     FunctionTableEntry *function = this->IsFunctionDefined(name); // at this point the function is defined in symbol table
     this->activeFunction = function;
 
-    this->variableCount = 0;
+    this->currentVariableCount = 0;
+    this->currentStackSpace = 0;
 
     return function;
 }
 
 void AST::ResetActiveFunction() {
-    this->activeFunction->SetTotalVariables(this->variableCount);
+    this->activeFunction->SetVariableCount(this->currentVariableCount);
+    this->activeFunction->SetVariableStackSpace(this->currentStackSpace * 8);
+
     this->activeFunction = nullptr;
 }
 
@@ -820,7 +823,8 @@ Variable *AST::PutVariableInForHeader(
         this->parser->notifyErrorListeners(variable, INTERNAL_ID_USE, nullptr);
     }
 
-    return data->AddVariable(name, specifier, type, this->GetStackOffset(type)); // in for header there can only occur one definition, no need to check
+    // in for header the definition cannot be static, no need to check
+    return data->AddVariable(name, specifier, type, this->GetStackOffset(type));
 }
 
 Variable *AST::PutVariableInForeachHeader(
@@ -930,16 +934,18 @@ bool AST::IsListExpression(JabukodParser::ExpressionContext *expression) {
 
 
 int AST::GetStackOffset(Type type) {
-    int amount = type.GetSize();
+    const int dataScale = 8;
 
-    if (amount == 0) { // SCALAR
-        this->variableCount++;
+    this->currentVariableCount++;
+
+    int valueCount = type.GetSize();
+    if (valueCount == 0) { // SCALAR
+        this->currentStackSpace += dataScale;
     } else { // ARRAY
-        this->variableCount += amount;
+        this->currentStackSpace += valueCount * dataScale;
     }
 
-    const int offsetBase = -8;
-    return (offsetBase * this->variableCount);
+    return ( - this->currentStackSpace); // the stack grows down
 }
 
 

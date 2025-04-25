@@ -48,7 +48,6 @@ public:
     // any visitEnumItem(JabukodParser::EnumItemContext *ctx) override;
     any visitListAccessExpression(JabukodParser::ListAccessExpressionContext *ctx) override;
     any visitMulDivModExpression(JabukodParser::MulDivModExpressionContext *ctx) override;
-    any visitExponentExpression(JabukodParser::ExponentExpressionContext *ctx) override;
     any visitShiftExpression(JabukodParser::ShiftExpressionContext *ctx) override;
     any visitBitOrExpression(JabukodParser::BitOrExpressionContext *ctx) override;
     any visitAssignExpression(JabukodParser::AssignExpressionContext *ctx) override;
@@ -80,8 +79,6 @@ public:
     // any visitFunctionCallStatement(JabukodParser::FunctionCallStatementContext *ctx) override; // processed by functionCall
     any visitReturnStatement(JabukodParser::ReturnStatementContext *ctx) override;
     any visitExitStatement(JabukodParser::ExitStatementContext *ctx) override;
-    any visitSuspendStatement(JabukodParser::SuspendStatementContext *ctx) override;
-    any visitResumeStatement(JabukodParser::ResumeStatementContext *ctx) override;
     any visitContinueStatement(JabukodParser::ContinueStatementContext *ctx) override;
     any visitBreakStatement(JabukodParser::BreakStatementContext *ctx) override;
     any visitRedoStatement(JabukodParser::RedoStatementContext *ctx) override;

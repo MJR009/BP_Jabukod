@@ -154,7 +154,7 @@ string Transform::ConditionToJump(NodeKind condition, Type comparisonType) {
         {JAE, JA, JBE, JB, JNE, JE},  // unsigned - used by SSE
         {JGE, JG, JLE, JL, JNE, JE}   // signed
     };
-    const int nodeKindCorrection = -17;
+    const int nodeKindCorrection = - NodeKind::LESS;
 
     int jumpSelector = condition + nodeKindCorrection;
     int signednessSelector = (comparisonType == Type::FLOAT) ? 0 : 1;
@@ -168,7 +168,7 @@ string Transform::ConditionToCMove(NodeKind condition, Type comparisonType) {
         {CMOVBQ, CMOVBEQ, CMOVAQ, CMOVAEQ, CMOVEQ, CMOVNEQ},  // SSE
         {CMOVLQ, CMOVLEQ, CMOVGQ, CMOVGEQ, CMOVEQ, CMOVNEQ}   // signed
     };
-    const int nodeKindCorrection = -17;
+    const int nodeKindCorrection = - NodeKind::LESS;
 
     int cmoveSelector = condition + nodeKindCorrection;
     int signednessSelector = (comparisonType == Type::FLOAT) ? 0 : 1;

@@ -1,0 +1,7 @@
+int main() {
+    float index = 0;
+    for (;;index = index + 1) {
+        int n[5] = {1, true, 3.14};
+        restart;
+    }
+}

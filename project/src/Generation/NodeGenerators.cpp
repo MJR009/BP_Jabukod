@@ -22,7 +22,7 @@ void NodeGenerators::GenerateFUNCTION(ASTNode *node) {
     string label = Transform::IdentifierToLabel(function->GetName());
     gen->instructions.emplace_back(label);
 
-    int neededStackSpace = 8 * function->GetVariableCount();
+    int neededStackSpace = function->GetNeededStackSpace();
     gen->ConnectSequence( Snippets::Prolog(neededStackSpace) );
 
     for (int i = 0; i < node->GetChildrenCount(); i++) {

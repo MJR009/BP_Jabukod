@@ -85,7 +85,7 @@ private:
     Type type; ///< Variables data type.
     any defaultValue; ///< Optional default value, associated with global and static variables.
 
-    int stackOffset; ///< Location this variable will be accessed on stack during runtime.
+    int stackOffset; ///< Location this variable will be accessed on stack during runtime, if it is local.
     bool isGlobal; ///< Global flag.
     bool isParameter; ///< Parameter flag.
     string parameterStorage; ///< If the variable is a parameter, this string contains where it is stored.

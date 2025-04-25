@@ -1,7 +1,7 @@
 int main() {
-    //if (5 && 3) {
-    //    write "HERE\n";
-    //}
+    if (5 && 3) {
+        write "HERE\n";
+    }
 
     if (5.2 < 3.6) {
         write "THEN\n";

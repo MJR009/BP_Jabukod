@@ -42,7 +42,7 @@ public:
     /// @brief Returns a new type, representing one item of an array type. 
     Type GetScalarEquivalent();
 
-    /// @brief Transforms the type into a string for printing.
+    /// @brief Returns the type as a string for printing.
     string toString() const;
     /// @brief Transform a string representing a data type into a type object.
     static Type toType(const string & str);

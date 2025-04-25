@@ -26,7 +26,6 @@ public:
         FUNCTION,
     
         MULTIPLICATION, DIVISION, MODULO,
-        POWER,
         LEFT_SHIFT, RIGHT_SHIFT,
         BIT_OR,
         ADDITION, SUBTRACTION,
@@ -37,16 +36,16 @@ public:
         LESS, LESS_EQUAL, GREATER, GREATER_EQUAL,
         EQUAL, NOT_EQUAL,
         UNARY_MINUS, BIT_NOT, NOT,
-        minus, // universal option for unary and binary minus, which one resolved in respective context
+        minus, ///< Universal option for unary and binary minus, which one is resolved in respective context.
     
         VARIABLE, LITERAL,
     
         ASSIGNMENT, FUNCTION_CALL,
         IF, WHILE, FOR, FOREACH,
-        FOR_HEADER1, FOR_HEADER2, FOR_HEADER3, // needed for diferentiation
-        BODY, // general for all structured control flow
+        FOR_HEADER1, FOR_HEADER2, FOR_HEADER3,
+        BODY, ///< General for all structured control flow.
     
-        RETURN, EXIT, SUSPEND, RESUME,
+        RETURN, EXIT,
         CONTINUE, BREAK, REDO, RESTART,
     
         READ, WRITE,
@@ -67,9 +66,9 @@ public:
     /// @brief To ease access to the actual node kind, namespace resolution operator :: can be used.
     operator Options() const { return value; }
 
-    /// @brief Converts node kind to string. 
+    /// @brief Returns a string representing the node kind. 
     string toString() const;
-    /// @brief For expression operators, converts node kind to sign. 
+    /// @brief For expression operators, returns a string with a sign representing the node kind. 
     string toSign() const;
     /// @brief Converts expression sign to node kind.
     static NodeKind toNodeKind(const string & sign);

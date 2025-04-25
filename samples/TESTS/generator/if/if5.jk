@@ -1,0 +1,5 @@
+bool value = false;
+
+int main() {
+    if (value) write "TRUE\n"; else write "FALSE\n";
+}

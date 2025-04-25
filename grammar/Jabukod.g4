@@ -65,7 +65,6 @@ expression
     : functionCall                                              # functionCallExpression
     | IDENTIFIER listAccess                                     # listAccessExpression
     | list                                                      # listExpression
-    | <assoc=right> expression '**' expression                  # exponentExpression
     | <assoc=right> sign=( '-' | '~' | '!' ) expression         # prefixUnaryExpression
     | expression sign=( '*' | '/' | '%' ) expression            # mulDivModExpression
     | expression sign=( '+' | '-' ) expression                  # addSubExpression
@@ -115,8 +114,6 @@ simpleStatement
     | functionCall                                                  # functionCallStatement
     | 'return' expression?                                          # returnStatement
     | 'exit' expression                                             # exitStatement
-    | 'suspend'                                                     # suspendStatement
-    | 'resume'                                                      # resumeStatement
     | 'continue'                                                    # continueStatement
     | 'break'                                                       # breakStatement
     | 'redo'                                                        # redoStatement

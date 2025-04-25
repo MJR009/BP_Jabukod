@@ -15,6 +15,6 @@ string FunctionData::GetName() {
     return "ERR";
 }
 
-int FunctionData::GetVariableCount() {
-    return this->location->GetTotalVariables();
+int FunctionData::GetNeededStackSpace() {
+    return this->location->GetVariableStackSpace();
 }

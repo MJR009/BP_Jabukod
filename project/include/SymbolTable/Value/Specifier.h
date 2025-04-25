@@ -27,7 +27,7 @@ public:
     /// @brief For easier usage, the specifiers can be accessed with :: operator.
     operator Options() const { return value; }
 
-    /// @brief Transforms the specifier into its representing string.
+    /// @brief Returns a string, representing the specifier.
     string toString() const;
     /// @brief Transforms a proveded string into a storage specifier object.
     static StorageSpecifier toSpecifier(const string & str);
