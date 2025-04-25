@@ -66,7 +66,7 @@ FunctionTableEntry *AST::SetActiveFunction(const string & name) {
 
 void AST::ResetActiveFunction() {
     this->activeFunction->SetVariableCount(this->currentVariableCount);
-    this->activeFunction->SetVariableStackSpace(this->currentStackSpace * 8);
+    this->activeFunction->SetVariableStackSpace(this->currentStackSpace);
 
     this->activeFunction = nullptr;
 }
@@ -697,6 +697,18 @@ void AST::CorrectStaticVariables() {
 
     this->PurgeLocalStaticVariables();
     this->RemoveStaticDefDeclSubtrees();
+}
+
+
+
+void AST::PrepareForeachControlVariable() {
+    ASTNode *controlVariableNode = this->activeNode->GetChild(0);
+    ASTNode *iteratedArrayNode = this->activeNode->GetChild(1);
+
+    Variable *controlVariable = controlVariableNode->GetData<VariableData>()->GetSelf();
+    Variable *iteratedArray = iteratedArrayNode->GetData<VariableData>()->GetSelf();
+
+    controlVariable->MakeForeachControlVariable(iteratedArray);
 }
 
 

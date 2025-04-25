@@ -133,7 +133,7 @@ string Transform::VariableToLocation(VariableData *data) {
     return "ERR";
 }
 
-string Transform::ListAccessToLocation(VariableData *array) {
+string Transform::ListAccessToLocation(Variable *array, string indexRegister) {
     string address;
 
     if (array->IsGlobal()) {
@@ -143,7 +143,7 @@ string Transform::ListAccessToLocation(VariableData *array) {
         address += "(" RBP; // %rbp base
     }
 
-    address += (", " RAX ", 8)"); // %rax index, scale is 8 bytes
+    address += (", " + indexRegister + ", 8)"); // %rax index, scale is 8 bytes
 
     return address;
 }

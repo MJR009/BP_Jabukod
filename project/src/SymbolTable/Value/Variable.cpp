@@ -56,6 +56,21 @@ void Variable::SetDefaultValue(any value) {
 
 
 
+void Variable::MakeForeachControlVariable(Variable *iteratedArray) {
+    this->isForeachControlVariable = true;
+    this->iteratedArray = iteratedArray;
+}
+
+bool Variable::IsControlVariable() {
+    return this->isForeachControlVariable;
+}
+
+Variable *Variable::GetIteratedArray() {
+    return this->iteratedArray;
+}
+
+
+
 void Variable::Print() const {
     cout <<
         this->storage.toString() << " " <<

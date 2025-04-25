@@ -92,6 +92,7 @@ void Generator::GenerateNode(ASTNode *node) {
         Generate_case(FOR_HEADER1);
         Generate_case(FOR_HEADER2);
         Generate_case(FOR_HEADER3);
+        Generate_case(FOREACH);
         Generate_case(BREAK);
         Generate_case(CONTINUE);
         Generate_case(REDO);
@@ -99,9 +100,6 @@ void Generator::GenerateNode(ASTNode *node) {
         Generate_case(FUNCTION_CALL);
         Generate_case(RETURN);
         Generate_case(EXIT);
-        /*
-        Generate_case(FOREACH);
-        */
         default:
             break;
     }

@@ -165,6 +165,9 @@ public:
     /// @brief Function performing the completee transformation of all program static varaibles into global ones.
     void CorrectStaticVariables();
 
+    /// @brief After processing a foreach header, flags the control variable for further processing.
+    void PrepareForeachControlVariable();
+
     /// @brief Prints out pretty formatted abstract syntax tree representation.
     void Print();
 

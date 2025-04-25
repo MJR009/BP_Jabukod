@@ -615,6 +615,8 @@ any ASTGenerationVisitor::visitForeachHeader(JabukodParser::ForeachHeaderContext
         this->ast.CheckIfValidForeachArray(ctx->expression()->getStart());
     }
 
+    this->ast.PrepareForeachControlVariable();
+
     return OK;
 }
 

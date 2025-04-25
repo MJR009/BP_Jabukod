@@ -21,7 +21,7 @@
 class Snippets {
 public:
     /**
-     * @name Names of different literals, which are always the same.
+     * @defgroup floatLiterals Names of different literals, which are always the same.
      * 
      * @{
      */

@@ -30,7 +30,7 @@ public:
     // Commented out methods included for completeness, default implementation used.
 
     /**
-     * @name Implemented visit methods.
+     * @name Implemented visitor methods.
      * 
      * @{
      */

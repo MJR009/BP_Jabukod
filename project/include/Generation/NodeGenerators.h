@@ -72,6 +72,7 @@ public:
     void GenerateFOR_HEADER1(ASTNode *node);
     void GenerateFOR_HEADER2(ASTNode *node);
     void GenerateFOR_HEADER3(ASTNode *node);
+    void GenerateFOREACH(ASTNode *node);
     void GenerateBREAK(ASTNode *node);
     void GenerateCONTINUE(ASTNode *node);
     void GenerateREDO(ASTNode *node);
@@ -79,9 +80,6 @@ public:
     void GenerateFUNCTION_CALL(ASTNode *node);
     void GenerateRETURN(ASTNode *node);
     void GenerateEXIT(ASTNode *node);
-    /*
-    void GenerateFOREACH(ASTNode *node);
-    */
     /** @} */
 
 private:
@@ -110,6 +108,9 @@ private:
     /// @brief Literal float and string have to be in .data section, immediate values cannot be used
     void AddNeededDeclarationData(Type declarationType);
 
+    /// @brief Generates correct array access for a foreach loop control variable and returns where it should be accessed afterwards.
+    string EvaluateControlVariableAccess(ASTNode *controlVariable);
+
 private:
     /**
      * @name Functions used for correctly resolving labels of control flow structures.
@@ -121,7 +122,7 @@ private:
      */
     // TODO FOREACH
     /// @brief Differentiable loops.
-    enum LoopKind { WHILE, FOR };
+    enum LoopKind { WHILE, FOR, FOREACH };
     stack<pair<vector<string>, LoopKind>> loopStack; ///< Used to resolve jump targets.
 
     void PushLoopLabels(const vector<string> & labels, LoopKind kind); ///< upon entering a loop, it's labels are stored.

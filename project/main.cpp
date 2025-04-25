@@ -16,7 +16,7 @@ void ERR::BadData() {
 #include "Compile.h"
 
 /**
- * @defgroup _2 Main function
+ * @defgroup mainFunction Main function
  * @brief Program entry point.
  * 
  * @{

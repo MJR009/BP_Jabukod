@@ -33,4 +33,15 @@ public:
     static int FOR_BODY; ///< Location of the for body label.
     static int FOR_UPDATE; ///< Location of the label preceeding the update step of the for loop.
     static int FOR_END; ///< Location of the label at the end of the for loop.
+
+    /// @brief Generates labels for a foreach statement.
+    static const vector<string> MakeNewFOREACHLabelSet();
+    static int FOREACH_INIT; ///< Location of inicialisation part label of the foreach loop.
+    static int FOREACH_BODY; ///< Location of the foreach body label.
+    static int FOREACH_STEP; ///< Location of the foreach label located before index update.
+    static int FOREACH_END; ///< Location of the foreach ending label
+
+private:
+    /// @brief Generates a numerical string for better unique identification of a control flow structure.
+    static string GetUnique();
 };

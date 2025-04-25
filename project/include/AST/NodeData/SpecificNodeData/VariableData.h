@@ -59,6 +59,8 @@ public:
     bool IsParameter();
     /// @brief Returns the memory location (register or stack offset) where the associated varaible is to be stored during runtime. 
     string GetParamaterLocation();
+    /// @brief Returns true, if the variable generated is marked as a foreach iterator.
+    bool IsForeachControlVariable();
 
     /// @brief Updates the variables name.
     void SetName(const string & name);

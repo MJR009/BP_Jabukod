@@ -9,7 +9,7 @@
 #include "common.h"
 
 /**
- * @name Stack manipulation.
+ * @defgroup stackManipulation Used stack manipulation instructions.
  * 
  * @{
  */
@@ -20,7 +20,7 @@
 /** @} */
 
 /**
- * @name Data transfers.
+ * @defgroup dataTransfers Used data transfer instructions.
  * 
  * @{
  */
@@ -31,7 +31,7 @@
 /** @} */
 
 /**
- * @name OS interaction.
+ * @defgroup OS Used OS interaction instructions.
  * 
  * @{
  */
@@ -39,7 +39,7 @@
 /** @} */
 
 /**
- * @name Data type conversions.
+ * @defgroup dataTypeConversions Used type conversion instructions.
  * 
  * @{
  */
@@ -49,7 +49,7 @@
 /** @} */
 
 /**
- * @name Conditions and coditional operations.
+ * @defgroup conditionInstructions Used condition and coditional operation instructions.
  * 
  * @{
  */
@@ -82,7 +82,7 @@
 /** @} */
 
 /**
- * @name General computation.
+ * @defgroup compInstructuins Instruction used for general computation.
  * 
  * @{
  */
@@ -122,6 +122,8 @@
 #define NEGQ "negq"
 
 #define NOTQ "notq"
+
+#define INCQ "incq"
 /** @} */
 
 /**

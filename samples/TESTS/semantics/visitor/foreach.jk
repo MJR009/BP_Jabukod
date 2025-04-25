@@ -1,12 +1,13 @@
+int global[3];
+
 int main() {
-    int x;
+    int X;
     int y[3];
 
-    foreach (int x : y) {
-        write "item";
+    foreach (int x : global) {
+        X = x + 1;
+        X = global[0];
+        write "step\n";
     }
-
-    //for (string x = "x";;) {
-    //    return 0;
-    //}
 }
+

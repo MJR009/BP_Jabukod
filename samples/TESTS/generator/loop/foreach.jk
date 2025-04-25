@@ -1,0 +1,39 @@
+//int array[3] = {1.0, 2.0, 3.0};
+
+int main() {
+    int array[3] = {1.0, 2.0, 3.0};
+    
+    //foreach(int x : array) {
+    //    write "HERE\n";
+    //    if (x == 2) break;
+    //}
+
+    //foreach(int x : array) {
+    //    if (x != 2) {
+    //        write "HERE\n";
+    //        continue;
+    //    } else {
+    //        break;
+    //    }
+    //}
+
+/*
+    bool flag = true;
+    foreach (int x : array) {
+        write "HERE\n";
+
+        flag = !flag;
+
+        if ( ! flag) redo;
+    }
+*/
+
+    bool flag = false;
+    foreach (int x : array) {
+        if ((x > 2) && ( ! flag)) {
+            flag = true;
+            restart;
+        }
+        write "HERE\n";
+    }
+}

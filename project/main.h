@@ -16,7 +16,7 @@
 #define ARGUMENTS "adDgho:"
 
 /**
- * @name Macros defining command line argument error text.
+ * @defgroup commandLineArgs Macros defining command line argument error text.
  * @{
  */
 #define INVALID_CLA ("invalid command line arguments, try " BOLD "-h" DEFAULT) ///< Unexpected or extraneous command line arguments

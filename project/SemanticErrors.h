@@ -11,7 +11,7 @@
 #pragma once
 
 /**
- * @name Errors that can occur when parsing global symbols
+ * @defgroup globalSymbolErrors Errors that can occur when parsing global symbols 
  * @{
  */
 #define VARIABLE_REDEFINITION "identifier used for variable is already taken"
@@ -34,7 +34,7 @@
 /** @} */
 
 /**
- * @name Errors that can occur when parsing local symbols
+ * @defgroup localSymbolErrors Errors that can occur when parsing local symbols
  * @{
  */
 #define VARIABLE_SAME_AS_PARAMETER "variable name in functions top scope must not be the same as a its parameter"
@@ -71,14 +71,17 @@
 /** @} */
 
 /**
- * @name Internal IDs will cause an error when compiling. This ensures there are no collisions with user defined ones.
+ * @defgroup internalIdError Internal identifier usage error
+ * 
+ * Internal IDs will cause an error when compiling. This ensures there are no collisions with user defined ones.
+ * 
  * @{
  */
 #define INTERNAL_ID_USE "identifiers may not start with \"__\" prefix"
 /** @} */
 
 /**
- * @name Possible enum errors
+ * @defgroup enumErrors Possible enum errors
  * @{
  */
 #define UNDEFINED_ENUM_DECLARATION "variable declared as enum cannot use an undefined enum"
@@ -88,14 +91,14 @@
 /** @} */
 
 /**
- * @name Possible static variable errors
+ * @defgroup staticVariableErrors Possible static variable errors
  * @{
  */
 #define STATIC_INIT_NOT_LITERAL "static variables can only be initialised by literals"
 /** @} */
 
 /**
- * @name Possible array related errors
+ * @defgroup arrayRelatedErrors Possible array related errors
  * @{
  */
 #define INVALID_ARRAY_SIZE "array size may only be a positive integer"

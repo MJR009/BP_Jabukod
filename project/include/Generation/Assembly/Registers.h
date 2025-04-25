@@ -9,21 +9,21 @@
 #include "common.h"
 
 /**
- * @name Preseved registers.
+ * @defgroup presevedRegisters Used preserved registers.
  * 
  * @{
  */
 #define RBX "%rbx" ///< operand
 #define RSP "%rsp"
 #define RBP "%rbp"
-#define R12 "%r12"
+#define R12 "%r12" ///< index of the control variable inside a foreach loop
 #define R13 "%r13"
 #define R14 "%r14"
 #define R15 "%r15"
 /** @} */
 
 /**
- * @name Scratch registers.
+ * @defgroup scratchRegisters Used scratch registers.
  * 
  * @{
  */
@@ -34,12 +34,14 @@
 #define RCX "%rcx" ///< function argument 4
 #define R8 "%r8" ///< function argument 5
 #define R9 "%r9" ///< function argument 6
+
+/// @brief hard set to 1 at the start of each program, used for bool conversions, as conditional move instructions do not work with immediate values
 #define R10 "%r10"
 #define R11 "%r11"
 /** @} */
 
 /**
- * @name Registers needed for bit shift operations.
+ * @defgroup bitShiftRegister Register parts needed for bit shift operations.
  * 
  * @{
  */
@@ -48,7 +50,7 @@
 /** @} */
 
 /**
- * @name Floating point SSE scratch registers.
+ * @defgroup sseRegisters Used floating point SSE scratch registers.
  * 
  * @{
  */
@@ -62,6 +64,11 @@
 #define XMM7 "%xmm7" ///< operand
 /** @} */
 
+/**
+ * @brief ripRegister instruction pointer register.
+ * 
+ * @{
+ */
 #define RIP "%rip"
 /** @} */
 

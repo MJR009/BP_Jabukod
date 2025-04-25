@@ -15,7 +15,7 @@
 #include "main.h"
 
 /**
- * @defgroup _1 Functions for compilation
+ * @defgroup compilationFunctions Functions for compilation
  * @brief Functions providing the compilation of the source input files.
  * 
  * @{

@@ -70,6 +70,13 @@ public:
     /// @brief Sets default value. Important mainly with static variables.
     void SetDefaultValue(any value);
 
+    /// @brief Gives the variable all data needed to act as a foreach control variable.
+    void MakeForeachControlVariable(Variable *iteratedArray);
+    /// @brief Returns true, if this variable is set as a foreach variable.
+    bool IsControlVariable();
+    /// @brief Returns the array variable that foreach control variable iterates over, if this is one.
+    Variable *GetIteratedArray();
+
     /// @brief Prints all data about the variable
     void Print() const override;
     /// @brief Prints the variable as local.
@@ -89,4 +96,7 @@ private:
     bool isGlobal; ///< Global flag.
     bool isParameter; ///< Parameter flag.
     string parameterStorage; ///< If the variable is a parameter, this string contains where it is stored.
+
+    bool isForeachControlVariable = false; ///< foreach loop control variable acts as a kind of fake variable, the array needs to be accessed.
+    Variable *iteratedArray = nullptr; ///< foreach loop control variable will iterate over this arrray.
 };

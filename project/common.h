@@ -30,7 +30,9 @@
 using namespace std;
 
 /**
- * @name Exit codes. Sometimes used as placeholders for return type "any" not being used.
+ * @defgroup exitCodes Exit codes.
+ * 
+ * Sometimes used as placeholders for return type "any" not being used.
  * @{
  */
 #define OK 0
@@ -38,7 +40,7 @@ using namespace std;
 /** @} */
 
 /**
- * @name Text characteristics ANSI escape sequences.
+ * @defgroup ansiText Text characteristics ANSI escape sequences.
  * @{
  */
 #define BOLD "\033[1m"
@@ -47,7 +49,7 @@ using namespace std;
 /** @} */
 
 /**
- * @name Text color ANSI escape sequences.
+ * @defgroup ansiColors Text color ANSI escape sequences.
  * @{
  */
 #define RED "\033[31m"
@@ -58,11 +60,11 @@ using namespace std;
 #define TEAL "\033[38;2;77;214;164m"
 /** @} */
 
-/// @name Resets text to default after ANSI escape sequence usage.
+/// @defgroup ansiReset Resets text to default after ANSI escape sequence usage.
 #define DEFAULT "\033[0m"
 
 /**
- * @name Table border characters. Used for printing abstract syntax trees.
+ * @defgroup unicodeBorder Table border characters. Used for printing abstract syntax trees.
  * @{
  */
 #define VERTICAL "\u2502"
@@ -73,6 +75,11 @@ using namespace std;
 
 namespace ERR {
 
-void BadData(); ///< Function to be called when an error occurs in structure of generated internal code representation.
+/**
+ * @defgroup BadData Bad data error
+ * 
+ * Function to be called when an error occurs in structure of generated internal code representation.
+ */
+void BadData();
 
 } // namespace ERR

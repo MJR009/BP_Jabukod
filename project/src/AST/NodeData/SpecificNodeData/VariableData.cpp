@@ -65,6 +65,10 @@ string VariableData::GetParamaterLocation() {
     return this->location->GetParameterLocation();
 }
 
+bool VariableData::IsForeachControlVariable() {
+    return this->location->IsControlVariable();
+}
+
 
 
 void VariableData::SetName(const string & name) {

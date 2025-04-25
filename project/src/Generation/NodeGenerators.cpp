@@ -71,7 +71,13 @@ void NodeGenerators::GenerateVARIABLE(ASTNode *node) {
     VariableData *data = node->GetData<VariableData>();
     Type variableType = data->GetType();
 
-    string source = Transform::VariableToLocation(data);
+    string source;
+
+    if (data->IsForeachControlVariable()) {
+        source = this->EvaluateControlVariableAccess(node);
+    } else {
+        source = Transform::VariableToLocation(data);
+    }
 
     switch (variableType) {
         case Type::INT:
@@ -128,7 +134,7 @@ void NodeGenerators::GenerateVARIABLE_DECLARATION(ASTNode *node) {
         for (int i = 0; i < size; i++) {
             gen->instructions.emplace_back(MOVQ, Transform::IntToImmediate(i), RAX);
 
-            string location = Transform::ListAccessToLocation(data);
+            string location = Transform::ListAccessToLocation(data->GetSelf());
             gen->ConnectSequence( Snippets::DeclareDefault(itemType, location) );
         }
     }
@@ -149,7 +155,7 @@ void NodeGenerators::GenerateLIST_ACCESS(ASTNode *node) {
         gen->instructions.emplace_back(LEA, Transform::GlobalToAddress(array->GetName()), RBX);
     }
 
-    string source = Transform::ListAccessToLocation(array);
+    string source = Transform::ListAccessToLocation(array->GetSelf());
 
     if (node->GetData<ExpressionData>()->GetType() == Type::FLOAT) {
         gen->instructions.emplace_back(MOVSS, source, XMM6);
@@ -494,6 +500,37 @@ void NodeGenerators::GenerateFOR_HEADER3(ASTNode *node) {
     gen->GenerateNode(node->GetChild(0));
 }
 
+void NodeGenerators::GenerateFOREACH(ASTNode *node) {
+    VariableData *iteratedArray = node->GetChild(1)->GetData<VariableData>();
+    int iterationCount = iteratedArray->GetType().GetSize();
+
+    vector<string> labelSet = ControlFlow::MakeNewFOREACHLabelSet();
+    this->PushLoopLabels(labelSet, LoopKind::FOREACH);
+
+    string init = labelSet.at(ControlFlow::FOREACH_INIT);
+    string body = labelSet.at(ControlFlow::FOREACH_BODY);
+    string step = labelSet.at(ControlFlow::FOREACH_STEP);
+    string end = labelSet.at(ControlFlow::FOREACH_END);
+
+    gen->instructions.emplace_back( Transform::IdentifierToLabel(init) );
+    gen->instructions.emplace_back(PUSH, R12);
+    gen->instructions.emplace_back(MOVQ, Transform::IntToImmediate(0), R12);
+
+    gen->instructions.emplace_back( Transform::IdentifierToLabel(body) );
+    gen->GenerateNode(node->GetChild(2));
+
+    gen->instructions.emplace_back( Transform::IdentifierToLabel(step) );
+    gen->instructions.emplace_back(CMP, Transform::IntToImmediate(iterationCount - 1), R12);
+    gen->instructions.emplace_back(JE, end);
+    gen->instructions.emplace_back(INCQ, R12);
+    gen->instructions.emplace_back(JMP, body);
+
+    gen->instructions.emplace_back(POP, R12);
+    gen->instructions.emplace_back( Transform::IdentifierToLabel(end) );
+
+    this->PopLoopLabels();
+}
+
 void NodeGenerators::GenerateBREAK(ASTNode *node) {
     gen->instructions.emplace_back(JMP, this->GetBreakTarget());
 }
@@ -648,7 +685,12 @@ void NodeGenerators::EvaluateAssignment(ASTNode *lSide, ASTNode *rSide, Type rSi
     // (2) prepare assignment target
     if (lSide->GetKind() != NodeKind::LIST_ACCESS) { // VARIABLE or VARIABLE_DEFINITION
         VariableData *lData = lSide->GetData<VariableData>();
-        target = Transform::VariableToLocation(lData);
+
+        if (lData->IsForeachControlVariable()) {
+            target = this->EvaluateControlVariableAccess(lSide);
+        } else {
+            target = Transform::VariableToLocation(lData);
+        }
         gen->instructions.emplace_back(opcode, source, target);
 
     } else {
@@ -770,6 +812,19 @@ void NodeGenerators::AddNeededDeclarationData(Type declarationType) {
 
 
 
+string NodeGenerators::EvaluateControlVariableAccess(ASTNode *controlVariable) {
+    Variable *variable = controlVariable->GetData<VariableData>()->GetSelf();
+    Variable *iteratedArray = variable->GetIteratedArray();
+
+    if (iteratedArray->IsGlobal()) { // global array has additional step
+        gen->instructions.emplace_back(LEA, Transform::GlobalToAddress(iteratedArray->GetName()), RBX);
+    }
+
+    return Transform::ListAccessToLocation(iteratedArray, R12);
+}
+
+
+
 // Loop stack:
 
 void NodeGenerators::PushLoopLabels(const vector<string> & labels, LoopKind kind) {
@@ -790,6 +845,8 @@ string NodeGenerators::GetBreakTarget() {
             return this->loopStack.top().first.at(ControlFlow::WHILE_END);
         case LoopKind::FOR:
             return this->loopStack.top().first.at(ControlFlow::FOR_END);
+        case LoopKind::FOREACH:
+            return this->loopStack.top().first.at(ControlFlow::FOREACH_END);
     }
 
     return "ERR";
@@ -801,6 +858,8 @@ string NodeGenerators::GetContinueTarget() {
             return this->loopStack.top().first.at(ControlFlow::WHILE_START);
         case LoopKind::FOR:
             return this->loopStack.top().first.at(ControlFlow::FOR_UPDATE);
+        case LoopKind::FOREACH:
+            return this->loopStack.top().first.at(ControlFlow::FOREACH_STEP);
     }
 
     return "ERR";
@@ -812,6 +871,8 @@ string NodeGenerators::GetRedoTarget() {
             return this->loopStack.top().first.at(ControlFlow::WHILE_BODY);
         case LoopKind::FOR:
             return this->loopStack.top().first.at(ControlFlow::FOR_BODY);
+        case LoopKind::FOREACH:
+            return this->loopStack.top().first.at(ControlFlow::FOREACH_BODY);
     }
 
     return "ERR";
@@ -823,6 +884,8 @@ string NodeGenerators::GetRestartTarget() {
             return this->loopStack.top().first.at(ControlFlow::WHILE_START);
         case LoopKind::FOR:
             return this->loopStack.top().first.at(ControlFlow::FOR_INIT);
+        case LoopKind::FOREACH:
+            return this->loopStack.top().first.at(ControlFlow::FOREACH_INIT);
     }
 
     return "ERR";

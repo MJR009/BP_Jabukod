@@ -47,7 +47,7 @@ public:
     static string IntToImmediate(const int & number); ///< Transforms an integer into an immediate value of the instruction.
     static string LiteralToImmediate(LiteralData *data); ///< Makes an immediate value straight from the literal data.
     static string VariableToLocation(VariableData *data); ///< Returns access to either a register or memory.
-    static string ListAccessToLocation(VariableData *array); ///< Returns access to memory with indexed addressing.
+    static string ListAccessToLocation(Variable *array, string indexRegister = RAX); ///< Returns access to memory with indexed addressing.
     static string ConditionToJump(NodeKind condition, Type comparisonType); ///< Returns the jump instruction used with a specific condition.
     static string ConditionToCMove(NodeKind condition, Type comparisonType); ///< Returns the conditional move instruction used with a specific condition.
     /** @} */
