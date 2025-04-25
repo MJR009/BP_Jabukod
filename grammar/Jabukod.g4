@@ -118,7 +118,6 @@ simpleStatement
     | 'break'                                                       # breakStatement
     | 'redo'                                                        # redoStatement
     | 'restart'                                                     # restartStatement
-    | 'read' IDENTIFIER                                             # readStatement
     | 'write' expression                                            # writeStatement
     ;
 

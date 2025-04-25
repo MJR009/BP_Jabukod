@@ -101,7 +101,6 @@ void Generator::GenerateNode(ASTNode *node) {
         Generate_case(EXIT);
         /*
         Generate_case(FOREACH);
-        Generate_case(READ);
         */
         default:
             break;

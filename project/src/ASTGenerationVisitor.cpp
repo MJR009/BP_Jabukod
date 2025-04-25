@@ -504,26 +504,6 @@ any ASTGenerationVisitor::visitRestartStatement(JabukodParser::RestartStatementC
     return OK;
 }
 
-any ASTGenerationVisitor::visitReadStatement(JabukodParser::ReadStatementContext *ctx) {
-    this->ast.AddNode(NodeKind::READ);
-
-    if (ctx->IDENTIFIER()) {
-        this->ast.AddNode(NodeKind::VARIABLE);
-
-        antlr4::Token *readTarget = ctx->IDENTIFIER()->getSymbol();
-
-        Variable *variable = this->ast.CheckIfEligableForRead(readTarget);
-        VariableData *data = new VariableData(variable);
-        this->ast.GiveActiveNodeData(data);
-
-        this->ast.MoveToParent();
-    }
-
-    this->ast.MoveToParent();
-
-    return OK;
-}
-
 any ASTGenerationVisitor::visitWriteStatement(JabukodParser::WriteStatementContext *ctx) {
     this->ast.AddNode(NodeKind::WRITE);
     this->visit(ctx->expression());

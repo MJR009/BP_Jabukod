@@ -106,7 +106,6 @@ public:
     void CheckIfNodeWithinLoop(antlr4::Token *token);
     void CheckIfModuloFloatOperands(JabukodParser::MulDivModExpressionContext *ctx);
     void CheckIfConstantDeclaration(StorageSpecifier specifier, antlr4::Token *variableToken);
-    Variable *CheckIfEligableForRead(antlr4::Token *variableToken);
     void CheckIfEligableForWrite(antlr4::Token *toWrite);
     bool CheckIfCorrectArgumentCount(int countInTable, antlr4::Token *functionToken);
     void CheckIfValidForInit(antlr4::Token *initToken);

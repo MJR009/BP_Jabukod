@@ -81,7 +81,6 @@ public:
     void GenerateEXIT(ASTNode *node);
     /*
     void GenerateFOREACH(ASTNode *node);
-    void GenerateREAD(ASTNode *node);
     */
     /** @} */
 

@@ -237,23 +237,6 @@ void AST::CheckIfConstantDeclaration(StorageSpecifier specifier, antlr4::Token *
     }
 }
 
-Variable *AST::CheckIfEligableForRead(antlr4::Token *variableToken) {
-    Variable *targetVariable = this->LookupVariable(variableToken);
-    if ( ! targetVariable) {
-        return nullptr;
-    }
-
-    if (targetVariable->GetType() != Type::STRING) {
-        this->parser->notifyErrorListeners(variableToken, READ_NOT_STRING, nullptr);
-    }
-
-    if (targetVariable->GetSpecifier() == StorageSpecifier::CONST) {
-        this->parser->notifyErrorListeners(variableToken, READ_INTO_CONSTANT, nullptr);
-    }
-
-    return targetVariable;
-}
-
 void AST::CheckIfEligableForWrite(antlr4::Token *toWrite) {
     ASTNode *operand = this->activeNode->GetChild(0);
     NodeKind operandKind = operand->GetKind();

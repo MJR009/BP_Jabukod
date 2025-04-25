@@ -61,7 +61,6 @@ string NodeKind::toString() const {
         Conversion_case(REDO);
         Conversion_case(RESTART);
 
-        Conversion_case(READ);
         Conversion_case(WRITE);
 
         Conversion_case(INT2FLOAT);

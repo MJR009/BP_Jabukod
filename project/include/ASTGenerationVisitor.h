@@ -83,7 +83,6 @@ public:
     any visitBreakStatement(JabukodParser::BreakStatementContext *ctx) override;
     any visitRedoStatement(JabukodParser::RedoStatementContext *ctx) override;
     any visitRestartStatement(JabukodParser::RestartStatementContext *ctx) override;
-    any visitReadStatement(JabukodParser::ReadStatementContext *ctx) override;
     any visitWriteStatement(JabukodParser::WriteStatementContext *ctx) override;
     any visitAssignment(JabukodParser::AssignmentContext *ctx) override;
     any visitForHeader(JabukodParser::ForHeaderContext *ctx) override;
