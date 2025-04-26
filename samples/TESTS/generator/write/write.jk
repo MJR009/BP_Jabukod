@@ -1,0 +1,9 @@
+string x = "abc\n";
+
+int main() {
+    string y = "ABCDE\n";
+
+    write x;
+    write y;
+    write "Hello world!\n";
+}

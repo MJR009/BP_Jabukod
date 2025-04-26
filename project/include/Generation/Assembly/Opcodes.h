@@ -57,6 +57,7 @@
 #define CMOVNZ "cmovnz"
 #define JZ "jz"
 #define CMP "cmp"
+#define CMPB "cmpb" ///< Used with write system call.
 #define COMISS "comiss" // "ucomiss"
 #define JMP "jmp"
 #define JLE "jle"

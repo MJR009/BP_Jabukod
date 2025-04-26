@@ -44,29 +44,18 @@ void NodeGenerators::GenerateWRITE(ASTNode *node) {
     ASTNode *operand = node->GetChild(0);
     VariableData *data = operand->GetData<VariableData>();
 
-    // TODO method to calculate length instead of hard coded !!!
-    // THIS WORKD ONLY FOR PRINTING IMMEDIATE STRINGS
-    string operandLength = "$" + to_string( data->GetDefaultValue<string>().size() - 2 ); // -2 for quotes
-
-    // TODO method to backup registers that are used !!! CORRECTLY
-    gen->instructions.emplace_back(PUSH, RSI);
-    gen->instructions.emplace_back(PUSH, RDX);
-    gen->instructions.emplace_back(PUSH, RDI);
-    gen->instructions.emplace_back(PUSH, RCX);
+    gen->ConnectSequence( Snippets::BackupScratchRegisters() );
 
     string opcode = data->IsGlobal() ? LEA : MOV; // load %rip relative address or take address straight from stack
 
-    gen->instructions.emplace_back(opcode, Transform::VariableToLocation(data), "%rsi");
-    gen->instructions.emplace_back(MOV, operandLength, "%rdx");
+    gen->instructions.emplace_back(opcode, Transform::VariableToLocation(data), RSI); // (1) adress
+    gen->ConnectSequence( Snippets::CalculateStringLength() ); // (2) string length
 
-    gen->instructions.emplace_back(MOV, Transform::IntToImmediate(STDOUT), "%rdi");
-    gen->instructions.emplace_back(MOV, Transform::IntToImmediate(SYSCALL_WRITE), "%rax");
+    gen->instructions.emplace_back(MOVQ, Transform::IntToImmediate(STDOUT), RDI); // (3) stream
+    gen->instructions.emplace_back(MOVQ, Transform::IntToImmediate(SYSCALL_WRITE), RAX); // (4) system call number
     gen->instructions.emplace_back(SYSCALL);
 
-    gen->instructions.emplace_back(POP, RCX);
-    gen->instructions.emplace_back(POP, RDI);
-    gen->instructions.emplace_back(POP, RDX);
-    gen->instructions.emplace_back(POP, RSI);
+    gen->ConnectSequence( Snippets::RestoreScratchRegisters() );
 }
 
 void NodeGenerators::GenerateVARIABLE(ASTNode *node) {

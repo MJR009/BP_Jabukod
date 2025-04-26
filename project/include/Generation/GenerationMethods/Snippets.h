@@ -47,4 +47,12 @@ public:
     static const vector<Instruction> PushRegister(Type type, string reg);
     /// @brief Puts a variable into a register from the top of the stack and pops.
     static const vector<Instruction> PopRegister(Type type, string reg);
+
+    /// @brief Pushes all scratch registers to the stack. Used with write syscall.
+    static const vector<Instruction> BackupScratchRegisters();
+    /// @brief Restores all scratch registers from the stack in reverse order. Used with write syscall.
+    static const vector<Instruction> RestoreScratchRegisters();
+
+    /// @brief Evaluetes the length of a string for a write system call. The lenght of a string in %rsi is stored into %rdx.
+    static const vector<Instruction> CalculateStringLength();
 };

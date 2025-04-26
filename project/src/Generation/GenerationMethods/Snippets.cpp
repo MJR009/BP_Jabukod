@@ -103,3 +103,58 @@ const vector<Instruction> Snippets::PopRegister(Type type, string reg) {
 
     return popSequence;
 }
+
+
+
+const vector<Instruction> Snippets::BackupScratchRegisters() {
+    vector<Instruction> backup;
+
+    backup.emplace_back(PUSH, RDI);
+    backup.emplace_back(PUSH, RSI);
+    backup.emplace_back(PUSH, RDX);
+    backup.emplace_back(PUSH, RCX);
+    backup.emplace_back(PUSH, R8);
+    backup.emplace_back(PUSH, R9);
+
+    return backup;
+}
+
+const vector<Instruction> Snippets::RestoreScratchRegisters() {
+    vector<Instruction> restore;
+
+    restore.emplace_back(POP, R9);
+    restore.emplace_back(POP, R8);
+    restore.emplace_back(POP, RCX);
+    restore.emplace_back(POP, RDX);
+    restore.emplace_back(POP, RSI);
+    restore.emplace_back(POP, RDI);
+
+    return restore;
+}
+
+
+
+const vector<Instruction> Snippets::CalculateStringLength() {
+    static int uniqueNumber = 0;
+    stringstream unique;
+    unique << setw(4) << setfill('0') << uniqueNumber;
+    uniqueNumber++;
+
+    string startLabel = "__write_start_" + unique.str();
+    string endLabel = "__write_end_" + unique.str();
+
+    vector<Instruction> length;
+
+    const int stringTerminator = '\0';
+    const string currentCharacter = ( "(" RSI ", " RDX ", 1)" );
+
+    length.emplace_back(MOVQ, Transform::IntToImmediate(0), RDX);
+    length.emplace_back(startLabel + ":");
+    length.emplace_back(CMPB, Transform::IntToImmediate(stringTerminator), currentCharacter);
+    length.emplace_back(JE, endLabel);
+    length.emplace_back(INCQ, RDX);
+    length.emplace_back(JMP, startLabel);
+    length.emplace_back(endLabel + ":");
+
+    return length;
+}
