@@ -85,6 +85,10 @@ string Transform::DefaultValueToInitializer(Variable *variable) {
 
 
 
+bool Transform::IsRegister(const string & memory) { // only register name start with a % sign
+    return (memory[0] == '%');
+}
+
 string Transform::GlobalToAddress(const string & variableName) {
     return variableName + "(" + RIP + ")";
 }

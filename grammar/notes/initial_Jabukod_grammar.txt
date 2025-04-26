@@ -9,9 +9,6 @@ Počáteční neterminál:
 	
 Komentáře "//" obsahují popis sémantické analýzy
 	
-TODO: if-then a if-then-else nelze rozlišit
-	počet dvojic [ a ] nelze rozlišit
-	
 ==================================================
 	
 <PROG>:		EOF

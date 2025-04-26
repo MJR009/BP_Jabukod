@@ -42,6 +42,7 @@ public:
      * 
      * @{
      */
+    static bool IsRegister(const string & memory); ///< Returns true, if the given string contains a register.
     static string GlobalToAddress(const string & variableName); ///< Transforms a global variable to its memory location.
     static string RegisterToAddress(const string & reg); ///< Transforms a register to address for loading an effective address of the stored value.
     static string IntToImmediate(const int & number); ///< Transforms an integer into an immediate value of the instruction.

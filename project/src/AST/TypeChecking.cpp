@@ -158,7 +158,7 @@ Type (*Conversion::arithmeticBinaryTable[5][5])(ASTNode *) =
        /* INT    */{NOCVI, I2F_1, B2I_2, e_ISC, INVAL},
        /* FLOAT  */{I2F_2, NOCVF, B2F_2, e_ISC, INVAL},
        /* BOOL   */{B2I_1, B2F_1, B2I_B, e_ISC, INVAL},
-       /* STRING */{e_ISC, e_ISC, e_ISC, e_ISC, INVAL}, // TODO zkontrolovat pro řetězce !!!
+       /* STRING */{e_ISC, e_ISC, e_ISC, e_ISC, INVAL},
        /* VOID   */{INVAL, INVAL, INVAL, INVAL, INVAL}
 };
 
@@ -169,7 +169,7 @@ Type (*Conversion::logicalBinaryTable[5][5])(ASTNode *) =
        /* INT    */{I2B_B, IF2B_, I2B_1, e_ISC, INVAL},
        /* FLOAT  */{FI2B_, F2B_B, F2B_1, e_ISC, INVAL},
        /* BOOL   */{I2B_2, F2B_2, NOCVB, e_ISC, INVAL},
-       /* STRING */{e_ISC, e_ISC, e_ISC, e_ISC, INVAL}, // TODO zkontrolovat pro řetězce !!!
+       /* STRING */{e_ISC, e_ISC, e_ISC, e_ISC, INVAL},
        /* VOID   */{INVAL, INVAL, INVAL, INVAL, INVAL}
 };
 
@@ -180,7 +180,7 @@ Type (*Conversion::relationalBinaryTable[5][5])(ASTNode *) =
        /* INT    */{NOCVI, I2F_1, B2I_2, e_ISC, INVAL},
        /* FLOAT  */{I2F_2, NOCVF, B2F_2, e_ISC, INVAL},
        /* BOOL   */{B2I_1, B2F_1, NOCVB, e_ISC, INVAL},
-       /* STRING */{e_ISC, e_ISC, e_ISC, e_ISC, INVAL}, // TODO zkontrolovat pro řetězce !!!
+       /* STRING */{e_ISC, e_ISC, e_ISC, e_ISC, INVAL},
        /* VOID   */{INVAL, INVAL, INVAL, INVAL, INVAL}
 };
 

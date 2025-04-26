@@ -23,7 +23,7 @@ int Assembler::Assemble(const string & outputPath, bool withDebugSymbols) {
 
 int Assembler::Link(const string & outputPath, bool withDebugSymbols) {
     string debug = withDebugSymbols ? "-g " : "";
-    string command = "ld " + debug + "-o " + outputPath + " " + outputPath + ".o"; // TODO -s flag
+    string command = "ld " + debug + "-o " + outputPath + " " + outputPath + ".o"; // -s flag
 
     int ret = system( command.c_str() );
     if (ret != 0) {

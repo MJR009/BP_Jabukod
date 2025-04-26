@@ -1,0 +1,57 @@
+string gs = "global";
+float gf = 3.14;
+
+void f(int p1, int p2, int p3, int p4, int p5, int p6, int p7, int p8, int p9) {
+    p1 = 1;
+    p2 = 2;
+    p3 = 3;
+    p4 = 4;
+    p5 = 5;
+    p6 = 6;
+    p7 = 7;
+    p8 = 8;
+    p9 = 9;
+}
+
+void fg(float p1, float p2, float p3, float p4, float p5, float p6, float p7, float p8, float p9, float p10) {
+    p1 = 1.0;
+    p2 = 2.0;
+    p3 = 3.0;
+    p4 = 4.0;
+    p5 = 5.0;
+    p6 = 6.0;
+    p7 = 7.0;
+    p8 = 8.0;
+    p9 = 9.0;
+    p10 = 10.0;
+}
+
+void g(int p1, bool p2, float p3, string p4, int p5, bool p6, float p7, string p8, int p9, int p10,
+    float p11, float p12, float p13, float p14, float p15, int p16, string p17) {
+    p1 = 1;
+    p2 = true;
+    p3 = 3.1;
+    p4 = "4";
+    p5 = 5;
+    p6 = true;
+
+    p7 = gf;
+    p8 = gs;
+    
+    p9 = p1;
+    p10 = p9;
+
+    p11 = 1.0;
+    p12 = 1.0;
+    p13 = 1.0;
+    p14 = 1.0;
+
+    p15 = 1.0;
+    p16 = 0;
+    p17 = "0";
+}
+
+int main() {
+    int x;
+    x = 255;
+}

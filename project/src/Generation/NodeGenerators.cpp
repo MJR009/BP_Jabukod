@@ -52,6 +52,7 @@ void NodeGenerators::GenerateWRITE(ASTNode *node) {
     gen->instructions.emplace_back(PUSH, RSI);
     gen->instructions.emplace_back(PUSH, RDX);
     gen->instructions.emplace_back(PUSH, RDI);
+    gen->instructions.emplace_back(PUSH, RCX);
 
     string opcode = data->IsGlobal() ? LEA : MOV; // load %rip relative address or take address straight from stack
 
@@ -62,6 +63,7 @@ void NodeGenerators::GenerateWRITE(ASTNode *node) {
     gen->instructions.emplace_back(MOV, Transform::IntToImmediate(SYSCALL_WRITE), "%rax");
     gen->instructions.emplace_back(SYSCALL);
 
+    gen->instructions.emplace_back(POP, RCX);
     gen->instructions.emplace_back(POP, RDI);
     gen->instructions.emplace_back(POP, RDX);
     gen->instructions.emplace_back(POP, RSI);
@@ -547,38 +549,8 @@ void NodeGenerators::GenerateRESTART(ASTNode *node) {
     gen->instructions.emplace_back(JMP, this->GetRestartTarget());
 }
 
-void NodeGenerators::GenerateFUNCTION_CALL(ASTNode *node) {
-    FunctionCallData *data = node->GetData<FunctionCallData>();
-    vector<string> backedUpRegisters;
-
-
-    // TODO can the arguments be somehow overwritten or accessed wrong???!!!!!
-    // TODO rose(x + 1, x), where x is a register parameter
-
-    // TODO MEMORY LOCATIONS
-    // TODO FLOATS
-    // TODO CORRECT STORAGE IN CASE OF STACK ARGUMENTS
-
-
-    for (int i = 0; i < node->GetChildrenCount(); i++) {
-        gen->GenerateNode(node->GetChild(i));
-
-        Type argumentType = data->GetArgumentType(i);
-        string opcode = (argumentType == Type::FLOAT) ? MOVSS : MOVQ;
-        string source = (argumentType == Type::FLOAT) ? XMM6 : RAX;
-        string target = data->GetArgumentSlot(i);
-
-        gen->instructions.emplace_back(PUSH, target);
-        backedUpRegisters.push_back(target);
-        gen->instructions.emplace_back(opcode, source, target);
-    }
-
-    gen->instructions.emplace_back(CALL, data->GetName());
-
-    auto toPop = backedUpRegisters.rbegin();
-    for (; toPop != backedUpRegisters.rend(); toPop++) {
-        gen->instructions.emplace_back(POP, *toPop);
-    }
+void NodeGenerators::GenerateFUNCTION_CALL(ASTNode *node) { // arguments are processed right to left
+    this->EvaluateFunctionCall(node);
 }
 
 void NodeGenerators::GenerateRETURN(ASTNode *node) {
@@ -750,6 +722,65 @@ void NodeGenerators::EvaluateArrayDefinition(ASTNode *variable) {
             gen->instructions.emplace_back(MOVQ, Transform::IntToImmediate(i), RBX);
             gen->instructions.emplace_back(opcode, source, targetAddress);
         }
+    }
+}
+
+void NodeGenerators::EvaluateFunctionCall(ASTNode *functionCall) {
+    FunctionCallData *data = functionCall->GetData<FunctionCallData>();
+    int argumentCount = functionCall->GetChildrenCount() - 1;
+    vector<string> backedUpRegisters;
+    int stackMemory = 0;
+
+    // (1) Backup used registers
+    for (int i = argumentCount; i >= 0; i--) {
+        Type argumentType = data->GetArgumentType(i);
+        string argumentLocation = data->GetArgumentSlot(i);
+
+        if ( Transform::IsRegister(argumentLocation) ) {
+            gen->ConnectSequence( Snippets::PushRegister(argumentType, argumentLocation) );
+            backedUpRegisters.push_back(argumentLocation);
+        }
+    }
+
+    // (2) Prepare arguments by System V ABI
+    for (int i = argumentCount; i >= 0; i--) {
+        gen->GenerateNode(functionCall->GetChild(i));
+
+        Type argumentType = data->GetArgumentType(i);
+        string target = data->GetArgumentSlot(i);
+
+        if ( Transform::IsRegister(target) ) { // argument stored in a register
+            if (argumentType == Type::FLOAT) {
+                gen->instructions.emplace_back(MOVSS, XMM6, target);
+            } else {
+                gen->instructions.emplace_back(MOVQ, RAX, target);
+            }
+
+        } else { // argument located on stack
+            gen->instructions.emplace_back(PUSH, RAX);
+            stackMemory += 8;            
+        }
+    }
+
+    // (3) Function call
+    gen->instructions.emplace_back(CALL, data->GetName());
+
+    // (4) Restore stack arguments
+    if (stackMemory != 0) {
+        gen->instructions.emplace_back(ADDQ, Transform::IntToImmediate(stackMemory), RSP);
+    }
+
+    // (5) restore backed up registers
+    auto toPop = backedUpRegisters.rbegin();
+    for (; toPop != backedUpRegisters.rend(); toPop++) {
+        Type registerType = Type::VOID;
+        if ((*toPop)[1] == 'x') { // only holds for SSE registers
+            registerType = Type::FLOAT;
+        } else {
+            registerType = Type::INT;
+        }
+
+        gen->ConnectSequence( Snippets::PopRegister(registerType, *toPop) );
     }
 }
 
