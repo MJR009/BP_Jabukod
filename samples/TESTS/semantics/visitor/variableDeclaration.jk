@@ -11,4 +11,6 @@ string d = "Jabukod\n";
 int main(int z) {
     static float y;
     int x = 1 + 1;
+
+    write str;
 }

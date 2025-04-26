@@ -1,8 +1,0 @@
-int main() {
-    string x = "";
-
-    read x;
-    write "Jabukod";
-}
-
-string str = "nelze nic";

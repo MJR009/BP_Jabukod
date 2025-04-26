@@ -1,6 +1,6 @@
 int main() {
     int x;
-    int y;
+    int y[1];
 
     foreach (int x : y) {
         if (true) {

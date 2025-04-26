@@ -1,11 +1,10 @@
-int rose(int x, int y) write "rose";
+int rose(int x, int y) write "rose\n";
 
-float f(int x, string y) write "Hello\n";
+float f(int x) write "Hello\n";
 
 int main() {
-    int x = 1.2 + f(1, "2.1"); 
-    // f("false", false);
-    f(false, "false");
+    int x = 1.2 + f(1); 
+    f(false);
 
     rose(1, 2.3);
     int y = rose(false, 1) + 1;

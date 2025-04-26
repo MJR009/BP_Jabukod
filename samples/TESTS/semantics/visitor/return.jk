@@ -6,15 +6,16 @@ void y() {
     return;
 }
 
-string z() {
-    string x = "hello";
+int z() {
+    //string x = "hello";
+    int x = 1;
 
-    return x;//+1;
+    return x+1;
 }
 
 int main() {
 
-    exit 1.0;
+    exit 3.14;
     exit 0;
     exit false;
 

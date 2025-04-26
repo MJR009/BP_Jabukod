@@ -1,3 +1,0 @@
-void rose() {
-    write "something" + read x;
-}

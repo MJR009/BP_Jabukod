@@ -3,7 +3,7 @@ int rose() {
         return -x;
     }
 
-    if (y > 0) return y*2; else return y**2;
+    if (y > 0) return y*2; else return y*2;
 
     if (z == 0) {
         mary(0);

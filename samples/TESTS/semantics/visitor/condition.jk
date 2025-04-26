@@ -1,6 +1,6 @@
 int main() {
     float x = 10;
-    int hi = x ** 3;
+    int hi = x * 3;
     int i;
 
     i = 2;

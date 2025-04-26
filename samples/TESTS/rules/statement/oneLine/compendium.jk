@@ -3,12 +3,10 @@ void rose() {
     bool y = x && (a || b);
     return;
     return x;
-    return (y ** 3 - 1);
+    return (y * 3 - 1);
     exit;
     exit(x + 2);
     exit x + 2;
-    suspend;
-    resume;
     continue;
     break;
     redo;

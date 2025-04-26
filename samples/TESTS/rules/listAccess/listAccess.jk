@@ -1,9 +1,11 @@
 int x = y[2];
 
 void rose() {
-    z[1][2] = true;
+    z[1]
+    
+= true;
 
-    z[a + - b][mary()] = false;
+    //z[a + - b][mary()] = false;
 
-    c[0][0][0] = "Jabukod";
+    //c[0][0][0] = "Jabukod";
 }

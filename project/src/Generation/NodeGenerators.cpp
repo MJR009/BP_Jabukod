@@ -667,8 +667,6 @@ void NodeGenerators::EvaluateAssignmentToArray(ASTNode *lSide, string opcode, st
 
     VariableData *data = lSide->GetChild(0)->GetData<VariableData>();
 
-    cout << data->GetType().GetScalarEquivalent().toString()<< endl;
-
     string scale = "8";
     if (data->GetType().GetScalarEquivalent() == Type::FLOAT) {
         scale = "4";

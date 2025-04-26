@@ -1,5 +1,0 @@
-int read = 10;
-
-void rose() {
-    write read;
-}

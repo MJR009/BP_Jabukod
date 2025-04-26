@@ -1,6 +1,6 @@
 void rose() {
     mary(
-        "Jabukod" + (a ** 2 - 1),
+        a * 2 - 1,
         - rock() + steady(),
         -(-11 + ~0xff)
     );

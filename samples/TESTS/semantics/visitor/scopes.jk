@@ -21,11 +21,10 @@ int main() {
         bool hello = false;
     }
 
-    string str;
-
-    foreach (static string char: str) {
-        float x = 0;
+    int arr[3] = {1, 2, 3};
+    foreach (int it : arr) {
+        it = it + 2;
     }
- 
+
     return 0;
 }

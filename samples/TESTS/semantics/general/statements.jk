@@ -5,7 +5,7 @@ int main() {
 
     while (x != 10) {
         x = x + 1;
-        int y = x ** 2.5;
+        int y = x * 2.5;
     }
 
     for (int x = 0; ; x = x + 1) {
@@ -29,20 +29,15 @@ int main() {
 
     if (false) {
         exit 0;
-    } else {
-        suspend;
     }
 
     return 0;
     exit 0;
-    suspend;
-    resume;
     // continue;
     // break;
     // redo;
     // restart;
     string x;
-    read x;
     write "Hello!\n";
 
     int y;
