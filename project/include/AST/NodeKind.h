@@ -73,6 +73,9 @@ public:
     /// @brief Converts expression sign to node kind.
     static NodeKind toNodeKind(const string & sign);
 
+    /// @brief Returns true if the node kind is a conversion (INT2FLOAT, etc.). 
+    bool IsConversion();
+
 private:
     Options value; ///< Value of any given NodeKind object.
 };

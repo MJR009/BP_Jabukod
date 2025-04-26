@@ -1063,14 +1063,24 @@ vector<Variable *> AST::PrepareAndGetAllStatic() {
                 if (current->GetKind() == NodeKind::VARIABLE_DECLARATION) {
                     aStaticVariable->SetDefaultValue( SymbolTable::GetDefaultByType(aStaticVariable->GetType()) );
 
-                } else { // VARIABLE_DEFINITION - the initial value is explicitly and in the tree
+                } else { // VARIABLE_DEFINITION - the initial value is explicitly in the tree
                     ASTNode *defaultValue = current->GetChild(0);
                     any theValue;
-                    
+
                     if (defaultValue->GetKind() == NodeKind::VARIABLE) {
-                        theValue = defaultValue->GetData<VariableData>()->GetActualDefaultValue();
-                    } else { // LITERAL
-                        theValue = defaultValue->GetData<LiteralData>()->GetValue();
+                        VariableData *data = defaultValue->GetData<VariableData>();
+                        theValue = data->GetActualDefaultValue();
+
+                    } else if (defaultValue->GetKind() == NodeKind::LITERAL) {
+                        LiteralData *data = defaultValue->GetData<LiteralData>();
+                        theValue = data->GetValue();
+
+                    } else if (defaultValue->GetKind().IsConversion()) {
+                        this->parser->notifyErrorListeners(STATIC_DEFINITION_TYPE_MISMATCH);
+                        continue;
+
+                    } else {
+                        continue;
                     }
 
                     aStaticVariable->SetDefaultValue(theValue);

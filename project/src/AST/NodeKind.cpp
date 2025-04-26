@@ -135,3 +135,21 @@ NodeKind NodeKind::toNodeKind(const string & sign) {
 
     return NodeKind::invalid;
 }
+
+
+
+bool NodeKind::IsConversion() {
+    vector<NodeKind> conversions = {
+        NodeKind::INT2FLOAT, NodeKind::BOOL2INT,
+        NodeKind::INT2BOOL, NodeKind::FLOAT2INT,
+        NodeKind::BOOL2FLOAT, NodeKind::FLOAT2BOOL
+    };
+
+    auto position = find(conversions.begin(), conversions.end(), this->value);
+
+    if (position != conversions.end()) {
+        return true;
+    }
+
+    return false;
+}

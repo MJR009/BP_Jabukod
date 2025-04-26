@@ -99,6 +99,7 @@
  * @{
  */
 #define STATIC_INIT_NOT_LITERAL "static variables can only be initialised by literals"
+#define STATIC_DEFINITION_TYPE_MISMATCH "initial value of a static variable must match it in type"
 /** @} */
 
 /**

@@ -1,4 +1,4 @@
-// results in an error
+// Results in an error, as intended
 
 static int g [3];
 //staic int g;
