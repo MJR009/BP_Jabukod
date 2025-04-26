@@ -1,1 +1,9 @@
+/*
+    Martin Jabůrek
+    Jabukód code example
+
+    hello.jk
+    The first Jabukód program
+*/
+
 int main() write "Hello world!\n";

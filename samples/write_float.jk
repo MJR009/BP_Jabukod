@@ -2,9 +2,24 @@
     Martin Jabůrek
     Jabukód code example
 
-    write_int.jk
-    Prints a value of type int
+    write_float.jk
+    Prints a value of type float
 */
+
+
+void writeFloat(float x) {
+    if (x < 0) {
+        write "-";
+        x = -x;
+    }
+
+    int whole = x;
+    float decimalPart = x - whole;
+
+    writeInt(whole);
+    write ".";
+    writeDecimal(decimalPart);
+}
 
 void writeInt(int n) {
     if (n < 0) {
@@ -34,18 +49,29 @@ void writeInt(int n) {
     write output;
 }
 
+void writeDecimal(float x) {
+    int digit;
+
+    for (int i = 0; i < 6; i = i + 1) {
+        digit = 10*x;
+        writeInt(digit);
+        x = 10*x - digit;
+    }
+}
+
 
 
 int main() {
-    writeInt(145);
+    writeFloat(0.0);
     write "\n";
 
-    writeInt(0);
+    writeFloat(3.14);
     write "\n";
 
-    writeInt(-23);
+    writeFloat(-123.321);
     write "\n";
 
-    writeInt(0xff);
+    float goldenRatio = (1 + 2.2361) / 2;
+    writeFloat(goldenRatio);
     write "\n";
 }
