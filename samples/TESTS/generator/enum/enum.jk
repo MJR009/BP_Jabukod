@@ -10,4 +10,10 @@ int main() {
     if (y == R) write "RED\n";
     if (y == G) write "GREEN\n";
     if (y == B) write "BLUE\n";
+
+    enum COLORS col = rose(B);
+}
+
+enum COLORS rose(enum COLORS value) {
+    return G;
 }

@@ -1,6 +1,7 @@
 int main() {
-    static int x = true;
-    static int y = 2.5;
+    //static int x = true;
+    //static int y = 2.5;
 
-    static int z = 1 + 3;
+    //static int z = 1 + 3;
+    return 0;
 }

@@ -2,5 +2,6 @@ int main() {
     int x = !!false;
     int y = ~0xff00;
 
-    //float z = !1;
+    float z = !1;
+    float w = ~25e-5;
 }

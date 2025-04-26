@@ -5,13 +5,13 @@ int main() {
 
     string x;
     x = "Jabukod_2\n";
-    //write x;
+    write x;
 
     string y;
     y = "Jabukod_3\n";
     string z;
     z = y;
-    //write z;
+    write z;
 
-    //write global;
+    write global;
 }

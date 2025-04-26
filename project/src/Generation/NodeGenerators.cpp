@@ -303,6 +303,7 @@ void NodeGenerators::GenerateBIT_NOT(ASTNode *node) {
     
     const int bitNotMask = 0xFFFFFFFF;
 
+    // unused, bit operations over float are not allowed
     if (node->GetData<ExpressionData>()->GetType() == Type::FLOAT) {
         if ( ! bitNotMaskDeclared) {
             gen->symbolTable.AddGlobalLiteral(Snippets::bitNotMask, Type::INT, bitNotMask);

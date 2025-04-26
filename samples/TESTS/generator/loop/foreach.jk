@@ -32,6 +32,7 @@ int main() {
     foreach (int x : array) {
         if ((x > 2) && ( ! flag)) {
             flag = true;
+            write "\n";
             restart;
         }
         write "HERE\n";

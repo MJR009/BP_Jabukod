@@ -1,5 +1,5 @@
 int main() {
-    int x = 2;
-    int y = -4;
-    int z = -1 + ((x * -3) - y + 5);
+    float x = 2.5;
+    float y = 7.5;
+    float z = ((y * 2.0) - x) * 1e3;
 }
