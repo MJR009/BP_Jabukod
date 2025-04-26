@@ -82,8 +82,12 @@ void SymbolTable::AddFunctionParameter(JabukodParser::NonVoidTypeContext *parame
         if ( ! this->IsIdEnumName(parameterType->IDENTIFIER()->getText()) ) {
             this->parser->notifyErrorListeners(parameterType->IDENTIFIER()->getSymbol(), UNDEFINED_ENUM_PARAMETER, nullptr);
         }
-    }    
+    }
+
     Type type = Type::toType( parameterType->getStart()->getText() );
+    if (type == Type::STRING) {
+        this->parser->notifyErrorListeners(parameterType->getStart(), STRING_PARAMETER, nullptr);
+    }
 
     string name = parameterName->getText();
     if ( ! this->IsFunctionParameterNameAvailable(name)) {

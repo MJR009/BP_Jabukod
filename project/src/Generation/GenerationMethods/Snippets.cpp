@@ -83,7 +83,7 @@ const vector<Instruction> Snippets::PushRegister(Type type, string reg) {
 
     if (type == Type::FLOAT) {
         pushSequence.emplace_back(SUBQ, Transform::IntToImmediate(8), RSP);
-        pushSequence.emplace_back(MOVSS, XMM6, Transform::RegisterToAddress(RSP));
+        pushSequence.emplace_back(MOVSS, reg, Transform::RegisterToAddress(RSP));
     } else {
         pushSequence.emplace_back(PUSH, reg);
     }
@@ -95,7 +95,7 @@ const vector<Instruction> Snippets::PopRegister(Type type, string reg) {
     vector<Instruction> popSequence;
 
     if (type == Type::FLOAT) {
-        popSequence.emplace_back(MOVSS, Transform::RegisterToAddress(RSP), XMM6);
+        popSequence.emplace_back(MOVSS, Transform::RegisterToAddress(RSP), reg);
         popSequence.emplace_back(ADDQ, Transform::IntToImmediate(8), RSP);
     } else {
         popSequence.emplace_back(POP, reg);

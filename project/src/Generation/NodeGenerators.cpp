@@ -757,7 +757,9 @@ void NodeGenerators::EvaluateFunctionCall(ASTNode *functionCall) {
             }
 
         } else { // argument located on stack
-            gen->instructions.emplace_back(PUSH, RAX);
+            string result = (argumentType == Type::FLOAT) ? XMM6 : RAX;
+            gen->ConnectSequence( Snippets::PushRegister(argumentType, result) );
+
             stackMemory += 8;            
         }
     }

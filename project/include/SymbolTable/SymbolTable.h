@@ -166,7 +166,7 @@ private:
     any ResolveExplicitDefaultValue(JabukodParser::LiteralContext *defaultValue, Type variableType) const;
     /// @brief Provides the implicit literal conversion for ResolveExplicitDefaultValue.
     any ConvertLiteralByType(JabukodParser::LiteralContext *defaultValue, Type literalType, Type variableType) const;
-
+    
     /// @brief Method to prepare an array, if the global variable is of type array.
     any MakeArrayValuesTyped(vector<any> & initialArray, Type arrayType, JabukodParser::ListExpressionContext *list) const;
     /// @brief Generic method, invoked by MakeArrayValuesTyped, according to the desired array type.
