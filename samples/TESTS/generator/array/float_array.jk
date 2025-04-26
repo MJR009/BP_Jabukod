@@ -1,0 +1,9 @@
+//float array[4] = {1.0, 2.0, 3.0};
+
+int main() {
+    float array[4] = {1.0, 2.0, 3.0};
+
+    float x = array[0];
+    array[3] = 4.0;
+    float y = array[3];
+}

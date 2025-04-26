@@ -147,7 +147,13 @@ string Transform::ListAccessToLocation(Variable *array, string indexRegister) {
         address += "(" RBP; // %rbp base
     }
 
-    address += (", " + indexRegister + ", 8)"); // %rax index, scale is 8 bytes
+    string scale = "8";
+
+    if (array->GetType().GetScalarEquivalent() == Type::FLOAT) {
+        scale = "4";
+    }
+
+    address += (", " + indexRegister + ", " + scale + ")"); // %rax index, scale is 8 bytes
 
     return address;
 }

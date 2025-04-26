@@ -667,15 +667,29 @@ void NodeGenerators::EvaluateAssignmentToArray(ASTNode *lSide, string opcode, st
 
     VariableData *data = lSide->GetChild(0)->GetData<VariableData>();
 
+    cout << data->GetType().GetScalarEquivalent().toString()<< endl;
+
+    string scale = "8";
+    if (data->GetType().GetScalarEquivalent() == Type::FLOAT) {
+        scale = "4";
+    }
+
     if (data->IsGlobal()) {
         gen->instructions.emplace_back(PUSH, RCX);
         gen->instructions.emplace_back(LEA, Transform::GlobalToAddress(data->GetName()), RCX);
-        gen->instructions.emplace_back(opcode, source, ("(" RCX ", " RBX ", 8)"));
+        string target = ("(" RCX ", " RBX ", ");
+        target += scale;
+        target += ")";
+        gen->instructions.emplace_back(opcode, source, target);
         gen->instructions.emplace_back(POP, RCX);
 
     } else { // local
         string target = to_string(data->GetStackOffset());
-        target += ( "(" RBP ", " RBX ", 8)" );
+
+        target += "(" RBP ", " RBX ", ";
+        target += scale;
+        target += ")";
+
         gen->instructions.emplace_back(opcode, source, target);
     }
 }
@@ -688,17 +702,26 @@ void NodeGenerators::EvaluateArrayDefinition(ASTNode *variable) {
         string opcode, source, targetAddress;
         Type targetType = target->GetType().GetScalarEquivalent();
 
+        string scale;
+
         if (targetType == Type::FLOAT) {
             opcode = MOVSS;
             source = XMM6;
+
+            scale = "4";
+
         } else {
             opcode = MOVQ;
             source = RAX;
+
+            scale = "8";
         }
 
         // here we know the processed variable has to be local
         targetAddress = to_string(target->GetStackOffset());
-        targetAddress += ( "(" RBP ", " RBX ", 8)" );
+        targetAddress += ( "(" RBP ", " RBX ", " );
+        targetAddress += scale;
+        targetAddress += ")";
 
         if (i >= list->GetChildrenCount()) { // fill in tail with implicit declarations
             this->AddNeededDeclarationData(targetType);
