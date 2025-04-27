@@ -5,10 +5,22 @@ Martin Jabůrek
 ## Bachelor Thesis Project
 ## Compiler generating the target code secured against reverse analysis
 
-// TODO description - copy english abstract?
+### Abstract
 
-All testing and development was done on a x86_64 machine using <b>Ubuntu 24.04.2 LTS</b> operating
-system with functionality verified on the `merlin` faculty server.
+This thesis focuses on designing a new programming language
+and the implementation of its compiler. Besides that it deals with creating and
+studying commonly used and new methods of securing generated
+code against reverse analysis.
+Both the widespread and the new protections are implemented directly as
+parts of the compiler. Another part of the new language are also
+unusual program structures, which not only better its
+usability for programming, but also offer further options for obfuscating generated code.
+The result is a functioning language compiler and its study, which
+shows and evaluates the effects of implemented methods
+on code security and their influence on programs during runtime.
+The resulting compiler and language can be
+used and further developed for the purposes of generating secured executables,
+without the need for additional processing afterwards.
 
 ## Project structure
 
@@ -118,6 +130,15 @@ It is automatically generated using `Doxygen` from code comments.
 
 After `make docs` is run, the pdf documentation is also put into the `build` directory
 under the name `xjabur02_Jabukod_documentation.pdf`.
+
+## Testing
+
+In the `samples` directory you can find a large set of example programs. The to level contains
+small programs showcasing known functions. Other subdirectories containg programs used during different phases
+of development.
+
+All testing and development was done on a x86_64 machine using <b>Ubuntu 24.04.2 LTS</b> operating
+system with functionality verified on the `merlin` faculty server.
 
 ## Syntax highlighting
 
