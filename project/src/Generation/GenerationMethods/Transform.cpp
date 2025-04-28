@@ -126,7 +126,7 @@ string Transform::VariableToLocation(VariableData *data) {
     if (data->IsGlobal()) {
         return Transform::GlobalToAddress(data->GetName());
 
-    } else if (data->IsParameter()) {
+    } else if (data->IsParameter()) { // TODO RESOLVE STACK POSITION BY ORDER
         return data->GetParamaterLocation();
 
     } else { // local

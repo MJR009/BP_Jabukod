@@ -24,16 +24,18 @@ void NodeGenerators::GenerateFUNCTION(ASTNode *node) {
 
     int neededStackSpace = function->GetNeededStackSpace();
     gen->ConnectSequence( Snippets::Prolog(neededStackSpace) );
+    // TODO PUSH ALL ARGUMENTS FOR LATER ACCESS
 
     for (int i = 0; i < node->GetChildrenCount(); i++) {
         gen->GenerateNode(node->GetChild(i));
     }
 
-    // fallback epilogues at the end of functions
-    if (gen->IsInMain()) {
+    // fallback epilogues
+    if (gen->IsInMain()) { // entry point main has exit epilogue
         gen->instructions.emplace_back(MOVQ, Transform::IntToImmediate(0), RAX);
         gen->ConnectSequence( Snippets::Exit(RAX) );
-    } else {
+
+    } else { // all other functions have return epilogue
         gen->ConnectSequence( Snippets::Epilog() );
     }
 
@@ -739,9 +741,10 @@ void NodeGenerators::EvaluateArrayDefinition(ASTNode *variable) {
 void NodeGenerators::EvaluateFunctionCall(ASTNode *functionCall) {
     FunctionCallData *data = functionCall->GetData<FunctionCallData>();
     int argumentCount = functionCall->GetChildrenCount() - 1;
-    vector<string> backedUpRegisters;
-    int stackMemory = 0;
+    vector<string> backedUpRegisters; // TODO NOT NEEDED
+    int stackMemory = 0; // TODO NOT NEEDED
 
+    // TODO DO NOT DO THIS
     // (1) Backup used registers
     for (int i = argumentCount; i >= 0; i--) {
         Type argumentType = data->GetArgumentType(i);
@@ -778,11 +781,13 @@ void NodeGenerators::EvaluateFunctionCall(ASTNode *functionCall) {
     // (3) Function call
     gen->instructions.emplace_back(CALL, data->GetName());
 
+    // TODO DO NOT DO THIS
     // (4) Restore stack arguments
     if (stackMemory != 0) {
         gen->instructions.emplace_back(ADDQ, Transform::IntToImmediate(stackMemory), RSP);
     }
 
+    // TODO DO NOT DO THIS
     // (5) restore backed up registers
     auto toPop = backedUpRegisters.rbegin();
     for (; toPop != backedUpRegisters.rend(); toPop++) {

@@ -2,27 +2,24 @@
 // The backup on the stack from before needs to be used.
 
 int main() {
-    return foo(1,2);
+    rose(1,2);
 }
 
-int foo(int a, int b) {
-    //writeInt(a);
-    //write "-";
-    //writeInt(b);
-    //write "\n";
-    return bar(b, a);
+void rose(int a, int b) {
+    writeInt( a ); write " - ";
+    writeInt( b ); write "\n";
+
+    mary(b, a);
+    mary(a, b);
 }
 
-int bar(int b, int a) {
-    //writeInt(a);
-    //write "-";
-    //writeInt(b);
-    //write "\n";
-    return 0;
+void mary(int a, int b) {
+    writeInt( a ); write " - ";
+    writeInt( b ); write "\n";
 }
 
 
-/*
+
 void writeInt(int n) {
     if (n < 0) {
         write "-";
@@ -49,4 +46,4 @@ void writeInt(int n) {
     if (digit == 9) output = "9";
 
     write output;
-}*/
+}

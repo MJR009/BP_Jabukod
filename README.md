@@ -138,7 +138,7 @@ small programs showcasing known functions. Other subdirectories containg program
 of development.
 
 All testing and development was done on a x86_64 machine using <b>Ubuntu 24.04.2 LTS</b> operating
-system with functionality verified on the `merlin` faculty server.
+system with functionality verified on the `merlin` FIT VUT server.
 
 ## Syntax highlighting
 
