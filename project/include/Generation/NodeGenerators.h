@@ -101,8 +101,12 @@ private:
     void EvaluateAssignmentToArray(ASTNode *lSide, string opcode, string source);
     /// @brief Generates code to initialise an array from a list.
     void EvaluateArrayDefinition(ASTNode *variable);
+
+
     /// @brief Generates code needed for calling a function, resolving all register backup and argument preparation.
     void EvaluateFunctionCall(ASTNode *functionCall);
+    /// @brief Prepare arguments transfered to function by System V ABI below local variables.
+    void TakeOverArguments(FunctionData *called);
 
     /// @brief Evaluates a condition for either a conditional jump or move.
     void EvaluateCondition(ASTNode *condition, string falseLabel);

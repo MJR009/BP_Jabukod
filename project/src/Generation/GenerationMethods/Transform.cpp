@@ -122,12 +122,20 @@ string Transform::LiteralToImmediate(LiteralData *data) {
     return Transform::IntToImmediate(value);
 }
 
-string Transform::VariableToLocation(VariableData *data) {
+string Transform::VariableToLocation(VariableData *data, FunctionData *inFunction) {
     if (data->IsGlobal()) {
         return Transform::GlobalToAddress(data->GetName());
 
-    } else if (data->IsParameter()) { // TODO RESOLVE STACK POSITION BY ORDER
-        return data->GetParamaterLocation();
+    } else if (data->IsParameter()) {
+        int orderInFunction = data->GetParameterOrder();
+        int neededStackSpace = inFunction->GetNeededStackSpace();
+
+        int base = - (neededStackSpace + 8);
+
+        int argumentOffset = base - (orderInFunction * 8);
+        string stackOffset = to_string( argumentOffset );
+
+        return ( stackOffset + "(" + RBP + ")" );
 
     } else { // local
         string stackOffset = to_string( data->GetStackOffset() );

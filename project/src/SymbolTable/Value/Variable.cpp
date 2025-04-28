@@ -26,6 +26,12 @@ int Variable::GetStackOffset() {
     return this->stackOffset;
 }
 
+int Variable::GetParameterOrder() {
+    return this->stackOffset; // same implementation, varuiables defined as parameters have their order stored
+}
+
+
+
 bool Variable::IsGlobal() {
     return this->isGlobal;
 }

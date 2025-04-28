@@ -35,6 +35,12 @@ Type FunctionTableEntry::GetReturnType() const {
     return this->returnType;
 }
 
+
+
+int FunctionTableEntry::GetParameterCount() {
+    return this->parameterCount;
+}
+
 list<Variable *> *FunctionTableEntry::GetParameters() {
     return &this->parameters;
 }

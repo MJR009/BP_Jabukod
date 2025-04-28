@@ -24,7 +24,9 @@ void NodeGenerators::GenerateFUNCTION(ASTNode *node) {
 
     int neededStackSpace = function->GetNeededStackSpace();
     gen->ConnectSequence( Snippets::Prolog(neededStackSpace) );
-    // TODO PUSH ALL ARGUMENTS FOR LATER ACCESS
+    this->TakeOverArguments(function);
+    gen->instructions.emplace_back(PUSH, RBX);
+    gen->instructions.emplace_back(PUSH, R12);
 
     for (int i = 0; i < node->GetChildrenCount(); i++) {
         gen->GenerateNode(node->GetChild(i));
@@ -50,7 +52,7 @@ void NodeGenerators::GenerateWRITE(ASTNode *node) {
 
     string opcode = data->IsGlobal() ? LEA : MOV; // load %rip relative address or take address straight from stack
 
-    gen->instructions.emplace_back(opcode, Transform::VariableToLocation(data), RSI); // (1) adress
+    gen->instructions.emplace_back(opcode, Transform::VariableToLocation(data, gen->currentFunction), RSI); // (1) adress
     gen->ConnectSequence( Snippets::CalculateStringLength() ); // (2) string length
 
     gen->instructions.emplace_back(MOVQ, Transform::IntToImmediate(STDOUT), RDI); // (3) stream
@@ -69,7 +71,7 @@ void NodeGenerators::GenerateVARIABLE(ASTNode *node) {
     if (data->IsForeachControlVariable()) {
         source = this->EvaluateControlVariableAccess(node);
     } else {
-        source = Transform::VariableToLocation(data);
+        source = Transform::VariableToLocation(data, gen->currentFunction);
     }
 
     switch (variableType) {
@@ -117,7 +119,7 @@ void NodeGenerators::GenerateVARIABLE_DECLARATION(ASTNode *node) {
     this->AddNeededDeclarationData(variableType);
 
     if ( ! variableType.IsArrayType()) { // scalar
-        string location = Transform::VariableToLocation(data);
+        string location = Transform::VariableToLocation(data, gen->currentFunction);
         gen->ConnectSequence( Snippets::DeclareDefault(variableType, location) );
 
     } else { // array - generate each item
@@ -653,7 +655,7 @@ void NodeGenerators::EvaluateAssignment(ASTNode *lSide, ASTNode *rSide, Type rSi
         if (lData->IsForeachControlVariable()) {
             target = this->EvaluateControlVariableAccess(lSide);
         } else {
-            target = Transform::VariableToLocation(lData);
+            target = Transform::VariableToLocation(lData, gen->currentFunction);
         }
         gen->instructions.emplace_back(opcode, source, target);
 
@@ -664,7 +666,7 @@ void NodeGenerators::EvaluateAssignment(ASTNode *lSide, ASTNode *rSide, Type rSi
 
 void NodeGenerators::EvaluateAssignmentToArray(ASTNode *lSide, string opcode, string source) {
     gen->instructions.emplace_back(PUSH, RAX);
-    gen->GenerateNode(lSide->GetChild(1)); // index will alway be integer
+    gen->GenerateNode(lSide->GetChild(1)); // index will always be integer
     gen->instructions.emplace_back(MOVQ, RAX, RBX);
     gen->instructions.emplace_back(POP, RAX);
 
@@ -738,25 +740,13 @@ void NodeGenerators::EvaluateArrayDefinition(ASTNode *variable) {
     }
 }
 
+
+
 void NodeGenerators::EvaluateFunctionCall(ASTNode *functionCall) {
     FunctionCallData *data = functionCall->GetData<FunctionCallData>();
     int argumentCount = functionCall->GetChildrenCount() - 1;
-    vector<string> backedUpRegisters; // TODO NOT NEEDED
-    int stackMemory = 0; // TODO NOT NEEDED
 
-    // TODO DO NOT DO THIS
-    // (1) Backup used registers
-    for (int i = argumentCount; i >= 0; i--) {
-        Type argumentType = data->GetArgumentType(i);
-        string argumentLocation = data->GetArgumentSlot(i);
-
-        if ( Transform::IsRegister(argumentLocation) ) {
-            gen->ConnectSequence( Snippets::PushRegister(argumentType, argumentLocation) );
-            backedUpRegisters.push_back(argumentLocation);
-        }
-    }
-
-    // (2) Prepare arguments by System V ABI
+    // (1) Prepare arguments by System V ABI
     for (int i = argumentCount; i >= 0; i--) {
         gen->GenerateNode(functionCall->GetChild(i));
 
@@ -772,33 +762,26 @@ void NodeGenerators::EvaluateFunctionCall(ASTNode *functionCall) {
 
         } else { // argument located on stack
             string result = (argumentType == Type::FLOAT) ? XMM6 : RAX;
-            gen->ConnectSequence( Snippets::PushRegister(argumentType, result) );
-
-            stackMemory += 8;            
+            gen->ConnectSequence( Snippets::PushRegister(argumentType, result) );        
         }
     }
 
-    // (3) Function call
+    // (2) Function call
     gen->instructions.emplace_back(CALL, data->GetName());
+}
 
-    // TODO DO NOT DO THIS
-    // (4) Restore stack arguments
-    if (stackMemory != 0) {
-        gen->instructions.emplace_back(ADDQ, Transform::IntToImmediate(stackMemory), RSP);
-    }
+void NodeGenerators::TakeOverArguments(FunctionData *called) {
+    for (int i = 0; i < called->GetParameterCount(); i++) {
+        string source = called->GetParameterSlot(i);
+        Type type = called->GetParameterType(i);
 
-    // TODO DO NOT DO THIS
-    // (5) restore backed up registers
-    auto toPop = backedUpRegisters.rbegin();
-    for (; toPop != backedUpRegisters.rend(); toPop++) {
-        Type registerType = Type::VOID;
-        if ((*toPop)[1] == 'x') { // only holds for SSE registers
-            registerType = Type::FLOAT;
-        } else {
-            registerType = Type::INT;
+        if (Transform::IsRegister(source)) { // argument stored in a register
+            gen->ConnectSequence( Snippets::PushRegister(type, source) );
+
+        } else { // argument stored on stack
+            gen->instructions.emplace_back(MOVQ, source, RAX);
+            gen->instructions.emplace_back(PUSH, RAX);
         }
-
-        gen->ConnectSequence( Snippets::PopRegister(registerType, *toPop) );
     }
 }
 

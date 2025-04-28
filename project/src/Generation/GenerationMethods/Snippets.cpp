@@ -21,11 +21,12 @@ const vector<Instruction> Snippets::Prolog(int bytesToReserve) {
 
     prolog.emplace_back(PUSH, RBP);
     prolog.emplace_back(MOV, RSP, RBP);
+    
     if (bytesToReserve != 0) {
         prolog.emplace_back(SUB, Transform::IntToImmediate(bytesToReserve), RSP);
     }
-    prolog.emplace_back(PUSH, RBX);
-    prolog.emplace_back(PUSH, R12);
+    
+    // %rbx and %r12 pushed after arguments are prepared
 
     return prolog;
 }
@@ -35,6 +36,7 @@ const vector<Instruction> Snippets::Epilog() {
 
     epilog.emplace_back(POP, R12);
     epilog.emplace_back(POP, RBX);
+
     epilog.emplace_back(MOV, RBP, RSP);
     epilog.emplace_back(POP, RBP);
     epilog.emplace_back(RET);

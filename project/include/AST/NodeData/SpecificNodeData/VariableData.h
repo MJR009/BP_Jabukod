@@ -50,8 +50,10 @@ public:
     /// @brief Returns the value of the variable as the actual internal "any" object.
     any GetActualDefaultValue();
 
-    /// @brief  Returns the offset at which the variable should be stored on the stack during generated programs runtime.
+    /// @brief Returns the offset at which the variable should be stored on the stack during generated programs runtime, if it is local.
     int GetStackOffset();
+    /// @brief Returns the order int a functions parameter list, if the variable is a parameter.
+    int GetParameterOrder();
 
     /// @brief Returns whether the variable is global. 
     bool IsGlobal();

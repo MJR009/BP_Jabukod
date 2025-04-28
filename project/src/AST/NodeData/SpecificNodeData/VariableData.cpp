@@ -51,6 +51,10 @@ int VariableData::GetStackOffset() {
     return this->location->GetStackOffset();
 }
 
+int VariableData::GetParameterOrder() {
+    return this->location->GetParameterOrder();
+}
+
 
 
 bool VariableData::IsGlobal() {

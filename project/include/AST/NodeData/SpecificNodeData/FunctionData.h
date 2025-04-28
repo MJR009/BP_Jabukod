@@ -27,6 +27,13 @@ public:
     /// @brief Retrieves how many bytes the associated function needs to allocate for its local variables.
     int GetNeededStackSpace();
 
+    /// @brief Returns how many parameter the associated function has.
+    int GetParameterCount();
+    /// @brief Returns the location of the associated functions parameter at the specified order.
+    const string GetParameterSlot(int order);
+    /// @brief Returns the data type of a parameter at the spefied order of the associated function.
+    Type GetParameterType(int order);
+
 private:
     FunctionTableEntry *location; ///< Memory location of the defined function.
 };

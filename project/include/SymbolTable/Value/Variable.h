@@ -55,6 +55,9 @@ public:
 
     /// @brief Returns the variables location on stack, if it is local.
     int GetStackOffset();
+    /// @brief Returns the order of the variable, if it is a parameter.
+    int GetParameterOrder();
+
     /// @brief If true, the variable is global, otherwise it is local or a parameter.
     bool IsGlobal();
     /// @brief  If true, the variable is actually a parameter.
@@ -92,8 +95,16 @@ private:
     Type type; ///< Variables data type.
     any defaultValue; ///< Optional default value, associated with global and static variables.
 
-    int stackOffset; ///< Location this variable will be accessed on stack during runtime, if it is local.
+    /**
+     * @brief Value used to determine its location on stack.
+     * 
+     * The exact offset if it is local.
+     * An order from the left, if it is a parameter.
+     */
+    int stackOffset;
+
     bool isGlobal; ///< Global flag.
+
     bool isParameter; ///< Parameter flag.
     string parameterStorage; ///< If the variable is a parameter, this string contains where it is stored.
 

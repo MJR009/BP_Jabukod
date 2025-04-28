@@ -28,6 +28,9 @@ public:
     string GetFunctionName() const;
     /// @brief Returns the return type of the function.
     Type GetReturnType() const;
+
+    /// @brief Returns how many parameters this function has.
+    int GetParameterCount();
     /// @brief Return all the parameters of the function.
     list<Variable *> *GetParameters();
     /// @brief If the function has a parameter with the given name, it is returned.
@@ -64,7 +67,7 @@ private:
     Type returnType; ///< The return type of the function.
     list<Variable *> parameters; ///< A list of all this functions parameters.
 
-    int parameterCount = 0; ///< How many parameters does this function have
+    int parameterCount = 0; ///< How many parameters does this function have.
 
     int variableCount = 0; ///< How many variables are defined within this function.
     int variableStackSpace = 0; ///< How much stack space is needed to allocate for variables.
