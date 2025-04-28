@@ -1,4 +1,0 @@
-int main() {
-    float y[3] = [1, 2, 3];
-    bool z[3];
-}
