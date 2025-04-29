@@ -1,0 +1,2 @@
+int main() write "Hello world!\n";
+//void main(int x) write "Hello world!\n";

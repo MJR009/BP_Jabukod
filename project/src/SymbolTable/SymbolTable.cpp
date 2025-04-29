@@ -182,6 +182,9 @@ void SymbolTable::CheckIfIntMainPresent() {
         if (mainFunction->GetReturnType() != Type::INT) {
             this->parser->notifyErrorListeners(BAD_MAIN_RETURN_TYPE);
         }
+        if (mainFunction->GetParameterCount() != 0) {
+            this->parser->notifyErrorListeners(BAD_MAIN_PARAMETERS);
+        }
     } else {
         this->parser->notifyErrorListeners(MISSING_MAIN);
     }
