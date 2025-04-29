@@ -543,7 +543,7 @@ void NodeGenerators::GenerateRESTART(ASTNode *node) {
     gen->instructions.emplace_back(JMP, this->GetRestartTarget());
 }
 
-void NodeGenerators::GenerateFUNCTION_CALL(ASTNode *node) { // arguments are processed right to left
+void NodeGenerators::GenerateFUNCTION_CALL(ASTNode *node) {
     this->EvaluateFunctionCall(node);
 }
 
@@ -742,32 +742,57 @@ void NodeGenerators::EvaluateArrayDefinition(ASTNode *variable) {
 
 
 
+// passing is purposefully made complex as too keep the values in registers as shortly as possible
 void NodeGenerators::EvaluateFunctionCall(ASTNode *functionCall) {
     FunctionCallData *data = functionCall->GetData<FunctionCallData>();
-    int argumentCount = functionCall->GetChildrenCount() - 1;
+    int argumentCount = functionCall->GetChildrenCount();
+    int neededStackSpace = 0;
 
-    // (1) Prepare arguments by System V ABI
-    for (int i = argumentCount; i >= 0; i--) {
-        gen->GenerateNode(functionCall->GetChild(i));
-
+    // (1) Only evaluate arguments that belong on stack
+    for (int i = argumentCount - 1; i >= 0; i--) {
+        string storage = data->GetArgumentSlot(i);
         Type argumentType = data->GetArgumentType(i);
-        string target = data->GetArgumentSlot(i);
 
-        if ( Transform::IsRegister(target) ) { // argument stored in a register
-            if (argumentType == Type::FLOAT) {
-                gen->instructions.emplace_back(MOVSS, XMM6, target);
-            } else {
-                gen->instructions.emplace_back(MOVQ, RAX, target);
-            }
+        if ( ! Transform::IsRegister(storage) ) {
+            gen->GenerateNode(functionCall->GetChild(i));
 
-        } else { // argument located on stack
             string result = (argumentType == Type::FLOAT) ? XMM6 : RAX;
-            gen->ConnectSequence( Snippets::PushRegister(argumentType, result) );        
+            gen->ConnectSequence( Snippets::PushRegister(argumentType, result) );
+
+            neededStackSpace += 8;
         }
     }
 
-    // (2) Function call
+    // (2) Evaluate all other arguments on stack
+    for (int i = argumentCount - 1; i >= 0; i--) {
+        string storage = data->GetArgumentSlot(i);
+        Type argumentType = data->GetArgumentType(i);
+
+        if ( Transform::IsRegister(storage) ) {
+            gen->GenerateNode(functionCall->GetChild(i));
+
+            string result = (argumentType == Type::FLOAT) ? XMM6 : RAX;
+            gen->ConnectSequence( Snippets::PushRegister(argumentType, result) );
+        }
+    }
+
+    // (3) Pop the arguments into their respective registers, just before the function call
+    for (int i = 0; i < argumentCount; i++) {
+        string storage = data->GetArgumentSlot(i);
+        Type argumentType = data->GetArgumentType(i);
+
+        if ( Transform::IsRegister(storage) ) {
+            gen->ConnectSequence( Snippets::PopRegister(argumentType, storage) );
+        }
+    }    
+
+    // (4) Function call
     gen->instructions.emplace_back(CALL, data->GetName());
+
+    // (5) Clean stack space used by stack arguments
+    if (neededStackSpace != 0) {
+        gen->instructions.emplace_back(ADDQ, Transform::IntToImmediate(neededStackSpace), RSP);
+    }
 }
 
 void NodeGenerators::TakeOverArguments(FunctionData *called) {

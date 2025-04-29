@@ -7,8 +7,9 @@ int main() {
     float f = 6.0;
     float g = 7.0;
     float h = 8.0;
+    int i = 9;
 
-    rose(a, b, c, d, e, f, g, h);
+    rose(a, b, c, d, e, f, g, h, i);
 
     writeInt(a); write " ";
     writeInt(b); write " ";
@@ -17,10 +18,11 @@ int main() {
     writeInt(e); write " ";
     writeInt(f); write " ";
     writeInt(g); write " ";
-    writeInt(h); write "\n";
+    writeInt(h); write " ";
+    writeInt(i); write "\n";
 }
 
-void rose(float a, float b, float c, float d, float e, float f, float g, float h) {
+void rose(float a, float b, float c, float d, float e, float f, float g, float h, int i) {
     writeInt(a); write " ";
     writeInt(b); write " ";
     writeInt(c); write " ";
@@ -28,7 +30,8 @@ void rose(float a, float b, float c, float d, float e, float f, float g, float h
     writeInt(e); write " ";
     writeInt(f); write " ";
     writeInt(g); write " ";
-    writeInt(h); write "\n";
+    writeInt(h); write " ";
+    writeInt(i); write "\n";
 }
 
 

@@ -1,0 +1,8 @@
+int main() {
+    int x = 4;
+    return rose(rose(3*5, x+1), rose(8, x));
+}
+
+int rose(int a, int b) {
+    return a - b;
+}
