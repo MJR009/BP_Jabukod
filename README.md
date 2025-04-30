@@ -1,6 +1,7 @@
 # Jabukód compiler
 
 Martin Jabůrek
+xjabur02@stud.fit.vutbr.cz
 
 ## Bachelor Thesis Project
 ## Compiler generating the target code secured against reverse analysis
