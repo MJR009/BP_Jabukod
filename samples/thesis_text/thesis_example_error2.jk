@@ -1,4 +1,10 @@
-// used in thesis text as semantic error example
+/*
+    Martin Jabůrek
+    Jabukód code example
+
+    thesis_example_error2.jk
+    Code used in the thesis text as an example of semantic errors.
+*/
 
 void rose() return 10;
 

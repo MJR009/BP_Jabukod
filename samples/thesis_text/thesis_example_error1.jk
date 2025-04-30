@@ -1,4 +1,10 @@
-// used in thesis text as lexical and syntax error example
+/*
+    Martin Jabůrek
+    Jabukód code example
+
+    thesis_eample_error4.jk
+    Code used in the thesis text for showcase of lexical and syntax errors.
+*/
 
 int main() {
     write Hello world!\n";

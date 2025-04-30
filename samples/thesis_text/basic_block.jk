@@ -1,0 +1,18 @@
+/*
+    Martin Jabůrek
+    Jabukód code example
+
+    basic_block.jk
+    Used in thesis for a basic block differentiation example.
+*/
+
+int main() {
+    int i = 2;
+    if (i == 2) {
+        i = i + 1;
+    } else foo(i);
+    return i;
+}
+int foo(int x) {
+    return x * 2;
+}
