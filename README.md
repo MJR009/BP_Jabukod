@@ -7,20 +7,16 @@ Martin Jabůrek
 
 ### Abstract
 
-This thesis focuses on designing a new programming language
-and the implementation of its compiler. Besides that it deals with creating and
-studying commonly used and new methods of securing generated
-code against reverse analysis.
-Both the widespread and the new protections are implemented directly as
-parts of the compiler. Another part of the new language are also
-unusual program structures, which not only better its
-usability for programming, but also offer further options for obfuscating generated code.
-The result is a functioning language compiler and its study, which
-shows and evaluates the effects of implemented methods
-on code security and their influence on programs during runtime.
-The resulting compiler and language can be
-used and further developed for the purposes of generating secured executables,
-without the need for additional processing afterwards.
+This thesis focuses on designing a new programming language and the implementation of
+its compiler. Besides that, it deals with creating and studying commonly used and new
+methods of securing generated code against reverse analysis. Both the widespread and
+the new protections are implemented directly as parts of the compiler. Another part of
+the new language are unusual program structures, which not only better its usability for
+programming but also offer further options for obfuscating generated code. The result is
+a functioning language compiler and its study, which shows and evaluates the effects of
+implemented methods on code security and their influence on programs during runtime.
+The resulting compiler and language can be used and further developed for the purposes of
+generating secured executables without the need for additional processing afterwards.
 
 ## Project structure
 
