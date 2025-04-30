@@ -1,16 +1,60 @@
 int main() {
     int x = 0xff;
 
-    if (x > 0) {
+    writeInt(x);
+    write "\n";
+
+    if (x < 0) {
         int x;
     } else {
-        int y;
-        while(true) {
+        int y = 1;
+        while(y) {
             int x = 0x10;
+
+            writeInt(x);
+            write "\n";
+
+            y = y - 1;
         }
+
+        writeInt(x);
+        write "\n";
     }
+
+    writeInt(x);
+    write "\n";
 
     for (int i = 0; i < 10; i = i + 1) {
         break;
     }
+}
+
+
+
+void writeInt(int n) {
+    if (n < 0) {
+        write "-";
+        n = -n;
+    }
+
+    int digit = n % 10;
+    n = (n - digit) / 10;
+    if (n > 0) {
+        writeInt(n);
+    }
+
+    string output;
+
+    if (digit == 0) output = "0";
+    if (digit == 1) output = "1";
+    if (digit == 2) output = "2";
+    if (digit == 3) output = "3";
+    if (digit == 4) output = "4";
+    if (digit == 5) output = "5";
+    if (digit == 6) output = "6";
+    if (digit == 7) output = "7";
+    if (digit == 8) output = "8";
+    if (digit == 9) output = "9";
+
+    write output;
 }

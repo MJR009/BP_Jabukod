@@ -1,6 +1,6 @@
 # Jabukód compiler
 
-Martin Jabůrek
+Martin Jabůrek <br/>
 xjabur02@stud.fit.vutbr.cz
 
 ## Bachelor Thesis Project
