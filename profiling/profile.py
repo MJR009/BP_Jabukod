@@ -1,5 +1,8 @@
 # 1) perf stat -e cycles,instructions --repeat 10 ./out - PERFORMANCE
 # 2) valgrind --tool=callgrind --dump-instr=yes --collect-jumps=yes ./out - CALLS
+#    ( flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo )
+#    ( flatpak install flathub org.kde.kcachegrind )
+#    flatpak run org.kde.kcachegrind
 #### otevřít callgrind.out.<pid> v LCacheGrind
 # 3) /usr/bin/time -v ./out - PRO DLOUHO BĚŽICÍ PROGRAMY
 #### externí time s více možnostmi
