@@ -9,7 +9,7 @@
 #include "Assembler.h"
 
 int Assembler::Assemble(const string & outputPath, bool withDebugSymbols) {
-    string debug = withDebugSymbols ? "-g " : "";
+    string debug = withDebugSymbols ? "-g " : ""; // -p for profiling
     string command = "as " + debug + "-o " + outputPath + ".o " + outputPath + ".s";
 
     int ret = system( command.c_str() );
@@ -23,7 +23,7 @@ int Assembler::Assemble(const string & outputPath, bool withDebugSymbols) {
 
 int Assembler::Link(const string & outputPath, bool withDebugSymbols) {
     string debug = withDebugSymbols ? "-g " : "";
-    string command = "ld " + debug + "-o " + outputPath + " " + outputPath + ".o"; // -s flag
+    string command = "ld " + debug + "-o " + outputPath + " " + outputPath + ".o"; // -s flag, -p for profiling
 
     int ret = system( command.c_str() );
     if (ret != 0) {
