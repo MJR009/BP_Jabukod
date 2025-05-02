@@ -1,10 +1,8 @@
 /**
- * @file main.h
+ * @file ProgramArguments.h
  * @author Martin Jabůrek
  *
- * @brief General definitions for top level functionality.
- * 
- * This file implements command line argument parsing and definitions needed for its error handling.
+ * @brief Command line arguments parsing using getopt.
  */
 
 #pragma once
@@ -12,8 +10,17 @@
 
 #include "getopt.h"
 
+/**
+ * @brief An empty struct to differentiate print help and error
+ * 
+ * This error will be treated differently from others. When caught, the help message will be printed and program
+ * will terminate without an error. This is an exception, other errors are not desired and program will terminate
+ * with an error (exit code 1) when they are caught.
+ */
+struct PrintHelp {};
+
 /// @brief Macros defining the command line arguments available for use with getopt function
-#define ARGUMENTS "adDgho:"
+#define ARGUMENTS "acdDgho:"
 
 /**
  * @defgroup commandLineArgs Macros defining command line argument error text.
@@ -27,9 +34,11 @@
 #define HELP_MESSAGE \
     ( \
         CYAN BOLD "Usage:\n" DEFAULT \
-        "\t./jabukod [" BOLD "-a" DEFAULT "] [" BOLD "-d" DEFAULT "] [" BOLD "-D" DEFAULT "] [" BOLD "-g" DEFAULT "] [" BOLD "-h" DEFAULT "] [" \
+        "\t./jabukod [" BOLD "-a" DEFAULT "] [" BOLD "-c" DEFAULT "] [" BOLD "-d" DEFAULT "] [" \
+            BOLD "-D" DEFAULT "] [" BOLD "-g" DEFAULT "] [" BOLD "-h" DEFAULT "] [" \
             BOLD "-o " DEFAULT EMPH "path_to_binary" DEFAULT BOLD "] " DEFAULT EMPH "path_to_program\n\n" DEFAULT \
         CYAN "-a " DEFAULT "- only execute source program " CYAN "a" DEFAULT "nalysis, do not compile\n" \
+        CYAN "-c " DEFAULT "- embed " CYAN "c" DEFAULT "lock cycle measurement with 'rdtsc' into the generated binary\n" \
         CYAN "-d " DEFAULT "- generate executable with " CYAN "d" DEFAULT "ebug info\n" \
         CYAN "-D " DEFAULT "- compile and " CYAN "D" DEFAULT "ebug the generated binary\n" \
         CYAN "-g " DEFAULT "- print " CYAN "g" DEFAULT "raphical representation of compilation\n" \
@@ -39,65 +48,17 @@
     )
 
 /**
- * @brief An empty struct to differentiate print help and error
- * 
- * This error will be treated differently from others. When caught, the help message will be printed and program
- * will terminate without an error. This is an exception, other errors are not desired and program will terminate
- * with an error (exit code 1) when they are caught.
- */
-struct PrintHelp {};
-
-/**
- * @class PrepareArguments
+ * @class ProgramArguments
  * @brief Class defining methods for command line argument parsing.
  * 
- * Object derived from this class is used later in code to modify optional behaviour.
- * Triggers for it are represented with bool flags.
+ * Object of this class is used later in code to modify optional behaviour.
+ * Triggers for this behaviour are represented with bool flags.
  * 
  */
-class PrepareArguments {
+class ProgramArguments {
 public:
     /// @brief Constructor, preparing the command line arguments for later use.
-    PrepareArguments(int argc, char **argv) {
-        int arg;
-        opterr = 0;
-
-        while( (arg = getopt(argc, argv, ARGUMENTS)) != -1 ) {
-            switch (arg) {
-                case 'a':
-                    this->onlyDoAnalysis = true;
-                    break;
-
-                case 'D':
-                    this->runDebug = true;
-                case 'd':
-                    this->generateWithDebugSymbols = true;
-                    break;
-
-                case 'g':
-                    this->printGraphicalRepresentation = true;
-                    break;
-
-                case 'h':
-                    throw PrintHelp{};
-                    break;
-
-                case 'o':
-                    this->outputFile = optarg;
-                    break;
-
-                case '?': default:
-                    throw INVALID_CLA;
-                    break;
-            }
-        }
-
-        if (optind >= argc) {
-            throw INVALID_CLA;
-        }
-
-        this->inputFile = argv[optind];
-    }
+    ProgramArguments(int argc, char **argv);
 
 public:
     string inputFile = ""; ///< Input file name and path with a Jabukód program.
@@ -107,4 +68,5 @@ public:
     bool generateWithDebugSymbols = false; ///< If true, output executable will be generated with debug symbol.
     bool runDebug = false; ///< If true, gdb is automaticly run with TUI and register contents view.
     bool printGraphicalRepresentation = false; ///< If true, contents of the symbol table and abstract syntax tree will be printed.
+    bool useRDTSC = false; ///< If true, geenrated programs will also output how many clock cycles they took to execute.
 };

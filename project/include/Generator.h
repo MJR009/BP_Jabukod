@@ -9,6 +9,7 @@
 
 #pragma once
 #include "common.h"
+#include "ProgramArguments.h"
 
 #include "AST.h"
 #include "Instruction.h"
@@ -30,7 +31,7 @@ class Generator {
 
 public:
     /// @brief Prepares the Generator object for use by associating all needed structures.
-    Generator(string outputPath, AST & ast, SymbolTable & symbolTable);
+    Generator(ProgramArguments *args, AST & ast, SymbolTable & symbolTable);
     /// @brief Method to transform the created internal representation into output assembly.
     void Generate();
     /// @brief Desctructor responsible for closing the output file stream and deleting associated friend class.
@@ -39,6 +40,8 @@ public:
 private:
     AST & ast; ///< Accociated abstract syntax tree.
     SymbolTable & symbolTable; ///< Associated symbol table.
+    ProgramArguments *args; ///< Passed command line arguments.
+
     NodeGenerators *nodeGenerators; ///< Associated helper friend class instance for generating the assembly of each node.
     
     /**
@@ -81,4 +84,20 @@ private:
     void ResetCurrentFunction();
     /// @brief Returns true if the current active function is the entry point function main. Otherwise returns false.
     bool IsInMain();
+
+private:
+    /**
+     * @name General assembly sequences.
+     * 
+     * The following pieces of assembly must be hard coded into every file to ensure correct functionality.
+     * They only need to be put in the final generated executable, they are not obfuscated.
+     * 
+     * @{     
+     */
+    void IncludeDataSection();
+    void IncludeRODataSection();
+    void IncludeTextSection();
+    void IncludeProgramEntryPoint();
+    void IncludeFallbackExit();
+    /** @} */
 };

@@ -12,6 +12,7 @@ any GlobalSymbolsVisitor::visitSourceFile(JabukodParser::SourceFileContext *ctx)
     visitChildren(ctx);
 
     this->symbolTable.CheckIfIntMainPresent();
+    *(this->canProfile) = this->symbolTable.CheckIfCanProfile();
 
     return OK;
 }

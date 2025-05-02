@@ -190,6 +190,10 @@ void SymbolTable::CheckIfIntMainPresent() {
     }
 }
 
+bool SymbolTable::CheckIfCanProfile() {
+    return this->functionTable->GetFunctionByName("writeInt");
+}
+
 
 
 bool SymbolTable::IsIdFunctionParameter(const string & functionName, const string & identifier) {

@@ -16,7 +16,7 @@
 #include "Generator.h"
 #include "Assembler.h"
 
-int Compile(PrepareArguments *args) {
+int Compile(ProgramArguments *args) {
     ifstream stream;
     if (OpenSourceFile(args->inputFile.c_str(), stream) == NOK) {
         return NOK;
@@ -54,8 +54,16 @@ int Compile(PrepareArguments *args) {
     // Phase 1: get and check all globally available symbols;
     //        -> function and enum identifiers, also global variables (generaly stuff that should not be in AST)
     SymbolTable symbolTable(&parser);
-    GlobalSymbolsVisitor GlobalSymbolsVisitor(symbolTable);
+    bool canProfile = false;
+    GlobalSymbolsVisitor GlobalSymbolsVisitor(symbolTable, &canProfile);
     GlobalSymbolsVisitor.visit(parseTree);
+
+    if (( ! canProfile) && args->useRDTSC) {
+        cerr << RED << "Internal error" << "\t" << DEFAULT;
+        cerr << DIM << "Profiling using -c flag can only be performed with a writeInt function present in the program" << endl << DEFAULT;
+        delete input;
+        return NOK;
+    }
 
     // Phase 2: generate abstract syntax tree and do final semantic checks
     //        -> makes the tree, gathers local symbols and checks symbol usage, ensures statement use validity
@@ -80,7 +88,7 @@ int Compile(PrepareArguments *args) {
     
     try {
         // Phase 4: generate target code and output to a file
-        Generator generator(args->outputFile, ast, symbolTable);
+        Generator generator(args, ast, symbolTable);
         generator.Generate();
 
         cout << BOLD << "Compiled " << DEFAULT << args->outputFile << ".s from " << args->inputFile << endl;
@@ -89,8 +97,14 @@ int Compile(PrepareArguments *args) {
         Assembler::Assemble(args->outputFile, args->generateWithDebugSymbols);
         Assembler::Link(args->outputFile, args->generateWithDebugSymbols);
 
-        cout << BOLD << CYAN << "Executable " << args->outputFile << " created successfully!" << DEFAULT << endl;
-
+        // extra output for confirmation
+        string extra = YELLOW;
+        cout << BOLD << CYAN << "Executable " << args->outputFile << DEFAULT;
+        extra += args->generateWithDebugSymbols ? " with debug info" : "";
+        extra += (args->generateWithDebugSymbols && args->useRDTSC) ? " and" : "";
+        extra += args->useRDTSC ? " with rdtsc" : "";
+        extra += CYAN;
+        cout << BOLD << CYAN << extra << " created successfully!" << DEFAULT << endl;
         if (args->runDebug) {
             Assembler::Debug(args->outputFile);
         }

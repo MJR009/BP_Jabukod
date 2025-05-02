@@ -35,7 +35,7 @@ void NodeGenerators::GenerateFUNCTION(ASTNode *node) {
     // fallback epilogues
     if (gen->IsInMain()) { // entry point main has exit epilogue
         gen->instructions.emplace_back(MOVQ, Transform::IntToImmediate(0), RAX);
-        gen->ConnectSequence( Snippets::Exit(RAX) );
+        gen->ConnectSequence( Snippets::Exit(RAX, gen->args->useRDTSC) );
 
     } else { // all other functions have return epilogue
         gen->ConnectSequence( Snippets::Epilog() );
@@ -554,7 +554,7 @@ void NodeGenerators::GenerateRETURN(ASTNode *node) {
     }
 
     if (gen->IsInMain()) {
-        gen->ConnectSequence( Snippets::Exit(RAX) );
+        gen->ConnectSequence( Snippets::Exit(RAX, gen->args->useRDTSC) );
     } else {
         gen->ConnectSequence( Snippets::Epilog() );
     }
@@ -563,7 +563,7 @@ void NodeGenerators::GenerateRETURN(ASTNode *node) {
 void NodeGenerators::GenerateEXIT(ASTNode *node) {
     gen->GenerateNode(node->GetChild(0));
 
-    gen->ConnectSequence( Snippets::Exit(RAX) );
+    gen->ConnectSequence( Snippets::Exit(RAX, gen->args->useRDTSC) );
 }
 
 

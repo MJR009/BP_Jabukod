@@ -75,6 +75,8 @@ public:
 
     /// @brief Returns true if the program defines a function with "int main" partial signature.
     void CheckIfIntMainPresent();
+    /// @brief Returns true if there is a writeInt function present in the program, needed for profiling.
+    bool CheckIfCanProfile();
 
     /// @brief For the given function, checks if the given ID is its parameter. If yes, returns true.
     bool IsIdFunctionParameter(const string & functionName, const string & identifier);

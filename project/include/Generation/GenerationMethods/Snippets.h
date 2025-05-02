@@ -38,7 +38,7 @@ public:
     /// @brief Generates a function epilogue sequence.
     static const vector<Instruction> Epilog();
     /// @brief Generates an exit syscall, using exit code from the provided register,
-    static const vector<Instruction> Exit(string reg);
+    static const vector<Instruction> Exit(string reg, bool useRDTSC);
 
     /// @brief Initialises the target memory location to its default value according to the data type. 
     static const vector<Instruction> DeclareDefault(Type type, string target);

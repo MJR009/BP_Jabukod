@@ -35,8 +35,6 @@ BP_Jabukod/
 |   +-- include/
 |   |
 |   +-- common.h
-|   +-- SemanticErrors.h
-|   +-- main.h
 |   +-- main.cpp
 |   \-- CMakeLists.txt
 +-- samples/
@@ -94,12 +92,13 @@ limitation to intended functionality.
 
 To run the generated compiler, do:
 
-`./jabukod [-a] [-d] [-D] [-g] [-h] [-o path_to_binary] path_to_program`
+`./jabukod [-a] [-c] [-d] [-D] [-g] [-h] [-o path_to_binary] path_to_program`
 
 <b>Command line arguments</b> can be used generally with `path_to_program` always last.
 `[]` mark voluntary arguments. Semantics of each of the argument above are:
 
 - `-a` - only execute source program <b>a</b>nalysis, do not compile
+- `-c` - embed <b>c</b>lock cycle measurement with `rdtsc` into the generated binary
 - `-d` - generate executable with <b>d</b>ebug info
 - `-D` - compile and <b>D</b>ebug generated binary
 - `-g` - print <b>g</b>raphical representation of compilation

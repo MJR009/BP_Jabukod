@@ -44,8 +44,20 @@ const vector<Instruction> Snippets::Epilog() {
     return epilog;
 }
 
-const vector<Instruction> Snippets::Exit(string reg) {
+const vector<Instruction> Snippets::Exit(string reg, bool useRDTSC) {
     vector<Instruction> exitSequence;
+
+    if (useRDTSC) {
+        exitSequence.emplace_back(PUSH, reg); // exit code can only be in GPR
+
+        exitSequence.emplace_back(RDTSC);
+        exitSequence.emplace_back(MOVQ, "__rdtsc(%rip)", RBX);
+        exitSequence.emplace_back(SUBQ, RBX, RAX);
+        exitSequence.emplace_back(MOVQ, RAX, RDI);
+        exitSequence.emplace_back(CALL, "writeInt");
+
+        exitSequence.emplace_back(POP, reg);
+    }
 
     exitSequence.emplace_back(MOV, reg, RDI);
     exitSequence.emplace_back(MOV, Transform::IntToImmediate(SYSCALL_EXIT), RAX);

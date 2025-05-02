@@ -9,7 +9,11 @@
 #include "Generator.h"
 #include "NodeGenerators.h"
 
-Generator::Generator(string outputPath, AST & ast, SymbolTable & symbolTable) : ast(ast), symbolTable(symbolTable) {
+Generator::Generator(ProgramArguments *args, AST & ast, SymbolTable & symbolTable)
+    : args(args), ast(ast), symbolTable(symbolTable)
+{
+    string outputPath = args->outputFile;
+
     if (outputPath.back() == '/') {
         throw (outputPath + " is a path");
     }
@@ -114,7 +118,7 @@ void Generator::OutputAssembly() {
 }
 
 void Generator::OutputDataSection() {
-    jout << "\t.data" << endl;
+    this->IncludeDataSection();
 
     Scope *globals = this->symbolTable.GetGlobalVariables();
     auto variables = globals->GetVariables();
@@ -131,7 +135,7 @@ void Generator::OutputDataSection() {
 }
 
 void Generator::OutputRODataSection() {
-    jout << "\t.section .rodata" << endl;
+    this->IncludeRODataSection();
 
     Scope *globals = this->symbolTable.GetGlobalVariables();
     auto variables = globals->GetVariables();
@@ -158,12 +162,9 @@ void Generator::OutputRODataSection() {
 }
 
 void Generator::OutputTextSection() {
-    jout << "\t.text" << endl;
-    jout << "\t.globl _start" << endl;
-    jout << "_start:" << endl;
-    jout << "\tmovq $1, %r10" << endl;
-    jout << "\tjmp main" << endl;
-    
+    this->IncludeTextSection();
+    this->IncludeProgramEntryPoint();
+
     for_each(this->instructions.begin(), this->instructions.end(),
         [ this ](Instruction & current) {
             if ( ! Transform::IsLabel(current)) jout << "\t";
@@ -172,11 +173,7 @@ void Generator::OutputTextSection() {
         }
     );
 
-    // fallback exit
-    jout << endl;
-    jout << "\tmov $0, %rdi" << endl;
-    jout << "\tmov $60, %rax" << endl;
-    jout << "\tsyscall" << endl;
+    this->IncludeFallbackExit();
 }
 
 
@@ -187,6 +184,7 @@ void Generator::OutputVariable(Variable *variable) {
     jout << Transform::TypeToDirective( variable->GetType() );
     jout << "\t";
     jout << Transform::DefaultValueToInitializer( variable );
+
     jout << endl;
 }
 
@@ -206,4 +204,50 @@ void Generator::ResetCurrentFunction() {
 
 bool Generator::IsInMain() {
     return this->currentFunction->GetName() == "main";
+}
+
+
+
+void Generator::IncludeDataSection() {
+    jout << "\t.data" << endl;
+
+    if (this->args->useRDTSC) {
+        jout << "__rdtsc:\t.quad\t0" << endl;
+    }
+}
+
+void Generator::IncludeRODataSection() {
+    jout << "\t.section .rodata" << endl;
+}
+
+void Generator::IncludeTextSection() {
+    jout << "\t.text" << endl;
+}
+
+void Generator::IncludeProgramEntryPoint() {
+    jout << "\t.globl _start" << endl;
+    jout << "_start:" << endl;
+
+    if (this->args->useRDTSC) {
+        jout << "\trdtsc" << endl;
+        jout << "\tmovq %rax, __rdtsc(%rip)" << endl;
+    }
+
+    jout << "\tmovq $1, %r10" << endl;
+    jout << "\tjmp main" << endl;
+}
+
+void Generator::IncludeFallbackExit() {
+    jout << endl;
+
+    if (this->args->useRDTSC) {
+        jout << "\trdtsc" << endl;
+        jout << "\tmovq __rdtsc(%rip), %rbx" << endl;
+        jout << "\tsubq %rbx, %rax" << endl;
+        jout << "\tmovq %rax, %rdi" << endl;
+        jout << "\tcall writeInt" << endl;
+    }
+    jout << "\tmov $0, %rdi" << endl;
+    jout << "\tmov $60, %rax" << endl;
+    jout << "\tsyscall" << endl;
 }

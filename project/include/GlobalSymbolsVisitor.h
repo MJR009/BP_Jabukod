@@ -23,8 +23,12 @@
  */
 class GlobalSymbolsVisitor : public JabukodBaseVisitor {
 public:
-    /// @brief Associates the symbol table to be filled in with the visitor.
-    GlobalSymbolsVisitor(SymbolTable & symbolTable) : symbolTable(symbolTable) {}
+    /**
+     * @brief Associates the symbol table to be filled in with the visitor.
+     * 
+     * @param canProfile Returns whether the program defines a writeInt function, needed to use the -c flag.
+     */
+    GlobalSymbolsVisitor(SymbolTable & symbolTable, bool *canProfile) : symbolTable(symbolTable), canProfile(canProfile) {}
 
     /**
      * @name Implemented visitor methods.
@@ -44,4 +48,6 @@ public:
 
 private:
     SymbolTable & symbolTable; ///< Associated symbol table reference.
+
+    bool *canProfile; ///< Used to propagate whether -c flag can be used for profiling.
 };

@@ -12,7 +12,7 @@ void ERR::BadData() {
     exit(EXIT_FAILURE);
 }
 
-#include "main.h"
+#include "ProgramArguments.h"
 #include "Compile.h"
 
 /**
@@ -24,13 +24,14 @@ void ERR::BadData() {
 
 /// @brief Program entry point.
 int main(int argc, char **argv) {
-    PrepareArguments *args = nullptr;
+    ProgramArguments *args = nullptr;
     try {
-        args = new PrepareArguments(argc, argv);
+        args = new ProgramArguments(argc, argv);
 
     } catch (const PrintHelp & help) {
         cout << HELP_MESSAGE;
         return OK;
+        
     } catch (const char *msg) {
         cerr << RED << "Input error" << "\t" << DEFAULT;
         cerr << DIM << msg << endl << DEFAULT;

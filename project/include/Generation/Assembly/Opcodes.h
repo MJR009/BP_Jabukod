@@ -128,6 +128,14 @@
 /** @} */
 
 /**
+ * @defgroup rdtscInstruction Read time stamp counter instruction for rudementary profiling.
+ * 
+ * @{
+ */
+#define RDTSC "rdtsc"
+/** @} */
+
+/**
  * @class Opcode
  * @brief Static class used to determine what instruction operation code should be used according to operation data type.
  * 

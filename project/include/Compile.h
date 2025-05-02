@@ -12,7 +12,7 @@
 #pragma once
 #include "common.h"
 
-#include "main.h"
+#include "ProgramArguments.h"
 
 /**
  * @defgroup compilationFunctions Functions for compilation
@@ -22,7 +22,7 @@
  */
 
 /// @brief The function to process the entire compilation.
-int Compile(PrepareArguments *args);
+int Compile(ProgramArguments *args);
 
 /// @brief Opens the input file with all required checks
 static int OpenSourceFile(const char *name, ifstream & stream);
