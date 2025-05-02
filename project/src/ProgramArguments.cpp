@@ -40,6 +40,13 @@ ProgramArguments::ProgramArguments(int argc, char **argv) {
                 this->outputFile = optarg;
                 break;
 
+            case 'O':
+                if (optarg) {
+                    this->obfuscation = optarg;
+                    // TODO check optarg
+                }
+                break;
+
             case '?': default:
                 throw INVALID_CLA;
                 break;
@@ -51,4 +58,6 @@ ProgramArguments::ProgramArguments(int argc, char **argv) {
     }
 
     this->inputFile = argv[optind];
+
+    cout << "\"" << this->obfuscation << "\"" << endl;
 }

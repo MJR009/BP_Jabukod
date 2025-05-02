@@ -94,7 +94,7 @@ To run the generated compiler, do:
 
 `./jabukod [-a] [-c] [-d] [-D] [-g] [-h] [-o path_to_binary] path_to_program`
 
-<b>Command line arguments</b> can be used generally with `path_to_program` always last.
+<b>Command line arguments</b> can be used generally with extra non option arguments ignored.
 `[]` mark voluntary arguments. Semantics of each of the argument above are:
 
 - `-a` - only execute source program <b>a</b>nalysis, do not compile

@@ -20,7 +20,7 @@
 struct PrintHelp {};
 
 /// @brief Macros defining the command line arguments available for use with getopt function
-#define ARGUMENTS "acdDgho:"
+#define ARGUMENTS "acdDgho:O::"
 
 /**
  * @defgroup commandLineArgs Macros defining command line argument error text.
@@ -69,4 +69,7 @@ public:
     bool runDebug = false; ///< If true, gdb is automaticly run with TUI and register contents view.
     bool printGraphicalRepresentation = false; ///< If true, contents of the symbol table and abstract syntax tree will be printed.
     bool useRDTSC = false; ///< If true, generated programs will also output how many clock cycles they took to execute.
+
+private:
+    string obfuscation = "";
 };

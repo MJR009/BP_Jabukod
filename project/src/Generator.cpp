@@ -28,7 +28,6 @@ Generator::Generator(ProgramArguments *args, AST & ast, SymbolTable & symbolTabl
 
 void Generator::Generate() {
     this->GenerateCode();
-    this->OutputAssembly();
 }
 
 Generator::~Generator() {

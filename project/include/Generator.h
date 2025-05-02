@@ -32,8 +32,12 @@ class Generator {
 public:
     /// @brief Prepares the Generator object for use by associating all needed structures.
     Generator(ProgramArguments *args, AST & ast, SymbolTable & symbolTable);
+
     /// @brief Method to transform the created internal representation into output assembly.
     void Generate();
+    /// @brief Generates all the sections of the output assembly into a file.
+    void OutputAssembly();
+
     /// @brief Desctructor responsible for closing the output file stream and deleting associated friend class.
     ~Generator();
 
@@ -62,8 +66,6 @@ private:
     /// @brief Selects which specific node to generate according to its associated kind.
     void GenerateNode(ASTNode *node);
 
-    /// @brief Generates all the sections of the output assembly.
-    void OutputAssembly();
     /// @brief Generates the .data section with global and static variables.
     void OutputDataSection();
     /// @brief Generates the .rodata section with constants and float and string literals.

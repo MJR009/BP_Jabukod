@@ -16,6 +16,9 @@
 #include "Generator.h"
 #include "Assembler.h"
 
+#include "ObfuscateAST.h"
+#include "Obfuscate3AC.h"
+
 int Compile(ProgramArguments *args) {
     ifstream stream;
     if (OpenSourceFile(args->inputFile.c_str(), stream) == NOK) {
@@ -71,6 +74,10 @@ int Compile(ProgramArguments *args) {
     ASTGenerationVisitor astGenerationVisitor(ast);
     astGenerationVisitor.visit(parseTree);
 
+    // FIRST OBFUSCATION: AST
+    ObfuscateAST ASTobfuscator(args, ast);
+    ASTobfuscator.AddObfuscations();
+
     // Phase 3: if there were errors, do not generate code
     if (parser.getNumberOfSyntaxErrors() != 0) {
         delete input;
@@ -87,9 +94,16 @@ int Compile(ProgramArguments *args) {
     }
     
     try {
-        // Phase 4: generate target code and output to a file
+        // Phase 4.1: generate target code ...
         Generator generator(args, ast, symbolTable);
         generator.Generate();
+
+        // SECOND OBFUSCATION: 3AC
+        Obfuscate3AC codeObfuscator(args, generator);
+        codeObfuscator.AddObfuscations();
+
+        // Phase 4.2: ... and output the code into a file
+        generator.OutputAssembly();
 
         cout << BOLD << "Compiled " << DEFAULT << args->outputFile << ".s from " << args->inputFile << endl;
         
