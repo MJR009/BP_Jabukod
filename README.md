@@ -92,7 +92,7 @@ limitation to intended functionality.
 
 To run the generated compiler, do:
 
-`./jabukod [-a] [-c] [-d] [-D] [-g] [-h] [-o path_to_binary] path_to_program`
+`./jabukod [-a] [-c] [-d] [-D] [-g] [-h] [-o path_to_binary] [-O selected_obfuscations] path_to_program`
 
 <b>Command line arguments</b> can be used generally with extra non option arguments ignored.
 `[]` mark voluntary arguments. Semantics of each of the argument above are:
@@ -104,6 +104,7 @@ To run the generated compiler, do:
 - `-g` - print <b>g</b>raphical representation of compilation
 - `-h` - print <b>h</b>elp message
 - `-o` - explicitly specified <b>o</b>utput file and directory (default is `out.s`)
+- `-O` - compiles with <b>O</b>bfuscations, which are done is processed by a mandatory following argument
 - `path_to_program` - mandatory input file
 
 It is recommended to not use the `-c` flag, as the implementation is very rudementary and can

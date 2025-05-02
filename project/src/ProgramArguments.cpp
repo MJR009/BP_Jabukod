@@ -38,15 +38,13 @@ ProgramArguments::ProgramArguments(int argc, char **argv) {
 
             case 'o':
                 this->outputFile = optarg;
+                if (optarg[0] == '-') {
+                    throw INVALID_INPUT_FILE_NAME;
+                }
                 break;
 
             case 'O':
-                this->obfuscate = true;
-                if (optarg) {
-                    this->PrepareSelectedObfuscations( string(optarg) );
-                } else {
-                    this->obfuscateAll = true;
-                }
+                this->PrepareSelectedObfuscations(optarg);
                 break;
 
             case '?': default:
@@ -65,5 +63,6 @@ ProgramArguments::ProgramArguments(int argc, char **argv) {
 
 
 void ProgramArguments::PrepareSelectedObfuscations(string optarg) {
-    // TODO ACCORIND TO IMPLEMENTED, SET FLAGS !!!
+    cout << optarg << endl;
+    // TODO ACCORDING TO IMPLEMENTED, SET FLAGS !!!
 }

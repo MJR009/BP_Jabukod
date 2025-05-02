@@ -20,7 +20,7 @@
 struct PrintHelp {};
 
 /// @brief Macros defining the command line arguments available for use with getopt function
-#define ARGUMENTS "acdDgho:O::"
+#define ARGUMENTS "acdDgho:O:"
 
 /**
  * @defgroup commandLineArgs Macros defining command line argument error text.
@@ -28,6 +28,7 @@ struct PrintHelp {};
  */
 #define INVALID_CLA ("invalid command line arguments, try " BOLD "-h" DEFAULT) ///< Unexpected or extraneous command line arguments
 #define INVALID_INPUT_FILE ("given input file could not be read") ///< Provided input file does not exist
+#define INVALID_INPUT_FILE_NAME ("input file name starting with '-' can't be processed") ///< as would interpret such file as a flag
 /** @} */
 
 /// @brief Macro definining text of the programs help message, it can be printed with -h argument.
@@ -36,14 +37,16 @@ struct PrintHelp {};
         CYAN BOLD "Usage:\n" DEFAULT \
         "\t./jabukod [" BOLD "-a" DEFAULT "] [" BOLD "-c" DEFAULT "] [" BOLD "-d" DEFAULT "] [" \
             BOLD "-D" DEFAULT "] [" BOLD "-g" DEFAULT "] [" BOLD "-h" DEFAULT "] [" \
-            BOLD "-o " DEFAULT EMPH "path_to_binary" DEFAULT BOLD "] " DEFAULT EMPH "path_to_program\n\n" DEFAULT \
+            BOLD "-O " DEFAULT EMPH "selected_obfuscations" DEFAULT"] [" \
+            BOLD "-o " DEFAULT EMPH "desired_path_to_binary" DEFAULT BOLD "] " DEFAULT EMPH "path_to_program\n\n" DEFAULT \
         CYAN "-a " DEFAULT "- only execute source program " CYAN "a" DEFAULT "nalysis, do not compile\n" \
         CYAN "-c " DEFAULT "- embed " CYAN "c" DEFAULT "lock cycle measurement with 'rdtsc' into the generated binary\n" \
         CYAN "-d " DEFAULT "- generate executable with " CYAN "d" DEFAULT "ebug info\n" \
         CYAN "-D " DEFAULT "- compile and " CYAN "D" DEFAULT "ebug the generated binary\n" \
         CYAN "-g " DEFAULT "- print " CYAN "g" DEFAULT "raphical representation of compilation\n" \
         CYAN "-h " DEFAULT "- print this " CYAN "h" DEFAULT "elp message\n" \
-        CYAN "-o " DEFAULT "- explicitly specified " CYAN "o" DEFAULT "utput file and directory (default is out.s)\n" \
+        CYAN "-o " DEFAULT "- explicitly specified " CYAN "o" DEFAULT "utput file and directory (default is 'out')\n" \
+        CYAN "-O " DEFAULT "- compile with " CYAN "O" DEFAULT "bfuscations, which are done is specified in a mandatory following argument\n" \
         EMPH "path_to_program " DEFAULT "- " BOLD "mandatory " DEFAULT "path to input program (any text file, use .jk filename extension)\n" \
     )
 
@@ -75,6 +78,5 @@ private:
     void PrepareSelectedObfuscations(string optarg);
 
 public: // obfuscation flags
-    bool obfuscate = false; ///< True if there was an -O flag present.
-    bool obfuscateAll = false; ///< All implemented obfuscations will be applied.
+    //bool obfuscateAll = false; ///< All implemented obfuscations will be applied.
 };
