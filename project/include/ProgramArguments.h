@@ -71,5 +71,10 @@ public:
     bool useRDTSC = false; ///< If true, generated programs will also output how many clock cycles they took to execute.
 
 private:
-    string obfuscation = "";
+    /// @brief Given the -O argument, prepares flags for which obfuscations should be done.
+    void PrepareSelectedObfuscations(string optarg);
+
+public: // obfuscation flags
+    bool obfuscate = false; ///< True if there was an -O flag present.
+    bool obfuscateAll = false; ///< All implemented obfuscations will be applied.
 };

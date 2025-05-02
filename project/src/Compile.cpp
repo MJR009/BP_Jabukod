@@ -74,10 +74,6 @@ int Compile(ProgramArguments *args) {
     ASTGenerationVisitor astGenerationVisitor(ast);
     astGenerationVisitor.visit(parseTree);
 
-    // FIRST OBFUSCATION: AST
-    ObfuscateAST ASTobfuscator(args, ast);
-    ASTobfuscator.AddObfuscations();
-
     // Phase 3: if there were errors, do not generate code
     if (parser.getNumberOfSyntaxErrors() != 0) {
         delete input;
@@ -93,12 +89,16 @@ int Compile(ProgramArguments *args) {
         return OK;
     }
     
+    // 1st OBFUSCATION: AST
+    ObfuscateAST ASTobfuscator(args, ast);
+    ASTobfuscator.AddObfuscations();
+
     try {
         // Phase 4.1: generate target code ...
         Generator generator(args, ast, symbolTable);
         generator.Generate();
 
-        // SECOND OBFUSCATION: 3AC
+        // 2nd OBFUSCATION: 3AC
         Obfuscate3AC codeObfuscator(args, generator);
         codeObfuscator.AddObfuscations();
 

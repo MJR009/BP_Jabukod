@@ -41,9 +41,11 @@ ProgramArguments::ProgramArguments(int argc, char **argv) {
                 break;
 
             case 'O':
+                this->obfuscate = true;
                 if (optarg) {
-                    this->obfuscation = optarg;
-                    // TODO check optarg
+                    this->PrepareSelectedObfuscations( string(optarg) );
+                } else {
+                    this->obfuscateAll = true;
                 }
                 break;
 
@@ -58,6 +60,10 @@ ProgramArguments::ProgramArguments(int argc, char **argv) {
     }
 
     this->inputFile = argv[optind];
+}
 
-    cout << "\"" << this->obfuscation << "\"" << endl;
+
+
+void ProgramArguments::PrepareSelectedObfuscations(string optarg) {
+    // TODO ACCORIND TO IMPLEMENTED, SET FLAGS !!!
 }
