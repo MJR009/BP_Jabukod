@@ -68,5 +68,5 @@ public:
     bool generateWithDebugSymbols = false; ///< If true, output executable will be generated with debug symbol.
     bool runDebug = false; ///< If true, gdb is automaticly run with TUI and register contents view.
     bool printGraphicalRepresentation = false; ///< If true, contents of the symbol table and abstract syntax tree will be printed.
-    bool useRDTSC = false; ///< If true, geenrated programs will also output how many clock cycles they took to execute.
+    bool useRDTSC = false; ///< If true, generated programs will also output how many clock cycles they took to execute.
 };

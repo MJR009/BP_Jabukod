@@ -106,6 +106,9 @@ To run the generated compiler, do:
 - `-o` - explicitly specified <b>o</b>utput file and directory (default is `out.s`)
 - `path_to_program` - mandatory input file
 
+It is recommended to not use the `-c` flag, as the implementation is very rudementary and can
+be replaced with programs such as `perf`, also used for profiling during development.
+
 For clarity and correct syntax highligting in Visual Studio Code,
 Jabukód source file names should be followed by `.jk` filename extension.
 
