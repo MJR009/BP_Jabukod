@@ -351,3 +351,13 @@ void ASTNode::Print() {
             break;
     }
 }
+
+
+
+ASTNode *ASTNode::PluckAfter(int order) {
+    auto toErase = this->children.begin() + order;
+    ASTNode *subtree = *toErase;
+    this->children.erase(toErase);
+
+    return subtree;
+}

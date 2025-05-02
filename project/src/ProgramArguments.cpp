@@ -44,7 +44,11 @@ ProgramArguments::ProgramArguments(int argc, char **argv) {
                 break;
 
             case 'O':
-                this->PrepareSelectedObfuscations(optarg);
+                try {
+                    this->PrepareSelectedObfuscations(optarg);
+                } catch (char *msg) {
+                    throw msg;
+                }
                 break;
 
             case '?': default:
@@ -63,6 +67,23 @@ ProgramArguments::ProgramArguments(int argc, char **argv) {
 
 
 void ProgramArguments::PrepareSelectedObfuscations(string optarg) {
-    cout << optarg << endl;
-    // TODO ACCORDING TO IMPLEMENTED, SET FLAGS !!!
+    vector<string> selected;
+
+    stringstream optargStream(optarg);
+    string aux;
+
+    while ( getline(optargStream, aux, ',') ) {
+        selected.push_back(aux);
+    }
+
+    for (string & item : selected) {
+             if (item == "all") this->obfuscateAll = true;
+        else if (item == "opaque") this->opaquePredicates = true;
+
+
+
+        else {
+            throw INVALID_OBFUSCATION_SELECTOR;
+        }
+    }
 }

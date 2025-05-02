@@ -9,7 +9,7 @@
 #include "Obfuscate3AC.h"
 
 void Obfuscate3AC::AddObfuscations() {
-    cout << "3AC obfuscation" << endl;
+    //
 }
 
 

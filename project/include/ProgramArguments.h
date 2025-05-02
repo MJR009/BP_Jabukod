@@ -29,6 +29,7 @@ struct PrintHelp {};
 #define INVALID_CLA ("invalid command line arguments, try " BOLD "-h" DEFAULT) ///< Unexpected or extraneous command line arguments
 #define INVALID_INPUT_FILE ("given input file could not be read") ///< Provided input file does not exist
 #define INVALID_INPUT_FILE_NAME ("input file name starting with '-' can't be processed") ///< as would interpret such file as a flag
+#define INVALID_OBFUSCATION_SELECTOR ("invalid obfuscation selector, try " BOLD "-h" DEFAULT) ///< The argument of -O was partially not recognized
 /** @} */
 
 /// @brief Macro definining text of the programs help message, it can be printed with -h argument.
@@ -78,5 +79,7 @@ private:
     void PrepareSelectedObfuscations(string optarg);
 
 public: // obfuscation flags
-    //bool obfuscateAll = false; ///< All implemented obfuscations will be applied.
+    bool obfuscateAll = false; ///< All implemented obfuscations will be applied.
+
+    bool opaquePredicates = false; ///< Obfuscate using opaque predicates.
 };

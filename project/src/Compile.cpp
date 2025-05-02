@@ -80,6 +80,10 @@ int Compile(ProgramArguments *args) {
         return NOK;
     }
 
+    // 1st OBFUSCATION: AST
+    ObfuscateAST ASTobfuscator(args, ast);
+    ASTobfuscator.AddObfuscations();
+
     if (args->printGraphicalRepresentation) {
         symbolTable.Print();
         ast.Print();
@@ -88,10 +92,6 @@ int Compile(ProgramArguments *args) {
         delete input;
         return OK;
     }
-    
-    // 1st OBFUSCATION: AST
-    ObfuscateAST ASTobfuscator(args, ast);
-    ASTobfuscator.AddObfuscations();
 
     try {
         // Phase 4.1: generate target code ...

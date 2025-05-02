@@ -1,0 +1,44 @@
+int main() {
+    int y = 1;
+    if (1) {
+        int x = 0;
+        if (1) {
+            x = 1 + y;
+        }
+        y = y + 1;
+    }
+
+    writeInt(y);
+    write "\n";
+}
+
+
+
+void writeInt(int n) {
+    if (n < 0) {
+        write "-";
+        n = -n;
+    }
+
+    int digit = n % 10;
+    n = (n - digit) / 10;
+    if (n > 0) {
+        writeInt(n);
+    }
+
+    string output;
+
+    if (digit == 0) output = "0";
+    if (digit == 1) output = "1";
+    if (digit == 2) output = "2";
+    if (digit == 3) output = "3";
+    if (digit == 4) output = "4";
+    if (digit == 5) output = "5";
+    if (digit == 6) output = "6";
+    if (digit == 7) output = "7";
+    if (digit == 8) output = "8";
+    if (digit == 9) output = "9";
+
+    write output;
+}
+

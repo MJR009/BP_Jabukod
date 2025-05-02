@@ -175,7 +175,7 @@ public:
 
     /// @brief Tree destrutor, deallocating each of its nodes.
     ~AST() {
-        void (*deallocateNode)(ASTNode *) = [](ASTNode *node) {
+        void (*deallocateNode)(ASTNode *) = [ ](ASTNode *node) {
             delete node;
         };
 

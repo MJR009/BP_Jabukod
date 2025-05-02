@@ -48,6 +48,10 @@ public:
         delete this->scope;
     }
 
+public: // used with obfuscation
+    /// @brief Returns a variable, if there is one in the scope; the caller does not need to know what variable it is, just that it is in this scope
+    Variable *GetVariableForOpaquePredicate();
+
 protected:
     Scope *scope; ///< The associated internal scope object. Protected used for inheriting by derived classes.
 };

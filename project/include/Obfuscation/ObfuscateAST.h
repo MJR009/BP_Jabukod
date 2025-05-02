@@ -21,11 +21,12 @@ public:
     /// @brief Passes the reference of the tree to be obfuscated.
     ObfuscateAST(ProgramArguments *args, AST & ast) : args(args), ast(ast) {}
 
-    /// @brief According to command line arguments, add obfuscations to the code
+    /// @brief According to command line arguments, add obfuscations to the code.
     void AddObfuscations();
 
 private:
-    //TODO
+    /// @brief Incorportade opaque predicate obfuscation.
+    void OpaquePredicates();
 
 private:
     ProgramArguments *args; ///< Given command line arguments, used to decide which obfuscations should be used.

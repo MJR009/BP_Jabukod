@@ -36,3 +36,19 @@ void BodyData::RemoveStaticVariables() {
 void BodyData::PrintScope() {
     this->scope->PrintDeclarations();
 }
+
+
+
+Variable *BodyData::GetVariableForOpaquePredicate() {
+    Variable *chosen = nullptr;
+    auto available = this->scope->GetVariables();
+
+    for (auto variable : *available) {
+        if (variable->GetType() != Type::STRING) {
+            chosen = variable;
+            break;
+        }
+    }
+
+    return chosen;
+}

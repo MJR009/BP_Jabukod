@@ -101,6 +101,10 @@ public:
         delete data;
     }
 
+public: // used with obfuscation
+    /// @brief Erases a order-th subtree from this nodes children and returns its root. 
+    ASTNode *PluckAfter(int order);
+
 private:
     NodeKind kind; ///< The kind of the node.
     ASTNode *parent = nullptr; ///< Address of predecessor node in the tree hierarchy.
