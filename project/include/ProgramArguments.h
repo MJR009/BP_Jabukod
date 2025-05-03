@@ -48,7 +48,11 @@ struct PrintHelp {};
         CYAN "-h " DEFAULT "- print this " CYAN "h" DEFAULT "elp message\n" \
         CYAN "-o " DEFAULT "- explicitly specified " CYAN "o" DEFAULT "utput file and directory (default is 'out')\n" \
         CYAN "-O " DEFAULT "- compile with " CYAN "O" DEFAULT "bfuscations, which are done is specified in a mandatory following argument\n" \
-        EMPH "path_to_program " DEFAULT "- " BOLD "mandatory " DEFAULT "path to input program (any text file, use .jk filename extension)\n" \
+        EMPH "path_to_program " DEFAULT "- " BOLD "mandatory " DEFAULT "path to input program (any text file, use .jk filename extension)\n\n" \
+        "The " CYAN "-O " DEFAULT "flag is used with " BOLD "comma-separated" DEFAULT " arguments, which represent available obfuscations:\n" \
+        CYAN "opaque" DEFAULT " - obfuscate using opaque predicates\n" \
+        CYAN "interleave" DEFAULT " - code interleaving\n" \
+        CYAN BOLD "all" DEFAULT BOLD " - will apply all available obfuscations\n" DEFAULT \
     )
 
 /**

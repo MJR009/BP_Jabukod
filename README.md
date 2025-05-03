@@ -107,11 +107,32 @@ To run the generated compiler, do:
 - `-O` - compiles with <b>O</b>bfuscations, which are done is processed by a mandatory following argument
 - `path_to_program` - mandatory input file
 
-It is recommended to not use the `-c` flag, as the implementation is very rudementary and can
-be replaced with programs such as `perf`, also used for profiling during development.
+When using `-O`, it has to be followed by an argument composed of <b>comma-delimited</b>
+names, which represent obfuscations you wish to apply. There are the following options:
+
+- `opaque` - obfuscate using opaque predicates
+- `interleave` - code interleaving
+- <b>`all`</b> - <b>will apply all available obfuscations.</b>
+
+It is recommended to not use the `-c` flag, as the implementation can
+be replaced with programs such as `perf`, even better suited for profiling.
 
 For clarity and correct syntax highligting in Visual Studio Code,
 Jabukód source file names should be followed by `.jk` filename extension.
+
+#### Examples
+
+Compile `program.jk` into an executable called `prog`<br/> 
+`./jabukod program.jk -o prog`
+
+Only do analysis for `program.jk` and show visual representation<br/>
+`./jabukod program.jk -ga`
+
+Compile and debug<br/>
+`./jabukod program.jk -D`
+
+Compile `program.jk` with opaque predicates and function interleaving obfuscations<br/>
+`./jabukod program.jk -O opaque,interleave`
 
 ### Code Examples
 
