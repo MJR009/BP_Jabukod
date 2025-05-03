@@ -19,6 +19,8 @@
 
 /// @brief Forward declaration of friend class for generating each of the nodes.
 class NodeGenerators;
+/// @brief Intermediate code obfuscator needs access to instructions as well.
+class Obfuscate3AC;
 
 /**
  * @class Generator
@@ -28,6 +30,8 @@ class NodeGenerators;
 class Generator {
     /// @brief To distribute functionality, a specialised class implements methods to generate each specific abstract syntax tree node.
     friend class NodeGenerators;
+    /// @brief Friend declaration of obfuscator for easier instruction access.
+    friend class Obfuscate3AC;
 
 public:
     /// @brief Prepares the Generator object for use by associating all needed structures.
@@ -37,6 +41,8 @@ public:
     void Generate();
     /// @brief Generates all the sections of the output assembly into a file.
     void OutputAssembly();
+    /// @brief Using associate 3AC obfuscator, obfuscates the generated instructions.
+    void Obfuscate();
 
     /// @brief Desctructor responsible for closing the output file stream and deleting associated friend class.
     ~Generator();
@@ -47,7 +53,8 @@ private:
     ProgramArguments *args; ///< Passed command line arguments.
 
     NodeGenerators *nodeGenerators; ///< Associated helper friend class instance for generating the assembly of each node.
-    
+    Obfuscate3AC *codeObfuscator; ///< Associated obfuscator, processing obfuscations when desired. 
+
     /**
      * @brief Internal intermediate representation of each instruction of assembly to be generated.
      * 

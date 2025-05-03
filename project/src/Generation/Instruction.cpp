@@ -11,14 +11,17 @@
 void Instruction::Output(ofstream & file) {
     file << this->opcode;
 
-    if (this->arg1 == "") return;
-    file << " " << this->arg1;
+    if (this->arg1 != "") {
+        file << " " << this->arg1;
 
-    if (this->arg2 == "") return;
-    file << ", " << this->arg2;
-    
-    if (this->arg3 == "") return;
-    file << ", " << this->arg3;
+        if (this->arg2 != "") {
+            file << ", " << this->arg2;
+        }
+    }
+
+    if (this->arg3 != "") {
+        file << " # " << this->arg3;
+    }
 }
 
 
@@ -35,4 +38,10 @@ void Instruction::ConnectSequences(vector<Instruction> & vector1, const vector<I
         vector2.begin(),
         vector2.end()
     );
+}
+
+
+
+void Instruction::AddComment(string comment) {
+    this->arg3 = comment;
 }

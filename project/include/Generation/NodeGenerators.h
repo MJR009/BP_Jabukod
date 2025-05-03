@@ -10,7 +10,7 @@
 
 #include "ASTNode.h"
 
-/// @brief Generator class using this node generation methods.
+/// @brief Generator class using the node generation methods.
 class Generator;
 
 /**

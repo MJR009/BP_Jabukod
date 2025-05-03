@@ -34,9 +34,12 @@ public:
     /// @brief Appends vector2 to vector1, changing vector1
     static void ConnectSequences(vector<Instruction> & vector1, const vector<Instruction> & vector2);
 
+    /// @brief Helper function adding a comment after an instruction into arg3, which is otherwise unused
+    void AddComment(string comment);
+
 private:
     string opcode; ///< Instructions operation code.
     string arg1; ///< First argument, typically source address.
     string arg2; ///< Second argument typically destination address.
-    string arg3; ///< Third argument, in case it is needed.
+    string arg3; ///< Third argument, a.
 };

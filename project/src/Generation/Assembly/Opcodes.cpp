@@ -27,3 +27,20 @@ const map<string, string> Opcode::SSE = {
     {IMUL, MULSS},
     {IDIV, DIVSS},
 };
+
+
+
+bool Opcode::IsJump(string opcode) {
+    vector<string> jumps = {
+        CALL, RET,
+        JZ, JMP, JLE, JGE, JG, JL, JNE, JE, JBE, JAE, JA, JB
+    };
+
+    auto position = find(jumps.begin(), jumps.end(), opcode);
+
+    if (position != jumps.end()) {
+        return true;
+    }
+
+    return false;
+}

@@ -7,7 +7,9 @@
  */
 
 #include "Generator.h"
+
 #include "NodeGenerators.h"
+#include "Obfuscate3AC.h"
 
 Generator::Generator(ProgramArguments *args, AST & ast, SymbolTable & symbolTable)
     : args(args), ast(ast), symbolTable(symbolTable)
@@ -24,13 +26,29 @@ Generator::Generator(ProgramArguments *args, AST & ast, SymbolTable & symbolTabl
     }
 
     this->nodeGenerators = new NodeGenerators(this);
+    this->codeObfuscator = new Obfuscate3AC(args, this);
 }
+
+
 
 void Generator::Generate() {
     this->GenerateCode();
 }
 
+void Generator::OutputAssembly() {
+    this->OutputDataSection();
+    this->OutputRODataSection();
+    this->OutputTextSection();
+}
+
+void Generator::Obfuscate() {
+    this->codeObfuscator->AddObfuscations();
+}
+
+
+
 Generator::~Generator() {
+    delete this->codeObfuscator;
     delete this->nodeGenerators;
 
     if (jout.is_open()) {
@@ -110,12 +128,6 @@ void Generator::GenerateNode(ASTNode *node) {
 
 
 
-void Generator::OutputAssembly() {
-    this->OutputDataSection();
-    this->OutputRODataSection();
-    this->OutputTextSection();
-}
-
 void Generator::OutputDataSection() {
     this->IncludeDataSection();
 
@@ -167,7 +179,9 @@ void Generator::OutputTextSection() {
     for_each(this->instructions.begin(), this->instructions.end(),
         [ this ](Instruction & current) {
             if ( ! Transform::IsLabel(current)) jout << "\t";
+
             current.Output( this->jout );
+            
             jout << endl;
         }
     );

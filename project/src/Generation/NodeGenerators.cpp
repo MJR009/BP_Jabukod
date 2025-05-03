@@ -7,6 +7,7 @@
  */
 
 #include "NodeGenerators.h"
+
 #include "Generator.h"
 
 void NodeGenerators::GeneratePROGRAM(ASTNode *node) {
@@ -52,7 +53,7 @@ void NodeGenerators::GenerateWRITE(ASTNode *node) {
 
     string opcode = data->IsGlobal() ? LEA : MOV; // load %rip relative address or take address straight from stack
 
-    gen->instructions.emplace_back(opcode, Transform::VariableToLocation(data, gen->currentFunction), RSI); // (1) adress
+    gen->instructions.emplace_back(opcode, Transform::VariableToLocation(data, gen->currentFunction), RSI); // (1) address
     gen->ConnectSequence( Snippets::CalculateStringLength() ); // (2) string length
 
     gen->instructions.emplace_back(MOVQ, Transform::IntToImmediate(STDOUT), RDI); // (3) stream

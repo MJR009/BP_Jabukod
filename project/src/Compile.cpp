@@ -99,8 +99,7 @@ int Compile(ProgramArguments *args) {
         generator.Generate();
 
         // 2nd OBFUSCATION: 3AC
-        Obfuscate3AC codeObfuscator(args, generator);
-        codeObfuscator.AddObfuscations();
+        generator.Obfuscate();
 
         // Phase 4.2: ... and output the code into a file
         generator.OutputAssembly();

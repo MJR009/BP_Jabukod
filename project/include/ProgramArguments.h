@@ -82,4 +82,5 @@ public: // obfuscation flags
     bool obfuscateAll = false; ///< All implemented obfuscations will be applied.
 
     bool opaquePredicates = false; ///< Obfuscate using opaque predicates.
+    bool interleave = false; ///< Obfuscate using code interleaving.
 };

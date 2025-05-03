@@ -144,4 +144,7 @@ class Opcode {
 public:
     static const map<string, string> GPR; ///< Returns operation to be used in general purpose registers.
     static const map<string, string> SSE; ///< Returns operation to be used in floating point registers.
+
+    /// @brief Returns true if the operation code given represents a kind of a jump.
+    static bool IsJump(string opcode);
 };
