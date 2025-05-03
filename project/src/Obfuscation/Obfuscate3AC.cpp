@@ -12,6 +12,7 @@
 
 void Obfuscate3AC::AddObfuscations() {
     if (this->args->obfuscateAll) {
+        this->Signedness();
         this->Interleaving();
 
         return;
@@ -19,6 +20,9 @@ void Obfuscate3AC::AddObfuscations() {
 
     if (this->args->interleave) {
         this->Interleaving();
+    }
+    if (this->args->signedness) {
+        this->Signedness();
     }
 }
 
@@ -37,7 +41,7 @@ void Obfuscate3AC::Interleaving() {
     ) {
         string opcode = instruction->GetOpcode();
 
-        if ( Opcode::IsJump(opcode) ) {
+        if ( Opcode::IsJump(opcode) || (opcode == CALL) || (opcode == RET) ) {
             instruction++;
             basicBlocks.push_back(instruction);
             continue; // a following real label won't be inserted again
@@ -89,4 +93,65 @@ void Obfuscate3AC::Interleaving() {
 
     // (3) update the instructions
     gen->instructions = interleaved;
+}
+
+void Obfuscate3AC::Signedness() {
+    const int O_S_flagMask = 0x880;
+    const int C_flagMask = 0x1;
+
+    int unique = 0;
+
+    for (int i = 0; i < (gen->instructions.size() - 1); i++) {
+        auto & current = gen->instructions.at(i);
+        auto & next = gen->instructions.at(i+1);
+
+        if ( ! Opcode::IsJump( next.GetOpcode() ) ) {
+            continue;
+        }
+
+        // TODO DO FOR FLOATS ALSO
+
+        if (current.GetOpcode() == CMP) {
+            // TODO JMP, JZ, JE, JNE ARE NOT OPTIONS
+
+            string doCLCLabel = "__clc_" + to_string(unique);
+            string endLabel = "__sign_end_" + to_string(unique);
+
+            next.FlipJumpSign();
+
+            vector<Instruction> converter;
+
+            converter.emplace_back(PUSHFQ);
+            converter.emplace_back(POP, RAX);
+
+            converter.emplace_back(MOVQ, Transform::IntToImmediate(O_S_flagMask), RBX);
+            converter.emplace_back(ANDQ, RAX, RBX);
+            converter.emplace_back(JZ, doCLCLabel);
+
+            converter.emplace_back(CMP, Transform::IntToImmediate(O_S_flagMask), RBX);
+            converter.emplace_back(JZ, doCLCLabel);
+
+            converter.emplace_back(ORQ, Transform::IntToImmediate(C_flagMask), RAX); // SET CARRY FLAG
+            converter.emplace_back(JMP, endLabel);
+
+            converter.emplace_back(doCLCLabel + ":");
+            converter.emplace_back(ANDQ, Transform::IntToImmediate( ~ C_flagMask), RAX); // CLEAR CARRY FLAG
+
+            converter.emplace_back(endLabel + ":");
+
+            converter.emplace_back(PUSH, RAX);
+            converter.emplace_back(POPFQ);
+
+            gen->instructions.insert(
+                gen->instructions.begin() + i+1, // insert before "next"
+                converter.begin(),
+                converter.end()
+            );
+
+            i += converter.size(); // afterwards ++ in header
+            unique++;
+
+            // TODO ANNOTE
+        }
+    }
 }

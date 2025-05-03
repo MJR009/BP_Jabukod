@@ -45,3 +45,13 @@ void Instruction::ConnectSequences(vector<Instruction> & vector1, const vector<I
 void Instruction::AddComment(string comment) {
     this->arg3 = comment;
 }
+
+
+
+void Instruction::FlipJumpSign() {
+    if ( ! Opcode::IsJump(this->opcode) ) {
+        return;
+    }
+
+    this->opcode = Opcode::FlipJumpSign(this->opcode);
+}

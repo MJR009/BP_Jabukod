@@ -37,6 +37,10 @@ public:
     /// @brief Helper function adding a comment after an instruction into arg3, which is otherwise unused
     void AddComment(string comment);
 
+public: // for obfuscation
+    /// @brief If the instruction is Jcc, changes the conditions signedness
+    void FlipJumpSign();
+
 private:
     string opcode; ///< Instructions operation code.
     string arg1; ///< First argument, typically source address.

@@ -52,6 +52,7 @@ struct PrintHelp {};
         "The " CYAN "-O " DEFAULT "flag is used with " BOLD "comma-separated" DEFAULT " arguments, which represent available obfuscations:\n" \
         CYAN "opaque" DEFAULT " - obfuscate using opaque predicates\n" \
         CYAN "interleave" DEFAULT " - code interleaving\n" \
+        CYAN "signedness" DEFAULT " - signedness obfuscation (designed for this compiler)\n" \
         CYAN BOLD "all" DEFAULT BOLD " - will apply all available obfuscations\n" DEFAULT \
     )
 
@@ -87,4 +88,5 @@ public: // obfuscation flags
 
     bool opaquePredicates = false; ///< Obfuscate using opaque predicates.
     bool interleave = false; ///< Obfuscate using code interleaving.
+    bool signedness = false; ///< Obfuscate using custom RFLAGS signedness obfuscation.
 };

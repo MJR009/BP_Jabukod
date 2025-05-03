@@ -30,6 +30,8 @@ public:
 private:
     /// @brief Applies code interleaving obfuscation.
     void Interleaving();
+    /// @brief Applies signedness obfuscation.
+    void Signedness();
 
 private:
     ProgramArguments *args; ///< Given command line arguments, used to decide which obfuscations should be used.

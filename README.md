@@ -112,13 +112,11 @@ names, which represent obfuscations you wish to apply. There are the following o
 
 - `opaque` - obfuscate using opaque predicates
 - `interleave` - code interleaving
+- `signedness` - <b>self designed</b> signedness obfuscation
 - <b>`all`</b> - <b>will apply all available obfuscations.</b>
 
 It is recommended to not use the `-c` flag, as the implementation can
 be replaced with programs such as `perf`, even better suited for profiling.
-
-For clarity and correct syntax highligting in Visual Studio Code,
-Jabukód source file names should be followed by `.jk` filename extension.
 
 #### Examples
 
@@ -138,6 +136,9 @@ Compile `program.jk` with opaque predicates and function interleaving obfuscatio
 
 Exaples of Jabukód programs are stored int the `samples` directory. Tests from `samples/TESTS/generator`
 may also be used a reference for possible code structures, which can be written in Jabukód.
+
+For clarity and correct syntax highligting in Visual Studio Code,
+Jabukód source file names should be followed by `.jk` filename extension.
 
 ### Other make targets
 

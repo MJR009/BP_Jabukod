@@ -80,6 +80,7 @@ void ProgramArguments::PrepareSelectedObfuscations(string optarg) {
              if (item == "all") this->obfuscateAll = true;
         else if (item == "opaque") this->opaquePredicates = true;
         else if (item == "interleave") this->interleave = true;
+        else if (item == "signedness") this->signedness = true;
 
 
 

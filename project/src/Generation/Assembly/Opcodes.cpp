@@ -31,8 +31,7 @@ const map<string, string> Opcode::SSE = {
 
 
 bool Opcode::IsJump(string opcode) {
-    vector<string> jumps = {
-        CALL, RET,
+    const vector<string> jumps = {
         JZ, JMP, JLE, JGE, JG, JL, JNE, JE, JBE, JAE, JA, JB
     };
 
@@ -43,4 +42,23 @@ bool Opcode::IsJump(string opcode) {
     }
 
     return false;
+}
+
+const string Opcode::FlipJumpSign(string opcode) {
+    const map<string, string> jumps = {
+        {JZ, JZ},
+        {JMP, JMP},
+        {JLE, JBE},
+        {JGE, JAE},
+        {JG, JA},
+        {JL, JB},
+        {JNE, JNE},
+        {JE, JE},
+        {JBE, JLE},
+        {JAE, JGE},
+        {JA, JG},
+        {JB, JL}
+    };
+
+    return jumps.at(opcode);
 }

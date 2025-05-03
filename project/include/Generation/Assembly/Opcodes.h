@@ -128,6 +128,18 @@
 /** @} */
 
 /**
+ * @defgroup flags Instructions used to work with the RFLAGS register.
+ * 
+ * @{
+ */
+#define PUSHFQ "pushfq"
+#define POPFQ "popfq"
+
+#define CLC "clc"
+#define STC "stc"
+/** @} */
+
+/**
  * @defgroup rdtscInstruction Read time stamp counter instruction for rudementary profiling.
  * 
  * @{
@@ -147,4 +159,6 @@ public:
 
     /// @brief Returns true if the operation code given represents a kind of a jump.
     static bool IsJump(string opcode);
+    /// @brief 
+    static const string FlipJumpSign(string opcode);
 };

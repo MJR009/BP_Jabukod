@@ -1,0 +1,10 @@
+int main() {
+    int x = -3;
+    int y = 3;
+
+    if (x > y) {
+        write "TRUE\n";
+    } else {
+        write "FALSE\n";
+    }
+}
