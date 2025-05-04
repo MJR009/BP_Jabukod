@@ -114,7 +114,8 @@ names, which represent obfuscations you wish to apply. There are the following o
 - `interleave` - code interleaving
 - `signedness` - <b>self designed</b> signedness obfuscation
 - `forge` - forge symbolic information
-- <b>`all`</b> - <b>will apply all available obfuscations.</b>
+- <b>`all` - will apply all available obfuscations</b>
+- <b>`annote` - adds annotation comments for obfuscations in generated assembly file</b>
 
 It is recommended to not use the `-c` flag, as the implementation can
 be replaced with programs such as `perf`, even better suited for profiling.

@@ -35,6 +35,7 @@ void Obfuscator::Obfuscate3AC() {
 // PRIVATE:
 
 void Obfuscator::Interleaving() {
+    static int blockOrder = 0;
     vector< vector<Instruction>::iterator > basicBlocks; // first instructions of basic blocks
 
     // (1) Find basic blocks, note where they begin
@@ -47,11 +48,22 @@ void Obfuscator::Interleaving() {
 
         if ( Opcode::IsJump(opcode) || (opcode == CALL) || (opcode == RET) ) {
             instruction++;
+
+            if (args->annoteObfuscations) {
+                instruction->AddComment("Basic block " + to_string(blockOrder));
+                blockOrder++;
+            }
+
             basicBlocks.push_back(instruction);
             continue; // a following real label won't be inserted again
         }
     
         if ( Transform::IsLabel(*instruction) ) { // first instruction is always a label, it is included
+            if (args->annoteObfuscations) {
+                instruction->AddComment("Basic block " + to_string(blockOrder));
+                blockOrder++;
+            }
+
             basicBlocks.push_back(instruction);            
         }
     }
@@ -72,8 +84,8 @@ void Obfuscator::Interleaving() {
 
         // (2.1) Add a starting label if there is none
         if ( ! Transform::IsLabel(*block) ) {
-            string implicitLabel = "__basic_block_" + to_string(i+1) + ":";
-            interleaved.emplace_back(implicitLabel);    
+            string implicitLabel = "__basic_block_" + to_string(i+1);
+            interleaved.emplace_back(implicitLabel + ":");
         }
 
         // (2.2) Write the original block
@@ -125,7 +137,11 @@ void Obfuscator::Signedness() {
 
             vector<Instruction> converter;
 
-            converter.emplace_back(PUSHFQ);
+            Instruction startMark(PUSHFQ);
+            if (args->annoteObfuscations) {
+                startMark.AddComment("SIGNEDNESS FLIP " + to_string(unique) + " START");
+            }
+            converter.push_back(startMark);
             converter.emplace_back(POP, RAX);
 
             converter.emplace_back(MOVQ, Transform::IntToImmediate(O_S_flagMask), RBX);
@@ -144,7 +160,11 @@ void Obfuscator::Signedness() {
             converter.emplace_back(endLabel + ":");
 
             converter.emplace_back(PUSH, RAX);
-            converter.emplace_back(POPFQ);
+            Instruction endMark(POPFQ);
+            if (args->annoteObfuscations) {
+                endMark.AddComment("SIGNEDNESS FLIP " + to_string(unique) + " END");
+            }
+            converter.push_back(endMark);
 
             gen->instructions.insert(
                 gen->instructions.begin() + i+1, // insert before "next"

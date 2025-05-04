@@ -55,6 +55,7 @@ struct PrintHelp {};
         CYAN "signedness" DEFAULT " - signedness obfuscation (designed for this compiler)\n" \
         CYAN "forge" DEFAULT " - purposefully forge symbolic information (designed for this compiler)\n" \
         CYAN BOLD "all" DEFAULT BOLD " - will apply all available obfuscations\n" DEFAULT \
+        CYAN BOLD "annote" DEFAULT BOLD " - adds annotation comments for obfuscations in generated assembly file\n" DEFAULT \
     )
 
 /**
@@ -86,6 +87,7 @@ private:
 
 public: // obfuscation flags
     bool obfuscateAll = false; ///< All implemented obfuscations will be applied.
+    bool annoteObfuscations = false; ///< If true, generated assembly will have additional comments about applied obfusccations.
 
     bool opaquePredicates = false; ///< Obfuscate using opaque predicates.
     bool interleave = false; ///< Obfuscate using code interleaving.
