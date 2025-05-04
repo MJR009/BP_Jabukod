@@ -32,6 +32,12 @@ list<Variable *> *EnumTableEntry::GetEntryItems() {
 
 
 
+void EnumTableEntry::SetEntryName(const string & newName) {
+    this->name = newName;
+}
+
+
+
 Variable *EnumTableEntry::GetItem(const string & name) {
     return this->items->GetVariable(name);
 }

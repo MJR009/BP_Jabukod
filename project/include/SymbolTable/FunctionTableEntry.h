@@ -29,6 +29,9 @@ public:
     /// @brief Returns the return type of the function.
     Type GetReturnType() const;
 
+    /// @brief Sets the function name according to specification.
+    void SetFunctionName(const string & name);
+
     /// @brief Returns how many parameters this function has.
     int GetParameterCount();
     /// @brief Return all the parameters of the function.

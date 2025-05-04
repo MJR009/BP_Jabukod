@@ -37,6 +37,12 @@ Type FunctionTableEntry::GetReturnType() const {
 
 
 
+void FunctionTableEntry::SetFunctionName(const string & name) {
+    this->name = name;
+}
+
+
+
 int FunctionTableEntry::GetParameterCount() {
     return this->parameterCount;
 }

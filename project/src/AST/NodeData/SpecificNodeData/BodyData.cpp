@@ -27,6 +27,12 @@ Variable *BodyData::GetVariable(const string & name) {
 
 
 
+list<Variable *> *BodyData::GetVariables() {
+    return this->scope->GetVariables();
+}
+
+
+
 void BodyData::RemoveStaticVariables() {
     this->scope->PurgeStaticVariables();
 }

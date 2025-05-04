@@ -236,6 +236,10 @@ list<EnumTableEntry *> *SymbolTable::GetAllEnums() {
     return this->enumTable->GetEnums();
 }
 
+list<FunctionTableEntry *> *SymbolTable::GetAllFunctions() {
+    return this->functionTable->GetFunctions();
+}
+
 
 
 bool SymbolTable::IsIdentifierAllowed(const string & identifier) const {

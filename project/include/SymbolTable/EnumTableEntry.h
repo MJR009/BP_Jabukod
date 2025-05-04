@@ -31,6 +31,9 @@ public:
     /// @brief Returns all items of this enum.
     list<Variable *> *GetEntryItems();
 
+    /// @brief Changes the name of the enum.
+    void SetEntryName(const string & newName);
+
     /// @brief According to the provided name, returns an item, if it exists.
     Variable *GetItem(const string & name);
 

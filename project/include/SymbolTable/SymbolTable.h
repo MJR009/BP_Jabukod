@@ -93,6 +93,8 @@ public:
     Scope *GetGlobalVariables();
     /// @brief Returns a list of all defined enums.
     list<EnumTableEntry *> *GetAllEnums();
+    /// @brief Returns the list of all defined functions.
+    list<FunctionTableEntry *> *GetAllFunctions();
 
     /// @brief Returns true if the user defined ID does not start with "__".
     bool IsIdentifierAllowed(const string & identifier) const;

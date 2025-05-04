@@ -35,6 +35,12 @@ FunctionTableEntry *FunctionTable::GetFunctionByName(const string & name) {
 
 
 
+list<FunctionTableEntry *> *FunctionTable::GetFunctions() {
+    return &(this->functions);
+}
+
+
+
 bool FunctionTable::IsNameAvailable(const string & name) const {
     return
         none_of(this->functions.begin(), this->functions.end(),

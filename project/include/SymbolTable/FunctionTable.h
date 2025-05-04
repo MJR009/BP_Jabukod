@@ -23,6 +23,9 @@ public:
     /// @brief Returns a function with the given name, if it exists.
     FunctionTableEntry *GetFunctionByName(const string & name);
 
+    /// @brief Returns all functions in the table.
+    list<FunctionTableEntry *> *GetFunctions();
+
     /// @brief Returns true, if a function with the given name does not yet exist.
     bool IsNameAvailable(const string & name) const;
     /// @brief Returns true, if a function does nbot have a parameter with the given name.

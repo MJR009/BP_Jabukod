@@ -80,7 +80,7 @@ int Compile(ProgramArguments *args) {
     }
 
     // INITIALISE OBFUSCATOR
-    Obfuscator obfuscator(args, ast);
+    Obfuscator obfuscator(args, symbolTable, ast);
 
     // 1st OBFUSCATION: AST
     obfuscator.ObfuscateAST();

@@ -37,6 +37,9 @@ public:
     /// @brief Finds and returns a variable with the provided name located within the associated scope.
     Variable *GetVariable(const string & name);
 
+    /// @brief Returns all variables withing the associated scope. 
+    list<Variable *> *GetVariables();
+
     /// @brief Removes all variables with static storage specifier from the scope.
     void RemoveStaticVariables();
 

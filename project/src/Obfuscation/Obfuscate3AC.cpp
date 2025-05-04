@@ -174,12 +174,15 @@ void Obfuscator::Signedness() {
 
             i += converter.size(); // afterwards ++ in header
             unique++;
-
-            // TODO ANNOTE
         }
     }
 }
 
 void Obfuscator::ForgeSymbolic_2() {
-    cout << "symbolic phase 2" << endl;
+    for (auto instruction : gen->instructions) {
+        if ( Transform::IsLabel(instruction) ) {
+            // TODO OBFUSCATE
+            // TODO MAYBE SWAP PAIRS? - CREATE A MAP FOR EVERY TIME A LABEL IS FOUND !!!
+        }
+    }
 }

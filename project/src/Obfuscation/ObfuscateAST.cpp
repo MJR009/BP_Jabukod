@@ -71,5 +71,57 @@ void Obfuscator::OpaquePredicates() {
 }
 
 void Obfuscator::ForgeSymbolic_1() {
-    cout << "symbolic phase 1" << endl;
+    auto globalVariables = this->symbolTable.GetGlobalVariables()->GetVariables();
+    auto enums = this->symbolTable.GetAllEnums();
+    auto functions = this->symbolTable.GetAllFunctions();
+
+    // (1) Collect names
+    vector<string> globalNames;
+
+    // (1.1) globals
+    for (Variable *global : *globalVariables) {
+        globalNames.push_back( global->GetName() );
+    }
+    
+    // (1.2) enums and items
+    for (EnumTableEntry *anEnum : *enums) {
+        globalNames.push_back(anEnum->GetEntryName());
+
+        for (Variable *item : *anEnum->GetEntryItems()) {
+            globalNames.push_back(item->GetName());
+        }
+    }
+
+    // (1.3) functions and parameters
+    for (FunctionTableEntry *function : *functions) {
+        if (function->GetFunctionName() != "main") {
+            globalNames.push_back(function->GetFunctionName());
+        }
+
+        for (Variable *parameter : *function->GetParameters()) {
+            globalNames.push_back(parameter->GetName());
+        }
+    }
+
+    // (1.4) locals
+    stack<ASTNode *> nodesToProcess;
+    nodesToProcess.push(this->ast.GetRoot());
+    while ( ! nodesToProcess.empty()) {
+        ASTNode *current = nodesToProcess.top();
+        nodesToProcess.pop();
+
+        if (current->IsScopeHavingNode()) {
+            for (auto local : *current->GetData<BodyData>()->GetVariables()) {
+                globalNames.push_back(local->GetName());
+            }
+        }
+
+        for (int i = 0; i < current->GetChildrenCount(); i++) {
+            nodesToProcess.push(current->GetChild(i));
+        }
+    }
+
+    // TODO OBFUSCATION
+    // TODO WATCH OUT FOR COVERING NAMES!!!
+    // TODO STORE ITEMS, SO THEY CAN BE EASILY ACCESSED
 }

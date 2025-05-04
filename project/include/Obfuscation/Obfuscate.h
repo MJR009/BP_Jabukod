@@ -24,7 +24,7 @@ class Generator;
 class Obfuscator {
 public:
     /// @brief Passes the reference of the tree to be obfuscated.
-    Obfuscator(ProgramArguments *args, AST & ast) : args(args), ast(ast) {}
+    Obfuscator(ProgramArguments *args, SymbolTable & symbolTable, AST & ast) : args(args), symbolTable(symbolTable), ast(ast) {}
     /// @brief Associates code generator for 3AC obfuscations.
     void GiveGenerator(Generator *gen) { this->gen = gen; }
 
@@ -52,5 +52,6 @@ private:
     ProgramArguments *args; ///< Given command line arguments, used to decide which obfuscations should be used.
 
     AST & ast; ///< Reference to the tree to be obfuscated.
+    SymbolTable & symbolTable; ///< Reference to current symbol table.
     Generator *gen = nullptr; ///< Pointer to the code generator, which holds the intermediate instructions - the 3AC representation.
 };
