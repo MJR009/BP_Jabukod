@@ -16,8 +16,7 @@
 #include "Generator.h"
 #include "Assembler.h"
 
-#include "ObfuscateAST.h"
-#include "Obfuscate3AC.h"
+#include "Obfuscate.h"
 
 int Compile(ProgramArguments *args) {
     ifstream stream;
@@ -80,9 +79,11 @@ int Compile(ProgramArguments *args) {
         return NOK;
     }
 
+    // INITIALISE OBFUSCATOR
+    Obfuscator obfuscator(args, ast);
+
     // 1st OBFUSCATION: AST
-    ObfuscateAST ASTobfuscator(args, ast);
-    ASTobfuscator.AddObfuscations();
+    obfuscator.ObfuscateAST();
 
     if (args->printGraphicalRepresentation) {
         symbolTable.Print();
@@ -95,10 +96,11 @@ int Compile(ProgramArguments *args) {
 
     try {
         // Phase 4.1: generate target code ...
-        Generator generator(args, ast, symbolTable);
+        Generator generator(args, ast, symbolTable, obfuscator);
         generator.Generate();
 
         // 2nd OBFUSCATION: 3AC
+        obfuscator.GiveGenerator(&generator);
         generator.Obfuscate();
 
         // Phase 4.2: ... and output the code into a file

@@ -104,7 +104,7 @@ To run the generated compiler, do:
 - `-g` - print <b>g</b>raphical representation of compilation
 - `-h` - print <b>h</b>elp message
 - `-o` - explicitly specified <b>o</b>utput file and directory (default is `out.s`)
-- `-O` - compiles with <b>O</b>bfuscations, which are done is processed by a mandatory following argument
+- `-O` - compile with <b>O</b>bfuscations, madatory following argument determines which are done
 - `path_to_program` - mandatory input file
 
 When using `-O`, it has to be followed by an argument composed of <b>comma-delimited</b>
@@ -113,6 +113,7 @@ names, which represent obfuscations you wish to apply. There are the following o
 - `opaque` - obfuscate using opaque predicates
 - `interleave` - code interleaving
 - `signedness` - <b>self designed</b> signedness obfuscation
+- `forge` - forge symbolic information
 - <b>`all`</b> - <b>will apply all available obfuscations.</b>
 
 It is recommended to not use the `-c` flag, as the implementation can

@@ -6,14 +6,15 @@
  * @link Obfuscate3AC.h
  */
 
-#include "Obfuscate3AC.h"
+#include "Obfuscate.h"
 
 #include "Generator.h"
 
-void Obfuscate3AC::AddObfuscations() {
+void Obfuscator::Obfuscate3AC() {
     if (this->args->obfuscateAll) {
         this->Signedness();
         this->Interleaving();
+        this->ForgeSymbolic_2();
 
         return;
     }
@@ -24,13 +25,16 @@ void Obfuscate3AC::AddObfuscations() {
     if (this->args->signedness) {
         this->Signedness();
     }
+    if (this->args->forgeSymbolic) {
+        this->ForgeSymbolic_2();
+    }
 }
 
 
 
 // PRIVATE:
 
-void Obfuscate3AC::Interleaving() {
+void Obfuscator::Interleaving() {
     vector< vector<Instruction>::iterator > basicBlocks; // first instructions of basic blocks
 
     // (1) Find basic blocks, note where they begin
@@ -95,7 +99,7 @@ void Obfuscate3AC::Interleaving() {
     gen->instructions = interleaved;
 }
 
-void Obfuscate3AC::Signedness() {
+void Obfuscator::Signedness() {
     const int O_S_flagMask = 0x880;
     const int C_flagMask = 0x1;
 
@@ -154,4 +158,8 @@ void Obfuscate3AC::Signedness() {
             // TODO ANNOTE
         }
     }
+}
+
+void Obfuscator::ForgeSymbolic_2() {
+    cout << "symbolic phase 2" << endl;
 }

@@ -53,6 +53,7 @@ struct PrintHelp {};
         CYAN "opaque" DEFAULT " - obfuscate using opaque predicates\n" \
         CYAN "interleave" DEFAULT " - code interleaving\n" \
         CYAN "signedness" DEFAULT " - signedness obfuscation (designed for this compiler)\n" \
+        CYAN "forge" DEFAULT " - purposefully forge symbolic information (designed for this compiler)\n" \
         CYAN BOLD "all" DEFAULT BOLD " - will apply all available obfuscations\n" DEFAULT \
     )
 
@@ -89,4 +90,5 @@ public: // obfuscation flags
     bool opaquePredicates = false; ///< Obfuscate using opaque predicates.
     bool interleave = false; ///< Obfuscate using code interleaving.
     bool signedness = false; ///< Obfuscate using custom RFLAGS signedness obfuscation.
+    bool forgeSymbolic = false; ///< Obfuscate by forging symbolic information.
 };

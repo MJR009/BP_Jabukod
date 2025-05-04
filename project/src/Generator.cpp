@@ -9,10 +9,10 @@
 #include "Generator.h"
 
 #include "NodeGenerators.h"
-#include "Obfuscate3AC.h"
+#include "Obfuscate.h"
 
-Generator::Generator(ProgramArguments *args, AST & ast, SymbolTable & symbolTable)
-    : args(args), ast(ast), symbolTable(symbolTable)
+Generator::Generator(ProgramArguments *args, AST & ast, SymbolTable & symbolTable, Obfuscator & obfuscator)
+    : args(args), ast(ast), symbolTable(symbolTable), obfuscator(obfuscator)
 {
     string outputPath = args->outputFile;
 
@@ -26,7 +26,6 @@ Generator::Generator(ProgramArguments *args, AST & ast, SymbolTable & symbolTabl
     }
 
     this->nodeGenerators = new NodeGenerators(this);
-    this->codeObfuscator = new Obfuscate3AC(args, this);
 }
 
 
@@ -42,13 +41,12 @@ void Generator::OutputAssembly() {
 }
 
 void Generator::Obfuscate() {
-    this->codeObfuscator->AddObfuscations();
+    this->obfuscator.Obfuscate3AC();
 }
 
 
 
 Generator::~Generator() {
-    delete this->codeObfuscator;
     delete this->nodeGenerators;
 
     if (jout.is_open()) {

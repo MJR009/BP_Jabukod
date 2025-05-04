@@ -6,11 +6,12 @@
  * @link ObfuscateAST.h
  */
 
-#include "ObfuscateAST.h"
+#include "Obfuscate.h"
 
-void ObfuscateAST::AddObfuscations() {
+void Obfuscator::ObfuscateAST() {
     if (this->args->obfuscateAll) {
         this->OpaquePredicates();
+        this->ForgeSymbolic_1();
 
         return;
     }
@@ -18,13 +19,16 @@ void ObfuscateAST::AddObfuscations() {
     if (this->args->opaquePredicates) {
         this->OpaquePredicates();
     }
+    if (this->args->forgeSymbolic) {
+        this->ForgeSymbolic_1();
+    }
 }
 
 
 
 // PRIVATE:
 
-void ObfuscateAST::OpaquePredicates() {
+void Obfuscator::OpaquePredicates() {
     void (*addOpaquePredicate)(ASTNode *) = [ ](ASTNode *node) {
         // (1) choose branches to cover
         if (node->GetKind() != NodeKind::BODY) { // we want a body node ...
@@ -64,4 +68,8 @@ void ObfuscateAST::OpaquePredicates() {
     };
 
     this->ast.PostorderForEachNode(addOpaquePredicate);
+}
+
+void Obfuscator::ForgeSymbolic_1() {
+    cout << "symbolic phase 1" << endl;
 }
