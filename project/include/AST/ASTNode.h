@@ -78,7 +78,7 @@ public:
 
     /// @brief Adds a new node after this one.
     void AppendNewChild(ASTNode *newChild);
-    /// @brief Inserts a new node at the specified order after this one.
+    /// @brief Inserts a new node at the specified order after this one, pushing the current child at this position deeper into the tree.
     void InsertAfter(ASTNode *newChild, int childIdx);
     /**
      * @brief Performs a rotation, putting first child at the end.
@@ -102,8 +102,10 @@ public:
     }
 
 public: // used with obfuscation
-    /// @brief Erases a order-th subtree from this nodes children and returns its root. 
+    /// @brief Erases the order-th subtree from this nodes children and returns its root. 
     ASTNode *PluckAfter(int order);
+    /// @brief Puts a new child, a subtree, into specified location, pushing other children to the right.
+    void PlantAfter(int order, ASTNode *root);
 
 private:
     NodeKind kind; ///< The kind of the node.

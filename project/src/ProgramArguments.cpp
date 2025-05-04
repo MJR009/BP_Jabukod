@@ -84,6 +84,7 @@ void ProgramArguments::PrepareSelectedObfuscations(string optarg) {
         else if (item == "interleave") this->interleave = true;
         else if (item == "signedness") this->signedness = true;
         else if (item == "forge") this->forgeSymbolic = true;
+        else if (item == "literal") this->literalExpansion = true;
 
 
 

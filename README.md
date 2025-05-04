@@ -114,6 +114,7 @@ names, which represent obfuscations you wish to apply. There are the following o
 - `interleave` - code interleaving
 - `signedness` - <b>self designed</b> signedness obfuscation
 - `forge` - forge symbolic information
+- `literal` - literal expansion
 - <b>`all` - will apply all available obfuscations</b>
 - <b>`annote` - adds annotation comments for obfuscations in generated assembly file</b>
 

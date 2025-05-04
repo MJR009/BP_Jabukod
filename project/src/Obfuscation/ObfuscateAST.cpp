@@ -11,6 +11,7 @@
 void Obfuscator::ObfuscateAST() {
     if (this->args->obfuscateAll) {
         this->OpaquePredicates();
+        this->LiteralExpansion();
         this->ForgeSymbolic_1();
 
         return;
@@ -18,6 +19,9 @@ void Obfuscator::ObfuscateAST() {
 
     if (this->args->opaquePredicates) {
         this->OpaquePredicates();
+    }
+    if (this->args->literalExpansion) {
+        this->LiteralExpansion();
     }
     if (this->args->forgeSymbolic) {
         this->ForgeSymbolic_1();
@@ -124,4 +128,81 @@ void Obfuscator::ForgeSymbolic_1() {
     // TODO OBFUSCATION
     // TODO WATCH OUT FOR COVERING NAMES!!!
     // TODO STORE ITEMS, SO THEY CAN BE EASILY ACCESSED
+}
+
+void Obfuscator::LiteralExpansion() {
+    void (*expand)(ASTNode *) = [ ](ASTNode *node) {
+        // (1) Check if there is a literal available to obfuscate
+        int i = 0;
+        bool literalPresent = false;
+        for (; i < node->GetChildrenCount(); i++) {
+            if (node->GetChild(i)->GetKind() == NodeKind::LITERAL) { // TODO REPLACES ONLY FIRST LITERAL RIGHT NOW
+                literalPresent = true;
+                break;
+            }
+        }
+        if ( ! literalPresent) {
+            return;
+        }
+
+        ASTNode *literal = node->GetChild(i);
+        LiteralData *data = literal->GetData<LiteralData>();
+
+        if (data->GetType() != Type::INT) { // TODO DO FOR BOOL ALSO
+            return;
+        }
+
+        // (2) Only add an arbitrary expression sometimes
+        if ( Random::Get0ToN(2) ) { // 50 % // TODO TWEAK PROBABILITIES
+            return;
+        }
+
+        // (3) Replace the subtree
+        int valueToReplace = any_cast<int>( data->GetValue() );
+        int operation = Random::Get0ToN(1);
+        NodeKind kind = NodeKind::invalid;
+        switch (operation) { // TODO EXPAND OPERATIONS
+            case 0:
+                kind = NodeKind::ADDITION;
+                break;
+
+            case 1:
+                kind = NodeKind::SUBTRACTION;
+                break;
+        }
+        ExpressionData *newNodeData = new ExpressionData(Type::INT);
+        ASTNode *newNode = new ASTNode(kind, newNodeData);
+
+        int replacement1;
+        if (valueToReplace == 0) {
+            replacement1 = Random::Get0ToN(10);
+        } else {
+            replacement1 = Random::Get0ToN(valueToReplace);
+        }
+        LiteralData *lSideData = new LiteralData(Type::INT, any( replacement1 ));
+        ASTNode *lSide = new ASTNode(NodeKind::LITERAL, lSideData);
+
+        int replacement2;
+        switch (operation) {
+            case 0:
+                replacement2 = valueToReplace - replacement1;
+                break;
+
+            case 1:
+                replacement2 = replacement1 - valueToReplace;
+                break;
+        }
+        LiteralData *rSideData = new LiteralData(Type::INT, any( replacement2 ));
+        ASTNode *rSide = new ASTNode(NodeKind::LITERAL, rSideData);
+
+        newNode->AppendNewChild(lSide);
+        newNode->AppendNewChild(rSide);
+
+        // (4) Replant the new expression where the literal used to be
+        node->PluckAfter(i);
+        delete literal;
+        node->PlantAfter(i, newNode);
+    };
+
+    this->ast.PreorderForEachNode(expand);
 }

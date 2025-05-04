@@ -54,6 +54,7 @@ struct PrintHelp {};
         CYAN "interleave" DEFAULT " - code interleaving\n" \
         CYAN "signedness" DEFAULT " - signedness obfuscation (designed for this compiler)\n" \
         CYAN "forge" DEFAULT " - purposefully forge symbolic information (designed for this compiler)\n" \
+        CYAN "literal" DEFAULT " - literal expansion\n" \
         CYAN BOLD "all" DEFAULT BOLD " - will apply all available obfuscations\n" DEFAULT \
         CYAN BOLD "annote" DEFAULT BOLD " - adds annotation comments for obfuscations in generated assembly file\n" DEFAULT \
     )
@@ -93,4 +94,5 @@ public: // obfuscation flags
     bool interleave = false; ///< Obfuscate using code interleaving.
     bool signedness = false; ///< Obfuscate using custom RFLAGS signedness obfuscation.
     bool forgeSymbolic = false; ///< Obfuscate by forging symbolic information.
+    bool literalExpansion = false; ///< Obfuscate by transforming literals into expressions.
 };

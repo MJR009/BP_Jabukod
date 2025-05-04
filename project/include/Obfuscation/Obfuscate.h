@@ -12,6 +12,8 @@
 #include "AST.h"
 #include "Generator.h"
 
+#include "Pseudorandom.h"
+
 /// @brief Generator class using the obfscation methods
 class Generator;
 
@@ -36,6 +38,8 @@ private:
     void OpaquePredicates();
     /// @brief Obfuscates by forging symbolic information. First part, which obfuscates actual source program symbols.
     void ForgeSymbolic_1();
+    /// @brief Expands literals into literal expressions.
+    void LiteralExpansion();
 
 public:
     /// @brief According to command line arguments, add obfuscations to three address code.

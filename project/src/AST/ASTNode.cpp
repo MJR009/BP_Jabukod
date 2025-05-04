@@ -356,8 +356,17 @@ void ASTNode::Print() {
 
 ASTNode *ASTNode::PluckAfter(int order) {
     auto toErase = this->children.begin() + order;
+
     ASTNode *subtree = *toErase;
     this->children.erase(toErase);
 
     return subtree;
+}
+
+void ASTNode::PlantAfter(int order, ASTNode *root) {
+    root->parent = this;
+    
+    auto target = this->children.begin() + order;
+
+    this->children.insert(target, root);
 }

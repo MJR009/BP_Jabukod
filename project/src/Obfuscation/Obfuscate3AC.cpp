@@ -19,11 +19,11 @@ void Obfuscator::Obfuscate3AC() {
         return;
     }
 
-    if (this->args->interleave) {
-        this->Interleaving();
-    }
     if (this->args->signedness) {
         this->Signedness();
+    }
+    if (this->args->interleave) {
+        this->Interleaving();
     }
     if (this->args->forgeSymbolic) {
         this->ForgeSymbolic_2();
