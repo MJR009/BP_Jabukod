@@ -85,6 +85,7 @@ void ProgramArguments::PrepareSelectedObfuscations(string optarg) {
         else if (item == "signedness") this->signedness = true;
         else if (item == "forge") this->forgeSymbolic = true;
         else if (item == "literal") this->literalExpansion = true;
+        else if (item == "clone") this->functionCloning = true;
 
 
 

@@ -30,6 +30,8 @@ public:
 
     /// @brief Returns instructions operation code.
     string GetOpcode();
+    /// @brief Returns first argument of instruction
+    string GetArg1();
 
     /// @brief Appends vector2 to vector1, changing vector1
     static void ConnectSequences(vector<Instruction> & vector1, const vector<Instruction> & vector2);
@@ -40,6 +42,8 @@ public:
 public: // for obfuscation
     /// @brief If the instruction is Jcc, changes the conditions signedness
     void FlipJumpSign();
+    /// @brief Changes arg1 of a call instruction, to jump elsewhere
+    void SetCallTarget(const string & newTarget);
 
 private:
     string opcode; ///< Instructions operation code.

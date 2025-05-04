@@ -55,6 +55,7 @@ struct PrintHelp {};
         CYAN "signedness" DEFAULT " - signedness obfuscation (designed for this compiler)\n" \
         CYAN "forge" DEFAULT " - purposefully forge symbolic information (designed for this compiler)\n" \
         CYAN "literal" DEFAULT " - literal expansion\n" \
+        CYAN "clone" DEFAULT " - function cloning\n" \
         CYAN BOLD "all" DEFAULT BOLD " - will apply all available obfuscations\n" DEFAULT \
         CYAN BOLD "annote" DEFAULT BOLD " - adds annotation comments for obfuscations in generated assembly file\n" DEFAULT \
     )
@@ -95,4 +96,5 @@ public: // obfuscation flags
     bool signedness = false; ///< Obfuscate using custom RFLAGS signedness obfuscation.
     bool forgeSymbolic = false; ///< Obfuscate by forging symbolic information.
     bool literalExpansion = false; ///< Obfuscate by transforming literals into expressions.
+    bool functionCloning = false; ///< Obfuscate using cloned functions.
 };

@@ -30,6 +30,10 @@ string Instruction::GetOpcode() {
     return this->opcode;
 }
 
+string Instruction::GetArg1() {
+    return this->arg1;
+}
+
 
 
 void Instruction::ConnectSequences(vector<Instruction> & vector1, const vector<Instruction> & vector2) {
@@ -54,4 +58,12 @@ void Instruction::FlipJumpSign() {
     }
 
     this->opcode = Opcode::FlipJumpSign(this->opcode);
+}
+
+void Instruction::SetCallTarget(const string & newTarget) {
+    if (this->opcode != CALL) {
+        return;
+    }
+
+    this->arg1 = newTarget;
 }

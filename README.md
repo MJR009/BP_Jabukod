@@ -115,6 +115,7 @@ names, which represent obfuscations you wish to apply. There are the following o
 - `signedness` - <b>self designed</b> signedness obfuscation
 - `forge` - forge symbolic information
 - `literal` - literal expansion
+- `clone` - function cloning
 - <b>`all` - will apply all available obfuscations</b>
 - <b>`annote` - adds annotation comments for obfuscations in generated assembly file</b>
 

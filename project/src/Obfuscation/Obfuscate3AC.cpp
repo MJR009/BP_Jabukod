@@ -12,6 +12,7 @@
 
 void Obfuscator::Obfuscate3AC() {
     if (this->args->obfuscateAll) {
+        this->FunctionCloning();
         this->Signedness();
         this->Interleaving();
         this->ForgeSymbolic_2();
@@ -19,6 +20,9 @@ void Obfuscator::Obfuscate3AC() {
         return;
     }
 
+    if (this->args->functionCloning) {
+        this->FunctionCloning();
+    }
     if (this->args->signedness) {
         this->Signedness();
     }
@@ -183,6 +187,78 @@ void Obfuscator::ForgeSymbolic_2() {
         if ( Transform::IsLabel(instruction) ) {
             // TODO OBFUSCATE
             // TODO MAYBE SWAP PAIRS? - CREATE A MAP FOR EVERY TIME A LABEL IS FOUND !!!
+        }
+    }
+}
+
+void Obfuscator::FunctionCloning() {
+    string originalName, cloneName; 
+
+    // (1) Search for a function to clone
+    for (int i = 0; i < gen->instructions.size(); i++) {
+        Instruction current = gen->instructions.at(i); // copy
+
+        if ( ! Transform::IsLabel(current) ) {
+            continue;
+        }
+
+        originalName = current.GetOpcode();
+        originalName.pop_back(); // remove ':'
+        if (( ! this->symbolTable.IsIdFunction(originalName) ) ||
+            (originalName == "main")
+        ) {
+            continue;
+        }
+
+        // (2) Clone the body of this function to the end of the program
+        cloneName = originalName + "_clone";
+        gen->instructions.emplace_back(cloneName + ":");
+        if (this->args->annoteObfuscations) {
+            gen->instructions.back().AddComment("CLONE OF " + originalName);
+        }
+
+        for (i++ /* skip label */;; i++) {
+            current = gen->instructions.at(i);
+
+            string currentName = current.GetOpcode();
+            currentName.pop_back(); // remove ':'
+
+            if ((this->symbolTable.IsIdFunction(currentName)) ||
+                (currentName == (cloneName))
+            ) { // only go up to next function
+                break;
+            } else if ( Transform::IsLabel(current) ) {
+                gen->instructions.push_back( {currentName + "_clone:"} );
+                if (this->args->annoteObfuscations) {
+                    gen->instructions.back().AddComment("CLONE OF " + currentName);
+                }
+                continue;
+            }
+
+            gen->instructions.push_back(current);
+        }
+
+        // (3) Only clone one function
+        break;
+    }
+
+    // (4) search for calls to original. Replace them with references to clone.
+    bool other = true; // only change every "other" call
+
+    for (Instruction & instruction : gen->instructions) {
+        if ((instruction.GetOpcode() == CALL) &&
+            (instruction.GetArg1() == originalName)
+        ) {
+            if ( ! other) {
+                other = true;
+                continue;
+            }
+            other = false;
+
+            instruction.SetCallTarget(cloneName);
+            if (this->args->annoteObfuscations) {
+                instruction.AddComment("CALL TO CLONE; ORIGINAL: " + originalName);
+            }
         }
     }
 }

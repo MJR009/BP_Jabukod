@@ -51,6 +51,8 @@ private:
     void Signedness();
     /// @brief Obfuscates by forging symbolic information. This is a second part, obfuscating automatically generated symbols.
     void ForgeSymbolic_2();
+    /// @brief Obfuscates by cloning selected functions. These can be use interchangably with originals.
+    void FunctionCloning();
 
 private:
     ProgramArguments *args; ///< Given command line arguments, used to decide which obfuscations should be used.
