@@ -40,6 +40,8 @@ private:
     void ForgeSymbolic_1();
     /// @brief Expands literals into literal expressions.
     void LiteralExpansion();
+    /// @brief Changes how array variables are stored and accessed.
+    //void RestructureArrays(); // TODO ( + SOMETHING FOR EFFECTIVE ADDRESS CALCULATION)
 
 public:
     /// @brief According to command line arguments, add obfuscations to three address code.
@@ -53,6 +55,10 @@ private:
     void ForgeSymbolic_2();
     /// @brief Obfuscates by cloning selected functions. These can be use interchangably with originals.
     void FunctionCloning();
+    /// @brief Code obfuscation, separating parts of functions into different functions. 
+    void Outline();
+    /// @brief Use control flow flattening.
+    //void Flatten(); // TODO
 
 private:
     ProgramArguments *args; ///< Given command line arguments, used to decide which obfuscations should be used.

@@ -56,6 +56,9 @@ struct PrintHelp {};
         CYAN "forge" DEFAULT " - purposefully forge symbolic information (designed for this compiler)\n" \
         CYAN "literal" DEFAULT " - literal expansion\n" \
         CYAN "clone" DEFAULT " - function cloning\n" \
+        CYAN "outline" DEFAULT " - function outlining\n" \
+        CYAN "array" DEFAULT " - array restructuring\n" \
+        CYAN "flatten" DEFAULT " - control flow flattening\n" \
         CYAN BOLD "all" DEFAULT BOLD " - will apply all available obfuscations\n" DEFAULT \
         CYAN BOLD "annote" DEFAULT BOLD " - adds annotation comments for obfuscations in generated assembly file\n" DEFAULT \
     )
@@ -97,4 +100,7 @@ public: // obfuscation flags
     bool forgeSymbolic = false; ///< Obfuscate by forging symbolic information.
     bool literalExpansion = false; ///< Obfuscate by transforming literals into expressions.
     bool functionCloning = false; ///< Obfuscate using cloned functions.
+    bool outline = false; ///< Obfuscate using function outlining.
+    bool restructureArrays = false; ///< Obfuscate using array restructuring.
+    bool flattening = false; ///< Obfuscate using control flow flattening.
 };

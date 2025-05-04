@@ -20,7 +20,7 @@ void Instruction::Output(ofstream & file) {
     }
 
     if (this->arg3 != "") {
-        file << " # " << this->arg3;
+        file << " #" << this->arg3;
     }
 }
 
@@ -47,7 +47,7 @@ void Instruction::ConnectSequences(vector<Instruction> & vector1, const vector<I
 
 
 void Instruction::AddComment(string comment) {
-    this->arg3 += comment;
+    this->arg3 += "# " + comment + " ";
 }
 
 

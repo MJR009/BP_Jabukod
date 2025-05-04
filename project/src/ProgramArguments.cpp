@@ -86,8 +86,9 @@ void ProgramArguments::PrepareSelectedObfuscations(string optarg) {
         else if (item == "forge") this->forgeSymbolic = true;
         else if (item == "literal") this->literalExpansion = true;
         else if (item == "clone") this->functionCloning = true;
-
-
+        else if (item == "outline") this->outline = true;
+        else if (item == "array") this->restructureArrays = true;
+        else if (item == "flatten") this->flattening = true;
 
         else {
             throw INVALID_OBFUSCATION_SELECTOR;

@@ -26,6 +26,8 @@ void Obfuscator::ObfuscateAST() {
     if (this->args->forgeSymbolic) {
         this->ForgeSymbolic_1();
     }
+
+    // TODO ARRAYS
 }
 
 
@@ -52,6 +54,8 @@ void Obfuscator::OpaquePredicates() {
         while (pluckIndex < node->GetChildrenCount()) { // second half is in opaque if statement
             toBeInCondition.push_back( node->PluckAfter(pluckIndex) );
         }
+
+        // TODO TRY TO DO THIS WITH AND WITHOUT DEAD CODE
 
         // (3) create a new IF subtree with opaque predicate, and put the plucked items in its BODY
         ASTNode *fakeIF = new ASTNode(NodeKind::IF, nullptr); // TODO USE VARIABLE
