@@ -20,8 +20,11 @@ class Random {
 public:
     /// @brief Returns a pseudo-random value.
     static double Get();
-    /// @bried Returns a pseudo-random value from 0 to n.
+    
+    /// @brief Returns a pseudo-random value from 0 to n.
     static int Get0ToN(int n);
+    /// @brief Returns a vector of numbers from 0 to n-1, permuted randomly.
+    static vector<int> GetPermutation0ToN(int n);
 
 private:
     /// @brief Trivial linear congruent generator implementation.

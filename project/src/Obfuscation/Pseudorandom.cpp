@@ -18,6 +18,25 @@ int Random::Get0ToN(int n) {
 
 
 
+vector<int> Random::GetPermutation0ToN(int n) {
+    vector<int> sequence;
+    for (int i = 0; i < n; i++) {
+        sequence.push_back(i);
+    }
+
+    vector<int> randomSequence;
+    while ( ! sequence.empty()) {
+        int i = Random::Get() * sequence.size();
+
+        randomSequence.push_back(sequence.at(i));
+        sequence.erase(sequence.begin() + i);
+    }
+
+    return randomSequence;
+}
+
+
+
 // PRIVATE:
 
 double Random::LinearCongruent() { // TODO GENERATE BETTER RANDOMNESS

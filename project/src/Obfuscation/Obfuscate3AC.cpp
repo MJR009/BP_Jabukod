@@ -2,8 +2,10 @@
  * @file Obfuscate3AC.cpp
  * @author Martin Jabůrek
  * 
- * Implementation of
- * @link Obfuscate3AC.h
+ * Obfuscation methods done on the three address code intermediate representation.
+ * 
+ * Partial implementation of
+ * @link Obfuscate.h
  */
 
 #include "Obfuscate.h"
@@ -45,70 +47,50 @@ void Obfuscator::Obfuscate3AC() {
 // PRIVATE:
 
 void Obfuscator::Interleaving() {
-    // (1) Find basic blocks, note where they begin
-    static int blockOrder = 0;
-    vector< vector<Instruction>::iterator > basicBlocks; // first instructions of basic blocks
+    auto basicBlocks = this->FindBasicBlocks();
 
-    for (
-        auto instruction = gen->instructions.begin();
-        instruction != gen->instructions.end() - 1;
-        instruction++
-    ) {
-        string opcode = instruction->GetOpcode();
-
-        if ( Opcode::IsJump(opcode) || (opcode == CALL) || (opcode == RET) ) {
-            instruction++;
-
-            if (args->annoteObfuscations) {
-                instruction->AddComment("Basic block " + to_string(blockOrder));
-                blockOrder++;
-            }
-
-            basicBlocks.push_back(instruction);
-            continue; // a following real label won't be inserted again
-        }
-    
-        if ( Transform::IsLabel(*instruction) ) { // first instruction is always a label, it is included
-            if (args->annoteObfuscations) {
-                instruction->AddComment("Basic block " + to_string(blockOrder));
-                blockOrder++;
-            }
-
-            basicBlocks.push_back(instruction);            
-        }
-    }
-
-    // (2) Recreate the instruction vector, but interleaved
     vector<Instruction> interleaved;
 
-    //for (int i = 0; i < basicBlocks.size(); i++) { // normal run
-    for (int i = basicBlocks.size() - 1; i >= 0; i--) { // TODO DIFFERENT ORDERINGS
-        vector<Instruction>::iterator block = basicBlocks.at(i);
-        bool isLastBlock = i == basicBlocks.size() - 1;
-        vector<Instruction>::iterator nextBlock;
+    // NORMAL RUN
+    //for (int i = 0; i < basicBlocks.size(); i++)
+    // REVERSE ORDER
+    //for (int i = basicBlocks.size() - 1; i >= 0; i--)
+    // PSEUDO-RANDOM ORDERING
+    //vector<int> blockIndexes = Random::GetPermutation0ToN( basicBlocks.size() );
+    //for (int i : blockIndexes)
+
+    vector<int> blockIndexes = Random::GetPermutation0ToN( basicBlocks.size() );
+    
+    for (int i : blockIndexes) {
+        auto block = basicBlocks.at(i);
+        bool isLastBlock = ( i == basicBlocks.size() - 1 );
+        decltype(block) nextBlock;
         if (isLastBlock) {
             nextBlock = gen->instructions.end();
         } else {
             nextBlock = basicBlocks.at(i + 1);
         }
 
-        // (2.1) Add a starting label if there is none
+        // (1) Add a starting label if there is none
         if ( ! Transform::IsLabel(*block) ) {
-            string implicitLabel = "__basic_block_" + to_string(i+1);
-            interleaved.emplace_back(implicitLabel + ":");
+            string implicitLabel = "__basic_block_" + to_string(i+1) + ":";
+            interleaved.emplace_back(implicitLabel);
         }
 
-        // (2.2) Write the original block
+        // (2) Write the original block
         while (block != nextBlock) {
             interleaved.push_back(*block);
             block++;
         }
 
-        // (2.3) Add a jump to the next block
+        // (3) Add a jump to the original next block
         if ( ! isLastBlock) {
             string target;
             if ( Transform::IsLabel(*nextBlock) ) {
-                target = nextBlock->GetOpcode().substr(0, nextBlock->GetOpcode().size() - 1);
+                string label = nextBlock->GetOpcode();
+                label.pop_back();
+                target = label;
+                
             } else {
                 target = "__basic_block_" + to_string(i+2);
             }
@@ -117,8 +99,7 @@ void Obfuscator::Interleaving() {
         }
     }
 
-    // (3) update the instructions
-    gen->instructions = interleaved;
+    gen->instructions = interleaved; // update original instructions
 }
 
 void Obfuscator::Signedness() {

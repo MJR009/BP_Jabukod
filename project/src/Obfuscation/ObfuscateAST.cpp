@@ -2,8 +2,10 @@
  * @file ObfuscateAST.cpp
  * @author Martin Jabůrek
  * 
- * Implementation of
- * @link ObfuscateAST.h
+ * Obfuscation methods done on abhstract syntax tree program representation.
+ * 
+ * Partial implementation of
+ * @link Obfuscate.h
  */
 
 #include "Obfuscate.h"

@@ -66,4 +66,16 @@ private:
     AST & ast; ///< Reference to the tree to be obfuscated.
     SymbolTable & symbolTable; ///< Reference to current symbol table.
     Generator *gen = nullptr; ///< Pointer to the code generator, which holds the intermediate instructions - the 3AC representation.
+
+private:
+    /**
+     * @name Additional helper methods for implemented obfuscations.
+     * 
+     * Implemented by ObfuscationMethods.cpp
+     * 
+     * @{
+     */
+    /// @brief Returns a vector of places where basic blocks start.
+    vector< vector<Instruction>::iterator > FindBasicBlocks();
+    /** @} */
 };
