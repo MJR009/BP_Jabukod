@@ -77,5 +77,8 @@ private:
      */
     /// @brief Returns a vector of places where basic blocks start.
     vector< vector<Instruction>::iterator > FindBasicBlocks();
+
+    /// @brief Using given variable, generates a fake condition for opaque predicate 
+    static ASTNode *CreateOpaquePredicate(Variable *controlVariable);
     /** @} */
 };

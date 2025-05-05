@@ -37,47 +37,52 @@ void Obfuscator::ObfuscateAST() {
 // PRIVATE:
 
 void Obfuscator::OpaquePredicates() {
-    void (*addOpaquePredicate)(ASTNode *) = [ ](ASTNode *node) {
+    this->ast.PostorderForEachNode
+    ( [ ](ASTNode *node)
+        {
         // (1) choose branches to cover
-        if (node->GetKind() != NodeKind::BODY) { // we want a body node ...
-            return;
-        }
-
-        BodyData *data = node->GetData<BodyData>();
-        Variable *variable = data->GetVariableForOpaquePredicate(); // ... and we want it to have a variable to use for the predicate (anything but string)
-        if ( ! variable) {
-            return;
-        }
+            // We want a body node ...
+            if ((node->GetKind() != NodeKind::BODY) &&
+                (node->GetKind() != NodeKind::FUNCTION)
+            ) {
+                return;
+            }
+            // ... and we want it to have a variable to use for the predicate.
+            BodyData *data = node->GetData<BodyData>();
+            Variable *variable = data->GetVariableForOpaquePredicate();
+            if ( ! variable) {
+                return;
+            }
 
         // (2) "pluck" out some subtrees to be covered by the opaque predicate
-        vector<ASTNode *> toBeInCondition;
+            vector<ASTNode *> toBeInCondition;
 
-        int pluckIndex = node->GetChildrenCount() / 2; // TODO MAKE MORE VARIANTS
-        while (pluckIndex < node->GetChildrenCount()) { // second half is in opaque if statement
-            toBeInCondition.push_back( node->PluckAfter(pluckIndex) );
-        }
+            if (Random::Get0ToN(1)) { // 50% chance
+                return;
+            }
 
-        // TODO TRY TO DO THIS WITH AND WITHOUT DEAD CODE
+            int pluckIndex = node->GetChildrenCount() / 2;
+            while (pluckIndex < node->GetChildrenCount()) { // second half is in opaque if statement
+                toBeInCondition.push_back( node->PluckAfter(pluckIndex) );
+            }
 
         // (3) create a new IF subtree with opaque predicate, and put the plucked items in its BODY
-        ASTNode *fakeIF = new ASTNode(NodeKind::IF, nullptr); // TODO USE VARIABLE
+            ASTNode *fakeIF = new ASTNode(NodeKind::IF, nullptr);
 
-        LiteralData *conditionData = new LiteralData(Type::BOOL, any(true)); // opaque predicate
-        ASTNode *condition = new ASTNode(NodeKind::LITERAL, conditionData);
-        fakeIF->AppendNewChild(condition);
+            ASTNode *condition = Obfuscator::CreateOpaquePredicate(variable);
+            fakeIF->AppendNewChild(condition);
 
-        BodyData *fakeIFBodyData = new BodyData(); // body with plucked nodes
-        ASTNode *fakeIFBody = new ASTNode(NodeKind::BODY, fakeIFBodyData);
-        fakeIF->AppendNewChild(fakeIFBody);
-        for (ASTNode *statement : toBeInCondition) { // "plant" the statements back, but elsewhere
-            fakeIFBody->AppendNewChild(statement);
-        }
+            BodyData *fakeIFBodyData = new BodyData(); // body with plucked nodes
+            ASTNode *fakeIFBody = new ASTNode(NodeKind::BODY, fakeIFBodyData);
+            fakeIF->AppendNewChild(fakeIFBody);
+            for (ASTNode *statement : toBeInCondition) { // "plant" the statements back, but elsewhere
+                fakeIFBody->AppendNewChild(statement);
+            }
 
         // (4) connect the new structure to the tree
-        node->AppendNewChild(fakeIF);
-    };
-
-    this->ast.PostorderForEachNode(addOpaquePredicate);
+            node->AppendNewChild(fakeIF);
+        }
+    );
 }
 
 void Obfuscator::ForgeSymbolic_1() {

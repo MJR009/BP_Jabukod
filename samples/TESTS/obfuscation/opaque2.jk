@@ -6,8 +6,8 @@ int main() {
             f = -g;
             write "STATEMENT1\n";
         } else {
-            write "STATEMENT2\n";
+            write "statement2\n";
         }
-        write "\tSTATEMENT3\n";
+        write "\t3\n";
     }
 }
