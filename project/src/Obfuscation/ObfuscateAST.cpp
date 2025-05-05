@@ -37,9 +37,11 @@ void Obfuscator::ObfuscateAST() {
 // PRIVATE:
 
 void Obfuscator::OpaquePredicates() {
+
     this->ast.PostorderForEachNode
-    ( [ ](ASTNode *node)
-        {
+
+    (
+        [ ](ASTNode *node) {
         // (1) choose branches to cover
             // We want a body node ...
             if ((node->GetKind() != NodeKind::BODY) &&
@@ -82,6 +84,7 @@ void Obfuscator::OpaquePredicates() {
         // (4) connect the new structure to the tree
             node->AppendNewChild(fakeIF);
         }
+
     );
 }
 
@@ -142,78 +145,36 @@ void Obfuscator::ForgeSymbolic_1() {
 }
 
 void Obfuscator::LiteralExpansion() {
-    void (*expand)(ASTNode *) = [ ](ASTNode *node) {
-        // (1) Check if there is a literal available to obfuscate
-        int i = 0;
-        bool literalPresent = false;
-        for (; i < node->GetChildrenCount(); i++) {
-            if (node->GetChild(i)->GetKind() == NodeKind::LITERAL) { // TODO REPLACES ONLY FIRST LITERAL RIGHT NOW
-                literalPresent = true;
-                break;
+
+    this->ast.PreorderForEachNode
+    
+    (
+        [ ](ASTNode *node) {
+            LiteralData *data;
+
+            for (int i = 0; i < node->GetChildrenCount(); i++) {
+                if (node->GetChild(i)->GetKind() != NodeKind::LITERAL) { // the item replaced must be a literal ...
+                    continue;
+                }
+                data = node->GetChild(i)->GetData<LiteralData>();
+                if (data->GetType() != Type::INT) { // ... of type int TODO
+                    continue;
+                }
+
+                int condition = Random::Get0ToN(2); // 33 % - only done sometimes
+                if (condition != 0) {
+                    continue;
+                }
+
+                ASTNode *replacementNode =
+                    Obfuscator::GenerateArfificialExpression( any_cast<int>(data->GetValue()) );
+
+                // replant the new expression where the literal used to be
+                ASTNode *oldLiteral = node->PluckAfter(i);
+                delete oldLiteral;
+                node->PlantAfter(i, replacementNode);
             }
         }
-        if ( ! literalPresent) {
-            return;
-        }
 
-        ASTNode *literal = node->GetChild(i);
-        LiteralData *data = literal->GetData<LiteralData>();
-
-        if (data->GetType() != Type::INT) { // TODO DO FOR BOOL ALSO
-            return;
-        }
-
-        // (2) Only add an arbitrary expression sometimes
-        if ( Random::Get0ToN(2) ) { // 50 % // TODO TWEAK PROBABILITIES
-            return;
-        }
-
-        // (3) Replace the subtree
-        int valueToReplace = any_cast<int>( data->GetValue() );
-        int operation = Random::Get0ToN(1);
-        NodeKind kind = NodeKind::invalid;
-        switch (operation) { // TODO EXPAND OPERATIONS
-            case 0:
-                kind = NodeKind::ADDITION;
-                break;
-
-            case 1:
-                kind = NodeKind::SUBTRACTION;
-                break;
-        }
-        ExpressionData *newNodeData = new ExpressionData(Type::INT);
-        ASTNode *newNode = new ASTNode(kind, newNodeData);
-
-        int replacement1;
-        if (valueToReplace == 0) {
-            replacement1 = Random::Get0ToN(10);
-        } else {
-            replacement1 = Random::Get0ToN(valueToReplace);
-        }
-        LiteralData *lSideData = new LiteralData(Type::INT, any( replacement1 ));
-        ASTNode *lSide = new ASTNode(NodeKind::LITERAL, lSideData);
-
-        int replacement2;
-        switch (operation) {
-            case 0:
-                replacement2 = valueToReplace - replacement1;
-                break;
-
-            case 1:
-                replacement2 = replacement1 - valueToReplace;
-                break;
-        }
-        LiteralData *rSideData = new LiteralData(Type::INT, any( replacement2 ));
-        ASTNode *rSide = new ASTNode(NodeKind::LITERAL, rSideData);
-
-        newNode->AppendNewChild(lSide);
-        newNode->AppendNewChild(rSide);
-
-        // (4) Replant the new expression where the literal used to be
-        node->PluckAfter(i);
-        delete literal;
-        node->PlantAfter(i, newNode);
-    };
-
-    this->ast.PreorderForEachNode(expand);
+    );
 }

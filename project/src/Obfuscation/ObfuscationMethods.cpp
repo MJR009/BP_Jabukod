@@ -198,3 +198,40 @@ vector<Instruction> Obfuscator::UsignedToSigned() {
     unique++;
     return converter;
 }
+
+
+
+ASTNode *Obfuscator::GenerateArfificialExpression(int valueToReplace) {
+    int operation = Random::Get0ToN(1); // + / -
+
+    NodeKind replacementKind = NodeKind::invalid;
+    switch (operation) {
+        case 0: replacementKind = NodeKind::ADDITION; break;
+        case 1: replacementKind = NodeKind::SUBTRACTION; break;
+    }
+    ExpressionData *replacementData = new ExpressionData(Type::INT);
+    ASTNode *replacementNode = new ASTNode(replacementKind, replacementData);
+
+    int leftValue = 10; // base value - for more interesting results
+    if (valueToReplace > 0) {
+        leftValue += Random::Get0ToN(valueToReplace);
+    } else if (valueToReplace < 0) {
+        int neg = - valueToReplace;
+        leftValue += - Random::Get0ToN(neg);
+    } else {} // 0
+    LiteralData *leftValueData = new LiteralData(Type::INT, any(leftValue));
+    ASTNode *left = new ASTNode(NodeKind::LITERAL, leftValueData);
+
+    int rightValue = 0;
+    switch (operation) {
+        case 0: rightValue = valueToReplace - leftValue; break;
+        case 1: rightValue = leftValue - valueToReplace; break;
+    }
+    LiteralData *rightValueData = new LiteralData(Type::INT, any(rightValue));
+    ASTNode *right = new ASTNode(NodeKind::LITERAL, rightValueData);
+
+    replacementNode->AppendNewChild(left);
+    replacementNode->AppendNewChild(right);
+
+    return replacementNode;
+}
