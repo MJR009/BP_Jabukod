@@ -80,5 +80,10 @@ private:
 
     /// @brief Using given variable, generates a fake condition for opaque predicate 
     static ASTNode *CreateOpaquePredicate(Variable *controlVariable);
+
+    /// @brief Converts comparison to float equivalent.
+    vector<Instruction> SignedToUnsigned();
+    /// @brief Converts comparison to signed int equivalent.
+    vector<Instruction> UsignedToSigned();
     /** @} */
 };

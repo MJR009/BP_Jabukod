@@ -103,69 +103,41 @@ void Obfuscator::Interleaving() {
 }
 
 void Obfuscator::Signedness() {
-    const int O_S_flagMask = 0x880;
-    const int C_flagMask = 0x1;
-
-    int unique = 0;
-
     for (int i = 0; i < (gen->instructions.size() - 1); i++) {
         auto & current = gen->instructions.at(i);
         auto & next = gen->instructions.at(i+1);
 
-        if ( ! Opcode::IsJump( next.GetOpcode() ) ) {
+        string nextOpcode = next.GetOpcode();
+
+        if ( ! Opcode::IsJump(nextOpcode) ) {
+            continue;
+        }
+        if ((nextOpcode == JMP) || (nextOpcode == JZ) ||
+            (nextOpcode == JE) || (nextOpcode == JNE)
+        ) { // these specific conditions cause no difference for this obfuscation
             continue;
         }
 
-        // TODO DO FOR FLOATS ALSO
-
-        if (current.GetOpcode() == CMP) {
-            // TODO JMP, JZ, JE, JNE ARE NOT OPTIONS
-
-            string doCLCLabel = "__clc_" + to_string(unique);
-            string endLabel = "__sign_end_" + to_string(unique);
-
-            next.FlipJumpSign();
-
-            vector<Instruction> converter;
-
-            Instruction startMark(PUSHFQ);
-            if (args->annoteObfuscations) {
-                startMark.AddComment("SIGNEDNESS FLIP " + to_string(unique) + " START");
-            }
-            converter.push_back(startMark);
-            converter.emplace_back(POP, RAX);
-
-            converter.emplace_back(MOVQ, Transform::IntToImmediate(O_S_flagMask), RBX);
-            converter.emplace_back(ANDQ, RAX, RBX);
-            converter.emplace_back(JZ, doCLCLabel);
-
-            converter.emplace_back(CMP, Transform::IntToImmediate(O_S_flagMask), RBX);
-            converter.emplace_back(JZ, doCLCLabel);
-
-            converter.emplace_back(ORQ, Transform::IntToImmediate(C_flagMask), RAX); // SET CARRY FLAG
-            converter.emplace_back(JMP, endLabel);
-
-            converter.emplace_back(doCLCLabel + ":");
-            converter.emplace_back(ANDQ, Transform::IntToImmediate( ~ C_flagMask), RAX); // CLEAR CARRY FLAG
-
-            converter.emplace_back(endLabel + ":");
-
-            converter.emplace_back(PUSH, RAX);
-            Instruction endMark(POPFQ);
-            if (args->annoteObfuscations) {
-                endMark.AddComment("SIGNEDNESS FLIP " + to_string(unique) + " END");
-            }
-            converter.push_back(endMark);
-
-            gen->instructions.insert(
-                gen->instructions.begin() + i+1, // insert before "next"
-                converter.begin(),
-                converter.end()
-            );
-
-            i += converter.size(); // afterwards ++ in header
-            unique++;
+        if (Random::Get0ToN(1)) { // 50 %, do not do every time
+            continue;
         }
+
+        next.FlipJumpSign();
+
+        vector<Instruction> converter;
+        if (current.GetOpcode() == CMP) { // GPR comparison
+            converter = this->SignedToUnsigned();
+        } else if (current.GetOpcode() == COMISS) { // SSE comparison
+            converter = this->UsignedToSigned();
+        }
+
+        gen->instructions.insert(
+            gen->instructions.begin() + i+1, // insert before "next"
+            converter.begin(),
+            converter.end()
+        );
+
+        i += converter.size(); // afterwards ++ in header
     }
 }
 

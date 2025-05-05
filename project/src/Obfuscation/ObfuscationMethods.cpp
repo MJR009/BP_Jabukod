@@ -114,3 +114,87 @@ ASTNode *Obfuscator::CreateOpaquePredicate(Variable *controlVariable) {
 
     return opaquePredicate;
 }
+
+
+
+vector<Instruction> Obfuscator::SignedToUnsigned() {
+    const int O_S_flagMask = 0x880;
+    const int C_flagMask = 0x1;
+
+    static int unique = 0;
+
+    vector<Instruction> converter;
+    string doCLCLabel = "__clc_" + to_string(unique);
+    string endLabel = "__sToU_" + to_string(unique);
+
+    Instruction startMark(PUSHFQ);
+    if (args->annoteObfuscations) {
+        startMark.AddComment("SIGNED TO UNSIGNED " + to_string(unique) + " START");
+    }
+    converter.push_back(startMark);
+    converter.emplace_back(POP, RAX);
+
+    converter.emplace_back(MOVQ, Transform::IntToImmediate(O_S_flagMask), RBX);
+    converter.emplace_back(ANDQ, RAX, RBX);
+    converter.emplace_back(JZ, doCLCLabel);
+
+    converter.emplace_back(CMP, Transform::IntToImmediate(O_S_flagMask), RBX);
+    converter.emplace_back(JZ, doCLCLabel);
+
+    converter.emplace_back(ORQ, Transform::IntToImmediate(C_flagMask), RAX); // SET CARRY FLAG
+    converter.emplace_back(JMP, endLabel);
+
+    converter.emplace_back(doCLCLabel + ":");
+    converter.emplace_back(ANDQ, Transform::IntToImmediate( ~ C_flagMask), RAX); // CLEAR CARRY FLAG
+
+    converter.emplace_back(endLabel + ":");
+
+    converter.emplace_back(PUSH, RAX);
+    Instruction endMark(POPFQ);
+    if (args->annoteObfuscations) {
+        endMark.AddComment("SIGNED TO UNSIGNED " + to_string(unique) + " END");
+    }
+    converter.push_back(endMark);
+
+    unique++;
+    return converter;
+}
+
+vector<Instruction> Obfuscator::UsignedToSigned() {
+    const int C_flagMask = 0x1;
+    const int O_S_flagMask = 0x880;
+    const int S_flagMask = 0x80;
+
+    static int unique = 0;
+
+    vector<Instruction> converter;
+    string flagsSameLabel = "__uToS_" + to_string(unique);
+
+    Instruction startMark(PUSHFQ);
+    if (args->annoteObfuscations) {
+        startMark.AddComment("UNSIGNED TO SIGNED " + to_string(unique) + " START");
+    }
+    converter.push_back(startMark);
+    converter.emplace_back(POP, RAX);
+    converter.emplace_back(ORQ, Transform::IntToImmediate(O_S_flagMask), RAX);
+
+    converter.emplace_back(MOVQ, Transform::IntToImmediate(C_flagMask), RBX);
+    converter.emplace_back(ANDQ, RAX, RBX);
+
+    converter.emplace_back(TEST, RBX, RBX);
+    converter.emplace_back(JZ, flagsSameLabel);
+
+    converter.emplace_back(ANDQ, Transform::IntToImmediate( ~ S_flagMask), RAX);
+
+    converter.emplace_back(flagsSameLabel + ":");
+
+    converter.emplace_back(PUSH, RAX);
+    Instruction endMark(POPFQ);
+    if (args->annoteObfuscations) {
+        endMark.AddComment("UNSIGNED TO SIGNED " + to_string(unique) + " END");
+    }
+    converter.push_back(endMark);
+
+    unique++;
+    return converter;
+}
