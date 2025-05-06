@@ -26,7 +26,14 @@ class Generator;
 class Obfuscator {
 public:
     /// @brief Passes the reference of the tree to be obfuscated.
-    Obfuscator(ProgramArguments *args, SymbolTable & symbolTable, AST & ast) : args(args), symbolTable(symbolTable), ast(ast) {}
+    Obfuscator(ProgramArguments *args, SymbolTable & symbolTable, AST & ast)
+        : args(args), symbolTable(symbolTable), ast(ast)
+    {
+        for (auto function : *symbolTable.GetAllFunctions()) {
+            this->functionNames.push_back( function->GetFunctionName() );
+        }
+    }
+
     /// @brief Associates code generator for 3AC obfuscations.
     void GiveGenerator(Generator *gen) { this->gen = gen; }
 
@@ -67,6 +74,8 @@ private:
     SymbolTable & symbolTable; ///< Reference to current symbol table.
     Generator *gen = nullptr; ///< Pointer to the code generator, which holds the intermediate instructions - the 3AC representation.
 
+    vector<string> functionNames; ///< Used to find functions in 3AC. Mainly used to keep track of clones.
+
 private:
     /**
      * @name Additional helper methods for implemented obfuscations.
@@ -75,8 +84,15 @@ private:
      * 
      * @{
      */
-    /// @brief Returns a vector of places where basic blocks start.
+    /// @brief Returns a vector of places where basic blocks start in 3AC. Result is invalidated upon instruction adjustments!
     vector< vector<Instruction>::iterator > FindBasicBlocks();
+    /// @brief Returns a vector of places where functions start in 3AC. Result is invalidated upon instruction adjustments!
+    vector< vector<Instruction>::iterator > FindFunctions();
+
+    /// @brief If the given instruction contains a label (plain or within a jump) it is given a clone suffix.
+    void AdjustClonedLabels(Instruction *current);
+    /// @brief With a certain chance, changes calls to a function to calls to its clone.
+    void AddCallsToClone(const string & originalName, const string & cloneName);
 
     /// @brief Using given variable, generates a fake condition for opaque predicate 
     static ASTNode *CreateOpaquePredicate(Variable *controlVariable);

@@ -12,7 +12,7 @@
 
 vector< vector<Instruction>::iterator > Obfuscator::FindBasicBlocks() {
     int blockOrder = 0;
-    vector< vector<Instruction>::iterator > basicBlocks;
+    decltype( Obfuscator::FindBasicBlocks() ) basicBlocks;
 
     for (
         auto instruction = gen->instructions.begin();
@@ -46,6 +46,61 @@ vector< vector<Instruction>::iterator > Obfuscator::FindBasicBlocks() {
     }
 
     return basicBlocks;
+}
+
+vector< vector<Instruction>::iterator > Obfuscator::FindFunctions() {
+    decltype( Obfuscator::FindFunctions() ) functions;
+
+    for (
+        auto instruction = gen->instructions.begin();
+        instruction != gen->instructions.end();
+        instruction++
+    ) {
+        if ( ! Transform::IsLabel(*instruction) ) {
+            continue;
+        }
+
+        string labelName = instruction->GetOpcode();
+        labelName.pop_back(); // remove ":"
+
+        if ( find(this->functionNames.begin(), this->functionNames.end(), labelName) != this->functionNames.end() ) {
+            functions.push_back(instruction);
+        }
+    }
+
+    return functions;
+}
+
+
+
+void Obfuscator::AdjustClonedLabels(Instruction *current) {
+    if ( Transform::IsLabel(*current) ) {
+        string oldName = current->GetOpcode();
+        oldName.pop_back(); // remove ":"
+        current->SetOpcode(oldName + "_clone:");
+
+        return;
+    }
+
+    if ( Opcode::IsJump(current->GetOpcode()) ) {
+        string oldTarget = current->GetArg1();
+        current->SetArg1(oldTarget + "_clone");
+    }
+}
+
+void Obfuscator::AddCallsToClone(const string & originalName, const string & cloneName) {
+    for (auto & current : gen->instructions) {
+        if (current.GetOpcode() != CALL) {
+            continue;
+        }
+        if (current.GetArg1() != originalName) {
+            continue;
+        }
+
+        if ( Random::Percent(USE_CLONE) ) {
+            current.SetArg1(cloneName);
+        }
+    }
 }
 
 

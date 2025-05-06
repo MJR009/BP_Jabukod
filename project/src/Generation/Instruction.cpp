@@ -36,6 +36,16 @@ string Instruction::GetArg1() {
 
 
 
+void Instruction::SetOpcode(const string & newOpcode) {
+    this->opcode = newOpcode;
+}
+
+void Instruction::SetArg1(const string & newArg) {
+    this->arg1 = newArg;
+}
+
+
+
 void Instruction::ConnectSequences(vector<Instruction> & vector1, const vector<Instruction> & vector2) {
     vector1.insert(
         vector1.end(),

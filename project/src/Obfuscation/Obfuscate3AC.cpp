@@ -151,75 +151,47 @@ void Obfuscator::ForgeSymbolic_2() {
 }
 
 void Obfuscator::FunctionCloning() {
-    string originalName, cloneName; 
+    auto functionStarts = this->FindFunctions();
 
-    // (1) Search for a function to clone
-    for (int i = 0; i < gen->instructions.size(); i++) {
-        Instruction current = gen->instructions.at(i); // copy
+    int functionToClone = Random::Get0ToN(functionStarts.size());
 
-        if ( ! Transform::IsLabel(current) ) {
-            continue;
-        }
-
-        originalName = current.GetOpcode();
-        originalName.pop_back(); // remove ':'
-        if (( ! this->symbolTable.IsIdFunction(originalName) ) ||
-            (originalName == "main")
-        ) {
-            continue;
-        }
-
-        // (2) Clone the body of this function to the end of the program
-        cloneName = originalName + "_clone";
-        gen->instructions.emplace_back(cloneName + ":");
-        if (this->args->annoteObfuscations) {
-            gen->instructions.back().AddComment("CLONE OF " + originalName);
-        }
-
-        for (i++ /* skip label */;; i++) {
-            current = gen->instructions.at(i);
-
-            string currentName = current.GetOpcode();
-            currentName.pop_back(); // remove ':'
-
-            if ((this->symbolTable.IsIdFunction(currentName)) ||
-                (currentName == (cloneName))
-            ) { // only go up to next function
-                break;
-            } else if ( Transform::IsLabel(current) ) {
-                gen->instructions.push_back( {currentName + "_clone:"} );
-                if (this->args->annoteObfuscations) {
-                    gen->instructions.back().AddComment("CLONE OF " + currentName);
-                }
-                continue;
-            }
-
-            gen->instructions.push_back(current);
-        }
-
-        // (3) Only clone one function
-        break; // TODO SELECT DIFFERENT FUNCTIONS
+    auto function = functionStarts.at(functionToClone);
+    string functionName = function->GetOpcode();
+    functionName.pop_back();
+    if (functionName == "main") {
+        return;
+    }
+    bool isLastFunction = ( functionToClone == functionStarts.size() - 1 );
+    decltype(function) nextFunction;
+    if (isLastFunction) {
+        nextFunction = gen->instructions.end();
+    } else {
+        nextFunction = functionStarts.at(functionToClone + 1);
     }
 
-    // (4) search for calls to original. Replace them with references to clone.
-    bool other = true; // only change every "other" call
+    vector<Instruction> clone;
 
-    for (Instruction & instruction : gen->instructions) {
-        if ((instruction.GetOpcode() == CALL) &&
-            (instruction.GetArg1() == originalName)
-        ) {
-            if ( ! other) {
-                other = true;
-                continue;
-            }
-            other = false;
-
-            instruction.SetCallTarget(cloneName);
-            if (this->args->annoteObfuscations) {
-                instruction.AddComment("CALL TO CLONE; ORIGINAL: " + originalName);
-            }
-        }
+    string cloneName = functionName + "_clone";
+    clone.emplace_back(cloneName + ":");
+    if (this->args->annoteObfuscations) {
+        clone.back().AddComment("CLONE OF " + functionName);
     }
+    function++;
+
+    while (function != nextFunction) {
+        Instruction instructionCopy = *function;
+
+        this->AdjustClonedLabels(&instructionCopy);
+
+        clone.push_back(instructionCopy);
+        function++;
+    }
+
+    gen->ConnectSequence( clone );
+
+    this->functionNames.push_back(cloneName);
+
+    this->AddCallsToClone(functionName, cloneName);
 }
 
 void Obfuscator::Outline() {

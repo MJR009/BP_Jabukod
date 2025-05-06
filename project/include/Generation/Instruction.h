@@ -33,6 +33,11 @@ public:
     /// @brief Returns first argument of instruction
     string GetArg1();
 
+    /// @brief Changes the opcode (used mainly for renaming labels).
+    void SetOpcode(const string & newOpcode);
+    /// @brief Changes arg1 (used mainly for renaming labels).
+    void SetArg1(const string & newArg);
+
     /// @brief Appends vector2 to vector1, changing vector1
     static void ConnectSequences(vector<Instruction> & vector1, const vector<Instruction> & vector2);
 
