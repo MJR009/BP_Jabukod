@@ -305,6 +305,7 @@ vector<Variable *> Obfuscator::ChooseArraysToRestructure() {
 
         if ( Random::Percent(RESTRUCTURE_ARRAY) ) {
             arraysToRestructure.push_back(var);
+            var->restructure = true;
         }
     }
 
@@ -324,9 +325,9 @@ vector<Variable *> Obfuscator::ChooseArraysToRestructure() {
 
                 if ( Random::Percent(RESTRUCTURE_ARRAY) ) {
                     arraysToRestructure.push_back(var);
+                    var->restructure = true;
+                    current->AdjustForRestructuring(var);
                 }
-
-                current->GetData<BodyData>()->AdjustForRestructuring(var);
             }
         }
 
@@ -356,7 +357,7 @@ void Obfuscator::RestructureArrays(vector<Variable *> arrays) {
             vector<int> newValue;
             for (int item : value) {
                 newValue.push_back(item);
-                int filler = any_cast<int>( this->GetFillerForRestrucutring(item, Type::INT) );
+                int filler = any_cast<int>( Obfuscator::GetFillerForRestrucutring(item, Type::INT) );
                 newValue.push_back(filler);
             }
             array->SetDefaultValue(any(newValue));
@@ -366,7 +367,7 @@ void Obfuscator::RestructureArrays(vector<Variable *> arrays) {
             vector<float> newValue;
             for (float item : value) {
                 newValue.push_back(item);
-                float filler = any_cast<float>( this->GetFillerForRestrucutring(item, Type::FLOAT) );
+                float filler = any_cast<float>( Obfuscator::GetFillerForRestrucutring(item, Type::FLOAT) );
                 newValue.push_back(filler);
             }
             array->SetDefaultValue(any(newValue));
@@ -376,7 +377,7 @@ void Obfuscator::RestructureArrays(vector<Variable *> arrays) {
             vector<bool> newValue;
             for (bool item : value) {
                 newValue.push_back(item);
-                bool filler = any_cast<bool>( this->GetFillerForRestrucutring(item, Type::BOOL) );
+                bool filler = any_cast<bool>( Obfuscator::GetFillerForRestrucutring(item, Type::BOOL) );
                 newValue.push_back(filler);
             }
             array->SetDefaultValue(any(newValue));

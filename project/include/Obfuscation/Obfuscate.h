@@ -48,7 +48,7 @@ private:
     /// @brief Expands literals into literal expressions.
     void LiteralExpansion();
     /// @brief Changes how array variables are stored and accessed.
-    void RestructureArrays_1();
+    void RestructureArrays();
 
 public:
     /// @brief According to command line arguments, add obfuscations to three address code.
@@ -62,8 +62,6 @@ private:
     void ForgeSymbolic_2();
     /// @brief Obfuscates by cloning selected functions. These can be use interchangably with originals.
     void FunctionCloning();
-    /// @brief Changes how array variables are addressed.
-    void RestructureArrays_2();
     /// @brief Use control flow flattening.
     //void Flatten(); // TODO
 
@@ -110,6 +108,6 @@ private:
     /// @brief Adjust size and default value of arrays chosen for restructuring.
     void RestructureArrays(vector<Variable *> arrays);
     /// @brief Chooses a good random value to put in false places in an restructured array.
-    any GetFillerForRestrucutring(any value, Type type);
+    static any GetFillerForRestrucutring(any value, Type type);
     /** @} */
 };

@@ -12,7 +12,7 @@
 
 void Obfuscator::ObfuscateAST() {
     if (this->args->obfuscateAll) {
-        this->RestructureArrays_1();
+        this->RestructureArrays();
         this->OpaquePredicates();
         this->LiteralExpansion();
         this->ForgeSymbolic_1();
@@ -21,7 +21,7 @@ void Obfuscator::ObfuscateAST() {
     }
 
     if (this->args->restructureArrays) {
-        this->RestructureArrays_1();
+        this->RestructureArrays();
     }
     if (this->args->opaquePredicates) {
         this->OpaquePredicates();
@@ -179,50 +179,82 @@ void Obfuscator::LiteralExpansion() {
     );
 }
 
-void Obfuscator::RestructureArrays_1() {
+void Obfuscator::RestructureArrays() {
     auto arraysToRestructure = this->ChooseArraysToRestructure();
     this->RestructureArrays(arraysToRestructure);
 
-    // TODO
+    this->ast.PostorderForEachNode(
+        [ ](ASTNode *current) {
+            if (current->GetKind() == NodeKind::VARIABLE_DEFINITION) {
+                Variable *variable = current->GetData<VariableData>()->GetSelf();
+                if ( ! variable->restructure) {
+                    return;
+                }
 
-    // definition - replace array literal
-    // access - << 1
-    // foreach - add one incq
-}
+                ASTNode *listNode = current->PluckAfter(0);
+                ExpressionData *data = listNode->GetData<ExpressionData>();
+                Type type = data->GetType();
 
-/*
-    // shift every access left by 1
-    stack<ASTNode *> nodes;
-    nodes.push(this->ast.GetRoot());
-    while ( ! nodes.empty()) {
-        ASTNode *current = nodes.top();
-        nodes.pop();
+                vector<ASTNode *> items;
+                for (int i = 0; i < listNode->GetChildrenCount(); i++) {
+                    items.push_back(listNode->GetChild(i));
+                }
 
-        do {
-            if (current->GetKind() != NodeKind::LIST_ACCESS) {
-                break;
+                Type newType = type.GetScalarEquivalent();
+                newType.MakeArray(type.GetSize() * 2);
+                ExpressionData *newData = new ExpressionData(newType);
+                ASTNode *newListNode = new ASTNode(NodeKind::LIST, newData);
+
+                for (ASTNode *item : items) {
+                    newListNode->AppendNewChild(item);
+
+                    Type falseValueType = newType.GetScalarEquivalent();
+                    ASTNode *falseValue;
+                    if (falseValueType == Type::INT) {
+                        LiteralData *value = new LiteralData(
+                            Type::INT,
+                            Obfuscator::GetFillerForRestrucutring(Random::Get0ToN(10), Type::INT)
+                        );
+                        falseValue = new ASTNode(NodeKind::LITERAL, value);
+
+                    } else if (falseValueType == Type::FLOAT) {
+                        VariableData *value = new VariableData(item->GetData<VariableData>()->GetSelf()); // automatic r.o. float, duplicated
+                        falseValue = new ASTNode(NodeKind::VARIABLE, value);
+
+                    } else if (falseValueType == Type::BOOL) {
+                        LiteralData *value = new LiteralData(
+                            Type::BOOL,
+                            Random::Percent(50)
+                        );
+                        falseValue = new ASTNode(NodeKind::LITERAL, value);
+                    }
+
+                    newListNode->AppendNewChild(falseValue);
+                }
+
+                delete listNode;
+                current->PlantAfter(0, newListNode);
             }
-            Variable *variable = current->GetChild(0)->GetData<VariableData>()->GetSelf();
-            if (variable != array) {
-                break;
-            }
-    
-            ExpressionData *shiftData = new ExpressionData(Type::INT);
-            ASTNode *shiftNode = new ASTNode(NodeKind::LEFT_SHIFT, shiftData);
-    
-            ASTNode *accessExpression = current->PluckAfter(1);
-    
-            LiteralData *oneData = new LiteralData(Type::INT, any(1));
-            ASTNode *one = new ASTNode(NodeKind::LITERAL, oneData);
-    
-            shiftNode->AppendNewChild(accessExpression);
-            shiftNode->AppendNewChild(one);
-    
-            current->PlantAfter(1, shiftNode);
-        } while (false);
 
-        for (int i = 0; i < current->GetChildrenCount(); i++) {
-            nodes.push(current->GetChild(i));
+            if (current->GetKind() == NodeKind::LIST_ACCESS) { // << 1
+                Variable *variable = current->GetChild(0)->GetData<VariableData>()->GetSelf();
+                if ( ! variable->restructure) {
+                    return;
+                }
+
+                ExpressionData *shiftData = new ExpressionData(Type::INT);
+                ASTNode *shiftNode = new ASTNode(NodeKind::LEFT_SHIFT, shiftData);
+        
+                ASTNode *accessExpression = current->PluckAfter(1);
+        
+                LiteralData *oneData = new LiteralData(Type::INT, any(1));
+                ASTNode *one = new ASTNode(NodeKind::LITERAL, oneData);
+        
+                shiftNode->AppendNewChild(accessExpression);
+                shiftNode->AppendNewChild(one);
+        
+                current->PlantAfter(1, shiftNode);
+            }
         }
-    }
-*/
+    );
+}

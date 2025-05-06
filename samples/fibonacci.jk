@@ -9,6 +9,7 @@
 const int COUNT = 20;
 
 int main() {
+    float zzz;
     int n[2] = {0, 1};
 
     for (int i = 0; i < COUNT; i = i + 1) {
@@ -19,6 +20,7 @@ int main() {
         n[1] = n[0] + n[1];
         n[0] = aux;
     }
+    int x;
 }
 
 

@@ -517,9 +517,23 @@ void NodeGenerators::GenerateFOREACH(ASTNode *node) {
     gen->GenerateNode(node->GetChild(2));
 
     gen->instructions.emplace_back( Transform::IdentifierToLabel(step) );
-    gen->instructions.emplace_back(CMP, Transform::IntToImmediate(iterationCount - 1), R12);
+
+    int correction = 1;
+    if (iteratedArray->GetSelf()->restructure) {
+        correction = 2; // account for extra item at the end
+    }
+    gen->instructions.emplace_back(CMP, Transform::IntToImmediate(iterationCount - correction), R12);
+
     gen->instructions.emplace_back(JE, end);
     gen->instructions.emplace_back(INCQ, R12);
+
+    if (iteratedArray->GetSelf()->restructure) { // used when obfuscating, __must be done here__
+        gen->instructions.emplace_back(INCQ, R12);
+        if (gen->args->annoteObfuscations) {
+            gen->instructions.back().AddComment("Double increment - restructured array access");
+        }
+    }
+
     gen->instructions.emplace_back(JMP, body);
 
     gen->instructions.emplace_back(POP, R12);

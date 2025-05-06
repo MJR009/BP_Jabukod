@@ -55,7 +55,7 @@ public: // used with obfuscation
     /// @brief Returns a variable, if there is one in the scope; the caller does not need to know what variable it is, just that it is in this scope
     Variable *GetVariableForOpaquePredicate();
     /// @brief Shifts all variables stack offsets to accomodate for changed array size.
-    void AdjustForRestructuring(Variable *restructuredArray);
+    void AdjustForRestructuring(int stackOffsetOfRestructured, int offsetAdjustment);
 
 protected:
     Scope *scope; ///< The associated internal scope object. Protected used for inheriting by derived classes.

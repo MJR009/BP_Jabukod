@@ -8,15 +8,19 @@ int main() {
     yy[2] = 3.14159;
     bool zz[3] = {true, false, true};
 
-    foreach (int a : xx) {
+    z[0] = true;
+    y[2] = 1.41;
+    x[3] = 40;
+
+    foreach (int a : x) {
         writeInt(a); write " ";
     }
     write "\n";
-    foreach (float b : yy) {
+    foreach (float b : y) {
         writeFloat(b); write " ";
     }
     write "\n";
-    foreach (bool c : zz) {
+    foreach (bool c : z) {
         writeInt(c); write " ";
     }
     write "\n";

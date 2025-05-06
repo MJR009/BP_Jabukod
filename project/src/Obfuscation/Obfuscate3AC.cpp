@@ -15,7 +15,6 @@
 void Obfuscator::Obfuscate3AC() {
     if (this->args->obfuscateAll) {
         this->FunctionCloning();
-        this->RestructureArrays_2();
         this->Signedness();
         this->Interleaving();
         this->ForgeSymbolic_2();
@@ -25,9 +24,6 @@ void Obfuscator::Obfuscate3AC() {
 
     if (this->args->functionCloning) {
         this->FunctionCloning();
-    }
-    if (this->args->restructureArrays) {
-        this->RestructureArrays_2();
     }
     if (this->args->signedness) {
         this->Signedness();
@@ -192,9 +188,4 @@ void Obfuscator::FunctionCloning() {
     this->functionNames.push_back(cloneName);
 
     this->AddCallsToClone(functionName, cloneName);
-}
-
-void Obfuscator::RestructureArrays_2() {
-    // offset(base, index, scale)
-    // scale /2 + index << 1
 }

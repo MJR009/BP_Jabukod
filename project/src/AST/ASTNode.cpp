@@ -370,3 +370,30 @@ void ASTNode::PlantAfter(int order, ASTNode *root) {
 
     this->children.insert(target, root);
 }
+
+
+
+void ASTNode::AdjustForRestructuring(Variable *restructuredArray) {
+    ASTNode *aux = this;
+    while (aux->GetKind() != NodeKind::FUNCTION) {
+        aux = aux->GetParent();
+    }
+
+    int originalRestructuredArrayStackOffset = restructuredArray->GetStackOffset();
+    int offsetAdjustment = restructuredArray->GetType().GetSize() * 8;
+
+    stack<ASTNode *> toAdjust;
+    toAdjust.push(aux);
+    while ( ! toAdjust.empty()) {
+        ASTNode *current = toAdjust.top();
+        toAdjust.pop();
+
+        if (current->IsScopeHavingNode()) {
+            current->GetData<BodyData>()->AdjustForRestructuring(originalRestructuredArrayStackOffset, offsetAdjustment);
+        }
+
+        for (int i = 0; i < current->GetChildrenCount(); i++) {
+            toAdjust.push(current->GetChild(i));
+        }
+    }
+}

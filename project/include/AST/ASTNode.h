@@ -107,6 +107,9 @@ public: // used with obfuscation
     /// @brief Puts a new child, a subtree, into specified location, pushing other children to the right.
     void PlantAfter(int order, ASTNode *root);
 
+    /// @brief Adjusts all scopes in a function to accomodate for restructured array.
+    void AdjustForRestructuring(Variable *restructuredArray);
+
 private:
     NodeKind kind; ///< The kind of the node.
     ASTNode *parent = nullptr; ///< Address of predecessor node in the tree hierarchy.
