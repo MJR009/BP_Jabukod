@@ -116,11 +116,10 @@ names, which represent obfuscations you wish to apply. There are the following o
 - `opaque` - obfuscate using opaque predicates
 - `interleave` - code interleaving
 - `signedness` - <b>self designed</b> signedness obfuscation
-- `forge` - forge symbolic information
+- `forge` - <b>self designed</b> symbolic information forging
 - `literal` - literal expansion
 - `clone` - function cloning
 - `array` - array restructuring
-- `flatten` - control flow flattening
 - <b>`all` - will apply all available obfuscations</b>
 - <b>`annote` - adds annotation comments for certain obfuscations in generated assembly file</b>
 
