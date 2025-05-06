@@ -110,5 +110,7 @@ private:
 
     /// @brief Returns all automatically generated labels in the given three address code range (representing a function).
     vector<string> CollectLabels(vector<Instruction>::iterator function, vector<Instruction>::iterator functionEnd);
+    /// @brief Implicit labels contain a 4 digit index. This function randmizes it.
+    void ForgeLabelNumber(string & label);
     /** @} */
 };

@@ -67,7 +67,10 @@ void Obfuscator::Interleaving() {
 
         // (1) Add a starting label if there is none
         if ( ! Transform::IsLabel(*block) ) {
-            string implicitLabel = "__basic_block_" + to_string(i+1) + ":";
+            ostringstream stream;
+            stream << setw(4) << setfill('0') << (i+1);
+
+            string implicitLabel = "__block_" + stream.str() + ":";
             interleaved.emplace_back(implicitLabel);
         }
 
@@ -86,7 +89,10 @@ void Obfuscator::Interleaving() {
                 target = label;
                 
             } else {
-                target = "__basic_block_" + to_string(i+2);
+                ostringstream stream;
+                stream << setw(4) << setfill('0') << (i+2);
+
+                target = "__block_" + stream.str();
             }
 
             interleaved.emplace_back(JMP, target);
@@ -139,6 +145,11 @@ void Obfuscator::ForgeSymbolic_2() {
     map<string, string> labelMapping;
 
     auto functionStarts = this->FindFunctions();
+    if ( // needed after interleaving, assembly may not start with a function
+        find(functionStarts.begin(), functionStarts.end(), gen->instructions.begin()) == functionStarts.end()
+    ) {
+        functionStarts.insert(functionStarts.begin(), gen->instructions.begin());
+    }
 
     // collect all implicit labels
     for (int i = 0; i < functionStarts.size(); i++) {
@@ -155,8 +166,11 @@ void Obfuscator::ForgeSymbolic_2() {
         int randomShift = Random::Get0ToN( implicitLabels.size() );
 
         for (int j = 0; j < implicitLabels.size(); j++) {
-            labelMapping[ implicitLabels[ j ] ] =
-                implicitLabels[ (j + randomShift) % implicitLabels.size() ];
+            string mappedLabel = implicitLabels[ (j + randomShift) % implicitLabels.size() ];
+
+            this->ForgeLabelNumber(mappedLabel);
+
+            labelMapping[ implicitLabels[ j ] ] = mappedLabel;
         }
     }
 

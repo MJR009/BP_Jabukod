@@ -177,10 +177,13 @@ vector<Instruction> Obfuscator::SignedToUnsigned() {
     const int C_flagMask = 0x1;
 
     static int unique = 0;
+    ostringstream stream;
+    stream << setw(4) << setfill('0') << unique;
+    string uniqueString = stream.str();
 
     vector<Instruction> converter;
-    string doCLCLabel = "__clc_" + to_string(unique);
-    string endLabel = "__sToU_" + to_string(unique);
+    string doCLCLabel = "__clc_" + uniqueString;
+    string endLabel = "__sToU_" + uniqueString;
 
     Instruction startMark(PUSHFQ);
     if (args->annoteObfuscations) {
@@ -221,9 +224,12 @@ vector<Instruction> Obfuscator::UsignedToSigned() {
     const int S_flagMask = 0x80;
 
     static int unique = 0;
+    ostringstream stream;
+    stream << setw(4) << setfill('0') << unique;
+    string uniqueString = stream.str();
 
     vector<Instruction> converter;
-    string flagsSameLabel = "__uToS_" + to_string(unique);
+    string flagsSameLabel = "__uToS_" + uniqueString;
 
     Instruction startMark(PUSHFQ);
     if (args->annoteObfuscations) {
@@ -428,3 +434,20 @@ vector<string> Obfuscator::CollectLabels(vector<Instruction>::iterator function,
 
     return labels;
 }
+
+void Obfuscator::ForgeLabelNumber(string & label) {
+    const int mod = 10000;
+    const int increment = 6971; // all 10000, without repetition
+
+    static int randomUnique = increment;
+
+    ostringstream stream;
+    stream << setw(4) << setfill('0') << (randomUnique);
+    string uniqueID = stream.str();
+    for (int i = 0; i < 4; i++) {
+        label[ label.size() - i - 1 ] = uniqueID[ i ];
+    }
+
+    randomUnique += increment;
+    randomUnique %= mod;
+} 
