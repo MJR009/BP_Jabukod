@@ -48,7 +48,7 @@ bool Random::Percent(int percent) {
 
 // PRIVATE:
 
-double Random::LinearCongruent() { // TODO GENERATE BETTER RANDOMNESS
+double Random::LinearCongruent() {
     const unsigned SEED = 0xDEAD10CC;
     //const unsigned a = 1664525u;
     //const unsigned b = 1013904223u;

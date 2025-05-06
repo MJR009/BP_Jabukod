@@ -410,3 +410,21 @@ any Obfuscator::GetFillerForRestrucutring(any value, Type type) {
 
     return any( 0 ); // suppress warning
 }
+
+
+
+vector<string> Obfuscator::CollectLabels(vector<Instruction>::iterator function, vector<Instruction>::iterator functionEnd) {
+    vector<string> labels;
+
+    function++; // skip the name of the function itself
+
+    for (; function != functionEnd; function++) {
+        if ( Transform::IsLabel(*function) ) {
+            string label = function->GetOpcode();
+            label.pop_back(); // remove ":"
+            labels.push_back(label);
+        }
+    }
+
+    return labels;
+}

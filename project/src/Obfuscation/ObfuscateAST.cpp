@@ -91,6 +91,9 @@ void Obfuscator::OpaquePredicates() {
 }
 
 void Obfuscator::ForgeSymbolic_1() {
+
+    return; // TODO REMOVE
+
     auto globalVariables = this->symbolTable.GetGlobalVariables()->GetVariables();
     auto enums = this->symbolTable.GetAllEnums();
     auto functions = this->symbolTable.GetAllFunctions();

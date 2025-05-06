@@ -34,8 +34,6 @@ void Obfuscator::Obfuscate3AC() {
     if (this->args->forgeSymbolic) {
         this->ForgeSymbolic_2();
     }
-
-    // TODO FLATTENING
 }
 
 
@@ -138,10 +136,58 @@ void Obfuscator::Signedness() {
 }
 
 void Obfuscator::ForgeSymbolic_2() {
-    for (auto instruction : gen->instructions) {
+    map<string, string> labelMapping;
+
+    auto functionStarts = this->FindFunctions();
+
+    // collect all implicit labels
+    for (int i = 0; i < functionStarts.size(); i++) {
+        vector<Instruction>::iterator function = functionStarts.at(i);
+        decltype(function) functionEnd;
+        if (i == functionStarts.size() - 1) {
+            functionEnd = gen->instructions.end();
+        } else {
+            functionEnd = functionStarts.at(i + 1);
+        }
+
+        vector<string> implicitLabels = this->CollectLabels(function, functionEnd);
+
+        int randomShift = Random::Get0ToN( implicitLabels.size() );
+
+        for (int j = 0; j < implicitLabels.size(); j++) {
+            labelMapping[ implicitLabels[ j ] ] =
+                implicitLabels[ (j + randomShift) % implicitLabels.size() ];
+        }
+    }
+
+    // replace all implicit labels
+    for (auto & instruction : gen->instructions) {
         if ( Transform::IsLabel(instruction) ) {
-            // TODO OBFUSCATE
-            // TODO MAYBE SWAP PAIRS? - CREATE A MAP FOR EVERY TIME A LABEL IS FOUND !!!
+            string originalLabel = instruction.GetOpcode();
+            originalLabel.pop_back();
+            if (labelMapping.find(originalLabel) == labelMapping.end()) { // do not replace what's not mapped
+                continue;
+            }
+            instruction.SetOpcode( labelMapping[originalLabel] + ":");
+
+            if (this->args->annoteObfuscations) {
+                instruction.AddComment("FORGED from " + originalLabel);
+            }
+
+            continue;
+        }
+
+        string opcode = instruction.GetOpcode();
+        if ( Opcode::IsJump(opcode) ) {
+            string originalLabel = instruction.GetArg1();
+            if (labelMapping.find(originalLabel) == labelMapping.end()) {
+                continue;
+            }
+            instruction.SetArg1( labelMapping[originalLabel] );
+
+            if (this->args->annoteObfuscations) {
+                instruction.AddComment("FORGED from " + originalLabel);
+            }
         }
     }
 }

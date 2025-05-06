@@ -62,8 +62,6 @@ private:
     void ForgeSymbolic_2();
     /// @brief Obfuscates by cloning selected functions. These can be use interchangably with originals.
     void FunctionCloning();
-    /// @brief Use control flow flattening.
-    //void Flatten(); // TODO
 
 private:
     ProgramArguments *args; ///< Given command line arguments, used to decide which obfuscations should be used.
@@ -109,5 +107,8 @@ private:
     void RestructureArrays(vector<Variable *> arrays);
     /// @brief Chooses a good random value to put in false places in an restructured array.
     static any GetFillerForRestrucutring(any value, Type type);
+
+    /// @brief Returns all automatically generated labels in the given three address code range (representing a function).
+    vector<string> CollectLabels(vector<Instruction>::iterator function, vector<Instruction>::iterator functionEnd);
     /** @} */
 };
