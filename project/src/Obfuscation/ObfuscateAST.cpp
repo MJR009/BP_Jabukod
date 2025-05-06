@@ -12,6 +12,7 @@
 
 void Obfuscator::ObfuscateAST() {
     if (this->args->obfuscateAll) {
+        this->RestructureArrays_1();
         this->OpaquePredicates();
         this->LiteralExpansion();
         this->ForgeSymbolic_1();
@@ -19,6 +20,9 @@ void Obfuscator::ObfuscateAST() {
         return;
     }
 
+    if (this->args->restructureArrays) {
+        this->RestructureArrays_1();
+    }
     if (this->args->opaquePredicates) {
         this->OpaquePredicates();
     }
@@ -28,8 +32,6 @@ void Obfuscator::ObfuscateAST() {
     if (this->args->forgeSymbolic) {
         this->ForgeSymbolic_1();
     }
-
-    // TODO ARRAYS
 }
 
 
@@ -176,3 +178,51 @@ void Obfuscator::LiteralExpansion() {
 
     );
 }
+
+void Obfuscator::RestructureArrays_1() {
+    auto arraysToRestructure = this->ChooseArraysToRestructure();
+    this->RestructureArrays(arraysToRestructure);
+
+    // TODO
+
+    // definition - replace array literal
+    // access - << 1
+    // foreach - add one incq
+}
+
+/*
+    // shift every access left by 1
+    stack<ASTNode *> nodes;
+    nodes.push(this->ast.GetRoot());
+    while ( ! nodes.empty()) {
+        ASTNode *current = nodes.top();
+        nodes.pop();
+
+        do {
+            if (current->GetKind() != NodeKind::LIST_ACCESS) {
+                break;
+            }
+            Variable *variable = current->GetChild(0)->GetData<VariableData>()->GetSelf();
+            if (variable != array) {
+                break;
+            }
+    
+            ExpressionData *shiftData = new ExpressionData(Type::INT);
+            ASTNode *shiftNode = new ASTNode(NodeKind::LEFT_SHIFT, shiftData);
+    
+            ASTNode *accessExpression = current->PluckAfter(1);
+    
+            LiteralData *oneData = new LiteralData(Type::INT, any(1));
+            ASTNode *one = new ASTNode(NodeKind::LITERAL, oneData);
+    
+            shiftNode->AppendNewChild(accessExpression);
+            shiftNode->AppendNewChild(one);
+    
+            current->PlantAfter(1, shiftNode);
+        } while (false);
+
+        for (int i = 0; i < current->GetChildrenCount(); i++) {
+            nodes.push(current->GetChild(i));
+        }
+    }
+*/

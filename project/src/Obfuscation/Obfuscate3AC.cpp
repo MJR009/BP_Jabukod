@@ -15,7 +15,7 @@
 void Obfuscator::Obfuscate3AC() {
     if (this->args->obfuscateAll) {
         this->FunctionCloning();
-        this->Outline();
+        this->RestructureArrays_2();
         this->Signedness();
         this->Interleaving();
         this->ForgeSymbolic_2();
@@ -26,8 +26,8 @@ void Obfuscator::Obfuscate3AC() {
     if (this->args->functionCloning) {
         this->FunctionCloning();
     }
-    if (this->args->outline) {
-        this->Outline();
+    if (this->args->restructureArrays) {
+        this->RestructureArrays_2();
     }
     if (this->args->signedness) {
         this->Signedness();
@@ -194,76 +194,7 @@ void Obfuscator::FunctionCloning() {
     this->AddCallsToClone(functionName, cloneName);
 }
 
-void Obfuscator::Outline() {
-    // may need a redesign ...
-
-    return;
-
-    // (1) Find basic blocks, note where they begin // TODO MAKE A FUNCTION - REFACTOR
-    static int blockOrder = 0;
-    vector< vector<Instruction>::iterator > basicBlocks; // first instructions of basic blocks
-
-    for (
-        auto instruction = gen->instructions.begin();
-        instruction != gen->instructions.end() - 1;
-        instruction++
-    ) {
-        string opcode = instruction->GetOpcode();
-
-        if ( Opcode::IsJump(opcode) || (opcode == CALL) || (opcode == RET) ) {
-            instruction++;
-
-            if (args->annoteObfuscations) {
-                instruction->AddComment("Basic block " + to_string(blockOrder));
-                blockOrder++;
-            }
-
-            basicBlocks.push_back(instruction);
-            continue; // a following real label won't be inserted again
-        }
-    
-        if ( Transform::IsLabel(*instruction) ) { // first instruction is always a label, it is included
-            if (args->annoteObfuscations) {
-                instruction->AddComment("Basic block " + to_string(blockOrder));
-                blockOrder++;
-            }
-
-            basicBlocks.push_back(instruction);            
-        }
-    }
-
-    // TODO WILL NOT WORK WITH CLONES, THEY NEED TO BE IN A SPECIAL TABLE
-
-    vector< vector<Instruction>::iterator > functionStarts;
-
-    // (2) Check for function starts, store their indexes
-    // Function label must not be outlined, return would casu
-
-    // RETURNS WILL BREAK THE OUTLINED FUNCTIONS !!!
-
-    // (2) Gather functions
-    for (auto block : basicBlocks) {
-        string originalName = block->GetOpcode();
-        originalName.pop_back(); // remove ':'
-        if ( this->symbolTable.IsIdFunction(originalName) ) {
-            functionStarts.push_back(block);
-        }
-    }
-
-    // (3) If possible, take a part of the 
-    if (functionStarts.size() < 2) {
-        return;
-    }
-
-    vector<Instruction>::iterator functionStart = *(functionStarts.end() - 2);
-    vector<Instruction>::iterator functionEnd = *(functionStarts.end() - 1);
-
-    // Collect instructions to outline
-    // Erase them from where they were before
-    // Insert a call to the old position
-
-    // distance(begin, first block)
-    // insert call na distance index
-
-    // TODO THIS WHOLE FUNCTION FOR EACH FUNCTION OUTLINE
+void Obfuscator::RestructureArrays_2() {
+    // offset(base, index, scale)
+    // scale /2 + index << 1
 }

@@ -100,7 +100,6 @@ public: // obfuscation flags
     bool forgeSymbolic = false; ///< Obfuscate by forging symbolic information.
     bool literalExpansion = false; ///< Obfuscate by transforming literals into expressions.
     bool functionCloning = false; ///< Obfuscate using cloned functions.
-    bool outline = false; ///< Obfuscate using function outlining.
     bool restructureArrays = false; ///< Obfuscate using array restructuring.
     bool flattening = false; ///< Obfuscate using control flow flattening.
 };

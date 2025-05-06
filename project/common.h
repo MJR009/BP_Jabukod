@@ -95,4 +95,5 @@ void BadData();
 #define LITERAL_EXPANSION 33
 #define SIGNEDNESS_OBFUSCATION 50
 #define USE_CLONE 50
+#define RESTRUCTURE_ARRAY 100
 /** @} */

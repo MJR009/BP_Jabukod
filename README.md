@@ -119,7 +119,6 @@ names, which represent obfuscations you wish to apply. There are the following o
 - `forge` - forge symbolic information
 - `literal` - literal expansion
 - `clone` - function cloning
-- `outline` - function outlining
 - `array` - array restructuring
 - `flatten` - control flow flattening
 - <b>`all` - will apply all available obfuscations</b>

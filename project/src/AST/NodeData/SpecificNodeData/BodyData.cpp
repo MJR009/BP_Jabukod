@@ -58,3 +58,16 @@ Variable *BodyData::GetVariableForOpaquePredicate() {
 
     return chosen;
 }
+
+void BodyData::AdjustForRestructuring(Variable *restructuredArray) {
+    int restructuredOffset = restructuredArray->GetStackOffset();
+    int offsetSize = restructuredArray->GetType().GetSize() * 8;
+
+    for (auto variable : *this->scope->GetVariables()) {
+        int currentStackOffset = variable->GetStackOffset();
+
+        if (restructuredOffset > currentStackOffset) {
+            variable->SetStackOffset( currentStackOffset - offsetSize );
+        }
+    }
+}

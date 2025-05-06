@@ -48,7 +48,7 @@ private:
     /// @brief Expands literals into literal expressions.
     void LiteralExpansion();
     /// @brief Changes how array variables are stored and accessed.
-    //void RestructureArrays(); // TODO ( + SOMETHING FOR EFFECTIVE ADDRESS CALCULATION)
+    void RestructureArrays_1();
 
 public:
     /// @brief According to command line arguments, add obfuscations to three address code.
@@ -62,8 +62,8 @@ private:
     void ForgeSymbolic_2();
     /// @brief Obfuscates by cloning selected functions. These can be use interchangably with originals.
     void FunctionCloning();
-    /// @brief Code obfuscation, separating parts of functions into different functions. 
-    void Outline();
+    /// @brief Changes how array variables are addressed.
+    void RestructureArrays_2();
     /// @brief Use control flow flattening.
     //void Flatten(); // TODO
 
@@ -104,5 +104,12 @@ private:
 
     /// @brief Used to generate expression during literal expansion obfuscation. This works for type int only.
     static ASTNode *GenerateArfificialExpression(int valueToReplace);
+
+    /// @brief Picks local and global array and prepares them for restructuring, doubling size
+    vector<Variable *> ChooseArraysToRestructure();
+    /// @brief Adjust size and default value of arrays chosen for restructuring.
+    void RestructureArrays(vector<Variable *> arrays);
+    /// @brief Chooses a good random value to put in false places in an restructured array.
+    any GetFillerForRestrucutring(any value, Type type);
     /** @} */
 };

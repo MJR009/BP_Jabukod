@@ -290,3 +290,122 @@ ASTNode *Obfuscator::GenerateArfificialExpression(int valueToReplace) {
 
     return replacementNode;
 }
+
+
+
+vector<Variable *> Obfuscator::ChooseArraysToRestructure() {
+    vector<Variable *> arraysToRestructure;
+
+    // global
+    auto globals = this->symbolTable.GetGlobalVariables();
+    for (Variable *var : *globals->GetVariables()) {
+        if ( ! var->GetType().IsArrayType()) {
+            continue;
+        }
+
+        if ( Random::Percent(RESTRUCTURE_ARRAY) ) {
+            arraysToRestructure.push_back(var);
+        }
+    }
+
+    // local
+    stack<ASTNode *> nodes;
+    nodes.push(this->ast.GetRoot());
+    while ( ! nodes.empty()) {
+        ASTNode *current = nodes.top();
+        nodes.pop();
+
+        if (current->IsScopeHavingNode()) {
+            auto scope = *current->GetData<BodyData>()->GetVariables();
+            for (Variable *var : scope) {
+                if ( ! var->GetType().IsArrayType()) {
+                    continue;
+                }
+
+                if ( Random::Percent(RESTRUCTURE_ARRAY) ) {
+                    arraysToRestructure.push_back(var);
+                }
+
+                current->GetData<BodyData>()->AdjustForRestructuring(var);
+            }
+        }
+
+        for (int i = 0; i < current->GetChildrenCount(); i++) {
+            nodes.push(current->GetChild(i));
+        }
+    }
+
+    return arraysToRestructure;
+}
+
+void Obfuscator::RestructureArrays(vector<Variable *> arrays) {
+    for (Variable *array : arrays) {
+        // double array sizes
+        Type oldType = array->GetType();
+        Type newType = oldType.GetScalarEquivalent();
+        newType.MakeArray(oldType.GetSize() * 2);
+        array->SetType(newType);
+
+        if ( ! array->IsGlobal()) { // only global arrays need default values
+            continue;
+        }
+
+        // adjust default values
+        if (array->GetType() == Type::ARRAY_INT) {
+            vector<int> value = array->GetDefaultValue<vector<int>>();
+            vector<int> newValue;
+            for (int item : value) {
+                newValue.push_back(item);
+                int filler = any_cast<int>( this->GetFillerForRestrucutring(item, Type::INT) );
+                newValue.push_back(filler);
+            }
+            array->SetDefaultValue(any(newValue));
+
+        } else if (array->GetType() == Type::ARRAY_FLOAT) {
+            vector<float> value = array->GetDefaultValue<vector<float>>();
+            vector<float> newValue;
+            for (float item : value) {
+                newValue.push_back(item);
+                float filler = any_cast<float>( this->GetFillerForRestrucutring(item, Type::FLOAT) );
+                newValue.push_back(filler);
+            }
+            array->SetDefaultValue(any(newValue));
+
+        } else if (array->GetType() == Type::ARRAY_BOOL) {
+            vector<bool> value = array->GetDefaultValue<vector<bool>>();
+            vector<bool> newValue;
+            for (bool item : value) {
+                newValue.push_back(item);
+                bool filler = any_cast<bool>( this->GetFillerForRestrucutring(item, Type::BOOL) );
+                newValue.push_back(filler);
+            }
+            array->SetDefaultValue(any(newValue));
+        }
+    }
+}
+
+any Obfuscator::GetFillerForRestrucutring(any value, Type type) {
+    if (type == Type::INT) {
+        int castValue = any_cast<int>(value);
+        if (castValue > 0) {
+            return Random::Get0ToN(castValue + 1);
+        } else if (castValue < 0) {
+            return - Random::Get0ToN(( - castValue) + 1);
+        } else {
+            return 0;
+        }
+
+    } else if (type == Type::FLOAT) {
+        float castValue = any_cast<float>(value);
+        if (castValue == 0) {
+            return 0.0f;
+        }
+        float random = Random::Get() * castValue;
+        return trunc(random * 10.0f) / 10.0f;
+
+    } else if (type == Type::BOOL) {
+        return any ( Random::Percent(50) );
+    }
+
+    return any( 0 ); // suppress warning
+}

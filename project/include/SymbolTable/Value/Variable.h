@@ -70,8 +70,10 @@ public:
 
     /// @brief Changes the variables name.
     void SetName(const string & name);
-    /// @brief Sets default value. Important mainly with static variables.
+    /// @brief Sets default value. Important mainly with static variables and array restructuring obfuscation.
     void SetDefaultValue(any value);
+    /// @brief Gives variable a new type. Used for array restructuring.
+    void SetType(Type type);
 
     /// @brief Gives the variable all data needed to act as a foreach control variable.
     void MakeForeachControlVariable(Variable *iteratedArray);
@@ -110,4 +112,17 @@ private:
 
     bool isForeachControlVariable = false; ///< foreach loop control variable acts as a kind of fake variable, the array needs to be accessed.
     Variable *iteratedArray = nullptr; ///< foreach loop control variable will iterate over this arrray.
+
+public: // obfuscation
+    /**
+     * @brief The varaible (an array) is marked for restructuring.
+     * 
+     * Restructuring must actually be marked inside the variable. Without this, foreach control variables
+     * have no way of changing their generated index when accessing the array. Usual array access with []
+     * is done withing AST before transforming to 3AC.
+     */
+    bool restructure = false;
+
+    /// @brief Adjusts the variables stack offset to accomodate for array restructuring.
+    void SetStackOffset(int newOffset);
 };

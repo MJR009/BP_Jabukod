@@ -60,6 +60,10 @@ void Variable::SetDefaultValue(any value) {
     this->defaultValue = value;
 }
 
+void Variable::SetType(Type type) {
+    this->type = type;
+}
+
 
 
 void Variable::MakeForeachControlVariable(Variable *iteratedArray) {
@@ -109,4 +113,10 @@ void Variable::PrintAsParameter() const {
 
 void Variable::PrintDefaultValue() const {
     Type::PrintAnyValueByType( this->defaultValue, this->type );
+}
+
+
+
+void Variable::SetStackOffset(int newOffset) {
+    this->stackOffset = newOffset;
 }
