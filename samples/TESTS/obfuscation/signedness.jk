@@ -7,4 +7,10 @@ int main() {
     } else {
         write "FALSE\n";
     }
+
+    if (x < y) {
+        write "TRUE\n";
+    } else {
+        write "FALSE\n";
+    }
 }

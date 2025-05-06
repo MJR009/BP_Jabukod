@@ -59,7 +59,7 @@ void Obfuscator::OpaquePredicates() {
         // (2) "pluck" out some subtrees to be covered by the opaque predicate
             vector<ASTNode *> toBeInCondition;
 
-            if (Random::Get0ToN(1)) { // 50% chance
+            if ( ! Random::Percent(OPAQUE_PREDICATE)) {
                 return;
             }
 
@@ -145,7 +145,6 @@ void Obfuscator::ForgeSymbolic_1() {
 }
 
 void Obfuscator::LiteralExpansion() {
-
     this->ast.PreorderForEachNode
     
     (
@@ -157,12 +156,11 @@ void Obfuscator::LiteralExpansion() {
                     continue;
                 }
                 data = node->GetChild(i)->GetData<LiteralData>();
-                if (data->GetType() != Type::INT) { // ... of type int TODO
+                if (data->GetType() != Type::INT) { // ... of type int
                     continue;
                 }
 
-                int condition = Random::Get0ToN(2); // 33 % - only done sometimes
-                if (condition != 0) {
+                if ( ! Random::Percent(LITERAL_EXPANSION)) {
                     continue;
                 }
 

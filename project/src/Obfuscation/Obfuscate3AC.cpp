@@ -118,7 +118,7 @@ void Obfuscator::Signedness() {
             continue;
         }
 
-        if (Random::Get0ToN(1)) { // 50 %, do not do every time
+        if ( ! Random::Percent(SIGNEDNESS_OBFUSCATION)) {
             continue;
         }
 

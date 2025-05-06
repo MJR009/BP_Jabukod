@@ -83,3 +83,15 @@ namespace ERR {
 void BadData();
 
 } // namespace ERR
+
+/**
+ * @defgroup probability Probabilities to apply obfuscations
+ * 
+ * Each probability is in whole percents, 0 is never applied, 100 is always applied.
+ * Note that anything below 0 is acts as 0 and anything above 100 acts as 100.
+ * @{
+ */
+#define OPAQUE_PREDICATE 50
+#define LITERAL_EXPANSION 33
+#define SIGNEDNESS_OBFUSCATION 50
+/** @} */

@@ -104,8 +104,11 @@ To run the generated compiler, do:
 - `-g` - print <b>g</b>raphical representation of compilation
 - `-h` - print <b>h</b>elp message
 - `-o` - explicitly specified <b>o</b>utput file and directory (default is `out.s`)
-- `-O` - compile with <b>O</b>bfuscations, madatory following argument determines which are done
+- `-O` - compile with <b>O</b>bfuscations, mandatory following argument determines which are done
 - `path_to_program` - mandatory input file
+
+It is recommended to not use the `-c` flag, as the implementation can
+be replaced with programs such as `perf`, even better suited for profiling.
 
 When using `-O`, it has to be followed by an argument composed of <b>comma-delimited</b>
 names, which represent obfuscations you wish to apply. There are the following options:
@@ -120,10 +123,9 @@ names, which represent obfuscations you wish to apply. There are the following o
 - `array` - array restructuring
 - `flatten` - control flow flattening
 - <b>`all` - will apply all available obfuscations</b>
-- <b>`annote` - adds annotation comments for obfuscations in generated assembly file</b>
+- <b>`annote` - adds annotation comments for certain obfuscations in generated assembly file</b>
 
-It is recommended to not use the `-c` flag, as the implementation can
-be replaced with programs such as `perf`, even better suited for profiling.
+Probabilities of applying certain obfuscations can be tweaked at the bottom of `common.h` file.
 
 #### Examples
 

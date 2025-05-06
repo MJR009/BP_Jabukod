@@ -86,7 +86,6 @@ private:
     /// @brief Converts comparison to signed int equivalent.
     vector<Instruction> UsignedToSigned();
 
-
     /// @brief Used to generate expression during literal expansion obfuscation. This works for type int only.
     static ASTNode *GenerateArfificialExpression(int valueToReplace);
     /** @} */

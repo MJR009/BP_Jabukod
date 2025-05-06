@@ -202,7 +202,7 @@ vector<Instruction> Obfuscator::UsignedToSigned() {
 
 
 ASTNode *Obfuscator::GenerateArfificialExpression(int valueToReplace) {
-    int operation = Random::Get0ToN(1); // + / -
+    int operation = Random::Get0ToN(2); // + / -
 
     NodeKind replacementKind = NodeKind::invalid;
     switch (operation) {
@@ -214,10 +214,10 @@ ASTNode *Obfuscator::GenerateArfificialExpression(int valueToReplace) {
 
     int leftValue = 10; // base value - for more interesting results
     if (valueToReplace > 0) {
-        leftValue += Random::Get0ToN(valueToReplace);
+        leftValue += Random::Get0ToN(valueToReplace + 1);
     } else if (valueToReplace < 0) {
         int neg = - valueToReplace;
-        leftValue += - Random::Get0ToN(neg);
+        leftValue += - Random::Get0ToN(neg + 1);
     } else {} // 0
     LiteralData *leftValueData = new LiteralData(Type::INT, any(leftValue));
     ASTNode *left = new ASTNode(NodeKind::LITERAL, leftValueData);

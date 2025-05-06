@@ -12,11 +12,11 @@ double Random::Get() {
     return Random::LinearCongruent();
 }
 
+
+
 int Random::Get0ToN(int n) {
-    return int( Random::Get() * (n+1) );
+    return int( Random::Get() * n );
 }
-
-
 
 vector<int> Random::GetPermutation0ToN(int n) {
     vector<int> sequence;
@@ -33,6 +33,15 @@ vector<int> Random::GetPermutation0ToN(int n) {
     }
 
     return randomSequence;
+}
+
+bool Random::Percent(int percent) {
+    percent = (percent < 0) ? 0 : percent;
+    percent = (percent > 100) ? 100 : percent;
+
+    double prob = percent / 100.0f;
+
+    return (prob > Random::Get());
 }
 
 
