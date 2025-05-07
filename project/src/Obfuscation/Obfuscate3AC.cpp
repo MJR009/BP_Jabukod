@@ -227,7 +227,7 @@ void Obfuscator::FunctionCloning() {
 
     vector<Instruction> clone;
 
-    string cloneName = functionName + "_clone";
+    string cloneName = "__clone_" + functionName;
     clone.emplace_back(cloneName + ":");
     if (this->args->annoteObfuscations) {
         clone.back().AddComment("CLONE OF " + functionName);

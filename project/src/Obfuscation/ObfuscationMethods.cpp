@@ -77,14 +77,14 @@ void Obfuscator::AdjustClonedLabels(Instruction *current) {
     if ( Transform::IsLabel(*current) ) {
         string oldName = current->GetOpcode();
         oldName.pop_back(); // remove ":"
-        current->SetOpcode(oldName + "_clone:");
+        current->SetOpcode("__clone" + oldName + ":");
 
         return;
     }
 
     if ( Opcode::IsJump(current->GetOpcode()) ) {
         string oldTarget = current->GetArg1();
-        current->SetArg1(oldTarget + "_clone");
+        current->SetArg1("__clone" + oldTarget);
     }
 }
 
