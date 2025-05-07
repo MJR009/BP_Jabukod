@@ -3,8 +3,8 @@
     Jabukód code example
 
     jabu_kod.pas.jk
-    The original Pascal Jabukód rewritten into the Jabukód languge
-    Formerly used as a fork bomb on my friends computer
+    The original Pascal Jabukód rewritten into the Jabukód language.
+    Formerly used as a fork bomb on my friends computer.
 */
 
 int main() {

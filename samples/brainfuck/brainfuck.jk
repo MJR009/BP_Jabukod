@@ -1,0 +1,240 @@
+/*
+    Martin Jabůrek
+    Jabukód code example
+
+    brainfuck.jk
+    A brainfuck language interpreter in Jabukód.
+
+    The implementation is a proof of concept.
+    Non instruction values (comments) should not be used.
+    Input is emulated using an array which is assumed to containg only 1 byte numbers.
+*/
+
+enum INSTRUCTIONS {
+    RIGHT = 1, LEFT, INC, DEC, OUT, IN, LBR, RBR
+}
+int memory[30000];
+int pointer = 0;
+
+int main() {
+    int program[1000] = {RIGHT, IN, LBR, RIGHT, IN, RBR, LEFT, LBR, OUT, LEFT, RBR};
+    int adr = 0;
+
+    int INPUT[100] = {10, 50, 48, 114, 117, 98, 97, 106, 120};
+    int inputPos = 0;
+
+    for (int adr = 0; program[adr] != 0; adr=adr+1) {
+        // >
+        if (program[adr] == RIGHT) {
+            pointer = pointer + 1;
+            if (pointer == 30000) pointer = 0;
+
+        // <
+        } else if (program[adr] == LEFT) {
+            pointer = pointer - 1;
+            if (pointer == -1) pointer = 29999;
+
+        // +
+        } else if (program[adr] == INC) {
+            memory[pointer] = memory[pointer] + 1;
+            if (memory[pointer] == 256) memory[pointer] = 0;
+
+        // -
+        } else if (program[adr] == DEC) {
+            memory[pointer] = memory[pointer] - 1;
+            if (memory[pointer] == -1) memory[pointer] = 255;
+
+        // .
+        } else if (program[adr] == OUT) {
+            writeCell(memory[pointer]);
+
+        // ,
+        } else if (program[adr] == IN) {
+            memory[pointer] = INPUT[inputPos];
+            inputPos = inputPos + 1;
+
+        // [
+        } else if (program[adr] == LBR) {
+            if (memory[pointer] == 0) {
+                int loops = 0;
+
+                while (true) {
+                    adr = adr + 1;
+
+                    if (program[adr] == LBR) {
+                        loops = loops + 1;
+                        continue;
+                    }
+                    if (program[adr] == RBR) {
+                        if (loops == 0) {
+                            break;
+                        } else {
+                            loops = loops - 1;
+                        }
+                    }
+                }
+            }
+
+        // ]
+        } else if (program[adr] == RBR) {
+            if (memory[pointer] != 0) {
+                int loops = 0;
+
+                while (true) {
+                    adr = adr - 1;
+
+                    if (program[adr] == LBR) {
+                        if (loops == 0) {
+                            break;
+                        } else {
+                            loops = loops - 1;
+                        }
+                    }
+                    if (program[adr] == RBR) {
+                        loops = loops + 1;
+                    }
+                }
+            }
+        }
+    }
+}
+
+void writeCell(int value) {
+    string character;
+
+         if (value ==   9) character = "\t";
+    else if (value ==  10) character = "\n";
+
+    else if (value ==  32) character = " ";
+    else if (value ==  33) character = "!";
+    else if (value ==  34) character = "\"";
+    else if (value ==  35) character = "#";
+    else if (value ==  36) character = "$";
+    else if (value ==  37) character = "%";
+    else if (value ==  38) character = "&";
+    else if (value ==  39) character = "'";
+    else if (value ==  40) character = "(";
+    else if (value ==  41) character = ")";
+    else if (value ==  42) character = "*";
+    else if (value ==  43) character = "+";
+    else if (value ==  44) character = ",";
+    else if (value ==  45) character = "-";
+    else if (value ==  46) character = ".";
+    else if (value ==  47) character = "/";
+    else if (value ==  48) character = "0";
+    else if (value ==  49) character = "1";
+    else if (value ==  50) character = "2";
+    else if (value ==  51) character = "3";
+    else if (value ==  52) character = "4";
+    else if (value ==  53) character = "5";
+    else if (value ==  54) character = "6";
+    else if (value ==  55) character = "7";
+    else if (value ==  56) character = "8";
+    else if (value ==  57) character = "9";
+    else if (value ==  58) character = ":";
+    else if (value ==  59) character = ";";
+    else if (value ==  60) character = "<";
+    else if (value ==  61) character = "=";
+    else if (value ==  62) character = ">";
+    else if (value ==  63) character = "?";
+    else if (value ==  64) character = "@";
+    else if (value ==  65) character = "A";
+    else if (value ==  66) character = "B";
+    else if (value ==  67) character = "C";
+    else if (value ==  68) character = "D";
+    else if (value ==  69) character = "E";
+    else if (value ==  70) character = "F";
+    else if (value ==  71) character = "G";
+    else if (value ==  72) character = "H";
+    else if (value ==  73) character = "I";
+    else if (value ==  74) character = "J";
+    else if (value ==  75) character = "K";
+    else if (value ==  76) character = "L";
+    else if (value ==  77) character = "M";
+    else if (value ==  78) character = "N";
+    else if (value ==  79) character = "O";
+    else if (value ==  80) character = "P";
+    else if (value ==  81) character = "Q";
+    else if (value ==  82) character = "R";
+    else if (value ==  83) character = "S";
+    else if (value ==  84) character = "T";
+    else if (value ==  85) character = "U";
+    else if (value ==  86) character = "V";
+    else if (value ==  87) character = "W";
+    else if (value ==  88) character = "X";
+    else if (value ==  89) character = "Y";
+    else if (value ==  90) character = "Z";
+    else if (value ==  91) character = "[";
+    else if (value ==  92) character = "\\";
+    else if (value ==  93) character = "]";
+    else if (value ==  94) character = "^";
+    else if (value ==  95) character = "_";
+    else if (value ==  96) character = "`";
+    else if (value ==  97) character = "a";
+    else if (value ==  98) character = "b";
+    else if (value ==  99) character = "c";
+    else if (value == 100) character = "d";
+    else if (value == 101) character = "e";
+    else if (value == 102) character = "f";
+    else if (value == 103) character = "g";
+    else if (value == 104) character = "h";
+    else if (value == 105) character = "i";
+    else if (value == 106) character = "j";
+    else if (value == 107) character = "k";
+    else if (value == 108) character = "l";
+    else if (value == 109) character = "m";
+    else if (value == 110) character = "n";
+    else if (value == 111) character = "o";
+    else if (value == 112) character = "p";
+    else if (value == 113) character = "q";
+    else if (value == 114) character = "r";
+    else if (value == 115) character = "s";
+    else if (value == 116) character = "t";
+    else if (value == 117) character = "u";
+    else if (value == 118) character = "v";
+    else if (value == 119) character = "w";
+    else if (value == 120) character = "x";
+    else if (value == 121) character = "y";
+    else if (value == 122) character = "z";
+    else if (value == 123) character = "{";
+    else if (value == 124) character = "|";
+    else if (value == 125) character = "}";
+    else if (value == 126) character = "~";
+
+    else {
+        writeInt(value);
+        return;
+    }
+
+    write character;
+}
+
+
+
+void writeInt(int n) {
+    if (n < 0) {
+        write "-";
+        n = -n;
+    }
+
+    int digit = n % 10;
+    n = (n - digit) / 10;
+    if (n > 0) {
+        writeInt(n);
+    }
+
+    string output;
+
+    if (digit == 0) output = "0";
+    if (digit == 1) output = "1";
+    if (digit == 2) output = "2";
+    if (digit == 3) output = "3";
+    if (digit == 4) output = "4";
+    if (digit == 5) output = "5";
+    if (digit == 6) output = "6";
+    if (digit == 7) output = "7";
+    if (digit == 8) output = "8";
+    if (digit == 9) output = "9";
+
+    write output;
+}
