@@ -2,12 +2,13 @@
     Martin Jabůrek
     Jabukód code example
 
-    brainfuck.jk
-    A brainfuck language interpreter in Jabukód.
+    jabufuck.jk
+    A Brainfuck language interpreter in Jabukód.
 
-    The implementation is a proof of concept.
     Non instruction values (comments) should not be used.
     Input is emulated using an array which is assumed to containg only 1 byte numbers.
+
+    Use prepare.py to generate programs easier.
 */
 
 enum INSTRUCTIONS {

@@ -91,62 +91,56 @@ void Obfuscator::OpaquePredicates() {
 }
 
 void Obfuscator::ForgeSymbolic_1() {
+    // functions
+    // => __function????
 
-    return; // TODO REMOVE
+    // main function is kept to make program realistic
 
-    auto globalVariables = this->symbolTable.GetGlobalVariables()->GetVariables();
-    auto enums = this->symbolTable.GetAllEnums();
-    auto functions = this->symbolTable.GetAllFunctions();
-
-    // (1) Collect names
-    vector<string> globalNames;
-
-    // (1.1) globals
-    for (Variable *global : *globalVariables) {
-        globalNames.push_back( global->GetName() );
-    }
-    
-    // (1.2) enums and items
-    for (EnumTableEntry *anEnum : *enums) {
-        globalNames.push_back(anEnum->GetEntryName());
-
-        for (Variable *item : *anEnum->GetEntryItems()) {
-            globalNames.push_back(item->GetName());
-        }
-    }
-
-    // (1.3) functions and parameters
-    for (FunctionTableEntry *function : *functions) {
-        if (function->GetFunctionName() != "main") {
-            globalNames.push_back(function->GetFunctionName());
+    for (auto function : *this->symbolTable.GetAllFunctions()) {
+        if (function->GetFunctionName() == "main") {
+            continue;
         }
 
-        for (Variable *parameter : *function->GetParameters()) {
-            globalNames.push_back(parameter->GetName());
-        }
+        function->SetFunctionName("__function" + Obfuscator::CreateArbitraryLabelNumber());
     }
 
-    // (1.4) locals
-    stack<ASTNode *> nodesToProcess;
-    nodesToProcess.push(this->ast.GetRoot());
-    while ( ! nodesToProcess.empty()) {
-        ASTNode *current = nodesToProcess.top();
-        nodesToProcess.pop();
+    // variables (global), enum items, parameters
+    // => __mem????
 
+    // enum names are not present in compiled result, they are not forged
+
+    Scope *globalScope = this->symbolTable.GetGlobalVariables();
+    for (auto variable : *globalScope->GetVariables()) {
+        variable->SetName("__mem" + Obfuscator::CreateArbitraryLabelNumber());
+    }
+
+    this->ast.PreorderForEachNode
+    ( [ ](ASTNode *current) {
         if (current->IsScopeHavingNode()) {
-            for (auto local : *current->GetData<BodyData>()->GetVariables()) {
-                globalNames.push_back(local->GetName());
+            auto localsInScope = current->GetData<BodyData>()->GetVariables();
+            for (auto variable : *localsInScope) {
+                variable->SetName("__mem" + Obfuscator::CreateArbitraryLabelNumber());
             }
         }
+    });
 
-        for (int i = 0; i < current->GetChildrenCount(); i++) {
-            nodesToProcess.push(current->GetChild(i));
+    auto enums = this->symbolTable.GetAllEnums();
+    for (auto anEnum : *enums) {
+        auto enumItems = anEnum->GetEntryItems();
+
+        for (auto item : *enumItems) {
+            item->SetName("__mem" + Obfuscator::CreateArbitraryLabelNumber());
         }
     }
 
-    // TODO OBFUSCATION
-    // TODO WATCH OUT FOR COVERING NAMES!!!
-    // TODO STORE ITEMS, SO THEY CAN BE EASILY ACCESSED
+    auto functions = this->symbolTable.GetAllFunctions();
+    for (auto function : *functions) {
+        auto parameters = function->GetParameters();
+
+        for (auto parameter : *parameters) {
+            parameter->SetName("__mem" + Obfuscator::CreateArbitraryLabelNumber());
+        }
+    }
 }
 
 void Obfuscator::LiteralExpansion() {

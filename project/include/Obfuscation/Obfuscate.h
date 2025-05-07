@@ -26,16 +26,12 @@ class Generator;
 class Obfuscator {
 public:
     /// @brief Passes the reference of the tree to be obfuscated.
-    Obfuscator(ProgramArguments *args, SymbolTable & symbolTable, AST & ast)
-        : args(args), symbolTable(symbolTable), ast(ast)
-    {
-        for (auto function : *symbolTable.GetAllFunctions()) {
-            this->functionNames.push_back( function->GetFunctionName() );
-        }
-    }
+    Obfuscator(ProgramArguments *args, SymbolTable & symbolTable, AST & ast) : args(args), symbolTable(symbolTable), ast(ast) {}
 
     /// @brief Associates code generator for 3AC obfuscations.
-    void GiveGenerator(Generator *gen) { this->gen = gen; }
+    void GiveGenerator(Generator *gen) {
+        this->gen = gen;
+    }
 
 public:
     /// @brief According to command line arguments, add obfuscations to the abstract syntax tree.
@@ -110,7 +106,9 @@ private:
 
     /// @brief Returns all automatically generated labels in the given three address code range (representing a function).
     vector<string> CollectLabels(vector<Instruction>::iterator function, vector<Instruction>::iterator functionEnd);
-    /// @brief Implicit labels contain a 4 digit index. This function randmizes it.
-    void ForgeLabelNumber(string & label);
+    /// @brief Implicit labels contain a 4 digit index. This function randmizes them.
+    static void ForgeLabelNumber(string & label);
+    /// @brief Used for exmplicit labels, like functions. Actually creates the random string, unlike ForgeLabelNumber.
+    static string CreateArbitraryLabelNumber();
     /** @} */
 };

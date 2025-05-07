@@ -49,11 +49,9 @@ bool Random::Percent(int percent) {
 // PRIVATE:
 
 double Random::LinearCongruent() {
-    const unsigned SEED = 0xDEAD10CC;
-    //const unsigned a = 1664525u;
-    //const unsigned b = 1013904223u;
-    const unsigned a = 69069u;
-    const unsigned b = 1u;
+    const unsigned SEED = LINEAR_CONGRUENT_SEED;
+    const unsigned a = LINEAR_CONGRUENT_A;
+    const unsigned b = LINEAR_CONGRUENT_B;
 
     static unsigned RANDOM = SEED;
 

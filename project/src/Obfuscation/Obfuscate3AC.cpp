@@ -13,6 +13,11 @@
 #include "Generator.h"
 
 void Obfuscator::Obfuscate3AC() {
+    // function names may be changed in ForgeSymbolic_1. They are retrieved only here, where they may be needed.
+    for (auto function : *symbolTable.GetAllFunctions()) {
+        this->functionNames.push_back( function->GetFunctionName() );
+    }
+
     if (this->args->obfuscateAll) {
         this->FunctionCloning();
         this->Signedness();
@@ -168,7 +173,7 @@ void Obfuscator::ForgeSymbolic_2() {
         for (int j = 0; j < implicitLabels.size(); j++) {
             string mappedLabel = implicitLabels[ (j + randomShift) % implicitLabels.size() ];
 
-            this->ForgeLabelNumber(mappedLabel);
+            Obfuscator::ForgeLabelNumber(mappedLabel);
 
             labelMapping[ implicitLabels[ j ] ] = mappedLabel;
         }

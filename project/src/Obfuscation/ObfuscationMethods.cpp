@@ -437,12 +437,12 @@ vector<string> Obfuscator::CollectLabels(vector<Instruction>::iterator function,
 
 void Obfuscator::ForgeLabelNumber(string & label) {
     const int mod = 10000;
-    const int increment = 6971; // all 10000, without repetition
+    const int increment = FORGED_IMPLICIT_LABEL_ID_STEP;
 
     static int randomUnique = increment;
 
     ostringstream stream;
-    stream << setw(4) << setfill('0') << (randomUnique);
+    stream << setw(4) << setfill('0') << randomUnique;
     string uniqueID = stream.str();
     for (int i = 0; i < 4; i++) {
         label[ label.size() - i - 1 ] = uniqueID[ i ];
@@ -451,3 +451,19 @@ void Obfuscator::ForgeLabelNumber(string & label) {
     randomUnique += increment;
     randomUnique %= mod;
 } 
+
+string Obfuscator::CreateArbitraryLabelNumber() {
+    const int mod = 10000;
+    const int increment = FORGED_EXPLICIT_LABEL_ID_STEP;
+
+    static int randomUnique = increment;
+
+    ostringstream stream;
+    stream << setw(4) << setfill('0') << randomUnique;
+    string uniqueID = stream.str();
+    
+    randomUnique += increment;
+    randomUnique %= mod;
+
+    return uniqueID;
+}

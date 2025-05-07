@@ -97,3 +97,16 @@ void BadData();
 #define USE_CLONE 50
 #define RESTRUCTURE_ARRAY 25
 /** @} */
+
+/**
+ * @defgroup randomness Values used for generated pseudo-random values during obfuscation
+ * 
+ * @{
+ */
+#define LINEAR_CONGRUENT_SEED 0xDEAD10CC
+#define LINEAR_CONGRUENT_A 69069u // 1664525u
+#define LINEAR_CONGRUENT_B 1u // 1013904223u
+
+#define FORGED_IMPLICIT_LABEL_ID_STEP 6971
+#define FORGED_EXPLICIT_LABEL_ID_STEP 4373
+/** @} */
