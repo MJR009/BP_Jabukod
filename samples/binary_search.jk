@@ -1,8 +1,9 @@
 /*
     Martin Jabůrek
-    Profiling program binary_search.jk
+    Jabukód code example
 
-    Searches through a large array using the binary search algorithm. Tests searching.
+    binary_search.jk
+    Binary search in a large array.
 */
 
 int array[100] = { // generated with https://www.random.org/sequences/ and adjusted

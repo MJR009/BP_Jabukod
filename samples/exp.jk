@@ -1,9 +1,9 @@
 /*
     Martin Jabůrek
-    Profiling program exp.jk
+    Jabukód code example
 
-    Exponent calculation using Taylor series approximation. Tests floating point arithmetic.
-    20 iterations
+    exp.jk
+    Calculates e^x of a decimal number using Taylor series approximation.
 */
 
 int main() {

@@ -1,8 +1,9 @@
 /*
     Martin Jabůrek
-    Profiling program quick_sort.jk
+    Jabukód code example
 
-    Sorts a large array using the quick sort algorithm. Tests sorting.
+    quick_sort.jk
+    Sorts a large array using quick sort algorithm.
 */
 
 int array[100] = { // generated with https://www.calculatorsoup.com/calculators/statistics/random-number-generator.php
