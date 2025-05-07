@@ -9,4 +9,19 @@
 # 4) MANUÁLNÍ RDTSC
 # *) grof se nehodí, protože by bylo třeba řešit, bylo by potřeba linkovat k C a volat mcount v prolozích
 
-print("Hello world!")
+# 1) compare C and Jabukód
+gcc -O0 -o ackermann ackermann.c
+gcc -O0 -o binary_search binary_search.c
+gcc -O0 -o quick_sort quick_sort.c
+
+ls -l # size
+
+../../build/jabukod ackermann.jk -o ./build/ackermann
+../../build/jabukod binary_search.jk -o ./build/binary_search
+../../build/jabukod quick_sort.jk -o ./build/quick_sort
+
+/usr/bin/time -v ./build/ackermann
+perf stat -e cycles,instructions --repeat 10 ./build/binary_search
+perf stat -e cycles,instructions --repeat 10 ./build/quick_sort
+
+# podobně pro C

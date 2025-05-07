@@ -1,0 +1,67 @@
+/*
+    Martin Jabůrek
+    Profiling program quick_sort.c
+
+    quick_sort.jk reimplemened in C
+*/
+
+#include <stdio.h>
+
+int array[100] = { // generated with https://www.calculatorsoup.com/calculators/statistics/random-number-generator.php
+    555, 646, 912, 599, 924, 134, 859, 884, 915, 329,
+    145, 534,  14, 740, 236, 981,  97, 458, 835, 751,
+    495, 817, 252, 439, 108, 402, 350, 747, 430,  41,
+    535, 903, 250, 121, 573, 386, 222, 540, 953, 276,
+    111, 416, 509, 997, 819, 494,  95, 280,  76, 796,
+    291, 332,  69, 738, 721, 421, 618,  39, 465, 753,
+    772, 910, 461, 679, 364, 790, 130, 622, 566, 347,
+    116, 240, 705, 974, 854, 274, 551,  55, 539, 933,
+    954, 855, 814, 132, 299, 680, 756, 106, 445, 674,
+    886, 868, 138, 702, 902, 425, 344, 931, 349, 644
+};
+
+int partition(int left, int right);
+
+void quickSort(int left, int right) {
+    if (left >= right) return;
+
+    int middle = partition(left, right);
+
+    quickSort(left, middle - 1);
+    quickSort(middle + 1, right);
+}
+
+int partition(int left, int right) {
+    int pivot = array[right];
+
+    int i = left;
+
+    for (int j = left; j <= right - 1; j++) {
+        if (array[j] < pivot) {
+            int aux = array[i];
+            array[i] = array[j];
+            array[j] = aux;
+
+            i++;
+        }
+    }
+
+    int aux = array[i];
+    array[i] = array[right];
+    array[right] = aux;
+
+    return i;
+}
+
+int main() {
+    quickSort(0, 99);
+
+    for (int i = 0; i < 10; i++) {
+        for (int j = 0; j < 10; j++) {
+            printf("%d\t", array[i*10 + j]);
+        }
+        printf("\n");
+    }
+
+    return 0;
+}
