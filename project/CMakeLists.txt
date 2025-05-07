@@ -97,9 +97,13 @@ add_custom_target(visualise
 set(ARCHIVE_BASE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/..)
 file(GLOB PACK_FILES
     RELATIVE ${ARCHIVE_BASE_DIR}
+    ${ARCHIVE_BASE_DIR}/docs/Doxyfile
+    ${ARCHIVE_BASE_DIR}/docs/images/*
     ${ARCHIVE_BASE_DIR}/grammar/Jabukod.g4
+    ${ARCHIVE_BASE_DIR}/grammar/Jabukod.dox
     ${ARCHIVE_BASE_DIR}/project/*
     ${ARCHIVE_BASE_DIR}/samples/*
+    ${ARCHIVE_BASE_DIR}/test_programs/*
     ${ARCHIVE_BASE_DIR}/tool/*
     ${ARCHIVE_BASE_DIR}/README.md
     ${ARCHIVE_BASE_DIR}/assignment.pdf
@@ -108,14 +112,11 @@ file(GLOB PACK_FILES
     ${ARCHIVE_BASE_DIR}/Jabukod_syntax-highlighting/language-configuration.json
     ${ARCHIVE_BASE_DIR}/Jabukod_syntax-highlighting/package.json
     ${ARCHIVE_BASE_DIR}/Jabukod_syntax-highlighting/README.md
-    ${ARCHIVE_BASE_DIR}/docs/Doxyfile
-    ${ARCHIVE_BASE_DIR}/docs/images/*
-    ${ARCHIVE_BASE_DIR}/grammar/Jabukod.dox
 )
 add_custom_target(pack
     COMMAND ${CMAKE_COMMAND} -E tar cfv ${PROJECT_NAME}.zip --format=zip ${PACK_FILES}
     COMMAND ${CMAKE_COMMAND} -E echo ""
-    COMMAND ${CMAKE_COMMAND} -E echo "!!!!!! DO NOT FORGET THE SYNTAX HIGHLIGHTOING FOR HANDIN !!!!!!"
+    COMMAND ${CMAKE_COMMAND} -E echo "!!!!!! DO NOT FORGET THE SYNTAX HIGHLIGHTING FOR HANDIN !!!!!!"
     COMMAND ${CMAKE_COMMAND} -E echo ""
     WORKING_DIRECTORY ${ARCHIVE_BASE_DIR}
 )

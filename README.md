@@ -29,16 +29,17 @@ BP_Jabukod/
 |   \-- Doxyfile
 +-- grammar/
 |   \-- Jabukod.g4
++-- profiling/
+|   \--
 +-- project/
 |   +-- cmake/
 |   +-- src/
 |   +-- include/
-|   |
 |   +-- common.h
 |   +-- main.cpp
 |   \-- CMakeLists.txt
 +-- samples/
-|   \-- TESTS/
++-- test_programs/
 +-- tool/
 |   \-- antlr-4.13.2-complete.jar
 +-- README.md
@@ -50,17 +51,12 @@ BP_Jabukod/
 
 ## Requirements
 
-Project requirements are analogous to ANTLR4 version 4.13.2:
-
 - Minimum C++ standard <b>C++17</b>
-- Minimum <b>CMake 2.8</b>
+- Minimum CMake version <b>2.8</b>
 - `java` installed (needed for `make visualise`, tested with `openjdk 21.0.6 2025-01-21`)
 - `javac` installed ( -//- )
 - `dot` installed ( -//- )
 - `doxygen` installed (needed for `make docs` and `make clean_docs`)
-
-Some of the outputs use ANSI escape sequences which may not visualise text as
-intended on some machines.
 
 ## Usage
 
@@ -104,14 +100,14 @@ To run the generated compiler, do:
 - `-g` - print <b>g</b>raphical representation of compilation
 - `-h` - print <b>h</b>elp message
 - `-o` - explicitly specified <b>o</b>utput file and directory (default is `out.s`)
-- `-O` - compile with <b>O</b>bfuscations, mandatory following argument determines which are done
+- `-O` - compile with <b>O</b>bfuscations; mandatory following argument determines which are done
 - `path_to_program` - mandatory input file
 
 It is recommended to not use the `-c` flag, as the implementation can
 be replaced with programs such as `perf`, even better suited for profiling.
 
 When using `-O`, it has to be followed by an argument composed of <b>comma-delimited</b>
-names, which represent obfuscations you wish to apply. There are the following options:
+names, which represent obfuscations to apply. There are the following options:
 
 - `opaque` - obfuscate using opaque predicates
 - `interleave` - code interleaving
@@ -124,6 +120,9 @@ names, which represent obfuscations you wish to apply. There are the following o
 - <b>`annote` - adds annotation comments for certain obfuscations in generated assembly file</b>
 
 Probabilities of applying certain obfuscations can be tweaked at the bottom of `common.h` file.
+
+Some of the command line outputs use ANSI escape sequences which may not visualise text as
+intended on some machines.
 
 #### Examples
 
@@ -141,8 +140,8 @@ Compile `program.jk` with opaque predicates and function interleaving obfuscatio
 
 ### Code Examples
 
-Exaples of Jabukód programs are stored int the `samples` directory. Tests from `samples/TESTS/generator`
-may also be used a reference for possible code structures, which can be written in Jabukód.
+Exaples of Jabukód programs are stored int the `samples` directory. Tests from `test_programs` directory
+can also be used as a reference for possible code structures, which can be written in Jabukód.
 
 For clarity and correct syntax highligting in Visual Studio Code,
 Jabukód source file names should be followed by `.jk` filename extension.
@@ -157,15 +156,10 @@ the `build` subdirectory or with `-C build` argument:
 with a syntax tree visualisation (note this target requires `java`, `javac` and `dot` installed).
 - `make pack` <br> Creates a `Jabukod.zip` file with everything needed for build.
 - `make docs` <br> Generates code documentation into the `docs` subdirectory, including generating
-the LaTeX `pdf`.
+the LaTeX pdf.
 - `make clean_docs` <br> deletes all products of documentation generation (`html` and `latex` subdirectories).
 
 ## Documentation
-
-### User guide
-
-This repository also contains two concise guides for programming in Jabukód, in the style of a cheatsheet.
-`Guide_CZ.pdf` is in czech and `Guide_EN.pdf` is in english.
 
 ### Code Documentation
 
@@ -175,14 +169,19 @@ It is automatically generated using `Doxygen` from code comments.
 After `make docs` is run, the pdf documentation is also put into the `build` directory
 under the name `xjabur02_Jabukod_documentation.pdf`.
 
+### User guide
+
+This repository also contains two concise guides for programming in Jabukód, in the style of a cheatsheet.
+`Guide_CZ.pdf` is in czech and `Guide_EN.pdf` is in english.
+
 ## Testing
 
 In the `samples` directory you can find a large set of example programs. The top level contains
 small programs showcasing widely known functions. Other subdirectories containg programs used
 for testing during different phases of development.
 
-All testing and development was done on a x86_64 machine using <b>Ubuntu 24.04.2 LTS</b> operating
-system with functionality verified on the `merlin` FIT VUT faculty server.
+All testing and development was done on an x86_64 machine using <b>Ubuntu 24.04.2 LTS</b> operating
+system. Correct functionality was verified on the `merlin` FIT VUT faculty server.
 
 ## Syntax highlighting
 
@@ -203,13 +202,10 @@ https://github.com/antlr/antlr4
 ANTLR4 uses the 'BSD 3-Clause "New" or "Revised" License'.
 The original license and copyright notice is preserved in `/project/cmake/LICENSE.txt` of this
 repository. The subdirectory also contains CMake files taken
-over from ANTLR4 repository for guaranteing correct functionality and interoperability.
+over and edited from ANTLR4 repository for guaranteing correct
+functionality and interoperability.
 
 This repository also contains the tools binary in the `/tool/` subdirectory.
-The same license holds here, but since it was downloaded from the official website,
-the license text from this website is also linked for completeness: <br/>
+The same license holds here. As the tool was downloaded from the official ANTLR4 website,
+the license present there is linked below: <br/>
 https://www.antlr.org/license.html
-
-According to: <br/>
-https://opensource.guide/legal/#which-open-source-license-is-appropriate-for-my-project <br/>
-using a different license for this project is completely allowed.
