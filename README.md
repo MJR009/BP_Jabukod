@@ -183,6 +183,17 @@ for testing during different phases of development.
 All testing and development was done on an x86_64 machine using <b>Ubuntu 24.04.2 LTS</b> operating
 system. Correct functionality was verified on the `merlin` FIT VUT faculty server.
 
+## Profiling
+
+There are several programs, that were used from profiling the generated executable files:
+- `perf stat` - execution time in clock cycles
+- `/usr/bin/time` - a `time` extension used for measuring execution time of longer running
+    programs in seconds.
+- `valgrind --tool=massif` and `ms_print` for measuring used stack memory.
+
+To semi-automize the generation of all necessary measurements for this thesis, a few bash scripts were
+created. These can be in the `/profiling` subdirectory, from which they also should be run.
+
 ## Syntax highlighting
 
 A part of this project is a custom extension for syntax highlighting of Jabukód files
