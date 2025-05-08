@@ -1,3 +1,8 @@
+# Martin Jabůrek
+# obfuscation_noIO.sh
+#
+# Meaurument of programs including obfuscations and combinations
+
 RED='\033[0;31m'
 DEFAULT='\033[0m'
 
