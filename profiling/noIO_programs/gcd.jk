@@ -1,0 +1,31 @@
+/*
+    Martin Jabůrek
+    Profiling program gcd.jk
+
+    Calculates the greatest common divisor of chosen large numbers. Tests integer calculations.
+    Plain algorithm implementation with no output for percise measurement.
+*/
+
+int A[10] = {674551, 861420, 287854, 1948724, 1618355, 1942788, 1659254, 1624788, 1235595, 524677};
+int B[10] = {644903, 803834,  64234, 1124877,  705214,  419344,  879878,  840718,  561674, 428399};
+
+int main() {
+    int res;
+
+    for (int i = 0; i < 10; i=i+1) {
+        for (int j = 0; j < 10; j=j+1) {
+            res = gcd(A[i], B[j]);
+        }
+    }
+}
+
+int gcd(int a, int b) {
+    while (b != 0) {
+        int aux = a;
+
+        a = b;
+        b = aux % b;
+    }
+
+    return a;
+}

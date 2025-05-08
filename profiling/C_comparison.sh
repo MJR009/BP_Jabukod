@@ -1,3 +1,9 @@
+# Martin Jabůrek
+# C_comparison.sh
+#
+# Compare chosen .jk and .c prorams with their full functionality.
+# Unused for profiling in thesis !
+
 RED='\033[0;31m'
 DEFAULT='\033[0m'
 

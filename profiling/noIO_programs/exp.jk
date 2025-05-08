@@ -1,0 +1,32 @@
+/*
+    Martin Jabůrek
+    Profiling program exp.jk
+
+    Exponent calculation using Taylor series approximation. Tests floating point arithmetic.
+    20 iterations
+    Plain algorithm implementation with no output for percise measurement.
+*/
+
+int main() {
+    float res;
+
+    for (float i = 0; i < 5; i=i+0.25) {
+        res = exp(i);
+    }
+}
+
+float exp(float x) {
+    float res = 1; // iteration 1
+
+    float numerator = x;
+    int denominator = 1;
+
+    for (int i = 2; i <= 20; i=i+1) {
+        res = res + (numerator / denominator);
+
+        numerator = numerator * x;
+        denominator = denominator * i;
+    }
+
+    return res;
+}
