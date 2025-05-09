@@ -2,9 +2,9 @@
     Martin Jabůrek
     Profiling program exp.jk
 
-    Exponent calculation using Taylor series approximation. Tests floating point arithmetic.
+    e^x calculation using Taylor series approximation. Tests floating point arithmetic.
     20 iterations
-    Plain algorithm implementation with no output for percise measurement.
+    Plain algorithm implementation with no output for fair measurement.
 */
 
 int main() {

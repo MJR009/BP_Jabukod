@@ -15,3 +15,5 @@ a.out
 docs/doxygen
 docs/html
 docs/latex
+
+profiling/result*

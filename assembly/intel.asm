@@ -10,11 +10,10 @@
 hello:   db "Hello world!",10,0
 hello_len:   equ $-hello
 
-
     SECTION .text
     global _start
 _start:
-    mov rdi, 1 ; 32 bit move -> more percisely a more efficient encoding, the 1 is sign extended into rdx
+    mov rdi, 1 ; 32 bit move -> more efficient encoding, the 1 is sign extended into rdx
     ; mov rdi, strict qword 1 ; 64 bit move
     ; mov rax, 0123456789abcdefh ; -//-
     lea rsi, [hello]

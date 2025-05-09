@@ -101,6 +101,7 @@ file(GLOB PACK_FILES
     ${ARCHIVE_BASE_DIR}/docs/images/*
     ${ARCHIVE_BASE_DIR}/grammar/Jabukod.g4
     ${ARCHIVE_BASE_DIR}/grammar/Jabukod.dox
+    ${ARCHIVE_BASE_DIR}/profiling/*
     ${ARCHIVE_BASE_DIR}/project/*
     ${ARCHIVE_BASE_DIR}/samples/*
     ${ARCHIVE_BASE_DIR}/test_programs/*

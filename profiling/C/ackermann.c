@@ -2,10 +2,9 @@
     Martin Jabůrek
     Profiling program ackermann.c
 
-    ackermann.jk reimplemented in C
+    ackermann.jk rewritten in C
+    Plain algorithm implementation with no output for fair measurement.
 */
-
-#include <stdio.h>
 
 int ackermann(int m, int n) {
     if (m == 0) {
@@ -18,23 +17,17 @@ int ackermann(int m, int n) {
 }
 
 int main() {
-    printf("%s\n", "\t0\t1\t2\t3\t4\t5");
+    int ack;
 
     int m = 0;
     for (; m < 4; m++) {
-        printf("%d\t", m);
-
         for (int n = 0; n <= 5; n++) {
-            printf("%d\t", ackermann(m, n));
+            ack = ackermann(m, n);
         }
-        printf("\n");
     }
     
     m = 4;
-    printf("4\t");
     for (int n = 0; n <= 1; n++) {
-        printf("%d\t", ackermann(m, n));
+        ack = ackermann(m, n);
     }
-
-    printf("%s\n", "-\t-\t-\t-\t");
 }

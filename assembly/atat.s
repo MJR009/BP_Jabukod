@@ -16,7 +16,8 @@ hello_len:
 .globl _start
 
 _start:
-    movq $1, %rdi # 32 bit $imm
+#    movabs $1, %rdi # 64 bit immediate
+    movq $1, %rdi # 32 bit immediate
     lea (hello), %rsi
     movq hello_len, %rdx
 
@@ -27,5 +28,3 @@ _start:
 
     movq $60, %rax
     syscall
-
-# 'tis a bit hard...

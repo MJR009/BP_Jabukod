@@ -3,6 +3,7 @@
     Profiling program quick_sort.jk
 
     Sorts a large array using the quick sort algorithm. Tests sorting.
+    Plain algorithm implementation with no output for fair measurement.
 */
 
 int array[100] = { // generated with https://www.calculatorsoup.com/calculators/statistics/random-number-generator.php
@@ -20,14 +21,6 @@ int array[100] = { // generated with https://www.calculatorsoup.com/calculators/
 
 int main() {
     quickSort(0, 99);
-
-    for (int i = 0; i < 10; i=i+1) {
-        for (int j = 0; j < 10; j=j+1) {
-            writeInt( array[i*10 + j] );
-            write "\t";
-        }
-        write "\n";
-    }
 
     return 0;
 }
@@ -61,34 +54,4 @@ int partition(int left, int right) {
     array[right] = aux;
 
     return i;
-}
-
-
-
-void writeInt(int n) {
-    if (n < 0) {
-        write "-";
-        n = -n;
-    }
-
-    int digit = n % 10;
-    n = (n - digit) / 10;
-    if (n > 0) {
-        writeInt(n);
-    }
-
-    string output;
-
-    if (digit == 0) output = "0";
-    if (digit == 1) output = "1";
-    if (digit == 2) output = "2";
-    if (digit == 3) output = "3";
-    if (digit == 4) output = "4";
-    if (digit == 5) output = "5";
-    if (digit == 6) output = "6";
-    if (digit == 7) output = "7";
-    if (digit == 8) output = "8";
-    if (digit == 9) output = "9";
-
-    write output;
 }

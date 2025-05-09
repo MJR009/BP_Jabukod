@@ -2,10 +2,9 @@
     Martin Jabůrek
     Profiling program quick_sort.c
 
-    quick_sort.jk reimplemened in C
+    quick_sort.jk rewritten in C
+    Plain algorithm implementation with no output for fair measurement.
 */
-
-#include <stdio.h>
 
 int array[100] = { // generated with https://www.calculatorsoup.com/calculators/statistics/random-number-generator.php
     555, 646, 912, 599, 924, 134, 859, 884, 915, 329,
@@ -55,13 +54,5 @@ int partition(int left, int right) {
 
 int main() {
     quickSort(0, 99);
-
-    for (int i = 0; i < 10; i++) {
-        for (int j = 0; j < 10; j++) {
-            printf("%d\t", array[i*10 + j]);
-        }
-        printf("\n");
-    }
-
     return 0;
 }

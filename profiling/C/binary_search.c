@@ -2,10 +2,9 @@
     Martin Jabůrek
     Profiling program binary_search.c
 
-    binary_search.jk reimplemented in C
+    binary_search.jk rewritten in C
+    Plain algorithm implementation with no output for fair measurement.
 */
-
-#include <stdio.h>
 
 int array[100] = { // generated with https://www.random.org/sequences/ and adjusted
     4,   8,  23,  54,  62,  64,  66,  67,  70,  76,
@@ -44,8 +43,6 @@ int binary_search(int n) {
 int main() {
     for (int i = 0; i < 10; i++) {
         int n = binary_search( searched[i] );
-
-        printf("%d\n", n);
     }
 
     return 0;

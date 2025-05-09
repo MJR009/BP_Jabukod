@@ -3,7 +3,7 @@
     Profiling program ackermann.jk
 
     Calculates the value of Ackermanns function for certain values. Tests effect of recursion depth.
-    Plain algorithm implementation with no output for percise measurement.
+    Plain algorithm implementation with no output for fair measurement.
 */
 
 int main() {
