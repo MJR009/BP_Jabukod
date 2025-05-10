@@ -21,7 +21,7 @@ generating secured executables without the need for additional processing afterw
 
 ## Project structure
 
-Essential top level project directories and files are arranged as follows:
+Essential top-level project directories and files are arranged as follows:
 
 ```
 BP_Jabukod/
@@ -70,9 +70,9 @@ BP_Jabukod/
 ### Build
 
 Opening the project for the first time in an IDE will likely result in many errors appearing.
-These are dependency errors from files to be generated during build.
+These are dependency errors from files to be generated during the build.
 
-The following is the recommended command for first time <b>building</b> the program:
+The following is the recommended command for <b>building</b> the program:
 
 `cmake -B build -S project && make -C build`<br>
 
@@ -88,7 +88,7 @@ build may take a long time.
 </br>
 </br>
 Also, due to several deprecation warnings shown during the build of the ANTLR4 runtime,
-build is not processed without warnings. For this compiler they pose no
+the build is not processed without warnings. For this compiler they pose no
 limitation to intended functionality.
 
 ### Running
@@ -97,8 +97,8 @@ To run the generated compiler, do:
 
 `./jabukod [-a] [-c] [-d] [-D] [-g] [-h] [-o path_to_binary] [-O selected_obfuscations] path_to_program`
 
-<b>Command line arguments</b> can be used generally with extra non option arguments ignored.
-`[]` mark voluntary arguments. Semantics of each of the argument above are:
+<b>Command line arguments</b> can be used generally, with extra non-option arguments ignored.
+`[]` mark voluntary arguments. The semantics of each of the arguments above are:
 
 - `-a` - only execute source program <b>a</b>nalysis, do not compile
 - `-c` - embed <b>c</b>lock cycle measurement with `rdtsc` into the generated binary
@@ -124,11 +124,11 @@ names, which represent obfuscations to apply. There are the following options:
 - `clone` - function cloning
 - `array` - array restructuring
 - <b>`all` - will apply all available obfuscations</b>
-- <b>`annote` - adds annotation comments for certain obfuscations in generated assembly file</b>
+- <b>`annote` - adds annotation comments for certain obfuscations in the generated assembly file</b>
 
-Probabilities of applying certain obfuscations can be tweaked at the bottom of `common.h` file.
+Probabilities of applying certain obfuscations can be tweaked at the bottom of the `common.h` file.
 
-Some of the command line outputs use ANSI escape sequences which may not visualise text as
+Some of the command line outputs use ANSI escape sequences, which may not visualise text as
 intended on some machines.
 
 #### Examples
@@ -147,20 +147,20 @@ Compile `program.jk` with opaque predicates and function interleaving obfuscatio
 
 ### Code Examples
 
-Exaples of Jabukód programs are stored int the `samples` directory. Tests from `test_programs` directory
+Examples of Jabukód programs are stored in the `samples` directory. Tests from `test_programs` directory
 can also be used as a reference for possible code structures.
 
-For clarity and correct syntax highligting in Visual Studio Code,
+For clarity and correct syntax highlighting in Visual Studio Code,
 Jabukód source file names should be followed by `.jk` filename extension.
 
 ### Other make targets
 
-There are also other build options. All of the available options are as follows, they all consider make being run from
+There are also other build options. All of the available options are as follows; they all consider make being run from
 the `build` subdirectory or with `-C build` argument:
 - `make` <br> Build the compiler binary.
 - `make clean` <br> Delete the generated `jabukod` executable.
 - `make visualise INPUT_FILE=[file from samples subdirectory]` <br> Opens a window
-with a syntax tree visualisation (note this target requires `java`, `javac` and `dot` installed).
+with a syntax tree visualization (note this target requires `java`, `javac` and `dot` installed).
 - `make pack` <br> Creates a `Jabukod.zip` file with everything needed for build.
 - `make docs` <br> Generates code documentation into the `docs` subdirectory, including generating
 the LaTeX pdf.
@@ -173,13 +173,13 @@ the LaTeX pdf.
 Code documentation generated with `make docs` is located in `docs` directory.
 It is automatically generated using `Doxygen` from code comments.
 
-After `make docs` is run, the pdf documentation is also put into the `build` directory
+After `make docs` is run, the PDF documentation is also put into the `build` directory
 under the name `xjabur02_Jabukod_documentation.pdf`.
 
 ### User guide
 
-This repository also contains two concise guides for programming in Jabukód, in the style of a cheatsheet.
-`Guide_CZ.pdf` is in czech and `Guide_EN.pdf` is in english.
+This repository also contains two concise guides for programming in Jabukód, in the style of a cheat sheet.
+`Guide_CZ.pdf` is in Czech and `Guide_EN.pdf` is in English.
 
 ## Testing
 
@@ -191,15 +191,15 @@ system. Correct functionality was verified on the `merlin` FIT VUT faculty serve
 
 ## Profiling
 
-For profiling two scripts are available:
-- `profiling/jabukod_vs_C.sh` - Compares executions speed, generated file size and memory consumption
+For profiling, two scripts are available:
+- `profiling/jabukod_vs_C.sh` - Compares execution speed, generated file size, and memory consumption
 of chosen algorithms implemented both in Jabukód and C. C programs are compiled using `gcc -O0`.
-- `obfuscations.sh` - Compares executions speed, generated file size and memory consumption of
+- `profiling/obfuscations.sh` - Compares execution speed, generated file size, and memory consumption of
 a set of sample programs written in Jabukód, compiled with different obfuscations applied.
 
-There are several programs, that were used from profiling the generated executable files:
+There are several programs that were used for profiling the generated executable files:
 - `perf stat` - execution time in clock cycles.
-- `/usr/bin/time` - execution time of longer running programs in seconds.
+- `/usr/bin/time` - execution time of longer-running programs in seconds.
 - `valgrind --tool=massif` and `ms_print` for measuring used stack memory.
 
 All profiled programs have output functionality removed to ensure fair comparison.
