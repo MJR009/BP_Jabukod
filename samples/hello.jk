@@ -3,7 +3,7 @@
     Jabukód code example
 
     hello.jk
-    The first Jabukód program
+    Program that prints "Hello world!" to the command line.
 */
 
 int main() write "Hello world!\n";

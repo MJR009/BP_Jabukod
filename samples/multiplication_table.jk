@@ -3,7 +3,7 @@
     Jabukód code example
 
     multiplication_table.jk
-    Prints the small multiplication table with one foreach and one for loop
+    Prints the small multiplication table with one foreach and one for loop.
 */
 
 int main() {

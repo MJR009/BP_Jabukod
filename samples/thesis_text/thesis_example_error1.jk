@@ -2,8 +2,8 @@
     Martin Jabůrek
     Jabukód code example
 
-    thesis_eample_error4.jk
-    Code used in the thesis text for showcase of lexical and syntax errors.
+    thesis_eample_error1.jk
+    Code used in thesis text for showcase of lexical and syntax errors.
 */
 
 int main() {

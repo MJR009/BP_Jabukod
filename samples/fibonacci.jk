@@ -3,7 +3,7 @@
     Jabukód code example
 
     fibonacci.jk
-    Prints the first "COUNT" Fibonnaci numbers
+    Prints the first "COUNT" Fibonnaci numbers.
 */
 
 const int COUNT = 20;

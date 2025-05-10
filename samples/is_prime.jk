@@ -3,7 +3,7 @@
     Jabukód code example
 
     is_prime.jk
-    Prints first "COUNT" whole numbers and whether they are prime or composite
+    Prints first "COUNT" whole numbers and whether they are prime or composite.
 */
 
 const int COUNT = 1000;

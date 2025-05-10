@@ -3,7 +3,7 @@
     Jabukód code example
 
     fact.jk
-    Recursive factorial of "VALUE"
+    Recursive factorial of "VALUE".
 */
 
 const int VALUE = 7;

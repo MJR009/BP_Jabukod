@@ -4,7 +4,7 @@
 
     jabu_kod.pas.jk
     The original Pascal Jabukód rewritten into the Jabukód language.
-    Formerly used as a fork bomb on my friends computer.
+    Formerly used to fry my friends computer.
 */
 
 int main() {

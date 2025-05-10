@@ -3,7 +3,7 @@
     Jabukód code example
 
     write_int.jk
-    Prints a value of type int
+    Prints a value of type int.
 */
 
 void writeInt(int n) {

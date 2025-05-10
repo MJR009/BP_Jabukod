@@ -7,7 +7,6 @@
 
     Non instruction values (comments) should not be used.
     Input is emulated using an array which is assumed to containg only 1 byte numbers.
-
     Use prepare.py to generate programs easier.
 */
 
