@@ -5,6 +5,7 @@
  * @brief Header to be available in every source file.
  * 
  * Contains all top level definitions, includes and macros, desired to be available everywhere in code.
+ * Randomness and percentages used for applying obfuscations can be tweaked in this file.
  */
 
 #pragma once
@@ -29,10 +30,12 @@
 
 using namespace std;
 
+
+
 /**
  * @defgroup exitCodes Exit codes.
  * 
- * Sometimes used as placeholders for return type "any" not being used.
+ * Sometimes also used as placeholders for return type "any" not being used.
  * @{
  */
 #define OK 0
@@ -40,7 +43,7 @@ using namespace std;
 /** @} */
 
 /**
- * @defgroup ansiText Text characteristics ANSI escape sequences.
+ * @defgroup ansiText Text setting ANSI escape sequences.
  * @{
  */
 #define BOLD "\033[1m"
@@ -60,11 +63,17 @@ using namespace std;
 #define TEAL "\033[38;2;77;214;164m"
 /** @} */
 
-/// @defgroup ansiReset Resets text to default after ANSI escape sequence usage.
+/**
+ * @defgroup ansiReset Default text setting ANSI escape sequence.
+ * @{
+ */
 #define DEFAULT "\033[0m"
+/** @} */
 
 /**
- * @defgroup unicodeBorder Table border characters. Used for printing abstract syntax trees.
+ * @defgroup unicodeBorder Table border characters.
+ * 
+ * Used for printing abstract syntax trees.
  * @{
  */
 #define VERTICAL "\u2502"
@@ -73,33 +82,40 @@ using namespace std;
 #define STOP "\u2514"
 /** @} */
 
+
+
 namespace ERR {
 
 /**
  * @defgroup BadData Bad data error
  * 
  * Function to be called when an error occurs in structure of generated internal code representation.
+ * Calls to this function are kept in the code. For correct source files a call to it should never occur
+ * during compilation.
  */
 void BadData();
 
 } // namespace ERR
 
+
+
 /**
  * @defgroup probability Probabilities to apply obfuscations
  * 
- * Each probability is in whole percents, 0 is never applied, 100 is always applied.
- * Note that anything below 0 is acts as 0 and anything above 100 acts as 100.
+ * Each probability is in whole percents.
+ * When set to 0, obfuscation is never applied, while 100 is always applied.
+ * Note that numbers below 0 and above 100 are clamped.
  * @{
  */
 #define OPAQUE_PREDICATE 50
-#define LITERAL_EXPANSION 33
+#define LITERAL_EXPANSION 33 // DO NOT set to 100, will result in infinite recursion.
 #define SIGNEDNESS_OBFUSCATION 50
 #define USE_CLONE 50
 #define RESTRUCTURE_ARRAY 25
 /** @} */
 
 /**
- * @defgroup randomness Values used for generated pseudo-random values during obfuscation
+ * @defgroup randomness Parameters used for generating pseudo-random values during obfuscation.
  * 
  * @{
  */

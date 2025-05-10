@@ -24,7 +24,7 @@
 /// @brief The function to process the entire compilation.
 int Compile(ProgramArguments *args);
 
-/// @brief Opens the input file with all required checks
+/// @brief Opens the input file with all required checks.
 static int OpenSourceFile(const char *name, ifstream & stream);
 
 /** @} */

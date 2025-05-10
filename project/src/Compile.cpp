@@ -39,7 +39,6 @@ int Compile(ProgramArguments *args) {
     lexer.removeErrorListeners();
     LexerErrorListener lexerErrorListener;
     lexer.addErrorListener(&lexerErrorListener);
-
     parser.removeErrorListeners();
     ParserErrorListener parserErrorListener;
     parser.addErrorListener(&parserErrorListener);
@@ -54,7 +53,7 @@ int Compile(ProgramArguments *args) {
     parserErrorListener.SetSemanticPhase();
 
     // Phase 1: get and check all globally available symbols;
-    //        -> function and enum identifiers, also global variables (generaly stuff that should not be in AST)
+    //        -> function and enum identifiers, global variables
     SymbolTable symbolTable(&parser);
     bool canProfile = false;
     GlobalSymbolsVisitor GlobalSymbolsVisitor(symbolTable, &canProfile);
@@ -68,7 +67,7 @@ int Compile(ProgramArguments *args) {
     }
 
     // Phase 2: generate abstract syntax tree and do final semantic checks
-    //        -> makes the tree, gathers local symbols and checks symbol usage, ensures statement use validity
+    //        -> make tree, gather local symbols and check usage, ensure statement use validity
     AST ast(&parser, symbolTable);
     ASTGenerationVisitor astGenerationVisitor(ast);
     astGenerationVisitor.visit(parseTree);
@@ -81,7 +80,6 @@ int Compile(ProgramArguments *args) {
 
     // INITIALISE OBFUSCATOR
     Obfuscator obfuscator(args, symbolTable, ast);
-
     // 1st OBFUSCATION: AST
     obfuscator.ObfuscateAST();
 
@@ -108,11 +106,11 @@ int Compile(ProgramArguments *args) {
 
         cout << BOLD << "Compiled " << DEFAULT << args->outputFile << ".s from " << args->inputFile << endl;
         
-        // Phase 5: assemble and link generated assembly to create executable
+        // Phase 5: assemble and link generated assembly
         Assembler::Assemble(args->outputFile, args->generateWithDebugSymbols);
         Assembler::Link(args->outputFile, args->generateWithDebugSymbols);
 
-        // extra output for confirmation
+        // extra confirmation output
         string extra = YELLOW;
         cout << BOLD << CYAN << "Executable " << args->outputFile << DEFAULT;
         extra += args->generateWithDebugSymbols ? " with debug info" : "";

@@ -2,7 +2,7 @@
  * @file ASTGenerationVisitor.h
  * @author Martin Jabůrek
  *
- * @brief ANTLR4 derived parse tree visitor to generate an abstract syntax tree.
+ * @brief ANTLR4 derived parse tree visitor to generate a custom abstract syntax tree.
  */
 
 #pragma once
@@ -12,15 +12,15 @@
 
 #include "SymbolTable.h"
 #include "AST.h"
-
 #include "SpecificNodeData.h"
 
 /**
  * @class ASTGenerationVisitor
  * @brief Class implementing methods for abstract syntax tree construction.
  * 
- * Only implements visit methods for relevant nodes. Some are unnecessary or are resolved by others.
- * Their return values of type "any" are unused.
+ * Only implements visit methods for relevant parse tree nodes. Some are unnecessary or are resolved
+ * within other nodes.
+ * All return values of type "any" are unused. Exit code macros are used as placeholder return values.
  */
 class ASTGenerationVisitor : public JabukodBaseVisitor {
 public:

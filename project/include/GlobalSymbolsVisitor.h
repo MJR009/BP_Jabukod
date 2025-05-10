@@ -3,8 +3,6 @@
  * @author Martin Jabůrek
  *
  * @brief Prepare all global symbols into the symbol table.
- * 
- * Using ANTLR4, this class gathers all global symbols from the provided source file into the symbol table.
  */
 
 #pragma once
@@ -34,7 +32,6 @@ public:
      * @name Implemented visitor methods.
      * 
      * Only a small portion of them are needed here. Most of the rest are used in the ASTGenerationVisitor.
-     * 
      * @{     
      */
     any visitSourceFile(JabukodParser::SourceFileContext *ctx) override;
@@ -44,10 +41,10 @@ public:
     any visitFunctionParameter(JabukodParser::FunctionParameterContext *ctx) override;
     any visitEnumDefinition(JabukodParser::EnumDefinitionContext *ctx) override;
     any visitEnumItem(JabukodParser::EnumItemContext *ctx) override;
-    /// @}
+    /** @} */
 
 private:
-    SymbolTable & symbolTable; ///< Associated symbol table reference.
+    SymbolTable & symbolTable; ///< Associated symbol table.
 
     bool *canProfile; ///< Used to propagate whether -c flag can be used for profiling.
 };

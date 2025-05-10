@@ -11,7 +11,7 @@
 #pragma once
 
 /**
- * @defgroup globalSymbolErrors Errors that can occur when parsing global symbols 
+ * @defgroup globalSymbolErrors Errors that can occur when parsing global symbols.
  * @{
  */
 #define VARIABLE_REDEFINITION "identifier used for variable is already taken"
@@ -24,7 +24,7 @@
 #define BAD_MAIN_RETURN_TYPE "wrong function main signature: must have return type int"
 #define BAD_MAIN_PARAMETERS "wrong function main signature: must not have any parameters"
 #define STATIC_GLOBAL_VARIABLE "static global variables are not allowed"
-#define GLOBAL_VARIABLE_DEFINITION_EXPRESSION "global varible must be initialised by literal"
+#define GLOBAL_VARIABLE_DEFINITION_EXPRESSION "global varible must be initialised by a literal"
 #define MISPLACED_INT_LITERAL "cannot assign int literal"
 #define MISPLACED_FLOAT_LITERAL "cannot assign float literal"
 #define MISPLACED_BOOL_LITERAL "cannot assign bool literal"
@@ -35,7 +35,7 @@
 /** @} */
 
 /**
- * @defgroup localSymbolErrors Errors that can occur when parsing local symbols
+ * @defgroup localSymbolErrors Errors that can occur when parsing local symbols.
  * @{
  */
 #define VARIABLE_SAME_AS_PARAMETER "variable name in functions top scope must not be the same as a its parameter"
@@ -48,7 +48,7 @@
 #define RESTART_OUT_OF_LOOP "a restart statement must be used within a loop"
 #define UNDEFINED_VARIABLE "variable is undefined"
 #define IMPLICIT_STRING_CONVERSION "cannot perform implicit conversion on subexpression of type string"
-#define MODULE_ON_FLOAT "operator \"\%\" operands must not have type float"
+#define MODULE_ON_FLOAT "operator '%' operands must not have type float"
 #define BIT_FLOAT_OPERAND "bitwise operator operands must not have type float"
 #define BIT_STRING_OPERAND "bitwise operator operands must not have type string"
 #define WRITE_EXPRESSION "write argument may only be a single literal or variable of type string"
@@ -69,8 +69,8 @@
 #define STRING_RETURN "return type string is not allowed"
 #define STRING_RETURN_VALUE "return value of type string is not allowed"
 #define BAD_EXIT_TYPE "exit value type cannot be converted to an int"
-#define STRING_FOR_HEADER "the control variable of a for statement cannot be of type string"
-#define STRING_FOREACH_HEADER "the control variable of a foreach statement cannot be of type string"
+#define STRING_FOR_HEADER "control variable of a for statement cannot be of type string"
+#define STRING_FOREACH_HEADER "control variable of a foreach statement cannot be of type string"
 #define WRONG_CONTROL_VARIABLE_TYPE "the foreach control variable and iterated array types must match"
 #define NESTED_FOREACH "foreach statements cannot be nested within the same function"
 /** @} */
@@ -90,8 +90,8 @@
  * @{
  */
 #define UNDEFINED_ENUM_DECLARATION "variable declared as enum cannot use an undefined enum"
-#define UNDEFINED_ENUM_PARAMETER "parameter cannot use an undefined enum as type"
-#define UNDEFINED_ENUM_RETURN_TYPE "function return type cannot use an undefined enum"
+#define UNDEFINED_ENUM_PARAMETER "enum type used as a function parameter is not defined"
+#define UNDEFINED_ENUM_RETURN_TYPE "enum type used for a return value is not defined"
 #define GLOBAL_ENUM_VARIABLE "global variables of type enum are not allowed"
 /** @} */
 
@@ -99,7 +99,7 @@
  * @defgroup staticVariableErrors Possible static variable errors
  * @{
  */
-#define STATIC_INIT_NOT_LITERAL "static variables can only be initialised by literals"
+#define STATIC_INIT_NOT_LITERAL "static variables must be initialised by literals"
 #define STATIC_DEFINITION_TYPE_MISMATCH "initial value of a static variable must match it in type"
 /** @} */
 
@@ -110,13 +110,13 @@
 #define INVALID_ARRAY_SIZE "array size may only be a positive integer"
 #define STRING_ARRAY "array of type string is not allowed"
 #define GLOBAL_ARRAY_NOT_DEFINED_BY_LIST "global array variable must be initialised by list literal"
-#define GLOBAL_LIST_TOO_BIG "global array initialiser is too large"
+#define GLOBAL_LIST_TOO_BIG "global array initializer is too large"
 #define ARRAY_DEFINITION_NOT_LIST "array definition must only be a list"
 #define OUT_OF_PLACE_LIST "list may only be used to initialise an array"
-#define STRAY_ARRAY_VARIABLE "array variable cannot be used without accessing an element"
-#define ARRAY_ACCESS_ON_SCALAR "non-array variable cannot be associated with array access via []"
-#define LIST_TOO_BIG "array initialiser is too large"
+#define STRAY_ARRAY_VARIABLE "array variable cannot be used here without accessing an element"
+#define ARRAY_ACCESS_ON_SCALAR "non-array variable cannot be indexed with []"
+#define LIST_TOO_BIG "array initializer is too large"
 #define BAD_INDEX "value cannot be used to index an array"
-#define FOREACH_NOT_ARRAY "variable iterated over in a foreach cycle must have an array type"
+#define FOREACH_NOT_ARRAY "variable iterated over in a foreach loop must have an array type"
 #define STATIC_ARRAY "static arrays are not allowed"
 /** @} */

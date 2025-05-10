@@ -18,7 +18,7 @@ any ASTGenerationVisitor::visitSourceFile(JabukodParser::SourceFileContext *ctx)
 }
 
 any ASTGenerationVisitor::visitVariableDeclaration(JabukodParser::VariableDeclarationContext *ctx) {
-    if (this->ast.CurrentlyIn() != NodeKind::PROGRAM) { // global declarations are already processed
+    if (this->ast.CurrentlyIn() != NodeKind::PROGRAM) { // skips global declarations
         this->ast.AddNode(NodeKind::VARIABLE_DECLARATION);
 
         if ( ! ctx->IDENTIFIER()) {
@@ -539,7 +539,8 @@ any ASTGenerationVisitor::visitAssignment(JabukodParser::AssignmentContext *ctx)
 
         Variable *variable = this->ast.LookupVariable( ctx->IDENTIFIER()->getSymbol() );
         if ( ! variable) {
-            // this occurs when an array definition size is not an int, parsing fails, we revover all the way to above node assignment
+            // this occurs when an array definition size is not an int, parsing fails
+            // recovery is done all the way to above assignment node
             this->ast.MoveToParent();
             this->ast.MoveToParent();
             this->ast.MoveToParent();

@@ -11,7 +11,7 @@
 #include "getopt.h"
 
 /**
- * @brief An empty struct to differentiate print help and error
+ * @brief An empty struct to differentiate printing help and errors.
  * 
  * This error will be treated differently from others. When caught, the help message will be printed and program
  * will terminate without an error. This is an exception, other errors are not desired and program will terminate
@@ -19,20 +19,27 @@
  */
 struct PrintHelp {};
 
-/// @brief Macros defining the command line arguments available for use with getopt function
-#define ARGUMENTS "acdDgho:O:"
-
 /**
- * @defgroup commandLineArgs Macros defining command line argument error text.
+ * @defgroup getoptArgs Macro defining the command line arguments available for use with the getopt function.
  * @{
  */
-#define INVALID_CLA ("invalid command line arguments, try " BOLD "-h" DEFAULT) ///< Unexpected or extraneous command line arguments
-#define INVALID_INPUT_FILE ("given input file could not be read") ///< Provided input file does not exist
-#define INVALID_INPUT_FILE_NAME ("input file name starting with '-' can't be processed") ///< as would interpret such file as a flag
-#define INVALID_OBFUSCATION_SELECTOR ("invalid obfuscation selector, try " BOLD "-h" DEFAULT) ///< The argument of -O was partially not recognized
+#define ARGUMENTS "acdDgho:O:"
 /** @} */
 
-/// @brief Macro definining text of the programs help message, it can be printed with -h argument.
+/**
+ * @defgroup commandLineArgs Macros defining command line argument errors.
+ * @{
+ */
+#define INVALID_CLA ("invalid command line arguments, try " BOLD "-h" DEFAULT) ///< Unexpected or extraneous command line arguments.
+#define INVALID_INPUT_FILE ("given input file could not be read") ///< Provided input file does not exist.
+#define INVALID_INPUT_FILE_NAME ("input file name starting with '-' can't be processed") ///< as would interpret such file as a flag.
+#define INVALID_OBFUSCATION_SELECTOR ("invalid obfuscation selector, try " BOLD "-h" DEFAULT) ///< The argument of -O was partially not recognized.
+/** @} */
+
+/**
+ * @defgroup helpMessageText Macro definining text of the programs help message, it can be printed with -h argument.
+ * @{
+ */
 #define HELP_MESSAGE \
     ( \
         CYAN BOLD "Usage:\n" DEFAULT \
@@ -60,6 +67,7 @@ struct PrintHelp {};
         CYAN BOLD "all" DEFAULT BOLD " - will apply all available obfuscations\n" DEFAULT \
         CYAN BOLD "annote" DEFAULT BOLD " - adds annotation comments for obfuscations in generated assembly file\n" DEFAULT \
     )
+/** @} */
 
 /**
  * @class ProgramArguments
@@ -67,7 +75,6 @@ struct PrintHelp {};
  * 
  * Object of this class is used later in code to modify optional behaviour.
  * Triggers for this behaviour are represented with bool flags.
- * 
  */
 class ProgramArguments {
 public:
@@ -75,7 +82,7 @@ public:
     ProgramArguments(int argc, char **argv);
 
 public:
-    string inputFile = ""; ///< Input file name and path with a Jabukód program.
+    string inputFile = ""; ///< Input file name and path to a Jabukód program.
     string outputFile = "out"; ///< Name given to generated assembly, relocatable object and executable files.
 
     bool onlyDoAnalysis = false; ///< If true, compilation will not proceed past source code analysis.
@@ -90,13 +97,13 @@ private:
 
 public: // obfuscation flags
     bool obfuscateAll = false; ///< All implemented obfuscations will be applied.
-    bool annoteObfuscations = false; ///< If true, generated assembly will have additional comments about applied obfusccations.
+    bool annoteObfuscations = false; ///< If true, generated assembly will have additional comments denoting applied obfusccations.
 
     bool opaquePredicates = false; ///< Obfuscate using opaque predicates.
     bool interleave = false; ///< Obfuscate using code interleaving.
     bool signedness = false; ///< Obfuscate using custom RFLAGS signedness obfuscation.
     bool forgeSymbolic = false; ///< Obfuscate by forging symbolic information.
     bool literalExpansion = false; ///< Obfuscate by transforming literals into expressions.
-    bool functionCloning = false; ///< Obfuscate using cloned functions.
+    bool functionCloning = false; ///< Obfuscate using a function clone.
     bool restructureArrays = false; ///< Obfuscate using array restructuring.
 };

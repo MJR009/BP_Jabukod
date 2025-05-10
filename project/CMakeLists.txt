@@ -1,4 +1,7 @@
-# CMakeLists.txt made using guide in README.md at https://github.com/antlr/antlr4/tree/master/runtime/Cpp/cmake and modified.
+# /project/CMakeLists.txt
+# Martin Jabůrek
+#
+# Made using guide in README.md at https://github.com/antlr/antlr4/tree/master/runtime/Cpp/cmake and modified.
 
 cmake_minimum_required (VERSION 2.8...3.28.3 FATAL_ERROR)
 set(CMAKE_CXX_STANDARD 17)
@@ -27,6 +30,8 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include/Generation/Assembly)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include/Generation/GenerationMethods)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include/ErrorListeners)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include/Obfuscation)
+
+
 
 ### ANTLR related: ###
 
@@ -57,11 +62,15 @@ add_definitions(-DANTLR4CPP_STATIC) # linking to a static library
 
 ###
 
+
+
 add_executable(${PROJECT_NAME} ${SRC}
     ${HDR} # own headers
     ${ANTLR_JabukodParser_CXX_OUTPUTS} # ANTLR generated headers
 )
 target_link_libraries(${PROJECT_NAME} antlr4_static)
+
+
 
 # Fundamental run target without arguments
 add_custom_target(run
@@ -141,5 +150,5 @@ if(DOXYGEN_FOUND)
         COMMAND ${CMAKE_COMMAND} -E rm -rf ${DOCS_DIR}/html ${DOCS_DIR}/latex
     )
 else()
-    message(STATUS "Doxygen not found. `make docs` is not available")
+    message(STATUS "Doxygen appears to not be installed, `make docs` will not be available.")
 endif()
