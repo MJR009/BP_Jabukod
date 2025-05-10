@@ -12,7 +12,7 @@
 
 /**
  * @class LiteralData
- * @brief Class containing the value of a runtime constant.
+ * @brief Class containing the value of an immediate value.
  * 
  * In the target code, some literal data cannot be represented by a literal. This concerns float and string literals.
  * These are transformed into internal constant global variables. 
@@ -21,7 +21,7 @@
  */
 class LiteralData : public GenericNodeData {
 public:
-    /// @brief Gives the LiteralData object it's value and the type it represents.
+    /// @brief Gives the LiteralData object its value and the type it represents.
     LiteralData(Type type, any value) : type(type), value(value) {}
 
     /// @brief Retrieve the value data type.
@@ -30,6 +30,6 @@ public:
     any GetValue();
 
 private:
-    Type type; ///< Literals data type.
-    any value; ///< Literals value.
+    Type type; ///< Literals data type
+    any value; ///< Literals value
 };

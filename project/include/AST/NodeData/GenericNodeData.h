@@ -13,7 +13,7 @@
 /**
  * @brief Node data base class.
  * 
- * This class is solely to be used as a base class for more specialised node data.
+ * This class is to be used solely as a base class for more specialised node data.
  */
 class GenericNodeData {
 public:

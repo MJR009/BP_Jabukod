@@ -12,7 +12,7 @@
 
 /**
  * @class ExpressionData
- * @brief Used to propagate the data type of a subexpression so coertions can be carried out and code generated correctly.
+ * @brief Used to propagate the data type of a subexpression so coertions can be carried out.
  * 
  */
 class ExpressionData : public GenericNodeData {
@@ -20,7 +20,7 @@ public:
     /// @brief Store the expressions desired data type.
     ExpressionData(const Type type) : type(type) {}
 
-    /// @brief Retrieves the stored data type.
+    /// @brief Retrieves expressions data type.
     Type GetType();
 
 private:

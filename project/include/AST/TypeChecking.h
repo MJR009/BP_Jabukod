@@ -16,16 +16,16 @@
  * @brief A static class implementing all methods used for implicit data type conversions.
  * 
  * If data types of operand/s are consistent, no coertion occurs. Otherwise
- * new nodes are added after the given node.
+ * new nodes are added after the given node to adjust values so it is possible to
+ * carry out an operation.
  */
 class Conversion {
 public:
     /**
-     * @name Top level coertion methods, called from outside,
+     * @name Top level coertion methods called from outside.
      * 
-     * Each of the methods is called within to circumstances reflected by its name and
+     * Each of the methods is called within the circumstances reflected by its name and
      * provides an appropriate coertion.
-     * 
      * @{
      */
     static Type ExpressionBinaryArithmetic(Type op1, Type op2, ASTNode *expressionRoot);
@@ -51,7 +51,6 @@ public:
 private:
     /**
      * @name Tables determing the action of each top level coertion method.
-     * 
      * @{
      */
     static Type (*arithmeticBinaryTable[5][5])(ASTNode *);
@@ -75,7 +74,7 @@ private:
     /**
      * @name Actual coertions done by the top level methods according to their tables.
      * 
-     * Each either triggers an error or adds a new node past the current one.
+     * Each either triggers an error or adds a new node.
      * 
      * @param expressionRoot The node representing the expression.
      * @return Infered data type after coertions.

@@ -36,7 +36,7 @@ public:
         LESS, LESS_EQUAL, GREATER, GREATER_EQUAL,
         EQUAL, NOT_EQUAL,
         UNARY_MINUS, BIT_NOT, NOT,
-        minus, ///< Universal option for unary and binary minus, which one is resolved in respective context.
+        minus, ///< Universal option for unary and binary minus, which one it is is resolved according to respective context.
     
         VARIABLE, LITERAL,
     

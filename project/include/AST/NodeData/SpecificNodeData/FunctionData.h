@@ -13,7 +13,7 @@
 
 /**
  * @class FunctionData
- * @brief Is used to be associated with a function definition node, for quick access to that function.
+ * @brief Data associated with a function definition node for quick access to that function.
  * 
  * The existence of the function is resolved When doing global symbol analysis.
  */
@@ -24,10 +24,10 @@ public:
 
     /// @brief Gets the name of the function.
     string GetName();
-    /// @brief Retrieves how many bytes the associated function needs to allocate for its local variables.
+    /// @brief Retrieves how many bytes the associated function needs to allocate for its local variables on stack.
     int GetNeededStackSpace();
 
-    /// @brief Returns how many parameter the associated function has.
+    /// @brief Returns how many parameters the associated function has.
     int GetParameterCount();
     /// @brief Returns the location of the associated functions parameter at the specified order.
     const string GetParameterSlot(int order);
@@ -35,5 +35,5 @@ public:
     Type GetParameterType(int order);
 
 private:
-    FunctionTableEntry *location; ///< Memory location of the defined function.
+    FunctionTableEntry *location; ///< Reference to the actual function.
 };

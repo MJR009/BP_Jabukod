@@ -127,7 +127,7 @@ Variable *AST::PutVariableInScope(
         return this->PutVariableInForHeader(variable, variableName, specifier, type);
     } else if (parent->GetKind() == NodeKind::FOREACH) {
         return this->PutVariableInForeachHeader(variable, variableName, specifier, type);
-    } //else ERR::BadData();
+    }
 
     return nullptr;
 }

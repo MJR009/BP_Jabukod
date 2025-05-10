@@ -211,7 +211,7 @@ Type (*Conversion::bitwiseUnaryTable[5])(ASTNode *) =
 
 
 
-// the rside is the second operand, first operand conversion is used since definition has lside in its data, not as a child
+// The rside is the second operand, first operand conversion is used since definition has lside in its data, not as a child.
 Type (*Conversion::definitionTable[5][5])(ASTNode *) =
 {
        /*  op1   */

@@ -16,10 +16,10 @@
 
 /**
  * @class AST
- * @brief Implementations of the abstract syntax tree intermediate code represantiation.
+ * @brief Implementation of the abstract syntax tree intermediate code represantiation.
  * 
  * The implementation also includes methods for semantic analysis. It is done here, not within
- * ASTGenerationVisitor. An instance of this class also hold a reference to the parser object, through
+ * ASTGenerationVisitor. An instance of this class also holds a reference to the parser object, through
  * which the semantic errors are raised.
  */
 class AST {
@@ -45,14 +45,14 @@ public:
     void AddNode(NodeKind kind);
     /// @brief Appeds a new node after the currently active node as it's last child while also immediately giving the node a data object.
     void AddNode(NodeKind kind, GenericNodeData *data);
-    /// @brief  A method to associate node data with a curent active node, after it is inserted.
+    /// @brief Associate node data with a curent active node, after it is inserted.
     void GiveActiveNodeData(GenericNodeData *data);
     /// @brief Generic method to retrieve data of the current active node.
     template <typename T>
     T *GetActiveNodeData() {
         return this->activeNode->GetData<T>();
     }
-    /// @brief Updates the active node to be the parent of the current active node, moving closer to the tree root.
+    /// @brief Updates the active node to be the parent of the current active node, moving closer to the root.
     void MoveToParent();
     /// @brief Set the function the analysis is currently processing for later reference.
     FunctionTableEntry *SetActiveFunction(const string & name);
@@ -62,7 +62,7 @@ public:
     ASTNode* GetRoot();
 
     /**
-     * @brief Puts a newly variable in it's closest scope, generating it straight from ANTLR4 parse
+     * @brief Puts a new variable in its closest scope, generating it straight from ANTLR4 parse
      * tree provided data.
      */
     Variable *PutVariableInScope(
@@ -100,7 +100,6 @@ public:
      * 
      * Arguments and return values of each of the functions are designed ad hoc for specific needs
      * during semantic analysis.
-     * 
      * @{
      */
     void CheckIfNodeWithinLoop(antlr4::Token *token);
@@ -127,14 +126,11 @@ public:
     /**
      * @name "Convert" methods, ensuring correct coertions where needed.
      * 
-     * Again, each of the methods is made ad hoc for where it is used. An effort was made to
-     * ensure a unique set of coertion functions, where each does a different kind of converion.
+     * Each of the methods is made ad hoc for where it is used. An effort was made to
+     * ensure a unique set of coertion functions, where each does a different kind of conversion.
      * Some of the methods return the new subexpression intermediate data type when needed.
-     * Any parameters of any of these functions are used for offending tokens when invoking
+     * Parameters of any of these functions are used to pass offending tokens when invoking
      * potential semantic errors on unsuccessfull coertions.
-     * The subexpression having the coertion done on itself is always taken from the current active
-     * node.
-     * 
      * @{
      */
     Type ConvertExpressionBinaryArithmetic(antlr4::Token *expressionStart);
@@ -167,7 +163,7 @@ public:
     /// @brief Function performing the completee transformation of all program static varaibles into global ones.
     void CorrectStaticVariables();
 
-    /// @brief After processing a foreach header, flags the control variable for further processing.
+    /// @brief After processing a foreach header, flags the control variable to generate more specific code for it.
     void PrepareForeachControlVariable(antlr4::Token *controlVariableToken);
 
     /// @brief Prints out pretty formatted abstract syntax tree representation.
@@ -183,23 +179,22 @@ public:
     }
 
 private:
-    JabukodParser *parser; ///< Parser associated or semantic error reporting.
+    JabukodParser *parser; ///< Parser associated for semantic error reporting.
 
     SymbolTable & symbolTable; ///< The associated symbol table.
 
     ASTNode *root = nullptr; ///< The root node of the tree.
-    ASTNode *activeNode = nullptr; ///< The current active node of the 
+    ASTNode *activeNode = nullptr; ///< The current active node of the tree.
 
     FunctionTableEntry *activeFunction = nullptr; ///< A shortcut to currently processed function, mainly for resolving parameters.
     int currentVariableCount = 0; ///< Helper attribute for seting the variable count of a new active function.
-    int currentStackSpace = 0; ///< Helper attribute for setting needed stack space of current active function. Needed because of varables.
+    int currentStackSpace = 0; ///< Helper attribute for setting needed stack space of current active function.
 
 private:
     /**
      * @name Functions implementing PutVariableInScope for all specific scope having nodes.
      * 
      * All attributes and return values reflect the PutVariableInScope public method.
-     * 
      * @{
      */
     Variable *PutVariableInFunctionScope(
@@ -228,7 +223,7 @@ private:
     );
     /** @} */
 
-    /// @brief Tries to find a varaible within all possible local scopes, all the way to the root of the tree.
+    /// @brief Tries to find a variable within all possible local scopes, all the way to the root of the tree.
     Variable *IsDefinedLocally(const string & name);
     /// @brief Checks whether a variable is defined within the global scope.
     Variable *IsDefinedGlobally(const string & name);
@@ -242,7 +237,7 @@ private:
 
     /// @brief Returns true if the given node has a scope. It can either be a BODY, FUNCTION, FOR or FOREACH node.
     bool IsScopeHavingNode(ASTNode *node);
-    /// @brief Checks whether a variable of the provided name is defined within the scope if the porovided node. 
+    /// @brief Checks whether a variable of the provided name is defined within the scope of the provided node. 
     Variable *IsInThisScope(const string & name, ASTNode *node);
     /// @brief Returns true if the variable with the provided name is the current functions parameter.
     Variable *IsParameter(const string & name);
@@ -257,7 +252,6 @@ private:
 
     /**
      * @name Methods used as part of static variable converions within CorrectStaticVariables.
-     * 
      * @{
      */
     void MangleStaticVariableNames(); ///< Make names globally unique.

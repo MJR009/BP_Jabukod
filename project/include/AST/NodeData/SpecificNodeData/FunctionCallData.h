@@ -22,7 +22,7 @@ public:
      * 
      * Also stores an "exists" bool. As functions are allowed to have void return type, but, within
      * expressions, void is used to state a semantic error at a lower level, this bit is needed.
-     * It is used to again print semantic errors more accurately, only on correctly defined functions.
+     * It is used to again print semantic errors more accurately, only on incorrectly defined functions.
      */
     FunctionCallData(FunctionTableEntry *function, bool exists) : location(function), exists(exists) {}
 
@@ -42,7 +42,7 @@ public:
      * @brief Returns the actual address at which the argument should be stored.
      * 
      * The address is mostly System V ABI compliant. The returned string represents either a 
-     * GPR or SSE register or a location on the stack.
+     * GPR, an SSE register or a location on the stack.
      */
     const string GetArgumentSlot(int order);
 

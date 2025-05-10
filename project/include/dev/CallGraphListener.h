@@ -12,8 +12,9 @@
 
 /**
  * @class CallGraphListener
- * @brief Simple class for drawing graphviz call graphs, used during development.
+ * @brief Simple class for drawing graphviz call graphs.
  * 
+ * Used during development.
  */
 class CallGraphListener : public JabukodBaseListener {
 public:

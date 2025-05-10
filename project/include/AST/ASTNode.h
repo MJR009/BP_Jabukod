@@ -21,27 +21,27 @@
  */
 class ASTNode {
 public:
-    /// @brief Constructor, giving the node it's kind and potential extra data.
+    /// @brief Constructor, giving the node its kind and potential extra data.
     ASTNode(NodeKind kind, GenericNodeData *data) : kind(kind), data(data) {}
 
     /**
-     * @brief Does a preorder walkthrough of all the nodes children.
+     * @brief Does a preorder walkthrough of all the nodes children and itself.
      * 
      * @param action A callback done when entering each of the nodes.
      */
     void PreorderWalkthorugh( void (*action)(ASTNode *) );
     /**
-     * @brief Does a postorder walkthrough of all the nodes children.
+     * @brief Does a postorder walkthrough of all the nodes children and itself.
      * 
-     * @param action A callback done when entering each of the nodes.
+     * @param action A callback done when leaving each of the nodes.
      */
     void PostorderWalkthrough( void (*action)(ASTNode *) );
 
-    /// @brief Returns the nodes kind. 
+    /// @brief Returns the nodes kind.
     NodeKind GetKind();
     /// @brief Returns the address of this nodes predecessor. For root of a tree, it is nullptr.
     ASTNode *GetParent();
-    /// @brief Returns the address of this nodes successor, at the "order" position. 
+    /// @brief Returns the address of this nodes successor at the "order" position. 
     ASTNode *GetChild(int order);
     /// @brief Returns this nodes data cast to the desired node data type. 
     template <typename T>
@@ -54,11 +54,10 @@ public:
 
     /**
      * @name Methods used when resolving expressions.
-     * 
      * @{
      */
-    Type GetOperandType(int i) const; ///< Retrieve the data type of nodes child at the specified index
-    int GetChildrenCount() const; ///< Get the successor count of the curret node
+    Type GetOperandType(int i) const; ///< Retrieve the data type of nodes child at the specified index.
+    int GetChildrenCount() const; ///< Get the successor count of the curret node.
     /** @} */
 
     /// @brief Sets this nodes data to the provided.
@@ -70,6 +69,7 @@ public:
     /**
      * @brief Returns whether the current node is a last child of the previous node for every node all the way to root.
      * 
+     * Used for printing the whole AST.
      * Goes from this node to root, first item represents this and last the root.
      */
     vector<bool> IsLastChildAllToRoot();
@@ -88,7 +88,7 @@ public:
      */
     void AdjustArguments();
 
-    /// @brief Returns the name of the function this node is located after.
+    /// @brief Returns the name of the function this node is located in.
     const string LocatedInFunction();
     /// @brief Removes all static variables from this nodes associated scope, if it has one.
     void RemoveStaticFromScope();
@@ -102,7 +102,7 @@ public:
     }
 
 public: // used with obfuscation
-    /// @brief Erases the order-th subtree from this nodes children and returns its root. 
+    /// @brief Erases the order-th subtree from this nodes children and returns the root of the subtree. 
     ASTNode *PluckAfter(int order);
     /// @brief Puts a new child, a subtree, into specified location, pushing other children to the right.
     void PlantAfter(int order, ASTNode *root);
