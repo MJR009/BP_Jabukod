@@ -15,12 +15,12 @@
 
 /**
  * @class Variable
- * @brief Class used to represent all values during runtime, their types, storage and all other behaviour.
+ * @brief Class used to represent all values during runtime, their types, storage and all other information.
  * 
  */
 class Variable : public BaseValue {
 public:
-    /// @brief According to the provided data, a new variable is constructed.
+    /// @brief According to the provided data constructs a new variable.
     Variable(
         const string & name,
         const StorageSpecifier storage,
@@ -41,9 +41,9 @@ public:
         parameterStorage(parameterStorage)
     {}
 
-    /// @brief Returns a variables data type.
+    /// @brief Returns the data type of a variables.
     Type GetType();
-    /// @brief Returns a variables storage specifier.
+    /// @brief Returns variables storage specifier.
     StorageSpecifier GetSpecifier();
     /// @brief Generic method to return variables value according to the specified type.
     template <typename T>
@@ -60,12 +60,12 @@ public:
 
     /// @brief If true, the variable is global, otherwise it is local or a parameter.
     bool IsGlobal();
-    /// @brief  If true, the variable is actually a parameter.
+    /// @brief  If true, the variable is a parameter.
     bool IsParameter();
     /// @brief If the variable is a parameter, returns where it is located for access as an argument.
     string GetParameterLocation();
 
-    /// @brief Makes the variable global.
+    /// @brief Flags the variable as global.
     void SetGlobalFlag();
 
     /// @brief Changes the variables name.
@@ -77,31 +77,30 @@ public:
 
     /// @brief Gives the variable all data needed to act as a foreach control variable.
     void MakeForeachControlVariable(Variable *iteratedArray);
-    /// @brief Returns true, if this variable is set as a foreach variable.
+    /// @brief Returns true, if this variable is a foreach control variable.
     bool IsControlVariable();
     /// @brief Returns the array variable that foreach control variable iterates over, if this is one.
     Variable *GetIteratedArray();
 
     /// @brief Prints all data about the variable
     void Print() const override;
-    /// @brief Prints the variable as local.
+    /// @brief Prints the variable as local, without default value.
     void PrintDeclaration() const;
-    /// @brief Prints the variable as a parameter.
+    /// @brief Prints the variable as a parameter, without default value and specifier.
     void PrintAsParameter() const;
     
-    /// @brief Prints the variable associated default value.
+    /// @brief Prints the variables associated default value.
     void PrintDefaultValue() const;
 
 private:
     StorageSpecifier storage; ///< Variables storage specifier.
     Type type; ///< Variables data type.
-    any defaultValue; ///< Optional default value, associated with global and static variables.
+    any defaultValue; ///< Optional default value associated with global and static variables.
 
     /**
-     * @brief Value used to determine its location on stack.
+     * @brief Value used to determine variables location on stack.
      * 
-     * The exact offset if it is local.
-     * An order from the left, if it is a parameter.
+     * Contains the exact offset, if it is local, or order from the left, if it is a parameter.
      */
     int stackOffset;
 
@@ -110,16 +109,16 @@ private:
     bool isParameter; ///< Parameter flag.
     string parameterStorage; ///< If the variable is a parameter, this string contains where it is stored.
 
-    bool isForeachControlVariable = false; ///< foreach loop control variable acts as a kind of fake variable, the array needs to be accessed.
+    bool isForeachControlVariable = false; ///< foreach loop control variable acts as a kind of "fake" variable, accessing an array withou explicit indexing.
     Variable *iteratedArray = nullptr; ///< foreach loop control variable will iterate over this arrray.
 
 public: // obfuscation
     /**
-     * @brief The varaible (an array) is marked for restructuring.
+     * @brief The array variable is marked for restructuring.
      * 
      * Restructuring must actually be marked inside the variable. Without this, foreach control variables
      * have no way of changing their generated index when accessing the array. Usual array access with []
-     * is done withing AST before transforming to 3AC.
+     * is done within AST before transforming to 3AC.
      */
     bool restructure = false;
 

@@ -27,7 +27,7 @@ int Variable::GetStackOffset() {
 }
 
 int Variable::GetParameterOrder() {
-    return this->stackOffset; // same implementation, varuiables defined as parameters have their order stored
+    return this->stackOffset; // same implementation, variables defined as parameters have their order stored
 }
 
 

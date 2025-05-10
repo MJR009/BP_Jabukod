@@ -39,7 +39,7 @@ public:
     void MakeArray(int size);
     /// @brief Returns the size of an array type.
     int GetSize();
-    /// @brief Returns a new type, representing one item of an array type. 
+    /// @brief Returns the type of an item of an array type. 
     Type GetScalarEquivalent();
 
     /// @brief Returns the type as a string for printing.
@@ -47,12 +47,12 @@ public:
     /// @brief Transform a string representing a data type into a type object.
     static Type toType(const string & str);
 
-    /// @brief From the given value and type, the value is printed semantivally correctly.
+    /// @brief From the given value and type prints the value correctly.
     static void PrintAnyValueByType(any value, Type type);
 
 private:
     Options value; ///< This objects associated type.
-    int size = 0; ///< If the object is of type array, its size is stored here.
+    int size = 0; ///< If the object is of type array, its size is stored here, otherwise it is 0.
 
 private:
     /// @brief Generic method to simplify printing arrays.

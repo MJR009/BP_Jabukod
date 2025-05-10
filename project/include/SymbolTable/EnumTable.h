@@ -25,22 +25,22 @@ public:
     /// @brief Returns all stored enums.
     list<EnumTableEntry *> *GetEnums();
 
-    /// @brief Finds an enum itemlocated in any of the defined enums.
+    /// @brief Finds an enum item located in any of the defined enums.
     Variable *GetItemFromAcrossAll(const string & name);
 
-    /// @brief Returns true, if the provided name is currently not being used for an enum.
+    /// @brief Returns true if the provided name is currently not being used for an enum.
     bool IsNameAvailable(const string & name) const;
-    /// @brief Returns true, if the provided name not used for any enum item across all.
+    /// @brief Returns true if the provided name is not used for any enum item across all enums.
     bool IsItemNameAvailableAcrossAll(const string & name) const;
-    /// @brief Returns true, if the provided enum does not contain the item with the provided name.
+    /// @brief Returns true if the provided enum does not contain the item with the provided name.
     bool IsItemNameAvailable(const string & name, EnumTableEntry *theEnum) const;
-    /// @brief Returns true, if the provided enum does not contain the item with the provided value. Values cannot be repeated across enum items.
+    /// @brief Returns true if the provided enum does not contain the item with the provided value. Values must not be repeated across enum items.
     bool IsItemValueAvailable(const int & value, EnumTableEntry *theEnum) const;
 
     /// @brief Prints the contents of the enum table.
     void Print() const;
 
-    /// @brief Destructor, removing all dynamically allocated enums.
+    /// @brief Destructor removing all dynamically allocated enums.
     ~EnumTable() {
         for_each(this->enums.begin(), this->enums.end(),
             [ ](EnumTableEntry *current) {

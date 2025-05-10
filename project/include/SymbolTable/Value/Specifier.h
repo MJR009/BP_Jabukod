@@ -2,7 +2,7 @@
  * @file Specifier.h
  * @author Martin Jabůrek
  *
- * @brief Variables storage specifiers.
+ * @brief Variable storage specifiers.
  */
 
 #pragma once
@@ -33,5 +33,5 @@ public:
     static StorageSpecifier toSpecifier(const string & str);
 
 private:
-    Options value; ///< This specifier currently associated value.
+    Options value; ///< The current value of this specifier.
 };

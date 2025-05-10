@@ -2,7 +2,7 @@
  * @file SymbolTable.h
  * @author Martin Jabůrek
  *
- * @brief Implementation of the symbol table, used for global symbols.
+ * @brief Implementation of the symbol table used for global symbols.
  */
 
 #pragma once
@@ -16,11 +16,10 @@
 
 /**
  * @class SymbolTable
- * @brief This class is the highest level container for all data defined within the input program, needing to be correctly
- * compiled.
+ * @brief This class is the highest level container for all data defined within the input program.
  * 
  * This class more percisely resolves only global data, that is global variables, functions and enums. The remaining
- * symbols, which are considered local are stored within the abstract syntax tree.
+ * symbols, which are considered local, are stored within the abstract syntax tree.
  */
 class SymbolTable {
 public:
@@ -59,9 +58,9 @@ public:
         antlr4::Token *itemValue
     );
 
-    /// @brief Adds a new global constant variable, representing a literal which can't be compiled into an immediate value.
+    /// @brief Adds a new global constant variable, representing a literal which cannot be compiled into an immediate value.
     Variable *AddGlobalLiteral(const string & name, Type type, any value);
-    /// @brief Adds a new global variable, that has been constructed earlier.
+    /// @brief Adds a new global variable that has been constructed earlier.
     void AddExistingGlobalVariable(Variable *variable);
 
     /// @brief When processing an enum, it is set as active, so items can be added easier.
@@ -73,12 +72,12 @@ public:
     /// @brief Invalidates the current function, setting it to nullptr.
     void ResetCurrentFunction();
 
-    /// @brief Returns true if the program defines a function with "int main" partial signature.
+    /// @brief Returns true if the program defines the entry point function "main" with wrong signature.
     void CheckIfIntMainPresent();
-    /// @brief Returns true if there is a writeInt function present in the program, needed for profiling.
+    /// @brief Returns true if there is a writeInt function present in the program. Needed for profiling with -c flag.
     bool CheckIfCanProfile();
 
-    /// @brief For the given function, checks if the given ID is its parameter. If yes, returns true.
+    /// @brief For the given function, checks if the given identifier is its parameter. If yes, returns true.
     bool IsIdFunctionParameter(const string & functionName, const string & identifier);
     /// @brief If there exists a global variable with the given name, it is returned, otherwise nullptr is returned.
     Variable *IsIdGlobalVariable(const string & name);
@@ -96,13 +95,13 @@ public:
     /// @brief Returns the list of all defined functions.
     list<FunctionTableEntry *> *GetAllFunctions();
 
-    /// @brief Returns true if the user defined ID does not start with "__".
+    /// @brief Returns true if the user defined identifier does not start with "__".
     bool IsIdentifierAllowed(const string & identifier) const;
 
     /// @brief Prints out all the contents of the symbol table.
     void Print() const;
 
-    /// @brief Deletes the symbol table and all its associate data.
+    /// @brief Deletes the symbol table and all its associated data.
     ~SymbolTable() {
         delete this->globalScope;
         delete this->functionTable;
@@ -148,11 +147,11 @@ private:
 
     /// @brief Creates a storage specifier from ANTLR4 symbols. 
     StorageSpecifier ResolveStorageSpecifier(JabukodParser::StorageSpecifierContext *specifier) const;
-    /// @brief Returns true, if the currently resolved variable was specifically declared.
+    /// @brief Returns true if the currently resolved variable was declared, not defined.
     bool IsFromDeclaration(JabukodParser::StorageSpecifierContext *specifier) const;
 
     /**
-     * @name Methods for resolving global variable values from their inicialisers as ANTLR4 tokens.
+     * @name Methods for resolving global variable values from their ANTLR4 token inicializers.
      * 
      * @{
      */
@@ -161,19 +160,19 @@ private:
     any GetImplicitDefaultValue(Type type) const; ///< For declarations.
     /** @} */
 
-    /// @brief Returns true, if the ANTLR4 expression context represents a literal.
+    /// @brief Returns true if the ANTLR4 expression context represents a literal.
     bool IsLiteralExpression(JabukodParser::ExpressionContext *expression) const;
-    /// @brief Returns true, if the ANTLR4 expression context represents a list.
+    /// @brief Returns true if the ANTLR4 expression context represents a list.
     bool IsListExpression(JabukodParser::ExpressionContext *expression) const;
 
-    /// @brief From a literal symbol, gets the value it represents or invokes an error, if a conversion cannot be performed.
+    /// @brief From a literal symbol gets the value it represents. Invokes an error if it cannot be assigned even after implicit conversion.
     any ResolveExplicitDefaultValue(JabukodParser::LiteralContext *defaultValue, Type variableType) const;
     /// @brief Provides the implicit literal conversion for ResolveExplicitDefaultValue.
     any ConvertLiteralByType(JabukodParser::LiteralContext *defaultValue, Type literalType, Type variableType) const;
     
-    /// @brief Method to prepare an array, if the global variable is of type array.
+    /// @brief Method to prepare an array if the global variable is of type array.
     any MakeArrayValuesTyped(vector<any> & initialArray, Type arrayType, JabukodParser::ListExpressionContext *list) const;
-    /// @brief Generic method, invoked by MakeArrayValuesTyped, according to the desired array type.
+    /// @brief Generic method invoked by MakeArrayValuesTyped, according to the desired array type.
     template <typename T>
     any MakeArrayValueTyped_Specific(vector<any> & initialArray, Type arrayType, JabukodParser::ListExpressionContext *list) const {
         vector<T> array;

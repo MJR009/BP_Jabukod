@@ -12,8 +12,7 @@
 
 /**
  * @class Scope
- * @brief Each variable used in a program is associated with a scope object. That on the other
- * hand is associated with the rest of the internal program representation.
+ * @brief Each variable used in a program is associated with a scope object.
  * 
  * For ease of access, since variables are always referenced from within a scope, they are stored
  * in a linked list. Like that they cannot be reallocated during compilation and their addresses can be used
@@ -32,13 +31,13 @@ public:
         bool isGlobal,
         bool isParameter
     );
-    /// @brief Adds a new variable, that has be constructed earlier.
+    /// @brief Adds a new variable that has be constructed elsewhere earlier.
     void AddExistingEntry(Variable *variable);
 
-    /// @brief Returns true, if the variable with the specified name is not within this scope.
+    /// @brief Returns true if the variable with the specified name is not within this scope.
     bool IsVariableNameAvailable(const string & name) const;
 
-    /// @brief Returns the variable searched for by its name, if it exists.
+    /// @brief Returns the variable searched for by its name if it exists. Otherwise returns a nullptr.
     Variable *GetVariable(const string & name);
     /// @brief Returns all variables associated with this scope. Used for printing.
     list<Variable *> *GetVariables();
@@ -50,7 +49,7 @@ public:
     /// @brief Prints all the variables within this scope, but only as enum items.
     void PrintAsEnum() const;
 
-    /// @brief Deletes the scope object, also deleting all variables within it.
+    /// @brief Deletes the scope object and all variables within it.
     ~Scope() {
         for_each(this->variables.begin(), this->variables.end(),
             [ ](Variable *current) {

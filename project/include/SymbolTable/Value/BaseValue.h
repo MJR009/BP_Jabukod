@@ -12,8 +12,8 @@
  * @class BaseValue
  * @brief Generic value to be inherited from by other classes.
  * 
- * During development, there were many different kinds of values, which were different.
- * Later they were all generalised to be able to always use a Variable value.
+ * During development, there were many different kinds of values.
+ * Later they were all generalized and only Variable remained.
  * This class is left for documentation purposes.
  */
 class BaseValue {
