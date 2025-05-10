@@ -142,7 +142,7 @@ void Obfuscator::Signedness() {
             converter.end()
         );
 
-        i += converter.size(); // afterwards ++ in header
+        i += converter.size();
     }
 }
 

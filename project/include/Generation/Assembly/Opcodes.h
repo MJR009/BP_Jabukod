@@ -31,7 +31,7 @@
 /** @} */
 
 /**
- * @defgroup OS Used OS interaction instructions.
+ * @defgroup instrOS Used OS interaction instructions.
  * 
  * @{
  */
@@ -39,7 +39,7 @@
 /** @} */
 
 /**
- * @defgroup dataTypeConversions Used type conversion instructions.
+ * @defgroup dataTypeConversions Used data conversion instructions.
  * 
  * @{
  */
@@ -58,7 +58,7 @@
 #define JZ "jz"
 #define CMP "cmp"
 #define CMPB "cmpb" ///< Used with write system call.
-#define COMISS "comiss" // "ucomiss"
+#define COMISS "comiss"
 #define JMP "jmp"
 #define JLE "jle"
 #define JGE "jge"
@@ -83,7 +83,7 @@
 /** @} */
 
 /**
- * @defgroup compInstructuins Instruction used for general computation.
+ * @defgroup compInstructions Instruction used for general computation.
  * 
  * @{
  */

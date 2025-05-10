@@ -14,7 +14,7 @@
 
 /**
  * @class Transform
- * @brief To comply with the target assembly form, internal represantiation is adjusted to reflect it.
+ * @brief To comply with the target assembly form, internal represantiation needs to be adjusted.
  * 
  */
 class Transform {
@@ -33,7 +33,7 @@ public:
      * 
      * @{
      */
-    static string TypeToDirective(Type type); ///< Transforms a data type to its respective data directive.
+    static string TypeToDirective(Type type); ///< Transforms a data type to its respective .data directive.
     static string DefaultValueToInitializer(Variable *variable); ///< Transforms a value to how it is represented in the generated program.
     /** @} */
 

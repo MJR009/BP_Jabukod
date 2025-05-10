@@ -85,7 +85,7 @@ string Transform::DefaultValueToInitializer(Variable *variable) {
 
 
 
-bool Transform::IsRegister(const string & memory) { // only register name start with a % sign
+bool Transform::IsRegister(const string & memory) { // only register names start with a % sign
     return (memory[0] == '%');
 }
 
@@ -98,10 +98,7 @@ string Transform::RegisterToAddress(const string & reg) {
 }
 
 string Transform::IntToImmediate(const int & number) {
-    // old implementation with hex numbers was problematic
-    //stringstream hexNumber;
-    //hexNumber << hex << number;
-    return "$" + to_string(number);//hexNumber.str();
+    return "$" + to_string(number);
 }
 
 string Transform::LiteralToImmediate(LiteralData *data) {

@@ -14,7 +14,7 @@
 
 /**
  * @class Instruction
- * @brief Represents one intermediate, three address code instruction, that is later
+ * @brief Represents one intermediate three address code instruction that is later
  * transformed into the target code.
  * 
  */
@@ -30,7 +30,7 @@ public:
 
     /// @brief Returns instructions operation code.
     string GetOpcode();
-    /// @brief Returns first argument of instruction
+    /// @brief Returns first argument of the instruction.
     string GetArg1();
 
     /// @brief Changes the opcode (used mainly for renaming labels).
@@ -38,21 +38,21 @@ public:
     /// @brief Changes arg1 (used mainly for renaming labels).
     void SetArg1(const string & newArg);
 
-    /// @brief Appends vector2 to vector1, changing vector1
+    /// @brief Appends vector2 to vector1, changing vector1.
     static void ConnectSequences(vector<Instruction> & vector1, const vector<Instruction> & vector2);
 
-    /// @brief Helper function adding a comment after an instruction into arg3, which is otherwise unused
+    /// @brief Helper function adding a comment after an instruction into arg3.
     void AddComment(string comment);
 
 public: // for obfuscation
-    /// @brief If the instruction is Jcc, changes the conditions signedness
+    /// @brief If the instruction is a conditional jump, changes the condition signedness.
     void FlipJumpSign();
-    /// @brief Changes arg1 of a call instruction, to jump elsewhere
+    /// @brief Changes arg1 of a call instruction, to jump elsewhere.
     void SetCallTarget(const string & newTarget);
 
 private:
     string opcode; ///< Instructions operation code.
     string arg1; ///< First argument, typically source address.
     string arg2; ///< Second argument typically destination address.
-    string arg3; ///< Third argument, a.
+    string arg3; ///< Third argument, used for comments.
 };

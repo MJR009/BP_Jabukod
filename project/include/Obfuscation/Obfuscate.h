@@ -2,7 +2,7 @@
  * @file Obfuscate.h
  * @author Martin Jabůrek
  *
- * @brief Implementations of used code obfuscations.
+ * @brief Implementations of code obfuscations.
  */
 
 #pragma once
@@ -19,7 +19,7 @@ class Generator;
 
 /**
  * @class Obfuscator
- * @brief Implementations of methods for obfuscation done on both the abstract syntax tree
+ * @brief Implementations of methods for obfuscation are done on both the abstract syntax tree
  * and on intermediate 3AC instructions.
  * 
  */
@@ -37,9 +37,9 @@ public:
     /// @brief According to command line arguments, add obfuscations to the abstract syntax tree.
     void ObfuscateAST();
 private:
-    /// @brief Incorportade opaque predicate obfuscation.
+    /// @brief Incorporate opaque predicate obfuscation.
     void OpaquePredicates();
-    /// @brief Obfuscates by forging symbolic information. First part, which obfuscates actual source program symbols.
+    /// @brief Obfuscates by forging symbolic information. This is the first part which obfuscates actual source program symbols.
     void ForgeSymbolic_1();
     /// @brief Expands literals into literal expressions.
     void LiteralExpansion();
@@ -54,9 +54,9 @@ private:
     void Interleaving();
     /// @brief Applies signedness obfuscation.
     void Signedness();
-    /// @brief Obfuscates by forging symbolic information. This is a second part, obfuscating automatically generated symbols.
+    /// @brief Obfuscates by forging symbolic information. This is a second part used for obfuscating automatically generated symbols.
     void ForgeSymbolic_2();
-    /// @brief Obfuscates by cloning selected functions. These can be use interchangably with originals.
+    /// @brief Obfuscates by cloning selected functions. These can be used interchangably with originals.
     void FunctionCloning();
 
 private:
@@ -66,14 +66,14 @@ private:
     SymbolTable & symbolTable; ///< Reference to current symbol table.
     Generator *gen = nullptr; ///< Pointer to the code generator, which holds the intermediate instructions - the 3AC representation.
 
-    vector<string> functionNames; ///< Used to find functions in 3AC. Mainly used to keep track of clones.
+    vector<string> functionNames; ///< Used to find functions in 3AC. Mainly needed to keep track of clones.
 
 private:
     /**
      * @name Additional helper methods for implemented obfuscations.
      * 
-     * Implemented by ObfuscationMethods.cpp
-     * 
+     * Implemented by
+     * @file ObfuscationMethods.cpp
      * @{
      */
     /// @brief Returns a vector of places where basic blocks start in 3AC. Result is invalidated upon instruction adjustments!
@@ -81,12 +81,12 @@ private:
     /// @brief Returns a vector of places where functions start in 3AC. Result is invalidated upon instruction adjustments!
     vector< vector<Instruction>::iterator > FindFunctions();
 
-    /// @brief If the given instruction contains a label (plain or within a jump) it is given a clone suffix.
+    /// @brief If the given instruction contains a label (normal or within as a jump target) it is given a clone suffix.
     void AdjustClonedLabels(Instruction *current);
     /// @brief With a certain chance, changes calls to a function to calls to its clone.
     void AddCallsToClone(const string & originalName, const string & cloneName);
 
-    /// @brief Using given variable, generates a fake condition for opaque predicate 
+    /// @brief Using given variable, generates a fake condition for opaque predicate.
     static ASTNode *CreateOpaquePredicate(Variable *controlVariable);
 
     /// @brief Converts comparison to float equivalent.
@@ -94,10 +94,10 @@ private:
     /// @brief Converts comparison to signed int equivalent.
     vector<Instruction> UsignedToSigned();
 
-    /// @brief Used to generate expression during literal expansion obfuscation. This works for type int only.
+    /// @brief Used to generate expression during literal expansion obfuscation. This is done for type int only.
     static ASTNode *GenerateArfificialExpression(int valueToReplace);
 
-    /// @brief Picks local and global array and prepares them for restructuring, doubling size
+    /// @brief Picks local and global array and prepares them for restructuring, doubling size.
     vector<Variable *> ChooseArraysToRestructure();
     /// @brief Adjust size and default value of arrays chosen for restructuring.
     void RestructureArrays(vector<Variable *> arrays);
@@ -108,7 +108,7 @@ private:
     vector<string> CollectLabels(vector<Instruction>::iterator function, vector<Instruction>::iterator functionEnd);
     /// @brief Implicit labels contain a 4 digit index. This function randmizes them.
     static void ForgeLabelNumber(string & label);
-    /// @brief Used for exmplicit labels, like functions. Actually creates the random string, unlike ForgeLabelNumber.
+    /// @brief Used for explicit labels, like functions. Actually creates the random string, unlike ForgeLabelNumber.
     static string CreateArbitraryLabelNumber();
     /** @} */
 };

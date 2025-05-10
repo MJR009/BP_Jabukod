@@ -2,7 +2,7 @@
  * @file NodeGenerators.h
  * @author Martin Jabůrek
  *
- * @brief Internal representation of one instruction.
+ * @brief Methods for generating intermediate code for each abstarct syntax tree node.
  */
 
 #pragma once
@@ -20,7 +20,7 @@ class Generator;
  */
 class NodeGenerators {
 public:
-    /// @brief Constructor, associating the generator using this class.
+    /// @brief Constructor, associates the generator which uses this class.
     NodeGenerators(Generator *associatedGenerator) : gen(associatedGenerator) {}
 
     /**
@@ -99,9 +99,8 @@ private:
     void EvaluateAssignment(ASTNode *lSide, ASTNode *rSide, Type rSdeType);
     /// @brief Specifically resolves assigning to a variable of an array type.
     void EvaluateAssignmentToArray(ASTNode *lSide, string opcode, string source);
-    /// @brief Generates code to initialise an array from a list.
+    /// @brief Generates code to initialize an array from a list.
     void EvaluateArrayDefinition(ASTNode *variable);
-
 
     /// @brief Generates code needed for calling a function, resolving all register backup and argument preparation.
     void EvaluateFunctionCall(ASTNode *functionCall);
@@ -114,15 +113,15 @@ private:
     /// @brief Literal float and string have to be in .data section, immediate values cannot be used
     void AddNeededDeclarationData(Type declarationType);
 
-    /// @brief Generates correct array access for a foreach loop control variable and returns where it should be accessed afterwards.
+    /// @brief Generates correct array access for a foreach loop control variable.
     string EvaluateControlVariableAccess(ASTNode *controlVariable);
 
 private:
     /**
      * @name Functions used for correctly resolving labels of control flow structures.
      * 
-     * A stack is kept of all labels associated with a specific control flow structure.
-     * Like this, the can be nested and current loop can be easily found.
+     * A stack is kept that contains all labels associated with a specific control flow structure.
+     * Like this, they can be nested and current loop can be found very easily.
      * 
      * @{
      */
@@ -130,8 +129,9 @@ private:
     enum LoopKind { WHILE, FOR, FOREACH };
     stack<pair<vector<string>, LoopKind>> loopStack; ///< Used to resolve jump targets.
 
-    void PushLoopLabels(const vector<string> & labels, LoopKind kind); ///< upon entering a loop, it's labels are stored.
+    void PushLoopLabels(const vector<string> & labels, LoopKind kind); ///< Upon entering a loop, its labels are stored.
     void PopLoopLabels(); ///< When a loop is left, labels are popped and the previous loop is visible again.
+    
     string GetCurrentEnd(); ///< Returns the ending label of the current loop.
     string GetBreakTarget(); ///< Return the label to jump to upon encountering a break command.
     string GetContinueTarget(); ///< Return the label to jump to upon encountering a continue command.

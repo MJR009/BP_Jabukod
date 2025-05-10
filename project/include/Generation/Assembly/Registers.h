@@ -2,14 +2,14 @@
  * @file Registers.h
  * @author Martin Jabůrek
  *
- * @brief File containing macros of x86 and SSE registers used in generated programs.
+ * @brief File containing macros of GPR and SSE registers used in generated programs.
  */
 
 #pragma once
 #include "common.h"
 
 /**
- * @defgroup presevedRegisters Used preserved registers.
+ * @defgroup presevedRegisters Preserved registers.
  * 
  * @{
  */
@@ -35,7 +35,7 @@
 #define R8 "%r8" ///< function argument 5
 #define R9 "%r9" ///< function argument 6
 
-/// @brief hard set to 1 at the start of each program, used for bool conversions, as conditional move instructions do not work with immediate values
+/// @brief Hard set to 1 at the start of each program, used for bool conversions, as conditional move instructions do not work with immediate values.
 #define R10 "%r10"
 #define R11 "%r11"
 /** @} */

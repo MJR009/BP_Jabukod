@@ -10,10 +10,10 @@
 
 /**
  * @class Random
- * @brief Used to retrieve a predetermined random number.ADJ_OFFSET_SINGLESHOT
+ * @brief Used to retrieve a predetermined random number.
  * 
  * Obfuscation needs to have somewhat random nature. To guarantee the same resulting assembly
- * for every compilation run and better control over result, this class can be used to
+ * for every compilation run and better control over results this class can be used to
  * get a random number from a predetermined sequence.
  */
 class Random {
@@ -25,7 +25,7 @@ public:
     static int Get0ToN(int n);
     /// @brief Returns a vector of numbers from 0 to n-1, permuted randomly.
     static vector<int> GetPermutation0ToN(int n);
-    /// @brief Gives uniform truth values with "percent" % chance for true.
+    /// @brief Gives uniform truth values with "percent"% chance for true.
     static bool Percent(int percent);
 
 private:

@@ -15,13 +15,13 @@
 
 /**
  * @class Snippets
- * @brief Some code sequences are needed quite often. This static class makes it easier to generate them repeatedly.
+ * @brief Some code sequences are needed often. This static class makes it easier to generate them repeatedly.
  * 
  */
 class Snippets {
 public:
     /**
-     * @defgroup floatLiterals Names of different literals, which are always the same.
+     * @defgroup floatLiterals Names of different literals possibly needed in programs, which are always the same.
      * 
      * @{
      */
@@ -40,17 +40,17 @@ public:
     /// @brief Generates an exit syscall, using exit code from the provided register,
     static const vector<Instruction> Exit(string reg, bool useRDTSC);
 
-    /// @brief Initialises the target memory location to its default value according to the data type. 
+    /// @brief Initializes the target memory location to its default value according to the data type. 
     static const vector<Instruction> DeclareDefault(Type type, string target);
 
-    /// @brief Stores a register on the stack
+    /// @brief Stores a register on the stack.
     static const vector<Instruction> PushRegister(Type type, string reg);
     /// @brief Puts a variable into a register from the top of the stack and pops.
     static const vector<Instruction> PopRegister(Type type, string reg);
 
-    /// @brief Pushes all scratch registers to the stack. Used with write syscall.
+    /// @brief Pushes all scratch registers to the stack. Used with write system call.
     static const vector<Instruction> BackupScratchRegisters();
-    /// @brief Restores all scratch registers from the stack in reverse order. Used with write syscall.
+    /// @brief Restores all scratch registers from the stack in reverse order. Used with write system call.
     static const vector<Instruction> RestoreScratchRegisters();
 
     /// @brief Evaluetes the length of a string for a write system call. The lenght of a string in %rsi is stored into %rdx.

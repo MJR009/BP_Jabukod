@@ -308,8 +308,8 @@ void NodeGenerators::GenerateBIT_NOT(ASTNode *node) {
     
     const int bitNotMask = 0xFFFFFFFF;
 
-    // unused, bit operations over float are not allowed
     if (node->GetData<ExpressionData>()->GetType() == Type::FLOAT) {
+    // UNUSED, bit operations over float are not allowed
         if ( ! bitNotMaskDeclared) {
             gen->symbolTable.AddGlobalLiteral(Snippets::bitNotMask, Type::INT, bitNotMask);
             bitNotMaskDeclared = true;
@@ -527,7 +527,7 @@ void NodeGenerators::GenerateFOREACH(ASTNode *node) {
     gen->instructions.emplace_back(JE, end);
     gen->instructions.emplace_back(INCQ, R12);
 
-    if (iteratedArray->GetSelf()->restructure) { // used when obfuscating, __must be done here__
+    if (iteratedArray->GetSelf()->restructure) { // used when obfuscating, MUST be done here
         gen->instructions.emplace_back(INCQ, R12);
         if (gen->args->annoteObfuscations) {
             gen->instructions.back().AddComment("Double increment - restructured array access");
