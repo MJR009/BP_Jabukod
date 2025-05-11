@@ -3,7 +3,7 @@
 #
 # Made using guide in README.md at https://github.com/antlr/antlr4/tree/master/runtime/Cpp/cmake and modified.
 
-cmake_minimum_required (VERSION 2.8...3.28.3 FATAL_ERROR)
+cmake_minimum_required (VERSION 2.8 FATAL_ERROR)
 set(CMAKE_CXX_STANDARD 17)
 
 project(jabukod)
