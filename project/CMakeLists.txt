@@ -131,24 +131,18 @@ add_custom_target(pack
     WORKING_DIRECTORY ${ARCHIVE_BASE_DIR}
 )
 
-find_package(Doxygen)
 
-if(DOXYGEN_FOUND)
-    set (DOCS_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../docs)
-    set (DOXYFILE ${DOCS_DIR}/Doxyfile)
+# Generate documentation
+set (DOCS_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../docs)
+set (DOXYFILE ${DOCS_DIR}/Doxyfile)
+add_custom_target(docs
+    COMMAND doxygen ${DOXYFILE}
+    COMMAND make -C ${DOCS_DIR}/latex
+    COMMAND cp ${DOCS_DIR}/latex/refman.pdf ${CMAKE_BINARY_DIR}/xjabur02_Jabukod_documentation.pdf
+    WORKING_DIRECTORY ${DOCS_DIR}
+)
 
-    # Generate documentation
-    add_custom_target(docs
-        COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYFILE}
-        COMMAND make -C ${DOCS_DIR}/latex
-        COMMAND cp ${DOCS_DIR}/latex/refman.pdf ${CMAKE_BINARY_DIR}/xjabur02_Jabukod_documentation.pdf
-        WORKING_DIRECTORY ${DOCS_DIR}
-    )
-
-    # Clean up generated documentation
-    add_custom_target(clean_docs
-        COMMAND ${CMAKE_COMMAND} -E rm -rf ${DOCS_DIR}/html ${DOCS_DIR}/latex
-    )
-else()
-    message(STATUS "Doxygen appears to not be installed, `make docs` will not be available.")
-endif()
+# Clean up generated documentation
+add_custom_target(clean_docs
+    COMMAND ${CMAKE_COMMAND} -E rm -rf ${DOCS_DIR}/html ${DOCS_DIR}/latex
+)
